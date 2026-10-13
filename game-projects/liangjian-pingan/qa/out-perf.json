@@ -1,0 +1,428 @@
+{
+ "at": "2026-10-13T10:49:44.929Z",
+ "runs": [
+  {
+   "name": "电脑 1920×1080 高画质",
+   "env": {
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "dpr": 1,
+    "canvas": [
+     1920,
+     1080
+    ],
+    "ua": "Edg/155.0.0.0"
+   },
+   "samples": [
+    {
+     "frames": 1993,
+     "avgFps": 166.1,
+     "medianMs": 5.9,
+     "p95Ms": 6,
+     "maxMs": 29.5,
+     "over50ms": 0,
+     "avgCalls": 63,
+     "avgTris": 35031,
+     "phase": 1,
+     "units": 17,
+     "quality": "high",
+     "view": "斜俯视",
+     "canvas": [
+      1920,
+      1080
+     ]
+    },
+    {
+     "frames": 1313,
+     "avgFps": 164.1,
+     "medianMs": 5.9,
+     "p95Ms": 6,
+     "maxMs": 29.4,
+     "over50ms": 0,
+     "avgCalls": 117,
+     "avgTris": 45367,
+     "phase": 1,
+     "units": 20,
+     "quality": "high",
+     "view": "正视",
+     "canvas": [
+      1920,
+      1080
+     ]
+    },
+    {
+     "frames": 1312,
+     "avgFps": 163.9,
+     "medianMs": 5.9,
+     "p95Ms": 6,
+     "maxMs": 29.5,
+     "over50ms": 0,
+     "avgCalls": 114,
+     "avgTris": 44908,
+     "phase": 1,
+     "units": 21,
+     "quality": "high",
+     "view": "第一人称",
+     "canvas": [
+      1920,
+      1080
+     ]
+    },
+    {
+     "frames": 1992,
+     "avgFps": 166,
+     "medianMs": 5.9,
+     "p95Ms": 6,
+     "maxMs": 41.3,
+     "over50ms": 0,
+     "avgCalls": 63,
+     "avgTris": 34597,
+     "phase": 2,
+     "units": 20,
+     "quality": "high",
+     "view": "斜俯视",
+     "canvas": [
+      1920,
+      1080
+     ]
+    },
+    {
+     "frames": 2321,
+     "avgFps": 165.8,
+     "medianMs": 5.9,
+     "p95Ms": 6,
+     "maxMs": 47.1,
+     "over50ms": 0,
+     "avgCalls": 107,
+     "avgTris": 38646,
+     "phase": 4,
+     "units": 22,
+     "quality": "high",
+     "view": "斜俯视",
+     "canvas": [
+      1920,
+      1080
+     ]
+    },
+    {
+     "frames": 1312,
+     "avgFps": 164,
+     "medianMs": 5.9,
+     "p95Ms": 6,
+     "maxMs": 35.3,
+     "over50ms": 0,
+     "avgCalls": 157,
+     "avgTris": 43286,
+     "phase": 4,
+     "units": 28,
+     "quality": "high",
+     "view": "正视",
+     "canvas": [
+      1920,
+      1080
+     ]
+    },
+    {
+     "frames": 1668,
+     "avgFps": 166.8,
+     "medianMs": 5.9,
+     "p95Ms": 6,
+     "maxMs": 17.7,
+     "over50ms": 0,
+     "avgCalls": 41,
+     "avgTris": 31831,
+     "phase": 5,
+     "units": 8,
+     "quality": "high",
+     "view": "斜俯视",
+     "canvas": [
+      1920,
+      1080
+     ]
+    }
+   ],
+   "errors": []
+  },
+  {
+   "name": "电脑 1280×720 高画质",
+   "env": {
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "dpr": 1,
+    "canvas": [
+     1280,
+     720
+    ],
+    "ua": "Edg/155.0.0.0"
+   },
+   "samples": [
+    {
+     "frames": 1994,
+     "avgFps": 166.2,
+     "medianMs": 5.9,
+     "p95Ms": 6,
+     "maxMs": 29.4,
+     "over50ms": 0,
+     "avgCalls": 63,
+     "avgTris": 35084,
+     "phase": 1,
+     "units": 17,
+     "quality": "high",
+     "view": "斜俯视",
+     "canvas": [
+      1280,
+      720
+     ]
+    },
+    {
+     "frames": 1309,
+     "avgFps": 163.6,
+     "medianMs": 5.9,
+     "p95Ms": 6,
+     "maxMs": 35.2,
+     "over50ms": 0,
+     "avgCalls": 117,
+     "avgTris": 45344,
+     "phase": 1,
+     "units": 20,
+     "quality": "high",
+     "view": "正视",
+     "canvas": [
+      1280,
+      720
+     ]
+    },
+    {
+     "frames": 1314,
+     "avgFps": 164.3,
+     "medianMs": 5.9,
+     "p95Ms": 6,
+     "maxMs": 29.4,
+     "over50ms": 0,
+     "avgCalls": 115,
+     "avgTris": 45201,
+     "phase": 1,
+     "units": 20,
+     "quality": "high",
+     "view": "第一人称",
+     "canvas": [
+      1280,
+      720
+     ]
+    },
+    {
+     "frames": 1991,
+     "avgFps": 165.9,
+     "medianMs": 5.9,
+     "p95Ms": 6,
+     "maxMs": 35.3,
+     "over50ms": 0,
+     "avgCalls": 65,
+     "avgTris": 34845,
+     "phase": 2,
+     "units": 21,
+     "quality": "high",
+     "view": "斜俯视",
+     "canvas": [
+      1280,
+      720
+     ]
+    },
+    {
+     "frames": 2323,
+     "avgFps": 165.9,
+     "medianMs": 5.9,
+     "p95Ms": 6,
+     "maxMs": 41.2,
+     "over50ms": 0,
+     "avgCalls": 108,
+     "avgTris": 38525,
+     "phase": 4,
+     "units": 22,
+     "quality": "high",
+     "view": "斜俯视",
+     "canvas": [
+      1280,
+      720
+     ]
+    },
+    {
+     "frames": 1313,
+     "avgFps": 164.1,
+     "medianMs": 5.9,
+     "p95Ms": 6,
+     "maxMs": 29.5,
+     "over50ms": 0,
+     "avgCalls": 157,
+     "avgTris": 43557,
+     "phase": 4,
+     "units": 28,
+     "quality": "high",
+     "view": "正视",
+     "canvas": [
+      1280,
+      720
+     ]
+    },
+    {
+     "frames": 1666,
+     "avgFps": 166.6,
+     "medianMs": 5.9,
+     "p95Ms": 6,
+     "maxMs": 23.6,
+     "over50ms": 0,
+     "avgCalls": 41,
+     "avgTris": 31750,
+     "phase": 5,
+     "units": 8,
+     "quality": "high",
+     "view": "斜俯视",
+     "canvas": [
+      1280,
+      720
+     ]
+    }
+   ],
+   "errors": []
+  },
+  {
+   "name": "手机模拟 844×390 DPR3 流畅",
+   "env": {
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "dpr": 3,
+    "canvas": [
+     1055,
+     487
+    ],
+    "ua": "Edg/155.0.0.0"
+   },
+   "samples": [
+    {
+     "frames": 2013,
+     "avgFps": 167.8,
+     "medianMs": 5.9,
+     "p95Ms": 6,
+     "maxMs": 17.6,
+     "over50ms": 0,
+     "avgCalls": 63,
+     "avgTris": 34802,
+     "phase": 1,
+     "units": 17,
+     "quality": "low",
+     "view": "斜俯视",
+     "canvas": [
+      1055,
+      487
+     ]
+    },
+    {
+     "frames": 1330,
+     "avgFps": 166.2,
+     "medianMs": 5.9,
+     "p95Ms": 6,
+     "maxMs": 17.7,
+     "over50ms": 0,
+     "avgCalls": 117,
+     "avgTris": 45061,
+     "phase": 1,
+     "units": 20,
+     "quality": "low",
+     "view": "正视",
+     "canvas": [
+      1055,
+      487
+     ]
+    },
+    {
+     "frames": 1332,
+     "avgFps": 166.5,
+     "medianMs": 5.9,
+     "p95Ms": 6,
+     "maxMs": 17.7,
+     "over50ms": 0,
+     "avgCalls": 115,
+     "avgTris": 44850,
+     "phase": 1,
+     "units": 20,
+     "quality": "low",
+     "view": "第一人称",
+     "canvas": [
+      1055,
+      487
+     ]
+    },
+    {
+     "frames": 2012,
+     "avgFps": 167.7,
+     "medianMs": 5.9,
+     "p95Ms": 6,
+     "maxMs": 23.5,
+     "over50ms": 0,
+     "avgCalls": 71,
+     "avgTris": 35185,
+     "phase": 2,
+     "units": 21,
+     "quality": "low",
+     "view": "斜俯视",
+     "canvas": [
+      1055,
+      487
+     ]
+    },
+    {
+     "frames": 2343,
+     "avgFps": 167.4,
+     "medianMs": 5.9,
+     "p95Ms": 6,
+     "maxMs": 35.3,
+     "over50ms": 0,
+     "avgCalls": 115,
+     "avgTris": 38716,
+     "phase": 4,
+     "units": 22,
+     "quality": "low",
+     "view": "斜俯视",
+     "canvas": [
+      1055,
+      487
+     ]
+    },
+    {
+     "frames": 1333,
+     "avgFps": 166.6,
+     "medianMs": 5.9,
+     "p95Ms": 6,
+     "maxMs": 17.7,
+     "over50ms": 0,
+     "avgCalls": 162,
+     "avgTris": 43508,
+     "phase": 4,
+     "units": 28,
+     "quality": "low",
+     "view": "正视",
+     "canvas": [
+      1055,
+      487
+     ]
+    },
+    {
+     "frames": 1691,
+     "avgFps": 169.1,
+     "medianMs": 5.9,
+     "p95Ms": 6,
+     "maxMs": 29.3,
+     "over50ms": 0,
+     "avgCalls": 41,
+     "avgTris": 31538,
+     "phase": 5,
+     "units": 8,
+     "quality": "low",
+     "view": "斜俯视",
+     "canvas": [
+      1055,
+      487
+     ]
+    }
+   ],
+   "errors": []
+  }
+ ]
+}

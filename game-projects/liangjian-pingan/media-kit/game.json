@@ -1,0 +1,22 @@
+{
+  "game_id": "liangjian-pingan",
+  "name": "亮剑：攻打平安县城（重做版）",
+  "engine": "Three.js r152（原生 ES 模块，无构建步骤）",
+  "current_version": "v0.1.0",
+  "entrypoint": "public/html/game/liangjian-pingan/index.html",
+  "launch": "node game-projects/liangjian-pingan/qa/serve.mjs  → http://localhost:8795/html/game/liangjian-pingan/",
+  "release_intent": "web_demo",
+  "development_model": "Claude Opus 5.5（Claude Code）",
+  "publication_status": "local_only",
+  "notes": "用户 2026-10-13 要求：把《枪火集结》抗战战役里的「平安县城」那一章在本地完全重做一版，不参考原实现代码，玩法、画面、数值、设计全部重新定，要有“开炮”等热门梗；做好后用户自己试玩对比原版。未接入网站游戏列表、未推送、未部署、未提交 Toy。",
+  "compare_with": "public/html/game/gunfire-assembly/（原版；同一个本地服务下 /html/game/gunfire-assembly/）",
+  "controls": {
+    "keyboard": "WASD 移动；J 射击（炮位旁按 J 操炮，操炮时 J 开炮、A/D 转炮口、W/S 调仰角、K 离开）；K 手榴弹；U 亮剑突进；I 骑兵连；Q/E 转视角；C 切换视角；Esc/P 暂停；菜单 ↑↓ 选择、←→ 调整、Enter 确认",
+    "touch": "左下摇杆移动（操炮时左右转炮口、上下调仰角）；右下 2×2 动作键 J/K/U/I；右上 切换视角 / 暂停 / 全屏；按住画面空白处拖动转视角",
+    "views": ["斜俯视（默认）", "战术俯视", "正视", "第一人称"],
+    "modes": ["自动识别", "电脑键鼠", "手机触屏"]
+  },
+  "storage_namespace": "lj_pingan_v1_（settings / cp / best）",
+  "handoff": "releases/v0.1.0/handoff.json",
+  "toy": { "id": null, "slug": null, "url": null, "visibility": null, "review_status": "not_submitted", "verified_at": null, "video_bindings": [] }
+}

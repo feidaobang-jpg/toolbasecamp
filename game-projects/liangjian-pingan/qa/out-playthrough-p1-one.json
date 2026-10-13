@@ -1,0 +1,71 @@
+{
+ "at": "2026-10-13T11:00:11.097Z",
+ "startPhase": 1,
+ "armor": "one",
+ "finished": true,
+ "gameSeconds": 263,
+ "wallSeconds": 7,
+ "phases": [
+  {
+   "phase": 1,
+   "seconds": 96.5,
+   "deaths": 11,
+   "hurt": 11
+  },
+  {
+   "phase": 2,
+   "seconds": 44.5,
+   "deaths": 2,
+   "hurt": 2
+  },
+  {
+   "phase": 3,
+   "seconds": 17.5,
+   "deaths": 0,
+   "hurt": 0
+  },
+  {
+   "phase": 4,
+   "seconds": 50.8,
+   "deaths": 5,
+   "hurt": 5
+  },
+  {
+   "phase": 5,
+   "seconds": 53.7,
+   "deaths": 6,
+   "hurt": 6
+  }
+ ],
+ "final": {
+  "state": "result",
+  "phase": 5,
+  "t": 263.00000000008947,
+  "deaths": 24,
+  "hurt": 24,
+  "shells": 6,
+  "cav": 5,
+  "loot": 1,
+  "clash": 2,
+  "tower": 1,
+  "won": 1,
+  "genius": 1,
+  "kills": 86,
+  "hp": 1,
+  "hx": -6.5,
+  "hz": -87.6,
+  "boss": -14,
+  "cannon": 11,
+  "retries": 0,
+  "score": 26235,
+  "enemies": 0
+ },
+ "result": {
+  "title": "平安县城，拿下了！",
+  "rank": "评价：亮剑团长",
+  "total": "战功合计 19035　最高 19035",
+  "stats": "用时4:23歼敌86干掉精锐9开炮6 发“天才”炮击1拼刀成功2骑兵连出击5缴获军火库是阵亡24受击24急救包0规则无限命 · 一发",
+  "hidden": false
+ },
+ "errors": []
+}

@@ -1,0 +1,9 @@
+[
+  { "id": "three", "use": "三维渲染库", "runtime": "public/html/game/liangjian-pingan/vendor/three.module.js", "source_type": "licensed", "tool": "Three.js r152（MIT）", "notes": "从仓库内 starship-defense/vendor 复制同一版本；许可证见 vendor/THREE-LICENSE.txt" },
+  { "id": "models", "use": "人物（八路军、日军步兵/军曹/特工队、山本一木）、意大利炮、战马与骑兵、大刀、急救包、弹药箱", "runtime": "public/html/game/liangjian-pingan/js/models.js", "source_type": "procedural", "tool": "Claude Opus 5.5 编写的程序化低模（顶点色方块/圆柱合批）", "notes": "原创造型；没有使用电视剧画面、演员肖像或其他游戏的模型" },
+  { "id": "world", "use": "城外黄土地与土坎、机枪阵地、平安县城城墙/城门/城楼、机枪堡、城内街道与房屋、军火库、守备队部", "runtime": "public/html/game/liangjian-pingan/js/world.js", "source_type": "procedural", "tool": "Claude Opus 5.5 编写", "notes": "关卡布局为本次原创设计，未参考《枪火集结》原实现" },
+  { "id": "textures", "use": "城砖、瓦片、地面颗粒三张平铺贴图", "runtime": "public/html/game/liangjian-pingan/js/geo.js（运行时用 Canvas 生成）", "source_type": "procedural", "tool": "Canvas 2D 程序生成" },
+  { "id": "sfx-bgm", "use": "全部音效与背景鼓乐、冲锋号", "runtime": "public/html/game/liangjian-pingan/js/audio.js", "source_type": "procedural", "tool": "WebAudio 实时合成", "notes": "原创；冲锋号是自编的三连音上行旋律，不是录音" },
+  { "id": "voice", "use": "十句喊话：开炮 / 意大利炮呢 / 给我拉上来 / 骑兵连进攻 / 亮剑 / 打的就是精锐 / 富裕的仗 / 真是个天才 / 勇者胜 / 冲啊", "raw": "media-kit/assets/voice-raw/*.wav（只留本机）", "runtime": "public/html/game/liangjian-pingan/assets/voice/*.mp3 + index.json", "source_type": "AI", "tool": "本机 IndexTTS-2.5（D:/sd/index-tts），参考音 yunxi-ref-8s.wav，情绪向量偏“怒/喜”", "params": "tools/make_voice.py；清单见 media-kit/assets/voice.json", "process": "ffmpeg 掐首尾静音、loudnorm -15 LUFS、单声道 32k/64kbps", "conditions": "机器合成，不是演员原声；未试听（subjective_listening: not-run）" },
+  { "id": "lines", "use": "台词、弹幕、大字", "runtime": "js/game.js、js/ai.js", "source_type": "supplied", "notes": "化用电视剧《亮剑》的知名台词与网络梗（用户指定要有“开炮”等热门梗）；任务流程为游戏改编" }
+]

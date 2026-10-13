@@ -1,0 +1,516 @@
+{
+ "at": "2026-10-13T10:58:56.648Z",
+ "results": [
+  {
+   "name": "选项「startPhase」点击切换且显示更新",
+   "ok": true,
+   "detail": {
+    "t0": "◂ 1 扫清城外 ▸",
+    "t1": "◂ 2 拉炮上阵 ▸",
+    "v": 2,
+    "rect": 44
+   }
+  },
+  {
+   "name": "选项「lives」点击切换且显示更新",
+   "ok": true,
+   "detail": {
+    "t0": "◂ 无限命 ▸",
+    "t1": "◂ 经典 3 命 ▸",
+    "v": "3",
+    "rect": 44
+   }
+  },
+  {
+   "name": "选项「armor」点击切换且显示更新",
+   "ok": true,
+   "detail": {
+    "t0": "◂ 标准 5 格 ▸",
+    "t1": "◂ 宽松 8 格 ▸",
+    "v": "easy",
+    "rect": 44
+   }
+  },
+  {
+   "name": "选项「view」点击切换且显示更新",
+   "ok": true,
+   "detail": {
+    "t0": "◂ 斜俯视 ▸",
+    "t1": "◂ 战术俯视 ▸",
+    "v": 1,
+    "rect": 44
+   }
+  },
+  {
+   "name": "选项「quality」点击切换且显示更新",
+   "ok": true,
+   "detail": {
+    "t0": "◂ 自动（高） ▸",
+    "t1": "◂ 高 ▸",
+    "v": "high",
+    "rect": 44
+   }
+  },
+  {
+   "name": "选项「volume」点击切换且显示更新",
+   "ok": true,
+   "detail": {
+    "t0": "◂ 80% ▸",
+    "t1": "◂ 90% ▸",
+    "v": 90,
+    "rect": 44
+   }
+  },
+  {
+   "name": "选项「danmaku」点击切换且显示更新",
+   "ok": true,
+   "detail": {
+    "t0": "◂ 开 ▸",
+    "t1": "◂ 关 ▸",
+    "v": false,
+    "rect": 44
+   }
+  },
+  {
+   "name": "选项「touchKeys」点击切换且显示更新",
+   "ok": true,
+   "detail": {
+    "t0": "◂ 自动 ▸",
+    "t1": "◂ 显示 ▸",
+    "v": "show",
+    "rect": 44
+   }
+  },
+  {
+   "name": "选项「fps」点击切换且显示更新",
+   "ok": true,
+   "detail": {
+    "t0": "◂ 关 ▸",
+    "t1": "◂ 开 ▸",
+    "v": true,
+    "rect": 44
+   }
+  },
+  {
+   "name": "刷新后设置保留",
+   "ok": true,
+   "detail": {
+    "saved": {
+     "demo": true,
+     "startPhase": 2,
+     "lives": "3",
+     "armor": "easy",
+     "view": 1,
+     "quality": "high",
+     "volume": 90,
+     "danmaku": false,
+     "touchKeys": "show",
+     "fps": true,
+     "mode": "auto"
+    },
+    "after": {
+     "demo": false,
+     "startPhase": 2,
+     "lives": "3",
+     "armor": "easy",
+     "view": 1,
+     "quality": "high",
+     "volume": 90,
+     "danmaku": false,
+     "touchKeys": "show",
+     "fps": true,
+     "mode": "auto"
+    }
+   }
+  },
+  {
+   "name": "演示模式不保存：刷新后回到关",
+   "ok": true,
+   "detail": {
+    "saved": true,
+    "after": false
+   }
+  },
+  {
+   "name": "开局后音频在跑且有声音输出",
+   "ok": true,
+   "detail": {
+    "a0": {
+     "state": "running",
+     "t": 0.9413333333333334
+    },
+    "peak": 0.11325968587995035
+   }
+  },
+  {
+   "name": "暂停：音频时钟冻结",
+   "ok": true,
+   "detail": {
+    "p1": {
+     "state": "pause",
+     "ctx": "suspended",
+     "t": 2.2613333333333334
+    },
+    "p2": {
+     "ctx": "suspended",
+     "t": 2.2613333333333334
+    }
+   }
+  },
+  {
+   "name": "暂停中调音量/画质不会恢复音乐，音量值生效",
+   "ok": true,
+   "detail": {
+    "ctx": "suspended",
+    "vol": 90,
+    "gain": 0.8999999761581421
+   }
+  },
+  {
+   "name": "继续：音频从暂停处续播",
+   "ok": true,
+   "detail": {
+    "state": "play",
+    "ctx": "running",
+    "t": 2.6613333333333333
+   }
+  },
+  {
+   "name": "暂停后点「重新开始」：音频恢复、时钟在走、出口有声音",
+   "ok": true,
+   "detail": {
+    "r0": {
+     "state": "play",
+     "ctx": "running",
+     "t": 2.96,
+     "gt": 0.30799999999851024
+    },
+    "r1": 4.272,
+    "pk": 0.07559275587882859
+   }
+  },
+  {
+   "name": "暂停后点「从本阶段重来」：音频恢复、时钟在走、出口有声音",
+   "ok": true,
+   "detail": {
+    "r0": {
+     "state": "play",
+     "ctx": "running",
+     "t": 4.581333333333333,
+     "gt": 0.30389999999702016
+    },
+    "r1": 5.88,
+    "pk": 0.05395916164272986
+   }
+  },
+  {
+   "name": "切到后台自动暂停并冻结声音（visibilitychange 模拟）",
+   "ok": true,
+   "detail": {
+    "state": "pause",
+    "ctx": "suspended"
+   }
+  },
+  {
+   "name": "暂停后返回主菜单再开局：有声音",
+   "ok": true,
+   "detail": {
+    "m0": {
+     "state": "menu",
+     "ctx": "running"
+    },
+    "pk2": 0.10351712999047624
+   }
+  },
+  {
+   "name": "耐久「std」：5 格，中弹扣 1 格，无敌期内不再扣",
+   "ok": true,
+   "detail": {
+    "hp0": [
+     5,
+     5,
+     5
+    ],
+    "h1": {
+     "hp": 4,
+     "alive": true,
+     "inv": 1.0833333333333337
+    },
+    "h2": {
+     "hp": 4,
+     "alive": true,
+     "inv": 0.8833333333333336
+    },
+    "pips": 4
+   }
+  },
+  {
+   "name": "耐久「easy」：8 格，中弹扣 1 格，无敌期内不再扣",
+   "ok": true,
+   "detail": {
+    "hp0": [
+     8,
+     8,
+     8
+    ],
+    "h1": {
+     "hp": 7,
+     "alive": true,
+     "inv": 1.0833333333333337
+    },
+    "h2": {
+     "hp": 7,
+     "alive": true,
+     "inv": 0.8833333333333336
+    },
+    "pips": 7
+   }
+  },
+  {
+   "name": "耐久「一发」：1 格，中弹即倒",
+   "ok": true,
+   "detail": {
+    "hp0": [
+     1,
+     1,
+     1
+    ],
+    "h1": {
+     "hp": 0,
+     "alive": false,
+     "inv": 1.0833333333333337
+    }
+   }
+  },
+  {
+   "name": "急救包：满血时留在原地，受伤后捡起 +3 格",
+   "ok": true,
+   "detail": {
+    "kept": 1,
+    "left": 0,
+    "hp": 5,
+    "meds": 1
+   }
+  },
+  {
+   "name": "无限命：阵亡后自动复活、耐久补满、有复活保护",
+   "ok": true,
+   "detail": {
+    "alive": false,
+    "deaths": 1,
+    "alive2": true,
+    "hp": 5,
+    "inv": 2.133333333333335,
+    "state": "play",
+    "lives": null
+   }
+  },
+  {
+   "name": "无限命：连续阵亡 4 次仍能复活",
+   "ok": true,
+   "detail": {
+    "n": 4,
+    "alive": true,
+    "state": "play"
+   }
+  },
+  {
+   "name": "经典 3 命：三次阵亡后进入失败结算",
+   "ok": true,
+   "detail": {
+    "lives": [
+     3,
+     2,
+     1,
+     0
+    ],
+    "state": "result",
+    "title": "攻城受挫",
+    "hud": "命 ×0"
+   }
+  },
+  {
+   "name": "演示模式：无敌、右上有标识、主角脚下有护罩",
+   "ok": true,
+   "detail": {
+    "hp": 5,
+    "badge": true,
+    "ring": true,
+    "flag": true
+   }
+  },
+  {
+   "name": "演示局不计最高分并在结算注明",
+   "ok": true,
+   "detail": {
+    "best": "1",
+    "total": "战功合计 103789　最高 1　（演示局不计最高）"
+   }
+  },
+  {
+   "name": "画质：高＝有阴影，流畅＝关阴影，自动显示当前实际档位",
+   "ok": true,
+   "detail": {
+    "high": {
+     "shadow": true,
+     "sun": true,
+     "pr": 1,
+     "actual": "high",
+     "label": "◂ 高 ▸"
+    },
+    "low": {
+     "shadow": false,
+     "sun": false,
+     "pr": 1,
+     "actual": "low",
+     "label": "◂ 流畅 ▸"
+    },
+    "auto": {
+     "shadow": true,
+     "sun": true,
+     "pr": 1,
+     "actual": "high",
+     "label": "◂ 自动（高） ▸"
+    }
+   }
+  },
+  {
+   "name": "帧率显示：开时角落出现读数，关时消失",
+   "ok": true,
+   "detail": {
+    "on": {
+     "hidden": false,
+     "text": "116 FPS  9ms\n56 批  33.4k 面"
+    },
+    "offHidden": true
+   }
+  },
+  {
+   "name": "弹幕：开时出现，关掉立即清空且不再出现",
+   "ok": true,
+   "detail": {
+    "n1": 6,
+    "n2": 0,
+    "n3": 0
+   }
+  },
+  {
+   "name": "起始阶段 1：标签、实际启动阶段与场景状态一致",
+   "ok": true,
+   "detail": {
+    "label": "◂ 1 扫清城外 ▸",
+    "phase": 1,
+    "gate": true,
+    "tower": true,
+    "cannonPlaced": false,
+    "cannonVisible": false,
+    "weapon": "pistol",
+    "boss": false,
+    "obj": "第一阶段 · 端掉城外两处机枪阵地 0/2"
+   }
+  },
+  {
+   "name": "起始阶段 2：标签、实际启动阶段与场景状态一致",
+   "ok": true,
+   "detail": {
+    "label": "◂ 2 拉炮上阵 ▸",
+    "phase": 2,
+    "gate": true,
+    "tower": true,
+    "cannonPlaced": false,
+    "cannonVisible": true,
+    "weapon": "pistol",
+    "boss": false,
+    "obj": "第二阶段 · 护送意大利炮到炮位 还剩 71 米"
+   }
+  },
+  {
+   "name": "起始阶段 3：标签、实际启动阶段与场景状态一致",
+   "ok": true,
+   "detail": {
+    "label": "◂ 3 开炮！ ▸",
+    "phase": 3,
+    "gate": true,
+    "tower": true,
+    "cannonPlaced": true,
+    "cannonVisible": true,
+    "weapon": "pistol",
+    "boss": false,
+    "obj": "第三阶段 · 操炮轰掉 机枪堡 0/2 · 城门 0/3"
+   }
+  },
+  {
+   "name": "从第 3 阶段开局后「重新开始」仍回到第 3 阶段",
+   "ok": true,
+   "detail": {
+    "rs": 3
+   }
+  },
+  {
+   "name": "起始阶段 4：标签、实际启动阶段与场景状态一致",
+   "ok": true,
+   "detail": {
+    "label": "◂ 4 打进县城 ▸",
+    "phase": 4,
+    "gate": false,
+    "tower": false,
+    "cannonPlaced": true,
+    "cannonVisible": true,
+    "weapon": "pistol",
+    "boss": false,
+    "obj": "第四阶段 · 肃清街上的鬼子 剩 19"
+   }
+  },
+  {
+   "name": "起始阶段 5：标签、实际启动阶段与场景状态一致",
+   "ok": true,
+   "detail": {
+    "label": "◂ 5 决战山本 ▸",
+    "phase": 5,
+    "gate": false,
+    "tower": false,
+    "cannonPlaced": true,
+    "cannonVisible": true,
+    "weapon": "lmg",
+    "boss": true,
+    "obj": "决战 · 击败山本一木"
+   }
+  },
+  {
+   "name": "打到第 2 阶段后主菜单出现「继续 · 第2阶段」并能接着打",
+   "ok": true,
+   "detail": {
+    "hidden": false,
+    "text": "继续 · 第2阶段",
+    "phase": 2
+   }
+  },
+  {
+   "name": "无限命下核心失败条件仍有效：意大利炮被打坏后本阶段重来",
+   "ok": true,
+   "detail": {
+    "z0": 95.09999999999985,
+    "broke": true,
+    "phase": 2,
+    "alive": true,
+    "hp": 30,
+    "z": 95.27999999999986,
+    "retries": 1,
+    "state": "play"
+   }
+  },
+  {
+   "name": "隐私：包内没有作者网站地址、账号表单或跳出链接（只允许主动打开作者B站主页）",
+   "ok": true,
+   "detail": {
+    "site": false,
+    "form": false,
+    "links": [],
+    "urls": [
+     "https://space.bilibili.com/16214353"
+    ]
+   }
+  }
+ ],
+ "errors": []
+}

@@ -1,0 +1,68 @@
+{
+ "engine": "IndexTTS-2.5（本地，D:/sd/index-tts）",
+ "reference": "yunxi-ref-8s.wav",
+ "note": "机器合成的喊话，不是演员原声，未使用电视剧音轨",
+ "subjective_listening": "not-run",
+ "lines": [
+  {
+   "id": "kaipao",
+   "text": "开炮！",
+   "seconds": 0.59,
+   "bytes": 5516
+  },
+  {
+   "id": "yidalipao",
+   "text": "二营长！你他娘的意大利炮呢？",
+   "seconds": 2.13,
+   "bytes": 17900
+  },
+  {
+   "id": "lashanglai",
+   "text": "给我拉上来！",
+   "seconds": 0.89,
+   "bytes": 7820
+  },
+  {
+   "id": "qibinglian",
+   "text": "骑兵连！进攻！",
+   "seconds": 1.02,
+   "bytes": 8972
+  },
+  {
+   "id": "liangjian",
+   "text": "亮剑！",
+   "seconds": 0.55,
+   "bytes": 5228
+  },
+  {
+   "id": "jingrui",
+   "text": "什么他娘的精锐！老子打的就是精锐！",
+   "seconds": 2.97,
+   "bytes": 24524
+  },
+  {
+   "id": "fuyu",
+   "text": "发财了！老子这辈子，没打过这么富裕的仗！",
+   "seconds": 3.28,
+   "bytes": 27116
+  },
+  {
+   "id": "tiancai",
+   "text": "你他娘的，还真是个天才！",
+   "seconds": 2.18,
+   "bytes": 18188
+  },
+  {
+   "id": "yongzhesheng",
+   "text": "狭路相逢，勇者胜！",
+   "seconds": 1.78,
+   "bytes": 15020
+  },
+  {
+   "id": "chong",
+   "text": "同志们，冲啊！",
+   "seconds": 1.24,
+   "bytes": 10700
+  }
+ ]
+}

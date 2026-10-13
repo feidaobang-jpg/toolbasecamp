@@ -1,0 +1,883 @@
+{
+ "at": "2026-10-13T10:59:41.013Z",
+ "note": "触屏为 Edge 无头浏览器的触控模拟，不是手机真机",
+ "results": [
+  {
+   "name": "电脑 1366×768：标题菜单完整且不滚动",
+   "ok": true,
+   "detail": {
+    "out": [],
+    "scroll": false,
+    "rot": false,
+    "compact": false
+   }
+  },
+  {
+   "name": "电脑 1280×720：标题菜单完整且不滚动",
+   "ok": true,
+   "detail": {
+    "out": [],
+    "scroll": false,
+    "rot": false,
+    "compact": false
+   }
+  },
+  {
+   "name": "键盘 ↓ 选到“命数”、→ 调整",
+   "ok": true,
+   "detail": {
+    "focused": "lives",
+    "before": "inf",
+    "after": "3"
+   }
+  },
+  {
+   "name": "键盘能进入操作模式三键并切换",
+   "ok": true,
+   "detail": {
+    "m1": "auto",
+    "m2": "pc",
+    "st1": {
+     "mode": "pc",
+     "pressed": [
+      "false",
+      "true",
+      "false"
+     ],
+     "touch": false,
+     "body": false
+    }
+   }
+  },
+  {
+   "name": "电脑上切到“手机触屏”：虚拟按键出现、横屏不旋转",
+   "ok": true,
+   "detail": {
+    "mode": "touch",
+    "touch": true,
+    "body": true,
+    "rot": false
+   }
+  },
+  {
+   "name": "电脑用鼠标拖虚拟摇杆向上＝前进",
+   "ok": true,
+   "detail": {
+    "dz": "-3.15"
+   }
+  },
+  {
+   "name": "电脑用鼠标按住虚拟 J 键开火",
+   "ok": true,
+   "detail": {
+    "x": 0,
+    "z": 76.84999999999988,
+    "yaw": 0,
+    "bullets": 2,
+    "state": "play",
+    "view": 0,
+    "mode": "touch",
+    "rot": false,
+    "size": [
+     1280,
+     720
+    ],
+    "nades": 3,
+    "dashCd": 0,
+    "cavCd": 0
+   }
+  },
+  {
+   "name": "暂停中切回“电脑键鼠”：虚拟键收起且本局保留",
+   "ok": true,
+   "detail": {
+    "touch": false,
+    "body": false,
+    "z": 76.84999999999988,
+    "state": "pause",
+    "phase": 1
+   }
+  },
+  {
+   "name": "电脑 1280×720：暂停菜单完整",
+   "ok": true,
+   "detail": {
+    "out": [],
+    "scroll": false,
+    "rot": false,
+    "compact": false
+   }
+  },
+  {
+   "name": "Esc 继续",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "电脑 1366×625：标题菜单完整且不滚动",
+   "ok": true,
+   "detail": {
+    "out": [],
+    "scroll": false,
+    "rot": false,
+    "compact": false
+   }
+  },
+  {
+   "name": "电脑 1280×580：标题菜单完整且不滚动",
+   "ok": true,
+   "detail": {
+    "out": [],
+    "scroll": false,
+    "rot": false,
+    "compact": false
+   }
+  },
+  {
+   "name": "电脑 1920×1080：标题菜单完整且不滚动",
+   "ok": true,
+   "detail": {
+    "out": [],
+    "scroll": false,
+    "rot": false,
+    "compact": false
+   }
+  },
+  {
+   "name": "手机 844×390：识别为触屏，横屏不旋转",
+   "ok": true,
+   "detail": {
+    "s0": {
+     "x": 0,
+     "z": 92,
+     "yaw": 0,
+     "bullets": 0,
+     "state": "menu",
+     "view": 0,
+     "mode": "touch",
+     "rot": false,
+     "size": [
+      844,
+      390
+     ],
+     "nades": 3,
+     "dashCd": 0,
+     "cavCd": 0
+    },
+    "f": {
+     "out": [],
+     "scroll": false,
+     "rot": false,
+     "compact": true
+    }
+   }
+  },
+  {
+   "name": "手机 844×390：标题菜单完整显示",
+   "ok": true,
+   "detail": {
+    "out": [],
+    "scroll": false,
+    "rot": false,
+    "compact": true
+   }
+  },
+  {
+   "name": "手机 844×390：菜单不出现键盘专属提示",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "手机 844×390：点“开始战斗”进入游戏且不自动全屏",
+   "ok": true,
+   "detail": {
+    "x": 0,
+    "z": 80,
+    "yaw": 0,
+    "bullets": 0,
+    "state": "play",
+    "view": 0,
+    "mode": "touch",
+    "rot": false,
+    "size": [
+     844,
+     390
+    ],
+    "nades": 3,
+    "dashCd": 0,
+    "cavCd": 0
+   }
+  },
+  {
+   "name": "手机 844×390：摇杆、四个动作键、右上三键都在屏内且不重叠",
+   "ok": true,
+   "detail": {
+    "off": [],
+    "over": [],
+    "small": [],
+    "hudOver": false,
+    "viewText": true
+   }
+  },
+  {
+   "name": "手机 844×390：摇杆上推＝前进",
+   "ok": true,
+   "detail": {
+    "dx": "0.00",
+    "dz": "-3.00"
+   }
+  },
+  {
+   "name": "手机 844×390：边移动边按 J 开火（多点触控）",
+   "ok": true,
+   "detail": {
+    "bullets": 2,
+    "dz": "-1.15"
+   }
+  },
+  {
+   "name": "手机 844×390：摇杆右推＝右移",
+   "ok": true,
+   "detail": {
+    "dx": "1.97"
+   }
+  },
+  {
+   "name": "手机 844×390：松手后停止移动",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "手机 844×390：画面空白处向右拖＝向右看",
+   "ok": true,
+   "detail": {
+    "dyaw": "-0.44"
+   }
+  },
+  {
+   "name": "手机 844×390：向左拖＝向左看",
+   "ok": true,
+   "detail": {
+    "dyaw": "0.44"
+   }
+  },
+  {
+   "name": "手机 844×390：在动作键上滑动不会转视角",
+   "ok": true,
+   "detail": {
+    "dyaw": "0.000"
+   }
+  },
+  {
+   "name": "手机 844×390：K 键生效",
+   "ok": true,
+   "detail": {
+    "p0": [
+     3,
+     0,
+     0
+    ],
+    "p1": [
+     2,
+     "0.0",
+     "0.0"
+    ]
+   }
+  },
+  {
+   "name": "手机 844×390：U 键生效",
+   "ok": true,
+   "detail": {
+    "p0": [
+     2,
+     0,
+     0
+    ],
+    "p1": [
+     2,
+     "6.9",
+     "0.0"
+    ]
+   }
+  },
+  {
+   "name": "手机 844×390：I 键生效",
+   "ok": true,
+   "detail": {
+    "p0": [
+     2,
+     6.916666666666667,
+     0
+    ],
+    "p1": [
+     2,
+     "6.8",
+     "44.9"
+    ]
+   }
+  },
+  {
+   "name": "手机 844×390：右上“切换视角”按下即切",
+   "ok": true,
+   "detail": {
+    "view": 1
+   }
+  },
+  {
+   "name": "手机 844×390：切视角提示不含键盘字样",
+   "ok": true,
+   "detail": {
+    "tip": "视角：战术俯视　按住画面空白处拖动转视角"
+   }
+  },
+  {
+   "name": "手机 844×390：暂停菜单完整显示",
+   "ok": true,
+   "detail": {
+    "out": [],
+    "scroll": false,
+    "rot": false,
+    "compact": true
+   }
+  },
+  {
+   "name": "手机 844×390：暂停菜单不出现键盘提示",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "手机 844×390：结算面板完整显示",
+   "ok": true,
+   "detail": {
+    "out": [],
+    "scroll": false,
+    "rot": false,
+    "compact": true
+   }
+  },
+  {
+   "name": "手机：手动“电脑键鼠”收起虚拟键，恢复“自动识别”后回到触屏",
+   "ok": true,
+   "detail": {
+    "m1": {
+     "touch": false,
+     "body": false
+    },
+    "m2": {
+     "touch": true,
+     "body": true
+    }
+   }
+  },
+  {
+   "name": "手机 844×346：识别为触屏，横屏不旋转",
+   "ok": true,
+   "detail": {
+    "s0": {
+     "x": 0,
+     "z": 92,
+     "yaw": 0,
+     "bullets": 0,
+     "state": "menu",
+     "view": 0,
+     "mode": "touch",
+     "rot": false,
+     "size": [
+      844,
+      346
+     ],
+     "nades": 3,
+     "dashCd": 0,
+     "cavCd": 0
+    },
+    "f": {
+     "out": [],
+     "scroll": false,
+     "rot": false,
+     "compact": true
+    }
+   }
+  },
+  {
+   "name": "手机 844×346：标题菜单完整显示",
+   "ok": true,
+   "detail": {
+    "out": [],
+    "scroll": false,
+    "rot": false,
+    "compact": true
+   }
+  },
+  {
+   "name": "手机 844×346：菜单不出现键盘专属提示",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "手机 800×390：识别为触屏，横屏不旋转",
+   "ok": true,
+   "detail": {
+    "s0": {
+     "x": 0,
+     "z": 92,
+     "yaw": 0,
+     "bullets": 0,
+     "state": "menu",
+     "view": 0,
+     "mode": "touch",
+     "rot": false,
+     "size": [
+      800,
+      390
+     ],
+     "nades": 3,
+     "dashCd": 0,
+     "cavCd": 0
+    },
+    "f": {
+     "out": [],
+     "scroll": false,
+     "rot": false,
+     "compact": true
+    }
+   }
+  },
+  {
+   "name": "手机 800×390：标题菜单完整显示",
+   "ok": true,
+   "detail": {
+    "out": [],
+    "scroll": false,
+    "rot": false,
+    "compact": true
+   }
+  },
+  {
+   "name": "手机 800×390：菜单不出现键盘专属提示",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "手机 740×360：识别为触屏，横屏不旋转",
+   "ok": true,
+   "detail": {
+    "s0": {
+     "x": 0,
+     "z": 92,
+     "yaw": 0,
+     "bullets": 0,
+     "state": "menu",
+     "view": 0,
+     "mode": "touch",
+     "rot": false,
+     "size": [
+      740,
+      360
+     ],
+     "nades": 3,
+     "dashCd": 0,
+     "cavCd": 0
+    },
+    "f": {
+     "out": [],
+     "scroll": false,
+     "rot": false,
+     "compact": true
+    }
+   }
+  },
+  {
+   "name": "手机 740×360：标题菜单可滚动且首尾可达",
+   "ok": true,
+   "detail": {
+    "reach": {
+     "okLast": true,
+     "okFirst": true
+    },
+    "f": {
+     "out": [],
+     "scroll": false,
+     "rot": false,
+     "compact": true
+    }
+   }
+  },
+  {
+   "name": "手机 740×360：菜单不出现键盘专属提示",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "手机 568×320：识别为触屏，横屏不旋转",
+   "ok": true,
+   "detail": {
+    "s0": {
+     "x": 0,
+     "z": 92,
+     "yaw": 0,
+     "bullets": 0,
+     "state": "menu",
+     "view": 0,
+     "mode": "touch",
+     "rot": false,
+     "size": [
+      568,
+      320
+     ],
+     "nades": 3,
+     "dashCd": 0,
+     "cavCd": 0
+    },
+    "f": {
+     "out": [],
+     "scroll": false,
+     "rot": false,
+     "compact": true
+    }
+   }
+  },
+  {
+   "name": "手机 568×320：标题菜单可滚动且首尾可达",
+   "ok": true,
+   "detail": {
+    "reach": {
+     "okLast": true,
+     "okFirst": true
+    },
+    "f": {
+     "out": [],
+     "scroll": false,
+     "rot": false,
+     "compact": true
+    }
+   }
+  },
+  {
+   "name": "手机 568×320：菜单不出现键盘专属提示",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "手机 390×844：识别为触屏，标题菜单起就旋转为横屏",
+   "ok": true,
+   "detail": {
+    "s0": {
+     "x": 0,
+     "z": 92,
+     "yaw": 0,
+     "bullets": 0,
+     "state": "menu",
+     "view": 0,
+     "mode": "touch",
+     "rot": true,
+     "size": [
+      844,
+      390
+     ],
+     "nades": 3,
+     "dashCd": 0,
+     "cavCd": 0
+    },
+    "f": {
+     "out": [],
+     "scroll": false,
+     "rot": true,
+     "compact": true
+    }
+   }
+  },
+  {
+   "name": "手机 390×844：标题菜单完整显示",
+   "ok": true,
+   "detail": {
+    "out": [],
+    "scroll": false,
+    "rot": true,
+    "compact": true
+   }
+  },
+  {
+   "name": "手机 390×844：菜单不出现键盘专属提示",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "手机 390×844：点“开始战斗”进入游戏且不自动全屏",
+   "ok": true,
+   "detail": {
+    "x": 0,
+    "z": 80,
+    "yaw": 0,
+    "bullets": 0,
+    "state": "play",
+    "view": 0,
+    "mode": "touch",
+    "rot": true,
+    "size": [
+     844,
+     390
+    ],
+    "nades": 3,
+    "dashCd": 0,
+    "cavCd": 0
+   }
+  },
+  {
+   "name": "手机 390×844：摇杆、四个动作键、右上三键都在屏内且不重叠",
+   "ok": true,
+   "detail": {
+    "off": [],
+    "over": [],
+    "small": [],
+    "hudOver": false,
+    "viewText": true
+   }
+  },
+  {
+   "name": "手机 390×844：摇杆上推＝前进",
+   "ok": true,
+   "detail": {
+    "dx": "0.00",
+    "dz": "-3.00"
+   }
+  },
+  {
+   "name": "手机 390×844：边移动边按 J 开火（多点触控）",
+   "ok": true,
+   "detail": {
+    "bullets": 2,
+    "dz": "-1.15"
+   }
+  },
+  {
+   "name": "手机 390×844：摇杆右推＝右移",
+   "ok": true,
+   "detail": {
+    "dx": "1.97"
+   }
+  },
+  {
+   "name": "手机 390×844：松手后停止移动",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "手机 390×844：画面空白处向右拖＝向右看",
+   "ok": true,
+   "detail": {
+    "dyaw": "-0.44"
+   }
+  },
+  {
+   "name": "手机 390×844：向左拖＝向左看",
+   "ok": true,
+   "detail": {
+    "dyaw": "0.44"
+   }
+  },
+  {
+   "name": "手机 390×844：在动作键上滑动不会转视角",
+   "ok": true,
+   "detail": {
+    "dyaw": "0.000"
+   }
+  },
+  {
+   "name": "手机 390×844：K 键生效",
+   "ok": true,
+   "detail": {
+    "p0": [
+     3,
+     0,
+     0
+    ],
+    "p1": [
+     2,
+     "0.0",
+     "0.0"
+    ]
+   }
+  },
+  {
+   "name": "手机 390×844：U 键生效",
+   "ok": true,
+   "detail": {
+    "p0": [
+     2,
+     0,
+     0
+    ],
+    "p1": [
+     2,
+     "6.9",
+     "0.0"
+    ]
+   }
+  },
+  {
+   "name": "手机 390×844：I 键生效",
+   "ok": true,
+   "detail": {
+    "p0": [
+     2,
+     6.916666666666667,
+     0
+    ],
+    "p1": [
+     2,
+     "6.8",
+     "44.9"
+    ]
+   }
+  },
+  {
+   "name": "手机 390×844：右上“切换视角”按下即切",
+   "ok": true,
+   "detail": {
+    "view": 1
+   }
+  },
+  {
+   "name": "手机 390×844：切视角提示不含键盘字样",
+   "ok": true,
+   "detail": {
+    "tip": "视角：战术俯视　按住画面空白处拖动转视角"
+   }
+  },
+  {
+   "name": "手机 390×844：暂停菜单完整显示",
+   "ok": true,
+   "detail": {
+    "out": [],
+    "scroll": false,
+    "rot": true,
+    "compact": true
+   }
+  },
+  {
+   "name": "手机 390×844：暂停菜单不出现键盘提示",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "手机 390×844：结算面板完整显示",
+   "ok": true,
+   "detail": {
+    "out": [],
+    "scroll": false,
+    "rot": true,
+    "compact": true
+   }
+  },
+  {
+   "name": "手机 360×780：识别为触屏，标题菜单起就旋转为横屏",
+   "ok": true,
+   "detail": {
+    "s0": {
+     "x": 0,
+     "z": 92,
+     "yaw": 0,
+     "bullets": 0,
+     "state": "menu",
+     "view": 0,
+     "mode": "touch",
+     "rot": true,
+     "size": [
+      780,
+      360
+     ],
+     "nades": 3,
+     "dashCd": 0,
+     "cavCd": 0
+    },
+    "f": {
+     "out": [],
+     "scroll": false,
+     "rot": true,
+     "compact": true
+    }
+   }
+  },
+  {
+   "name": "手机 360×780：标题菜单可滚动且首尾可达",
+   "ok": true,
+   "detail": {
+    "reach": {
+     "okLast": true,
+     "okFirst": true
+    },
+    "f": {
+     "out": [],
+     "scroll": false,
+     "rot": true,
+     "compact": true
+    }
+   }
+  },
+  {
+   "name": "手机 360×780：菜单不出现键盘专属提示",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "手机 375×667：识别为触屏，标题菜单起就旋转为横屏",
+   "ok": true,
+   "detail": {
+    "s0": {
+     "x": 0,
+     "z": 92,
+     "yaw": 0,
+     "bullets": 0,
+     "state": "menu",
+     "view": 0,
+     "mode": "touch",
+     "rot": true,
+     "size": [
+      667,
+      375
+     ],
+     "nades": 3,
+     "dashCd": 0,
+     "cavCd": 0
+    },
+    "f": {
+     "out": [],
+     "scroll": false,
+     "rot": true,
+     "compact": true
+    }
+   }
+  },
+  {
+   "name": "手机 375×667：标题菜单可滚动且首尾可达",
+   "ok": true,
+   "detail": {
+    "reach": {
+     "okLast": true,
+     "okFirst": true
+    },
+    "f": {
+     "out": [],
+     "scroll": false,
+     "rot": true,
+     "compact": true
+    }
+   }
+  },
+  {
+   "name": "手机 375×667：菜单不出现键盘专属提示",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "电脑窄高窗口：自动识别不旋转；手动“手机触屏”才旋转；“电脑键鼠”不旋转",
+   "ok": true,
+   "detail": {
+    "a": false,
+    "b": true,
+    "c": false
+   }
+  }
+ ],
+ "errors": []
+}
