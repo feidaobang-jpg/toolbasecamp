@@ -161,7 +161,7 @@
   },
   "toy": {
     "id": "38678478981120",
-    "status": "auditing",
+    "status": "published",
     "package_sha256": "deb723413e1fdb51b2a9e20ae06ab173c493710a6afb999b1fdc5b427d9925fd",
     "entry_bytes": 65854,
     "version": "web-shallow-hive-v0.37.2",
@@ -177,7 +177,12 @@
     "mode": "submit",
     "submitted_once": true,
     "preview_url": "https://www.bilibili.com/toy/preview/preview_NOQ8LieJ/index.html",
-    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_XIFOwro1/index.html"
+    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_XIFOwro1/index.html",
+    "platform_status": "published",
+    "public_verified_at": "2026-10-13T16:33:44.662175+08:00",
+    "public_qa": "toy-public-qa.json",
+    "public_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+    "platform_mtime": 1791880341
   },
   "bilibili": {
     "decision": "deferred_accumulating",
