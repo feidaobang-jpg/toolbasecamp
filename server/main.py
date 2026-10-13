@@ -1100,6 +1100,7 @@ def health():
         "pc_builds_api_rev": PC_BUILDS_API_REV,
         "stocks_api": (
             "/stocks/recommend-pullback" in paths
+            and "/stocks/preview" in paths
             and "/stocks/status" in paths
             and "/stocks/review-export" in paths
             and "/stocks/records" in paths

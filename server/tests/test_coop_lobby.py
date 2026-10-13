@@ -89,6 +89,37 @@ def test_unknown_directory_game_is_rejected():
     with TestClient(app) as client:
         assert client.get('/game/coop/rooms?game=unknown').status_code == 400
 
+@pytest.mark.parametrize('capacity', [2, 3, 4])
+def test_anonymous_room_names_and_seats_are_generated_without_accounts(capacity):
+    with TestClient(app) as client, ExitStack() as stack:
+        sockets = []
+        for slot in range(capacity):
+            ws = stack.enter_context(client.websocket_connect('/game/coop/ws?game=starship'))
+            ws.receive_json(); sockets.append(ws)
+            if slot == 0:
+                ws.send_json({'type': 'create', 'anonymous': True, 'name': '不可公开的名字',
+                              'roomName': '不可公开的房间名', 'maxPlayers': capacity, 'liveJoin': True})
+                joined = until(ws, 'joined'); code = joined['room']['code']
+                assert joined['room']['name'] == '合作房间 · ' + code
+            else:
+                ws.send_json({'type': 'join', 'code': code, 'name': '旧客户端任意名称'})
+                joined = until(ws, 'joined')
+                ws.send_json({'type': 'ready', 'ready': True})
+            assert joined['room']['players'][-1]['name'] == '玩家' + str(slot + 1)
+            assert '不可公开' not in str(joined) and '旧客户端' not in str(joined)
+        while not all(p['ready'] for p in until(sockets[0], 'roster')['room']['players']):
+            pass
+        sockets[0].send_json({'type': 'start'})
+        assert until(sockets[0], 'start')['config']['playerSlots'] == list(range(capacity))
+        assert any(r['code'] == code and r['name'] == '合作房间 · ' + code for r in client.get('/game/coop/rooms').json()['rooms'])
+
+def test_explicit_custom_identity_remains_available():
+    with TestClient(app) as client, client.websocket_connect('/game/coop/ws?game=tank') as host:
+        host.receive_json()
+        host.send_json({'type': 'create', 'anonymous': False, 'name': '自定义昵称', 'roomName': '自定义房间'})
+        room = until(host, 'joined')['room']
+        assert room['name'] == '自定义房间' and room['players'][0]['name'] == '自定义昵称'
+
 def test_starship_versus_rooms_are_one_on_one():
     url = '/game/coop/ws?game=starship'
     with TestClient(app) as client, ExitStack() as stack:

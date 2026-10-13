@@ -162,7 +162,10 @@ async def coop_lobby_ws(socket: WebSocket, game='tank'):
                 if len(password) > 32:
                     await peer.send({'type': 'error', 'message': '房间密码最多32个字符'})
                     continue
-                peer.name = str(msg.get('name') or '坦克手')[:12]
+                # Anonymous clients (including old clients) cannot choose public text.
+                anonymous = msg.get('anonymous') is not False
+                requested_name = str(msg.get('name') or '').strip()[:12]
+                peer.name = '' if anonymous or requested_name in ('', '玩家', '坦克手') else requested_name
                 peer.identity = str(msg.get('identity') or secrets.token_hex(16))[:64]
                 if kind == 'create':
                     if len(rooms) >= 128:
@@ -177,7 +180,8 @@ async def coop_lobby_ws(socket: WebSocket, game='tank'):
                     settings = game_config(game, msg.get('config'))
                     if settings.get('mode') == 'versus':
                         capacity = 2 * settings.get('size', 1)
-                    candidate = Room(code, str(msg.get('roomName') or peer.name + '的房间')[:32],
+                    room_name = '' if anonymous else str(msg.get('roomName') or '').strip()[:32]
+                    candidate = Room(code, room_name or '合作房间 · ' + code,
                                      capacity, settings, salt,
                                      password_key(password, salt) if password else b'', game=game)
                     rooms[code] = candidate
@@ -214,6 +218,8 @@ async def coop_lobby_ws(socket: WebSocket, game='tank'):
                     peer.ready = candidate.started
                     peer.hero = bounded((msg.get('config') or {}).get('hero') if isinstance(msg.get('config'), dict) else 0, 0, 3, 0)
                     peer.team = clean_team((msg.get('config') or {}).get('team') if isinstance(msg.get('config'), dict) else None)
+                if not peer.name:
+                    peer.name = '玩家' + str(peer.slot + 1)
                 room = candidate
                 room.peers[peer.slot] = peer
                 watchers[id(socket)] = (peer, 1, 'all', game)

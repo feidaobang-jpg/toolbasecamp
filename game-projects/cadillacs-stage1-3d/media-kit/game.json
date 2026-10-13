@@ -38,14 +38,14 @@
     "category": "GAME",
     "visibility": "public",
     "status": "published",
-    "submitted_at": "2026-10-12T12:23:09.816162+00:00",
+    "submitted_at": "2026-10-13T02:55:36.396355+00:00",
     "package": {
       "path": "D:\\project\\task-artifacts\\all-games-input-safety-20261012\\final-packages\\cadillacs-stage1-3d.zip",
       "sha256": "ab47a688b73868eaace12808c9fe2eb629464626599b7d40bb471ca7c94b971f",
       "bytes": 20361412,
       "submitted": true
     },
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_1jswCVjT/index.html",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_AFFhu3Xb/index.html",
     "note": "昵称与房间名安全整改包已过审；正式入口可用，访问者水印开启。",
     "status_verified": "v0.10.1 published；公开运行版本v0.10.1、关卡只有第一及第二关",
     "bound_videos": [
@@ -53,7 +53,7 @@
     ],
     "review_status": "published",
     "version": "v0.11.0-hellroad.1-privacy1-input-safety1",
-    "verified_at": "2026-10-12T12:26:46.405Z",
+    "verified_at": "2026-10-13T11:04:41.015087+08:00",
     "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
     "last_published_version": "v0.11.0-hellroad.1-privacy1-input-safety1",
     "pending_updates": [
@@ -135,10 +135,10 @@
         "release_record": "releases/backfill-20261010/release-status.json"
       }
     ],
-    "submitted_version": "v0.11.0-hellroad.1-privacy1-input-safety1",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_1jswCVjT/index.html",
-    "release_record": "releases/v0.11.0-hellroad.1-privacy1-input-safety1/handoff.json",
-    "published_version": "v0.11.0-hellroad.1-privacy1-input-safety1",
+    "submitted_version": "v0.11.0-hellroad.1-menu-desk1-anonymous1",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_D9g3jDBe/index.html",
+    "release_record": "releases/v0.11.0-hellroad.1-menu-desk1-anonymous1/handoff.json",
+    "published_version": "v0.11.0-hellroad.1-menu-desk1-anonymous1",
     "published_verified_at": "2026-10-12T12:26:46.405Z",
     "previous_published_version": "v0.10.0",
     "previous_published_verified_at": "2026-10-07T21:52:04+08:00",
@@ -159,7 +159,7 @@
     "last_successful_sync_version": "v0.11.0-hellroad.1-privacy1-input-safety1",
     "last_successful_sync_at": "2026-10-12T12:26:46.405Z",
     "package_tree_sha256": "97073435dcaa5c8b1c380bd6abc6acbef489335d1a824758254dceb2ac7fac4b",
-    "public_verified_at": "2026-10-12T12:26:46.405Z",
+    "public_verified_at": "2026-10-13T11:04:41.015087+08:00",
     "public_runtime_evidence": {
       "status": "public_verified",
       "at": "2026-10-12T12:26:46.405Z",
@@ -191,7 +191,7 @@
     "published_at": null,
     "submission_time_note": "Exact submission time not persisted; receipts and final public status preserved.",
     "directory_manifest_sha256": "e0758388eafb0ed7633a23252e279c7013b69302bf57c1dae695b9ad038b5efd",
-    "package_sha256": "ab47a688b73868eaace12808c9fe2eb629464626599b7d40bb471ca7c94b971f",
+    "package_sha256": "a9658ba81e1a31c0ed1da225ad0ac5d39e0dcb654ba015ec4b49b3605c5153db",
     "watermark_enabled": true,
     "public_runtime_revision": "v25480"
   },
@@ -473,7 +473,7 @@
       "area": "0..5：测试用直接从某个区域开始（3 起为第二关）"
     }
   },
-  "current_version": "v0.11.0-hellroad.1-menu-desk1",
+  "current_version": "v0.11.0-hellroad.1-menu-desk1-anonymous1",
   "engine": "Three.js r170（WebGL，站内 public/vendor/three/0.170.0），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
   "bilibili": "media-kit/bilibili-sync.json（BV18XHW66E55，2026-10-05 发布）",
   "one_liner": "Capcom 街机恐龙快打搬进 3D，已做到第二关：海上都市打倒维斯和岩跳龙，再开凯迪拉克闯沼泽森林——三角龙冲撞、别吵醒霸王龙、齐腰泥沼、链锤兵、双刀屠夫；硬派写实画风（卡通着色 + 描边 + 写实贴图）。",
@@ -1122,5 +1122,6 @@
       }
     }
   ],
-  "last_backfill_record": "releases/backfill-20261010/release-status.json"
+  "last_backfill_record": "releases/backfill-20261010/release-status.json",
+  "qa": "releases/v0.11.0-hellroad.1-menu-desk1-anonymous1/handoff.json"
 }

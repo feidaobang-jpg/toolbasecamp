@@ -15,15 +15,26 @@ const cases=[['toy',{width:1280,height:720}],['toy',{width:390,height:844}],['to
    const dir=path.join(root,'dist/toy/chongchao-qianshao/package');
    await p.route('https://www.bilibilitoy.com/toy/qa-cloudsave/**',r=>{const file=decodeURIComponent(new URL(r.request().url()).pathname.replace('/toy/qa-cloudsave/',''));return r.fulfill({path:path.join(dir,file)});});
    await context.addInitScript(({save})=>{
-    window.__cloudMock={values:{chongchao_auto_v2:JSON.stringify({schema:2,game:'starship-defense',revision:'qa-r1',save})},writes:[]};
-    window.toy={isSupport:async()=>true,getCloudStorage:async()=>structuredClone(window.__cloudMock.values),setCloudStorage:async items=>{window.__cloudMock.writes.push(items);Object.assign(window.__cloudMock.values,items);},getAuthorProfile:async()=>({status:'denied'}),getRankList:async()=>[]};
+    window.__cloudMock={values:{chongchao_auto_v2:JSON.stringify({schema:2,game:'starship-defense',revision:'qa-r1',save})},writes:[],reads:0,denied:false};
+    window.toy={isSupport:async()=>true,getCloudStorage:async()=>{window.__cloudMock.reads++;if(window.__cloudMock.denied)throw Error('用户未登录');return structuredClone(window.__cloudMock.values);},setCloudStorage:async items=>{window.__cloudMock.writes.push(items);Object.assign(window.__cloudMock.values,items);},getAuthorProfile:async()=>({status:'denied'}),getRankList:async()=>[]};
    },{save});
   }
   await context.addInitScript(({prefix,save,channel})=>{
    // Seed once per isolated context; reloads retain subsequent edits and deletions.
    if(!sessionStorage.getItem('qa-seeded')){localStorage.setItem(prefix+'auto',JSON.stringify(save));sessionStorage.setItem('qa-seeded','yes');}
   },{prefix,save,channel});
-  const url=route;await p.goto(url);await p.locator('#btnContinue').waitFor({state:'visible'});await p.locator('#btnContinue').click();
+  const url=route;await p.goto(url);await p.locator('#btnContinue').waitFor({state:'visible'});
+  assert.equal(await p.evaluate(()=>window.__cloudMock.reads),0,'startup requested account cloud storage');
+  await p.locator('#btnPlatformMenu').click();assert.equal(await p.evaluate(()=>window.__cloudMock.reads),0,'opening local saves requested cloud storage');
+  assert((await p.locator('#cloudInfo').innerText()).includes('尚未查看'),'unread cloud save was incorrectly reported as absent');
+  assert.equal(await p.locator('#cloudAuto').isChecked(),false,'new players were opted into account storage');
+  await p.evaluate(()=>window.__cloudMock.denied=true);await p.locator('#cloudRead').click();await p.locator('#cloudSaveStatus').filter({hasText:'未登录'}).waitFor();
+  await p.locator('#platformClose').click();await p.locator('#btnPlatformMenu').click();
+  assert((await p.locator('#cloudInfo').innerText()).includes('尚未查看'),'failed cloud request was incorrectly reported as an empty cloud save');
+  assert.equal(await p.evaluate(prefix=>JSON.parse(localStorage.getItem(prefix+'auto')).gold,prefix),1234);
+  await p.evaluate(()=>window.__cloudMock.denied=false);
+  await p.locator('#cloudRead').click();await p.waitForFunction(()=>window.__cloudMock.reads>0);
+  await p.locator('#cloudAuto').check();await p.locator('#platformClose').click();await p.locator('#btnContinue').click();
   await p.locator('#hud').waitFor({state:'visible'});
   if(channel==='toy')await p.waitForFunction(()=>window.__cloudMock.writes.length>0,{},{timeout:12000});
   assert.equal(await p.evaluate(prefix=>JSON.parse(localStorage.getItem(prefix+'auto')).gold,prefix),1234);
@@ -33,7 +44,7 @@ const cases=[['toy',{width:1280,height:720}],['toy',{width:390,height:844}],['to
   if(channel==='toy'){
    const values=await p.evaluate(()=>window.__cloudMock.values);await context.addInitScript(values=>{window.__cloudMock.values=values;},values);
   }
-  await p.reload();await p.locator('#btnPlatformMenu').waitFor({state:'visible'});await p.locator('#btnPlatformMenu').click();await p.locator('#cloudLoad').waitFor({state:'visible'});
+  await p.reload();await p.locator('#btnPlatformMenu').waitFor({state:'visible'});await p.locator('#btnPlatformMenu').click();assert.equal(await p.evaluate(()=>window.__cloudMock.reads),0);await p.locator('#cloudRead').click();await p.locator('#cloudLoad').waitFor({state:'visible'});
   await p.locator('#cloudLoad').click();await p.locator('#confirmOk').click();await p.locator('#hud').waitFor({state:'visible'});
   const restored=await p.evaluate(prefix=>JSON.parse(localStorage.getItem(prefix+'auto')),prefix);assert.equal(restored.gold,1234);assert.equal(restored.level,3);
   await p.locator('#saveHealth').click();const downloadPromise=p.waitForEvent('download');await p.locator('#saveExport').click();const download=await downloadPromise;const exported=JSON.parse(fs.readFileSync(await download.path(),'utf8'));assert.equal(exported.game,'starship-defense');assert.equal(exported.save.gold,1234);assert(!JSON.stringify(exported).includes('token'));
@@ -46,7 +57,7 @@ const cases=[['toy',{width:1280,height:720}],['toy',{width:390,height:844}],['to
   // Demonstrate storage failure in the real game's pause checkpoint.
   await p.locator('#platformClose').click();await p.evaluate(prefix=>{const old=Storage.prototype.setItem;Storage.prototype.setItem=function(k,v){if(k.startsWith(prefix))throw new DOMException('quota','QuotaExceededError');return old.call(this,k,v);};},prefix);
   await p.locator(mobile?'#vP':'#menuButton').click();await p.locator('#saveHealth').filter({hasText:'本地保存失败'}).waitFor();assert.equal(await p.evaluate(prefix=>JSON.parse(localStorage.getItem(prefix+'auto')).gold,prefix),2222);
-  assert.equal(errors.length,0,errors.join('\n'));results.push({channel,viewport,passed:true,checks:['one-day-old legacy save','automatic cloud checkpoint','empty-device cloud restore','export without credentials','bad import rejected','confirmed import preserves former local save','history recovery entries','storage failure keeps primary'],errors});console.log('PASS '+channel+' '+viewport.width+'x'+viewport.height);await context.close();
+  assert.equal(errors.length,0,errors.join('\n'));results.push({channel,viewport,passed:true,checks:['no startup or local-panel account storage request','cloud opt-in only on player action','one-day-old legacy save','opted-in automatic cloud checkpoint','empty-device cloud restore','export without credentials','bad import rejected','confirmed import preserves former local save','history recovery entries','storage failure keeps primary'],errors});console.log('PASS '+channel+' '+viewport.width+'x'+viewport.height);await context.close();
  }
  fs.writeFileSync(path.join(out,'results.json'),JSON.stringify({method:'Edge headless; actual game bundles; cloud APIs mocked in isolated contexts, no player account writes; mobile viewports are simulations',results},null,2));
  }finally{await browser.close();}

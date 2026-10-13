@@ -1,0 +1,83 @@
+{
+  "task_id": "01a132f7-3d5e-7a60-a635-d1962513c8d2-work1",
+  "version": "collection-cleanup-20261013",
+  "collection": {
+    "toy_id": 40495283951616,
+    "slug": "feidao-games",
+    "url": "https://www.bilibili.com/toy/feidao-games/index.html",
+    "status": "published",
+    "game_count": 14,
+    "submitted_at": "2026-10-13T02:20:37.193425+00:00",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_ejS3boyM/index.html",
+    "watermark_enabled": false,
+    "public_verified_at": "2026-10-13T02:25:36.275437+00:00",
+    "published_version": "collection-cleanup-20261013",
+    "last_successful_sync_version": "collection-cleanup-20261013"
+  },
+  "changes": [
+    "加入枪火集结，独立动作射击分类，真实游戏封面",
+    "移除西游降魔卡片并排除旧封面打包",
+    "移除作者网站、网站投票入口，作者B站主页优先官方SDK",
+    "纠正赤色要塞、玛丽、恐龙快打关卡说明",
+    "新游戏公开后同次收尾更新合集，西游永久排除，拆分玩法不占原模式菜单"
+  ],
+  "build": {
+    "zip_sha256": "0a95acba1640d41a21b6e71aa49b6a2a560a1b149eb8a83d5236ca7876fee9de",
+    "zip_path": "D:\\project\\task-artifacts\\toy-collection-cleanup-20261013\\feidao-games.zip",
+    "index_sha256": "c59bb91c7d45a2ff483337c4ffac88a3b490ba2421d986fdb22c7c5c63a8e915",
+    "files": {
+      "assets/chongchao-qianshao.jpg": "7823309320ebef2cbc389e88b4c2b538ce4074a086349261fe31c3cf01f93518",
+      "assets/feidao-brick-breaker.png": "79c6007d26144a3dc081034b245ef0d87615a3c38c5200927db3cb04f3e74764",
+      "assets/feidao-bubble-dragon.png": "72dbde0c572142227c609113aabee9a24699926e7ed62242b3b15f1149d62712",
+      "assets/feidao-cadillacs-3d.png": "23b187fdba0747a4e0a9217cefd0db46dad15410752d94ed613c7c852b8c5b62",
+      "assets/feidao-fly-bird.png": "96397dcd1b03e74cd0ff837bccf13251fe806289c9650a5f8f7896ec2c1a5b57",
+      "assets/feidao-frog-zuma.png": "e1690daf37a000e0d730818270ced3731e49db4a2201be34cc11f99e3890b885",
+      "assets/feidao-gemswap.png": "f7b3781529ef5ede388123502f1de37bbbac411dd7444ba0c7e662a61f5aa2b4",
+      "assets/feidao-gunfire.jpg": "26ac542bfe86e6b530eff461e8034e79c7e5ac715ae85da911da733841cb088d",
+      "assets/feidao-jackal-3d.png": "d66115a17536485ee7c7ac32f6985623ceda2a95f6eaac3e8d5c3bd447327c34",
+      "assets/feidao-lianliankan.png": "3bf141b49f60fafa0aebd5a9aee57adff5ca97f76a41558c2bc065aceee047a6",
+      "assets/feidao-mario-3d.png": "0c08b7387182a62f11551520ba4f40e99e2741f3b4c679a9b822f4292946cbad",
+      "assets/feidao-sheepstack.png": "9f30dcbda1ba5aff1d575cbe95a90f025f8cf8b94e5547588fca9a045ffd5520",
+      "assets/feidao-tank-3d.png": "2c7fc4057e46e587bf366ab32e3fdfedbf2061931a5983303795c101fe615b44",
+      "assets/feidao-worms.png": "a839fdbb755f2e5661586215e99b67cd84abfb7db604660a72d322047275f7a4",
+      "author-home.js": "5b4b8fc50b73dec1d8f70182453c35f3d07101336345ccad6b689de7e2eb19f7",
+      "index.html": "c59bb91c7d45a2ff483337c4ffac88a3b490ba2421d986fdb22c7c5c63a8e915"
+    }
+  },
+  "qa": {
+    "cases": 3,
+    "passed": true,
+    "method": "Isolated headless Edge; Toy SDK mocked; desktop and mobile viewport simulations",
+    "evidence": "D:\\project\\task-artifacts\\toy-collection-cleanup-20261013\\collection-qa.json",
+    "doctor": "passed_no_findings",
+    "actual_toy_preview": {
+      "status": "passed",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_F0Yoe6YJ/index.html",
+      "checks": [
+        "gunfire card present",
+        "journey removed",
+        "14 cards",
+        "no author website links",
+        "actual card opened gunfire Toy v0.1.2"
+      ],
+      "evidence": "D:\\project\\task-artifacts\\toy-collection-cleanup-20261013\\toy-collection-preview.jpg"
+    },
+    "public": {
+      "status": "passed",
+      "verified_at": "2026-10-13T02:25:36.275437+00:00",
+      "checks": [
+        "14 public game cards",
+        "gunfire card present",
+        "journey absent",
+        "no author website links"
+      ],
+      "evidence": "D:\\project\\task-artifacts\\toy-collection-cleanup-20261013\\toy-collection-public.jpg"
+    }
+  },
+  "bilibili": {
+    "decision": "deferred_accumulating",
+    "reason": "合集清单整理，已有视频入口继续有效，本次不改历史成片或发布新视频"
+  },
+  "created_at": "2026-10-13T02:15:33.887216+00:00",
+  "source_commit": "c8d5bfd402216ca5e75f07de318fe6013679ee5d"
+}

@@ -4,13 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex,nofollow" />
-  <title>回调企稳 - 股票后台</title>
+  <title>选股策略 - 股票后台</title>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="../../../css/base.css?v=nosTW1" />
   <link rel="stylesheet" href="../../../css/admin-shell.css?v=nosTW4" />
   <link rel="stylesheet" href="../../../css/site-mobile-nav.css?v=nosTW1" />
-  <link rel="stylesheet" href="../../../css/admin/stock-picks.css?v=pullback1" />
-  <script src="../../../js/locales/zh-CN.js?v=pullback1"></script>
+  <link rel="stylesheet" href="../../../css/admin/stock-picks.css?v=etfdip1" />
+  <script src="../../../js/locales/zh-CN.js?v=etfdip1"></script>
   <script src="../../../js/i18n.js?v=nosTW1"></script>
   <script src="../../../js/config.js?v=nosTW1"></script>
   <script src="../../../js/common_ui.js?v=nosTW1"></script>
@@ -33,11 +33,12 @@
     </div>
     <div id="app" class="stock-page-wrap hidden">
       <section class="stock-container">
+        <div id="strategyTabs" class="tab-nav stock-strategy-tabs" role="tablist" aria-label="策略"></div>
         <div class="stock-strategy-heading">
-          <div><h2 data-i18n="privateHub.stock.strategy">回调企稳</h2><p data-i18n="privateHub.stock.subtitle">趋势向上 · 缩量回调 · 企稳确认</p></div>
-          <span class="stock-badge">中短线 · 模拟跟踪</span>
+          <div><h2 id="strategyName">选股策略</h2><p id="strategySubtitle"></p></div>
+          <span id="strategyBadge" class="stock-badge">模拟跟踪</span>
         </div>
-        <p class="strategy-desc" data-i18n="privateHub.stock.validation">初始规则尚未完成历史回测和样本外验证，不代表已证实高胜率。</p>
+        <p id="strategyValidation" class="strategy-desc">正在读取策略说明…</p>
         <div id="schedulerStatus" class="stock-job-status" aria-live="polite">正在读取自动运行状态…</div>
         <p id="marketSessionStatus" class="status" role="status"></p>
         <div class="toolbar action-row">
@@ -48,6 +49,7 @@
         </div>
         <p id="actionStatus" class="status" role="status"></p>
         <div id="recordsStats" class="records-stats" aria-live="polite"></div>
+        <details id="backtestBox" class="stock-rules stock-backtest hidden" open></details>
         <details class="stock-rules"><summary data-i18n="privateHub.stock.rules">规则与执行</summary><div id="rulesText"></div></details>
         <div id="screenResults" class="results"></div>
       </section>
@@ -71,7 +73,7 @@
           <table class="records-table">
             <thead><tr>
               <th data-i18n="privateHub.stock.signal">信号时间</th>
-              <th data-i18n="privateHub.stock.stock">股票 / 行业</th>
+              <th data-i18n="privateHub.stock.stock">标的 / 行业或指数</th>
               <th data-i18n="privateHub.stock.entry">模拟买入</th>
               <th data-i18n="privateHub.stock.latest">最新 / 卖出</th>
               <th data-i18n="privateHub.stock.net">扣费收益</th>
@@ -86,6 +88,6 @@
   </main>
   <script src="../../../js/admin/admin-gate.js?v=nosTW5"></script>
   <script src="../../../js/tb-pager.js?v=nosTW1"></script>
-  <script src="../../../js/admin/stock-picks.js?v=session-hint2"></script>
+  <script src="../../../js/admin/stock-picks.js?v=etfdip1"></script>
 </body>
 </html>

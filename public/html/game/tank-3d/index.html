@@ -102,10 +102,12 @@
       <div class="panel small coop-panel">
         <h2>联机大厅 · 合作守基地</h2>
         <p id="coop-settings" class="rules"></p>
+        <p>单机与匿名联机无需游戏内登录；自定义名称需登录B站并通过安全检测。</p>
         <div class="coop-controls">
-        <label>昵称 <input id="coop-name" maxlength="12" value="坦克手" autocomplete="off"><button id="coop-bili-name" type="button" hidden>使用B站昵称</button></label>
+        <label class="anonymous-option"><input id="coop-anonymous" type="checkbox" checked> 匿名联机（无需登录）</label>
+        <label>昵称 <input id="coop-name" maxlength="12" value="玩家" readonly autocomplete="off"><button id="coop-bili-name" type="button" hidden>使用B站昵称（可选）</button></label>
         <fieldset id="coop-create-fields"><legend>创建房间</legend>
-          <label>房间名 <input id="coop-room-name" maxlength="32" placeholder="不填则使用昵称" autocomplete="off"></label>
+          <label>房间名 <input id="coop-room-name" maxlength="32" placeholder="自动生成房间名称" readonly autocomplete="off"></label>
           <label>人数上限 <select id="coop-capacity"><option value="2">2人</option><option value="3">3人</option><option value="4" selected>4人</option></select></label>
           <label>房间密码 <input id="coop-create-password" type="password" maxlength="32" placeholder="留空：所有玩家可加入" autocomplete="new-password"></label>
           <nav class="items"><button id="coop-create" class="primary">创建房间</button></nav>
@@ -191,7 +193,7 @@
   });
   if (location.protocol === 'file:') document.getElementById('loading').textContent = '本地双击打开（file://）无法加载 3D 模块，请使用网站地址或 HTTP 本地服务。';
 </script>
-<script type="module" src="./main.js?v=views4"></script>
+<script type="module" src="./main.js?v=anonymous-20261013"></script>
 <script defer src="../../../js/game/author-home.js?v=1"></script>
 </body>
 </html>

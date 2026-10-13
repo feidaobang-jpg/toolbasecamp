@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "game_id": "cadillacs-stage1-3d",
+  "version": "v0.11.0-hellroad.1-menu-desk1-anonymous1",
+  "created_at": "2026-10-13T10:34:51.434288+08:00",
+  "build": {
+    "id": "v0.11.0-hellroad.1-menu-desk1-anonymous1",
+    "commit": "da4c54e89677f56a80183bc037dbc3285d5cf06d",
+    "dirty": false,
+    "fingerprint": "a9658ba81e1a31c0ed1da225ad0ac5d39e0dcb654ba015ec4b49b3605c5153db",
+    "entrypoint": "public/html/game/cadillacs-stage1-3d/index.html"
+  },
+  "changes": [
+    {
+      "id": "anonymous-no-login",
+      "before": "Default names used login-dependent Toy text safety; campaign cloud read was requested at startup",
+      "after": "Default anonymous seats and rooms have server-generated labels; cloud storage is requested only on player action",
+      "verification": "passed",
+      "evidence": "../../../../site-games/releases/anonymous-coop-20261013/handoff.json"
+    }
+  ],
+  "qa": {
+    "website": "passed",
+    "final_package": "passed",
+    "physical_phone": "not-tested",
+    "artifact_directory": "D:/project/task-artifacts/anonymous-coop-20261013",
+    "actual_toy_preview": "passed"
+  },
+  "media": [
+    {
+      "id": "anonymous-lobby-desktop",
+      "file": "D:\\project\\task-artifacts\\anonymous-coop-20261013\\final-package-qa\\cadillacs-stage1-3d-anonymous-1280x720.png",
+      "sha256": "4792a3bffd759006f8bb50fa6acbfb2104e3dc59f28c0245c57c9019fc3ab8fd",
+      "kind": "screenshot",
+      "version": "v0.11.0-hellroad.1-menu-desk1-anonymous1",
+      "build_id": "v0.11.0-hellroad.1-menu-desk1-anonymous1",
+      "capture_mode": "realtime-automation",
+      "description": "Actual final package menu with mocked logged-out SDK; default anonymous checked; no account API calls",
+      "width": 1280,
+      "height": 720,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable"
+    }
+  ],
+  "readiness": {
+    "update": "partial",
+    "overview": "not_applicable",
+    "gaps": [
+      "No new edited video; menu screenshots and multiplayer QA are retained for a later combined Bilibili episode"
+    ]
+  },
+  "cover": "reuse; login/menu flow does not change gameplay art",
+  "channel_record": "../../../../site-games/releases/anonymous-coop-20261013/handoff.json",
+  "channels": {
+    "website": "deployed_verified",
+    "toy": {
+      "game": "cadillacs-stage1-3d",
+      "id": "40412421031936",
+      "slug": "feidao-cadillacs-3d",
+      "version": "v0.11.0-hellroad.1-menu-desk1-anonymous1",
+      "zip": "D:\\project\\task-artifacts\\anonymous-coop-20261013\\final-packages\\cadillacs-stage1-3d.zip",
+      "sha256": "a9658ba81e1a31c0ed1da225ad0ac5d39e0dcb654ba015ec4b49b3605c5153db",
+      "previous_platform_status": "published",
+      "watermark_enabled": true,
+      "preview_attempt_at": "2026-10-13T02:38:08.236852+00:00",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_AFFhu3Xb/index.html",
+      "preview_verified": true,
+      "preview_method": "Codex IAB real Toy iframe; desktop and portrait viewport; anonymous room created and left without profile/cloud request",
+      "submit_attempt_at": "2026-10-13T02:55:24.831436+00:00",
+      "status": "published",
+      "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_D9g3jDBe/index.html",
+      "submitted_at": "2026-10-13T02:55:36.396355+00:00",
+      "submitted_status": "auditing",
+      "public_verified_at": "2026-10-13T11:04:41.015087+08:00",
+      "public_url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
+      "public_evidence": {
+        "method": "Codex IAB official public iframe; actual published version directory; default anonymous checkbox checked and optional Bilibili nickname present",
+        "anonymous_default": true,
+        "no_room_created_or_account_profile_requested": true
+      }
+    },
+    "bilibili": "deferred_accumulating",
+    "taptap": "not_requested"
+  }
+}

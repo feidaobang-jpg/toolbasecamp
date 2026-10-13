@@ -1,5 +1,5 @@
 [Unit]
-Description=Toolbasecamp stock pullback paper tracking
+Description=Toolbasecamp stock strategy paper tracking
 After=network-online.target mysql.service
 Wants=network-online.target
 

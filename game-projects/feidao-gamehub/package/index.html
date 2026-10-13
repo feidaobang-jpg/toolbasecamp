@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>飞刀班长游戏合集</title>
 <script src="https://s1.hdslb.com/bfs/seed/toy/app/sdk/toy-sdk.js"></script>
+<script src="./author-home.js"></script>
 <style>
   :root {
     --ink: #3a3122; --ink-soft: #7a6f5c; --paper: #f7f1e3; --card: #fffaf0;
@@ -91,37 +92,37 @@
     <div class="logo">🎮</div>
     <div>
       <h1>飞刀班长游戏合集</h1>
-      <div class="sub">AI 把点子和建议做成能玩的游戏 · <a href="https://space.bilibili.com/16214353" target="_blank" rel="noopener">B站主页</a></div>
+      <div class="sub">AI 把点子和建议做成能玩的游戏 · <a data-author-home href="https://space.bilibili.com/16214353" target="_blank" rel="noopener">作者B站主页</a></div>
     </div>
   </header>
   <div class="chips" id="chips"></div>
   <div class="grid" id="grid"></div>
   <footer>
-    想玩哪款复刻或新玩法？<a href="https://www.zhengxiaohui.cn/game-vote.html" target="_blank" rel="noopener">投票 / 愿望单</a>提名，票高的优先做。<br>
-    网页版与最新动态：<a href="https://www.zhengxiaohui.cn/games.html" target="_blank" rel="noopener">www.zhengxiaohui.cn/games.html</a>
+    新游戏会陆续加入合集，点击卡片即可打开对应 Toy。<br>
+    想玩哪款复刻或新玩法？欢迎在B站视频评论区告诉我。
   </footer>
 </div>
 <div class="toast" id="toast"></div>
 <script>
 const GAMES = [
-  { slug: 'feidao-jackal-3d', title: '赤色要塞 3D', cat: '3d', tags: ['3D重制', '双关卡', '第一人称'], video: 'BV1EyHz6wE5u',
+  { slug: 'feidao-jackal-3d', title: '赤色要塞 3D', cat: '3d', tags: ['3D重制', '三关卡', '第一人称'], video: 'BV1EyHz6wE5u',
     poster: './assets/feidao-jackal-3d.png',
-    desc: '驾驶武装吉普炸营房、救俘虏、送直升机，海滩与废墟两关，新增第一人称视角。' },
+    desc: '驾驶武装吉普炸营房、救俘虏、送直升机，第一至三关可玩，支持第一人称视角。' },
   { slug: 'chongchao-qianshao', title: '虫潮围城', cat: 'str', tags: ['塔防', '建造防线', '指挥队友'], video: 'BV1WbHq6eEBt',
     poster: './assets/chongchao-qianshao.jpg',
     desc: '建造防线、指挥队友、抵御虫潮，还能钻进虫洞反攻母皇。' },
+  { slug: 'feidao-gunfire', title: '枪火集结', cat: 'act', tags: ['第一人称', '战地据点', '抗战战役'],
+    poster: './assets/feidao-gunfire.jpg',
+    desc: '独立枪战游戏：争夺战地据点、挑战抗战战役，步行第一人称作战，载具第三人称跟随。' },
   { slug: 'feidao-tank-3d', title: '坦克大战 3D', cat: '3d', tags: ['3D重制', '经典'], video: 'BV1Wqaz6AEJb',
     poster: './assets/feidao-tank-3d.png',
     desc: '立体地图上的坦克大战，守住老鹰基地。' },
   { slug: 'feidao-mario-3d', title: '超级玛丽 3D', cat: '3d', tags: ['3D重制', '平台跳跃'], video: 'BV1guep6NELt',
     poster: './assets/feidao-mario-3d.png',
-    desc: '3D 视角重现顶蘑菇，1-1 与 1-2 两关。' },
-  { slug: 'feidao-cadillacs-3d', title: '恐龙快打 3D', cat: '3d', tags: ['3D重制', '第一关'], video: 'BV18XHW66E55',
+    desc: '3D 视角重现顶蘑菇，1-1 至 1-4 可玩，从地面、地下、树冠一路闯到库巴城堡。' },
+  { slug: 'feidao-cadillacs-3d', title: '恐龙快打 3D', cat: '3d', tags: ['3D重制', '三关卡'], video: 'BV18XHW66E55',
     poster: './assets/feidao-cadillacs-3d.png',
-    desc: '横版闯关打架的经典，第一关 3D 重制版。' },
-  { slug: 'feidao-journey-west', title: '西游降魔', cat: '3d', tags: ['3D', '动作'],
-    poster: './assets/feidao-journey-west.png',
-    desc: '三维渲染的降妖之路。' },
+    desc: '横版闯关打架的经典，第一至三关 3D 重制版。' },
   { slug: 'feidao-worms', title: '百战天虫', cat: 'str', tags: ['回合制', '炮击'],
     poster: './assets/feidao-worms.png',
     desc: '回合制虫虫炮击对轰，算好抛物线一击制胜。' },
@@ -147,7 +148,7 @@ const GAMES = [
     poster: './assets/feidao-gemswap.png',
     desc: '交换宝石凑三连消，连锁反应最爽。' }
 ];
-const CATS = [ ['all', '全部'], ['3d', '3D 重制'], ['cas', '经典休闲'], ['str', '策略塔防'] ];
+const CATS = [ ['all', '全部'], ['3d', '3D 重制'], ['act', '动作射击'], ['cas', '经典休闲'], ['str', '策略塔防'] ];
 
 const grid = document.getElementById('grid');
 const chips = document.getElementById('chips');

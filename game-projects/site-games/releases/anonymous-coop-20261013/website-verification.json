@@ -1,0 +1,50 @@
+[
+  {
+    "file": "js/game/input-safety.js",
+    "passed": true,
+    "exact_sha256": true,
+    "sha256": "7f61f0d01249e8ce642a8e4672880c2f1386e068b09324e7252379418a968000"
+  },
+  {
+    "file": "js/game/coop.js",
+    "passed": true,
+    "exact_sha256": true,
+    "sha256": "aadfdf4567314a8c4b01b0a8a174a49088d86781c45dd808c6755cd095906217"
+  },
+  {
+    "file": "html/game/tank-3d/index.html",
+    "passed": true,
+    "exact_sha256": false,
+    "sha256": "385d9949c55b552e1deb4e5d3adaad2e4022d0bb57fcd103c1853b6834343ef1"
+  },
+  {
+    "file": "html/game/jackal-stage1-3d/js/game.min.js",
+    "passed": true,
+    "exact_sha256": true,
+    "sha256": "3b74d17f8c3ad18ef247a6f87f663a825e262afa0d6c664c2cdf1ca19aba9907"
+  },
+  {
+    "file": "html/game/cadillacs-stage1-3d/js/game.min.js",
+    "passed": true,
+    "exact_sha256": true,
+    "sha256": "e408a5c6e0b555327770b0ca2a2bc08cace95d803d5d635a0ae0bec4c5c60f1e"
+  },
+  {
+    "file": "html/game/starship-defense/game.compat.js",
+    "passed": true,
+    "exact_sha256": true,
+    "sha256": "55cac66a47310f2031ae702a5a78e2749f3dd06b5b299773c0d633c66f590939"
+  },
+  {
+    "file": "html/game/starship-defense/index.html",
+    "passed": true,
+    "exact_sha256": false,
+    "sha256": "8b345ecac1210879ffcd0387191fe56a7cc05fa29d4069be5ae85dd45482274f"
+  },
+  {
+    "file": "html/game/gunfire-assembly/game.compat.js",
+    "passed": true,
+    "exact_sha256": true,
+    "sha256": "19ed3121eb9fccfbd1d8318df495b269f831a054275bf1e4bf682c07d8839891"
+  }
+]

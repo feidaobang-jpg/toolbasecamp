@@ -1,7 +1,7 @@
 // Shared rooms transport and portable lobby UI. Gameplay stays in each game's adapter.
 import {installLandscapeTyping} from './landscape-typing.js?v=lt1';
-import {preparePublicIdentity,publicText,onPublicTextChecked,protectSnapshotText,installNicknameButton} from './input-safety.js?v=safety1';
-export {installNicknameButton};
+import {preparePublicIdentity,publicText,onPublicTextChecked,protectSnapshotText,installNicknameButton,installAnonymousControls,anonymousPlayerName} from './input-safety.js?v=anonymous1';
+export {installNicknameButton,installAnonymousControls};
 export const GAMES = {
   tank: {toy:'feidao-tank-3d',title:'坦克大战', protocol:'tank3d-v2', max:4, path:'tank-3d'},
   jackal: {toy:'feidao-jackal-3d',title:'赤色要塞', protocol:'jackal3d-v1', max:4, path:'jackal-stage1-3d'},
@@ -61,7 +61,7 @@ export class CoopConnection {
     if(this.socket?.readyState!==1||this.socket.bufferedAmount>200000)return false;
     if(data.type==='create'||data.type==='join'){
       const approved=this.pendingIdentity;
-      if(!approved||data.type!==approved.type||data.name!==approved.name||data.roomName!==approved.roomName)return false;
+      if(!approved||data.type!==approved.type||data.name!==approved.name||data.roomName!==approved.roomName||data.anonymous!==approved.anonymous)return false;
       this.pendingIdentity=null;
     }
     if(data.type==='input')data={...data,input:{...data.input,activity:this.localActive()}};
@@ -85,17 +85,17 @@ export class CoopConnection {
     if(ai!==this.bots.has(slot)){if(ai)this.bots.add(slot);else this.bots.delete(slot);this.send({type:'control',slot,ai});}
     return ai?computer():human;
   }
-  safeRoom(room){return {...room,name:publicText(room.name,'合作房间'),players:(room.players||[]).map(p=>({...p,name:publicText(p.name,(p.slot+1)+'P玩家')}))};}
+  safeRoom(room){return {...room,name:publicText(room.name,'合作房间',this.allowTextChecks),players:(room.players||[]).map(p=>({...p,name:publicText(p.name,anonymousPlayerName(p.slot),this.allowTextChecks)}))};}
   async connect(type, name, code, options={}) {
     this.disconnect();const attempt=this.connectionAttempt;this.intentional=false;this.textFailureShown=false;
     if(type==='create'||type==='join'){
-      this.onStatus('正在检测昵称和房间名称…');
-      const checked=await preparePublicIdentity(name,options.roomName,type==='create');
+      this.onStatus(options.anonymous?'正在匿名连接…':'正在检测自定义名称…');
+      const checked=await preparePublicIdentity(name,options.roomName,type==='create',options.anonymous===true);
       if(attempt!==this.connectionAttempt)return false;
       if(!checked.passed){this.onInputRejected(checked.field);this.onStatus(checked.message);return false;}
-      name=checked.name;options={...options,roomName:checked.roomName};
-      this.pendingIdentity={type,name,roomName:checked.roomName};
-      try{localStorage.setItem('gamehub-nickname',name);}catch{}
+      name=checked.name;options={...options,roomName:checked.roomName,anonymous:checked.anonymous};
+      this.allowTextChecks=checked.customText===true;
+      this.pendingIdentity={type,name,roomName:checked.roomName,anonymous:checked.anonymous};
     }
     if(attempt!==this.connectionAttempt)return false;
     const socket=this.socket=new WebSocket(endpoint(this.game));
@@ -107,11 +107,11 @@ export class CoopConnection {
       if(!msg||typeof msg!=='object')return;
       if(msg.room){this.rawRoom=msg.room;msg.room=this.safeRoom(msg.room);}
       if(msg.type==='rooms'){this.rawDirectory=msg;msg={...msg,rooms:(msg.rooms||[]).map(r=>this.safeRoom(r))};}
-      if(typeof msg.name==='string')msg.name=publicText(msg.name,(Number(msg.slot)+1)+'P玩家');
-      if(msg.type==='state')protectSnapshotText(msg.state);
+      if(typeof msg.name==='string')msg.name=publicText(msg.name,anonymousPlayerName(msg.slot),this.allowTextChecks);
+      if(msg.type==='state')protectSnapshotText(msg.state,0,this.allowTextChecks);
       if(typeof msg.message==='string'){
         // Server notices interpolate player names; never display the supplied sentence.
-        const player=publicText(this.rawRoom?.players?.find(p=>p.slot===msg.slot)?.name,(Number(msg.slot)+1)+'P玩家');
+        const player=publicText(this.rawRoom?.players?.find(p=>p.slot===msg.slot)?.name,anonymousPlayerName(msg.slot),this.allowTextChecks);
         if(msg.type==='player_joined')msg.message=(msg.name||player)+'中途加入';
         else if(msg.type==='control')msg.message=player+(msg.ai?'：30秒未操作，电脑队友接管':'已回来，恢复真人操作');
         else if(msg.type==='player_left')msg.message=player+'已离开房间，其余队友可继续';
@@ -157,7 +157,7 @@ export class CoopConnection {
   }
   clearInputs(){this.inputs.clear();}
   disconnect(){
-    this.connectionAttempt++;this.rawRoom=null;this.rawDirectory=null;this.pendingIdentity=null;
+    this.connectionAttempt++;this.rawRoom=null;this.rawDirectory=null;this.pendingIdentity=null;this.allowTextChecks=false;
     this.intentional=true;clearInterval(this.heartbeat);const socket=this.socket;this.socket=null;
     if(socket?.readyState===1)socket.send(JSON.stringify({type:'leave'}));
     socket?.close();this.room=null;this.slot=-1;this.stateCount=0;this.inputs.clear();this.activity.clear();this.bots.clear();
@@ -172,6 +172,7 @@ const css = `
 .coop-actions{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}.coop-card button,.coop-entry{background:#3b7049;color:#fff8e9;border:2px solid #294b32;border-radius:10px;padding:9px 12px;min-height:44px;cursor:pointer}
 .coop-card button:focus-visible,.coop-entry:focus-visible{outline:3px solid #e5ae34;outline-offset:2px}.coop-card button:disabled{opacity:.55;cursor:default}
 .coop-card button.coop-btn-locked{opacity:.6;background:#6f8270;border-color:#52624f}
+.coop-card input[readonly]{background:#e8eedb}.coop-anonymous-option{display:flex;align-items:center;gap:8px;min-height:44px}.coop-anonymous-option input{width:20px;height:20px;margin:0}
 .coop-card a{color:#27563c}.coop-rooms{list-style:none;padding:0;margin:8px 0}.coop-rooms li{display:flex;gap:8px;align-items:center;justify-content:space-between;border-top:1px solid #c9d2ba;padding:6px 0}.coop-rooms button{flex-shrink:0}
 .coop-status{min-height:1.4em;color:#884123}.coop-roster{padding:8px;background:#e8eedb;border-radius:8px}.coop-footer{font-size:12px}
 @media(max-height:430px){.coop-card{padding:10px}.coop-card h2{font-size:18px}.coop-card p{margin:3px 0}.coop-footer{display:none}.coop-actions{margin:5px 0}}
@@ -188,10 +189,12 @@ export class CooperativeLobby {
     const entry=document.createElement('button');entry.className='coop-entry';entry.type='button';entry.dataset.act='coop';entry.textContent='联机大厅 · 2–'+GAMES[game].max+'人合作';menu.append(entry);entry.addEventListener('click',()=>this.open());
     this.entry=entry;
     const panel=document.createElement('div');panel.className='coop-panel';panel.hidden=true;panel.setAttribute('role','dialog');panel.setAttribute('aria-modal','true');panel.setAttribute('aria-label',GAMES[game].title+'联机大厅');
-    panel.innerHTML='<section class="coop-card"><h2>'+GAMES[game].title+' · 联机大厅</h2><p>自定义昵称和房间名称须通过安全检测；普通网页可用默认名称联机，单机存档独立保留。</p><div class="coop-grid"><label>昵称<input data-field="name" maxlength="12" autocomplete="nickname" value="玩家"></label><label>房间名称<input data-field="roomName" maxlength="32" placeholder="我的合作房间"></label><label>人数<select data-field="capacity"></select></label><label>房间号<input data-field="code" inputmode="numeric" maxlength="6" placeholder="六位房间号"></label><label>密码（选填）<input data-field="password" maxlength="32" type="password" autocomplete="off"></label><label>房间筛选<select data-field="filter"><option value="all">全部房间</option><option value="open">无需密码</option><option value="locked">密码房</option></select></label></div><div class="coop-actions"><button data-do="create">创建房间</button><button data-do="join">加入房间</button><button data-do="refresh">刷新列表</button><button data-do="close">返回游戏</button></div><p class="coop-status" role="status" aria-live="polite"></p><div class="coop-roster" hidden></div><div class="coop-actions coop-room-actions" hidden><button data-do="ready">准备</button><button data-do="start">开始合作</button><button data-do="invite">复制邀请链接</button><button data-do="leave">退出房间</button></div><ul class="coop-rooms"></ul><div class="coop-actions coop-pager"><button data-do="prev">上一页</button><span></span><button data-do="next">下一页</button></div><p class="coop-footer">合作同步暂停；房主退出则结束房间，支持中途加入；闲置30秒电脑接管，操作后交还真人。</p></section>';
+    panel.innerHTML='<section class="coop-card"><h2>'+GAMES[game].title+' · 联机大厅</h2><p>单机与匿名联机无需游戏内登录；自定义名称需登录B站并通过安全检测。</p><label class="coop-anonymous-option"><input data-field="anonymous" type="checkbox" checked> 匿名联机（无需登录）</label><div class="coop-grid"><label>昵称<input data-field="name" maxlength="12" autocomplete="nickname" value="玩家" readonly></label><label>房间名称<input data-field="roomName" maxlength="32" placeholder="自动生成房间名称" readonly></label><label>人数<select data-field="capacity"></select></label><label>房间号<input data-field="code" inputmode="numeric" maxlength="6" placeholder="六位房间号"></label><label>密码（选填）<input data-field="password" maxlength="32" type="password" autocomplete="off"></label><label>房间筛选<select data-field="filter"><option value="all">全部房间</option><option value="open">无需密码</option><option value="locked">密码房</option></select></label></div><div class="coop-actions"><button data-do="create">创建房间</button><button data-do="join">加入房间</button><button data-do="refresh">刷新列表</button><button data-do="close">返回游戏</button></div><p class="coop-status" role="status" aria-live="polite"></p><div class="coop-roster" hidden></div><div class="coop-actions coop-room-actions" hidden><button data-do="ready">准备</button><button data-do="start">开始合作</button><button data-do="invite">复制邀请链接</button><button data-do="leave">退出房间</button></div><ul class="coop-rooms"></ul><div class="coop-actions coop-pager"><button data-do="prev">上一页</button><span></span><button data-do="next">下一页</button></div><p class="coop-footer">合作同步暂停；房主退出则结束房间，支持中途加入；闲置30秒电脑接管，操作后交还真人。</p></section>';
     container.append(panel);this.panel=panel;
-    const profileButton=document.createElement('button');profileButton.type='button';profileButton.className='coop-bili-name';profileButton.textContent='使用B站昵称';
-    this.field('name').parentElement.append(profileButton);installNicknameButton(profileButton,this.field('name'),s=>this.status(s));
+    const profileButton=document.createElement('button');profileButton.type='button';profileButton.className='coop-bili-name';profileButton.textContent='使用B站昵称（可选）';
+    this.field('name').parentElement.append(profileButton);
+    const useCustomIdentity=installAnonymousControls(this.field('anonymous'),this.field('name'),this.field('roomName'),()=>{if(!this.connection.room)this.connection.disconnect();});
+    installNicknameButton(profileButton,this.field('name'),s=>this.status(s),useCustomIdentity);
     for(let n=2;n<=GAMES[game].max;n++){const o=document.createElement('option');o.value=n;o.textContent=n+'人';this.field('capacity').append(o);}this.field('capacity').value=GAMES[game].max;
     if(game==='cadillacs'||game==='starship'){
       const label=document.createElement('label');label.textContent=game==='cadillacs'?'角色':'兵种';
@@ -200,7 +203,6 @@ export class CooperativeLobby {
       select.value=this.getConfig().hero||0;label.append(select);this.panel.querySelector('.coop-grid').append(label);
       const originalConfig=this.getConfig;this.getConfig=()=>({...originalConfig(),hero:+select.value});
     }
-    try{this.field('name').value=localStorage.getItem('gamehub-nickname')||'玩家';}catch{}
     panel.addEventListener('keydown',e=>{
       e.stopPropagation();if(e.key==='Escape'){e.preventDefault();this.close();}
       if(e.key==='Tab'){const nodes=[...panel.querySelectorAll('input,select,button,a')].filter(x=>!x.disabled&&x.getClientRects().length);const first=nodes[0],last=nodes.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}
@@ -210,7 +212,7 @@ export class CooperativeLobby {
     const intent=new URLSearchParams(location.search).get('coop');
     if(intent){setTimeout(()=>{this.open();
       // 联机大厅的「创建房间」链接只把玩家带到大厅，建房由玩家自己点，避免昵称/房间名/密码还没填就静默建房。
-      if(intent==='create'){const b=this.panel.querySelector('[data-do="create"]');b.focus();this.status('填好昵称、房间名称、人数和密码后点「创建房间」');}
+      if(intent==='create'){const b=this.panel.querySelector('[data-do="create"]');b.focus();this.status('选择人数与可选密码后点「创建房间」，默认匿名，无需游戏内登录');}
       else if(/^\d{6}$/.test(intent)){this.pendingInvite=intent;this.field('code').value=intent;this.status('邀请房间 '+intent+' 已填入，正在确认房间状态…');}
     },300);}
   }
@@ -234,7 +236,7 @@ export class CooperativeLobby {
     if(kind==='create'||kind==='join'){
       if(c.room){this.status('你已在房间 '+c.room.code+'，请先点「退出房间」再'+(kind==='create'?'创建新房间':'加入其他房间'));return;}
       if(kind==='join'&&!/^\d{6}$/.test(code)){this.status('请输入六位房间号');return;}
-      c.connect(kind,name,code,{password,roomName:this.field('roomName').value.trim(),maxPlayers:+this.field('capacity').value,config:this.getConfig()});
+      c.connect(kind,name,code,{password,anonymous:this.field('anonymous').checked,roomName:this.field('roomName').value.trim(),maxPlayers:+this.field('capacity').value,config:this.getConfig()});
     } else if(kind==='refresh')this.list();
     else if(kind==='close')this.close();
     else if(kind==='ready'){const ready=!c.room?.players.find(p=>p.slot===c.slot)?.ready,cfg=this.getConfig();c.send({type:'ready',ready,hero:cfg.hero||0,...(cfg.team?{team:cfg.team}:{})});}
@@ -263,6 +265,8 @@ export class CooperativeLobby {
     roster.hidden=!r;this.panel.querySelector('.coop-room-actions').hidden=!r;if(this.field('hero'))this.field('hero').disabled=!!r?.players.find(p=>p.slot===c.slot)?.ready;
     if(r){const vs=r.settings?.mode==='versus',teamTag=t=>vs?({blue:'（蓝方）',red:'（红方）'}[t]||'（自动分队）'):'';
     roster.textContent='房间 '+r.code+' · '+r.name+(vs?' · 对战 '+(r.settings.size||1)+' 对 '+(r.settings.size||1):'')+' · '+r.players.map(p=>(p.slot===0?'房主 ':'')+p.name+teamTag(p.team)+(p.ready?' ✓':' 等待准备')).join(' / ');this.panel.querySelector('[data-do="ready"]').hidden=c.host||r.started;this.panel.querySelector('[data-do="start"]').hidden=!c.host||r.started;if(this.field('hero'))this.field('hero').disabled=!!r.players.find(p=>p.slot===c.slot)?.ready;this.panel.querySelector('[data-do="ready"]').textContent=r.players.find(p=>p.slot===c.slot)?.ready?'取消准备':'准备';}
+    for(const k of ['anonymous','name','roomName'])this.field(k).disabled=!!r;
+    const profile=this.panel.querySelector('.coop-bili-name');profile.disabled=!!r||!profile.dataset.profileReady;
     if(r&&c.host)for(const p of r.players.filter(p=>p.slot!==0)){const b=document.createElement('button');b.type='button';b.dataset.kick=p.slot;b.textContent='踢出 '+(p.slot+1)+'P '+p.name;b.onclick=e=>{e.stopPropagation();c.send({type:'kick',slot:p.slot});};roster.append(b);}
     // 已在房间时不再用 disabled 吞掉点击：按钮显示为锁定态但仍可点，点了才会说明原因和下一步。
     for(const k of ['create','join']){const b=this.panel.querySelector('[data-do="'+k+'"]');b.classList.toggle('coop-btn-locked',!!r);b.setAttribute('aria-disabled',r?'true':'false');b.title=r?'已在房间 '+r.code+'，点「退出房间」后才能'+(k==='create'?'新建':'加入'):'';}

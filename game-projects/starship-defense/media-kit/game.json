@@ -10,7 +10,7 @@
   },
   "name": "虫潮围城",
   "engine": "Three.js r152",
-  "current_version": "web-weapon-bar-v0.36.5",
+  "current_version": "web-anonymous-v0.36.7",
   "entrypoint": "public/html/game/starship-defense/index.html",
   "build_command": "cd game-projects/starship-defense && npm ci && npm run build; python build-toy.py",
   "release_intent": "web_demo",
@@ -20,7 +20,7 @@
   "preview_url": "https://www.bilibili.com/toy/preview/preview_G5Asukje/index.html",
   "public_play_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
   "media_readiness": "partial",
-  "qa": "releases/web-menu-history-v0.36.1/handoff.json",
+  "qa": "releases/web-anonymous-v0.36.7/handoff.json",
   "pending_toy_merge": [
     {
       "version": "web-zerg-corpse-spinfix-v0.33.3-combined",
@@ -48,7 +48,7 @@
     "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
     "visibility": "PUBLIC",
     "review_status": "published",
-    "verified_at": "2026-10-12T12:29:13.804Z",
+    "verified_at": "2026-10-13T11:04:41.015087+08:00",
     "video_bindings": [
       "BV1Ujad6DEuf",
       "BV1WbHq6eEBt",
@@ -56,16 +56,16 @@
       "BV1xdpx63ETu"
     ],
     "linked_game_video": "https://www.bilibili.com/video/BV1Ujad6DEuf",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_G5Asukje/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_K3HxzO6f/index.html",
     "title": "虫潮围城",
     "zip_sha256": "7fdcde9a3e849d51d78b25ef6a67137e85b3addc3103a425aacf9e26ff31edd5",
     "submitted_date": "2026-10-12",
-    "release_record": "releases/web-fps-mouse-v0.36.2-input-safety1/handoff.json",
-    "submitted_version": "web-fps-mouse-v0.36.2-input-safety1",
-    "published_version": "web-fps-mouse-v0.36.2-input-safety1",
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_G5Asukje/index.html",
-    "note": "昵称与房间名安全整改包已过审；正式入口可用，访问者水印开启。",
-    "package_sha256": "7fdcde9a3e849d51d78b25ef6a67137e85b3addc3103a425aacf9e26ff31edd5",
+    "release_record": "releases/web-anonymous-v0.36.7/handoff.json",
+    "submitted_version": "web-anonymous-v0.36.7",
+    "published_version": "web-anonymous-v0.36.7",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_2q7sLW5w/index.html",
+    "note": "v0.36.6已过审且正式菜单公开核验：跨游戏入口移除，自身模式和旧存档入口保留。",
+    "package_sha256": "2a99c0665a6b58462e149f55a107ca59923220a0b877922914af9aae0c492fdb",
     "pending_updates": [
       {
         "version": "web-controls-v0.18.2",
@@ -118,12 +118,12 @@
       }
     ],
     "published_entry": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
-    "published_verified_at": "2026-10-12T12:29:13.804Z",
-    "status": "auditing",
+    "published_verified_at": "2026-10-13T02:25:36.275437+00:00",
+    "status": "published",
     "package_hash": "7fdcde9a3e849d51d78b25ef6a67137e85b3addc3103a425aacf9e26ff31edd5",
     "submission_time_note": "Exact submission time not persisted; receipts and final public status preserved.",
-    "submitted_at": "2026-10-12T22:57:32+08:00",
-    "public_verified_at": "2026-10-12T12:29:13.804Z",
+    "submitted_at": "2026-10-13T02:55:37.676971+00:00",
+    "public_verified_at": "2026-10-13T11:04:41.015087+08:00",
     "public_runtime_evidence": {
       "status": "public_verified",
       "at": "2026-10-12T12:29:13.804Z",
@@ -139,8 +139,8 @@
     "version": "web-fps-mouse-v0.36.2-input-safety1",
     "published_at": "2026-10-11T10:03:07+00:00",
     "publication_time_note": "平台mtime记录为本次published状态时间；公开实测时间另记。",
-    "last_published_version": "web-fps-mouse-v0.36.2-input-safety1",
-    "last_submitted_version": "web-weapon-bar-v0.36.5",
+    "last_published_version": "web-independent-menu-v0.36.6",
+    "last_submitted_version": "web-independent-menu-v0.36.6",
     "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_G5Asukje/index.html",
     "current_public_verification": "verified",
     "channel_authorization": {
@@ -149,9 +149,9 @@
       "recorded_at": "2026-10-10T03:02:52.978211+00:00",
       "scope": "2026-10-09 已完成并已发布网站的冻结版本补发；替代昨日其他渠道暂缓指令，不包含新视频或其他未完成开发"
     },
-    "last_successful_sync_version": "web-fps-mouse-v0.36.2-input-safety1",
-    "last_successful_sync_at": "2026-10-12T12:29:13.804Z",
-    "public_verified_version": "web-fps-mouse-v0.36.2-input-safety1",
+    "last_successful_sync_version": "web-independent-menu-v0.36.6",
+    "last_successful_sync_at": "2026-10-13T02:25:36.275437+00:00",
+    "public_verified_version": "web-independent-menu-v0.36.6",
     "video_binding_verified_at": "2026-10-09T17:53:41.810316+08:00",
     "source_commit": "e8fcfe3dd37dc1966c894722079676f44f57c0ec",
     "package": {
@@ -162,7 +162,7 @@
     },
     "submitted_package_sha256": "7fdcde9a3e849d51d78b25ef6a67137e85b3addc3103a425aacf9e26ff31edd5",
     "watermark_enabled": true,
-    "public_runtime_revision": "v25481",
+    "public_runtime_revision": "v25661",
     "last_zip_sha256": "bcba022aad44d7c04553bfe0505b6d7e2b357512365323d27e8df814bbd80d38",
     "last_preview_url": "https://www.bilibili.com/toy/preview/preview_ywZcH4SZ/index.html"
   },
@@ -180,13 +180,13 @@
   "extension_review_status": "published",
   "preview_version": "web-fps-mouse-v0.36.2-input-safety1",
   "submitted_toy_version": "web-fps-mouse-v0.36.2-input-safety1",
-  "website_version": "web-weapon-bar-v0.36.5",
-  "website_verified_at": "2026-10-12T22:50:00+08:00",
+  "website_version": "web-independent-menu-v0.36.6",
+  "website_verified_at": "2026-10-13T02:18:12.406788+00:00",
   "site_list_name": "虫潮围城",
   "controls": "原有多动作按键和Shift按住冲刺保留；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。",
   "default_theme": "dark",
   "feedback_ledger": "feedback-ledger.json",
-  "handoff": "releases/web-fps-mouse-v0.36.2-input-safety1/handoff.json",
+  "handoff": "releases/web-independent-menu-v0.36.6/handoff.json",
   "squad_controls": "商店雇佣机枪/突击/医疗/工程队友；准备阶段免费转职，强化保留；队友卡片分配四种已购载具，玩家I接管；暂停菜单跟随/守基地。",
   "environments": {
     "desert": "第1–3章：荒漠，可选白天/夜晚",
@@ -234,7 +234,7 @@
     "keyboard_modes": "Tab/菜单上下进入模式组，左右或A/D选项，Enter/空格/J确认，有aria-pressed选中状态"
   },
   "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
-  "website_commit": "f4d0adf5",
+  "website_commit": "c8d5bfd402216ca5e75f07de318fe6013679ee5d",
   "campaign_difficulty": {
     "default": "normal",
     "choices": [
@@ -920,14 +920,10 @@
   },
   "website": {
     "status": "deployed_verified",
-    "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
-    "verified_at": "2026-10-12T12:31:12.320579+00:00",
-    "source_commit": "e8fcfe3dd37dc1966c894722079676f44f57c0ec",
-    "runtime_sha256": "d030362676bd1873670df71f64658287da1cf0801d7c2e7989afb1e7b4daead8",
-    "runtime_matches_tested_build": true,
-    "physical_phone": false,
-    "version": "web-fps-mouse-v0.36.2-input-safety1",
-    "verification_record": "game-projects/site-games/releases/input-safety-20261012/website-deployed.json"
+    "source_commit": "c8d5bfd402216ca5e75f07de318fe6013679ee5d",
+    "verified_at": "2026-10-13T02:18:12.406788+00:00",
+    "runtime_sha256": "d5f844322f1016fa98747a3e38dc6c7bc61b80a88911804dc0289b34e988b26d",
+    "evidence": "D:\\project\\task-artifacts\\toy-collection-cleanup-20261013\\website-check.json"
   },
   "current_development_tool": "Codex",
   "rv_town": {
@@ -1422,5 +1418,5 @@
     "deployed_script_src": "./game.compat.js?v=f07e5c81",
     "action_url": "https://github.com/feidaobang-jpg/toolbasecamp/actions/runs/38140856542"
   },
-  "toy_status": "auditing"
+  "toy_status": "published"
 }

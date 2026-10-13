@@ -3,10 +3,10 @@ const {chromium}=require('C:/Users/37818/.cache/codex-runtimes/codex-primary-run
 const fs=require('fs'),path=require('path'),assert=require('assert/strict'),http=require('http');
 const root=path.resolve(__dirname,'../../..');
 const out=process.env.PRIVACY_QA_OUT||path.join(process.env.LOCALAPPDATA||require('os').tmpdir(),'CodexGameQA','privacy-cleanup-20261011');
-const games=['starship-defense','tank-3d','mario-3d','jackal-stage1-3d','cadillacs-stage1-3d'].filter(game=>!process.env.PRIVACY_QA_GAMES||process.env.PRIVACY_QA_GAMES.split(',').includes(game));
+const games=['starship-defense','gunfire-assembly','tank-3d','mario-3d','jackal-stage1-3d','cadillacs-stage1-3d'].filter(game=>!process.env.PRIVACY_QA_GAMES||process.env.PRIVACY_QA_GAMES.split(',').includes(game));
 assert(games.length,'PRIVACY_QA_GAMES must select at least one known game');
 const mime={'.html':'text/html','.js':'text/javascript','.css':'text/css','.svg':'image/svg+xml','.json':'application/json','.mp3':'audio/mpeg','.wav':'audio/wav'};
-function packageDir(game){const meta=JSON.parse(fs.readFileSync(path.join(root,'game-projects',game,'media-kit/game.json')));return game==='starship-defense'?path.join(root,'dist/toy/chongchao-qianshao/package'):path.join(root,'game-projects',game,'dist',(game==='tank-3d'?'':'toy-')+meta.current_version,'package');}
+function packageDir(game){const meta=JSON.parse(fs.readFileSync(path.join(root,'game-projects',game,'media-kit/game.json')));return ['starship-defense','gunfire-assembly'].includes(game)?path.join(root,'dist/toy',game==='starship-defense'?'chongchao-qianshao':'feidao-gunfire','package'):path.join(root,'game-projects',game,'dist',(game==='tank-3d'?'':'toy-')+meta.current_version,'package');}
 function walk(dir){return fs.readdirSync(dir,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(path.join(dir,e.name)):[path.join(dir,e.name)]);}
 for(const game of games){for(const file of walk(packageDir(game)).filter(f=>/\.(html|js|css)$/.test(f))){
  const text=fs.readFileSync(file,'utf8');
@@ -23,11 +23,15 @@ const server=http.createServer((req,res)=>{const file=path.resolve(root,'.'+deco
   await context.addInitScript(()=>{window.__authorCalls=[];window.toy={isSupport:async()=>true,navigate:async args=>{window.__authorCalls.push(args);},getCloudStorage:async()=>({}),setCloudStorage:async()=>{},getAuthorProfile:async()=>({status:'denied'}),getRankList:async()=>[]};});
   const dir=packageDir(game),prefix='https://www.bilibilitoy.com/toy/privacy-qa-'+game+'/';
   await page.route(prefix+'**',r=>{const file=path.resolve(dir,decodeURIComponent(new URL(r.request().url()).pathname.split('/').slice(3).join('/')));return file.startsWith(dir+path.sep)&&fs.existsSync(file)?r.fulfill({path:file,contentType:mime[path.extname(file)]||'application/octet-stream'}):r.fulfill({status:404});});
-  await page.goto(prefix+'index.html');const author=page.locator(game==='starship-defense'?'#settingsRow [data-author-home]':'#menu [data-author-home]');
+  await page.goto(prefix+'index.html');const author=page.locator(['starship-defense','gunfire-assembly'].includes(game)?'#settingsRow [data-author-home]':'#menu [data-author-home]');
   await author.waitFor({state:'visible'});await page.waitForFunction(()=>window.toy&&document.querySelector('[data-author-home]'));
   await author.scrollIntoViewIfNeeded();await author.focus();await author.press('Enter');
   await page.waitForFunction(()=>window.__authorCalls.length===1);assert.deepEqual(await page.evaluate(()=>window.__authorCalls[0]),{type:'space',id:'16214353'});
-  if(game==='starship-defense'){await page.locator('#btnPlatformMenu').click();await page.locator('#platformPanel').waitFor({state:'visible'});assert.equal(await page.locator('#cloudSaveTools').isVisible(),true);assert.equal(await page.locator('#saveAccount,#savePassword,#saveLoginForm').count(),0);}
+  if(['starship-defense','gunfire-assembly'].includes(game)){
+    // Gunfire's current title menu offers arena play, not campaign save controls.
+    if(await page.locator('#btnPlatformMenu').isVisible()){await page.locator('#btnPlatformMenu').click();await page.locator('#platformPanel').waitFor({state:'visible'});assert.equal(await page.locator('#cloudSaveTools').isVisible(),true);}
+    assert.equal(await page.locator('#saveAccount,#savePassword,#saveLoginForm').count(),0);
+  }
   assert.deepEqual(forbidden,[]);assert.deepEqual(errors,[]);
   await page.screenshot({path:path.join(out,game+'-'+viewport.width+'x'+viewport.height+'.png')});
   results.push({game,viewport,channel:'toy-package',checks:['packaged code contains no website credentials or navigation','author homepage keyboard/SDK navigation','menu reachable','no credential requests','no page errors'],passed:true});await context.close();

@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "game_id": "jackal-stage1-3d",
+  "version": "v0.11.1-anonymous1",
+  "created_at": "2026-10-13T10:34:51.432122+08:00",
+  "build": {
+    "id": "v0.11.1-anonymous1",
+    "commit": "da4c54e89677f56a80183bc037dbc3285d5cf06d",
+    "dirty": false,
+    "fingerprint": "9935f5bd5c62cccf287d7a6baea232bbb96bc9f8d56acea7e6d7dbd2c4eadb74",
+    "entrypoint": "public/html/game/jackal-stage1-3d/index.html"
+  },
+  "changes": [
+    {
+      "id": "anonymous-no-login",
+      "before": "Default names used login-dependent Toy text safety; campaign cloud read was requested at startup",
+      "after": "Default anonymous seats and rooms have server-generated labels; cloud storage is requested only on player action",
+      "verification": "passed",
+      "evidence": "../../../../site-games/releases/anonymous-coop-20261013/handoff.json"
+    }
+  ],
+  "qa": {
+    "website": "passed",
+    "final_package": "passed",
+    "physical_phone": "not-tested",
+    "artifact_directory": "D:/project/task-artifacts/anonymous-coop-20261013",
+    "actual_toy_preview": "passed"
+  },
+  "media": [
+    {
+      "id": "anonymous-lobby-desktop",
+      "file": "D:\\project\\task-artifacts\\anonymous-coop-20261013\\final-package-qa\\jackal-stage1-3d-anonymous-1280x720.png",
+      "sha256": "865ce258fcf74169556cac874a83eed2462d028274d72931d73d8ac9487ccab7",
+      "kind": "screenshot",
+      "version": "v0.11.1-anonymous1",
+      "build_id": "v0.11.1-anonymous1",
+      "capture_mode": "realtime-automation",
+      "description": "Actual final package menu with mocked logged-out SDK; default anonymous checked; no account API calls",
+      "width": 1280,
+      "height": 720,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable"
+    }
+  ],
+  "readiness": {
+    "update": "partial",
+    "overview": "not_applicable",
+    "gaps": [
+      "No new edited video; menu screenshots and multiplayer QA are retained for a later combined Bilibili episode"
+    ]
+  },
+  "cover": "reuse; login/menu flow does not change gameplay art",
+  "channel_record": "../../../../site-games/releases/anonymous-coop-20261013/handoff.json",
+  "channels": {
+    "website": "deployed_verified",
+    "toy": {
+      "game": "jackal-stage1-3d",
+      "id": "39863936092160",
+      "slug": "feidao-jackal-3d",
+      "version": "v0.11.1-anonymous1",
+      "zip": "D:\\project\\task-artifacts\\anonymous-coop-20261013\\final-packages\\jackal-stage1-3d.zip",
+      "sha256": "9935f5bd5c62cccf287d7a6baea232bbb96bc9f8d56acea7e6d7dbd2c4eadb74",
+      "previous_platform_status": "published",
+      "watermark_enabled": true,
+      "preview_attempt_at": "2026-10-13T02:38:02.343338+00:00",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_Q0p0L694/index.html",
+      "preview_verified": true,
+      "preview_method": "Codex IAB real Toy iframe; desktop and portrait viewport; anonymous room created and left without profile/cloud request",
+      "submit_attempt_at": "2026-10-13T02:55:18.906272+00:00",
+      "status": "published",
+      "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_umfcBOH5/index.html",
+      "submitted_at": "2026-10-13T02:55:24.584433+00:00",
+      "submitted_status": "auditing",
+      "public_verified_at": "2026-10-13T11:04:41.015087+08:00",
+      "public_url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
+      "public_evidence": {
+        "method": "Codex IAB official public iframe; actual published version directory; default anonymous checkbox checked and optional Bilibili nickname present",
+        "anonymous_default": true,
+        "no_room_created_or_account_profile_requested": true
+      }
+    },
+    "bilibili": "deferred_accumulating",
+    "taptap": "not_requested"
+  }
+}
