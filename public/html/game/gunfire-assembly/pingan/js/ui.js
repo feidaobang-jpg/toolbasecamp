@@ -19,7 +19,7 @@ const OPTS = {
   touchKeys: { label: '触屏按键', where: 'm', fmt: (v) => ({ auto: '自动', show: '显示', hide: '隐藏' }[v]) },
   fps: { label: '帧率显示', where: 'mp', fmt: (v) => (v ? '开' : '关') },
   aimSens: { label: '瞄准灵敏度', where: 'mp', fmt: (v) => ({ low: '低', mid: '中', high: '高' }[v]) },
-  mouseAim: { label: '鼠标瞄准', where: 'mp', fmt: (v) => (v === 'lock' ? '鼠标锁定' : '按住拖动') },
+  mouseAim: { label: '鼠标瞄准', where: 'mp', fmt: (v) => (v === 'lock' ? '鼠标接管' : '按住拖动') },
   leftFire: { label: '左手开火键', where: 'mp', fmt: (v) => (v ? '开' : '关') },
 };
 const MODES = [['auto', '自动识别'], ['pc', '电脑键鼠'], ['touch', '手机触屏']];
@@ -85,7 +85,8 @@ export class UI {
     opts.appendChild(this.btnFullM);
     this.btnBili = this._btn('<span class="ol">作者B站主页</span><span class="ov">飞刀班长</span>', 'opt', () => this.app.openAuthor());
     opts.appendChild(this.btnBili);
-    const foot = el('div', 'foot', '<span class="pc-only"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移动　鼠标按住拖动瞄准、左键开火、右键开镜　<kbd>空格</kbd> 跳　<kbd>R</kbd> 换弹　<kbd>G</kbd> 手榴弹　<kbd>F</kbd> 操炮　<kbd>V</kbd> 亮剑　<kbd>X</kbd> 骑兵连　<kbd>C</kbd> 切换人称<br>纯键盘：<kbd>Q</kbd><kbd>E</kbd> 左右转　<kbd>Y</kbd><kbd>H</kbd> 上下转　<kbd>J</kbd> 开火　<kbd>K</kbd> 跳　<kbd>U</kbd> 亮剑　<kbd>I</kbd> 骑兵连　<kbd>L</kbd> 手榴弹　<kbd>O</kbd> 开镜　<kbd>Enter</kbd> 开始</span><span class="touch-only">左下摇杆移动，右半屏滑动瞄准，按住开火键也能拖着瞄；准星靠近敌人会自动吸一点。</span>');
+    opts.appendChild(this._btn('<span class="ol">返回大厅</span><span class="ov">枪火集结</span>', 'opt', () => this.app.toLobby()));
+    const foot = el('div', 'foot', '<span class="pc-only"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移动　鼠标瞄准（点一下画面接管，<kbd>Esc</kbd> 释放）、左键开火、右键开镜　<kbd>空格</kbd> 跳　<kbd>R</kbd> 换弹　<kbd>G</kbd> 手榴弹　<kbd>F</kbd> 互动　<kbd>C</kbd> 切换人称<br>纯键盘：<kbd>Q</kbd><kbd>E</kbd> 左右转　<kbd>Y</kbd><kbd>H</kbd> 上下转　<kbd>J</kbd> 开火　<kbd>K</kbd> 跳　<kbd>U</kbd> 手榴弹　<kbd>I</kbd> 互动（上炮 / 上机枪）　<kbd>O</kbd> 开镜　<kbd>Enter</kbd> 开始</span><span class="touch-only">左下摇杆移动，右半屏滑动瞄准，按住开火键也能拖着瞄；准星靠近敌人会自动吸一点。打掉机枪手后，阵地里的机枪可以接管。</span>');
     p.append(head, start, opts, this._modes(), foot);
     menu.appendChild(p);
     this.menuPanel = p;
@@ -101,7 +102,7 @@ export class UI {
     for (const k of Object.keys(OPTS)) if (OPTS[k].where.includes('p')) o2.appendChild(this._optBtn(k));
     o2.appendChild(this._btn('<span class="ol">全屏</span><span class="ov">切换</span>', 'opt', () => this.app.fullscreen()));
     c2.append(o2, this._modes());
-    c2.appendChild(el('div', 'foot', '<span class="pc-only">准星对着敌人开火，靠近目标会吸附，打头伤害加倍；<kbd>R</kbd> 换弹，打空自动换。<kbd>空格</kbd>/<kbd>K</kbd> 跳：能跳过铁丝网、跳上箱子和土台、跳进机枪阵地侧面，也能跳起躲山本的突进。炮位旁按 <kbd>F</kbd> 操炮：<kbd>A</kbd><kbd>D</kbd> 转炮口、<kbd>W</kbd><kbd>S</kbd> 调仰角、开火键开炮、<kbd>F</kbd> 离开。<kbd>V</kbd>/<kbd>U</kbd> 亮剑能和山本拼刀，<kbd>X</kbd>/<kbd>I</kbd> 骑兵连，<kbd>Esc</kbd> 继续。</span><span class="touch-only">准星对着敌人开火，靠近目标会吸附，打头伤害加倍。跳：能跳过铁丝网、跳上箱子和土台、跳进机枪阵地侧面，也能跳起躲山本的突进。炮位旁点“操炮”：摇杆转炮口、调仰角，开火键开炮。亮剑能和山本拼刀。</span>'));
+    c2.appendChild(el('div', 'foot', '<span class="pc-only">准星对着敌人开火，靠近目标会吸附，打头伤害加倍；<kbd>R</kbd> 换弹，打空自动换。<kbd>空格</kbd>/<kbd>K</kbd> 跳：能跳过铁丝网、跳上箱子和土台、跳进机枪阵地侧面，也能跳起躲山本的突进。<kbd>I</kbd>/<kbd>F</kbd> 互动：打掉机枪手后走进阵地接管机枪；炮位旁上炮，<kbd>A</kbd><kbd>D</kbd> 转炮口、<kbd>W</kbd><kbd>S</kbd> 调仰角、开火键开炮；再按一次离开。<kbd>U</kbd>/<kbd>G</kbd> 手榴弹，<kbd>Esc</kbd> 继续。</span><span class="touch-only">准星对着敌人开火，靠近目标会吸附，打头伤害加倍。跳：能跳过铁丝网、跳上箱子和土台、跳进机枪阵地侧面，也能跳起躲山本的突进。打掉机枪手后走进阵地点“机枪”接管；炮位旁点“操炮”，摇杆转炮口、调仰角，开火键开炮。</span>'));
     cols.append(c1, c2); pp.appendChild(cols); pause.appendChild(pp);
 
     // 结算
@@ -207,7 +208,7 @@ export class UI {
   _skills() {
     const box = $('skills');
     this.chips = {};
-    for (const k of ['fire', 'nade', 'dash', 'cav']) { const d = el('div'); box.appendChild(d); this.chips[k] = d; }
+    for (const k of ['fire', 'nade']) { const d = el('div'); box.appendChild(d); this.chips[k] = d; }
   }
   // 动作键状态：触屏按钮与电脑右下角的状态条共用
   setAction(key, label, sub, disabled, keyText) {
@@ -226,7 +227,7 @@ export class UI {
     const c = this.chips[key];
     if (c) { c.innerHTML = `<b>${keyText || ''}</b>${label}<em>${sub || '就绪'}</em>`; c.classList.toggle('off', !!disabled); }
   }
-  // 互动键（操炮 / 离开炮位）：电脑显示提示条，触屏显示按钮
+  // 互动键（操炮 / 接管机枪 / 离开）：电脑显示提示条，触屏显示按钮
   setUse(label) {
     if (this.cache.use === label) return;
     this.cache.use = label;

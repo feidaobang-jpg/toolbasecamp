@@ -147,19 +147,13 @@ export function buildWorld(scene, quality) {
       for (let i = 0; i < n; i++) g.box(width, 0.29, step * 0.96, x + R(-0.04, 0.04), 0.15 + r * 0.29, z0 + step * (i + 0.5), (i + r) % 2 ? C.bag : C.bag2, R(-0.05, 0.05), 0, 0, 0.3);
     }
   };
-  const mgProp = (g, x, y, z) => {
-    g.box(0.12, 0.14, 1.3, x, y + 0.2, z + 0.3, 0x2b2b2b, 0, 0, 0, 0);
-    g.box(0.2, 0.2, 0.5, x, y + 0.18, z - 0.3, 0x35332e, 0, 0, 0, 0);
-    g.box(0.05, 0.4, 0.05, x - 0.22, y - 0.02, z + 0.2, 0x2b2b2b, 0, 0, 0.5, 0);
-    g.box(0.05, 0.4, 0.05, x + 0.22, y - 0.02, z + 0.2, 0x2b2b2b, 0, 0, -0.5, 0);
-  };
   // 朝南（+Z）的 U 形机枪阵地
   const nest = (g, cx, cz, id) => {
     sandbagRow(g, cx - 2.6, cx + 2.6, cz + 1.3, 5);
     // 两侧只垒到腰高：正面打不穿，绕到侧面就能打到机枪手
     sandbagCol(g, cx - 2.3, cz - 1.0, cz + 0.9, 3);
     sandbagCol(g, cx + 2.3, cz - 1.0, cz + 0.9, 3);
-    mgProp(g, cx, 1.45, cz + 1.2);
+    // 机枪是单独的模型（game.js 的 initGuns），打掉机枪手后可以接管
     g.box(0.5, 0.36, 0.34, cx + 1.1, 0.18, cz + 0.3, 0x5a6038);
     const cs = [
       col(cx - 2.7, cx + 2.7, cz + 0.9, cz + 1.7, 1.6, 'nest', { nest: id }),

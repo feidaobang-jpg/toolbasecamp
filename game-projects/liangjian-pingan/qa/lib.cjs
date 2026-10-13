@@ -4,8 +4,8 @@ const fs = require('fs');
 const PW = process.env.PLAYWRIGHT_DIR || 'D:/project/godot/absurd-3d-daily/node_modules/playwright';
 const { chromium } = require(PW);
 const EDGE = process.env.EDGE_PATH || 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe';
-const BASE = process.env.LJ_URL || 'http://localhost:8795/html/game/liangjian-pingan/';
-const OUT = process.env.QA_OUTPUT || path.join(__dirname, '../media-kit/releases/v0.2.0/captures/qa');
+const BASE = process.env.LJ_URL || 'http://localhost:8795/html/game/gunfire-assembly/pingan/';
+const OUT = process.env.QA_OUTPUT || path.join(__dirname, '../media-kit/releases/v0.3.0/captures/qa');
 fs.mkdirSync(OUT, { recursive: true });
 
 async function open(opts = {}) {
@@ -19,7 +19,8 @@ async function open(opts = {}) {
   page.on('response', (r) => { if (r.status() >= 400 && !/assets\/voice\//.test(r.url()) && !/favicon/.test(r.url())) errors.push('http ' + r.status() + ': ' + r.url()); });
   await page.goto(BASE + '?qa=1' + (opts.query || ''), { waitUntil: 'load' });
   await page.waitForFunction(() => window.__lj && document.getElementById('loading').hidden, null, { timeout: 20000 });
-  await page.evaluate(() => { window.__lj.app.noAutoPause = true; });
+  // 电脑端默认是鼠标接管；原有的拖动类断言沿用“按住拖动”，要测接管的脚本自己改回 lock
+  await page.evaluate((lock) => { const a = window.__lj.app; a.noAutoPause = true; if (!lock) a.s.mouseAim = 'drag'; }, !!opts.lock);
   return { browser, ctx, page, errors };
 }
 const shot = (page, name) => page.screenshot({ path: path.join(OUT, name) });

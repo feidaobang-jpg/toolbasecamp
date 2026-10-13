@@ -5,7 +5,7 @@ const fs = require('fs');
 const PW = process.env.PLAYWRIGHT_DIR || 'D:/project/godot/absurd-3d-daily/node_modules/playwright';
 const { chromium } = require(PW);
 const EDGE = process.env.EDGE_PATH || 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe';
-const BASE = process.env.LJ_URL || 'http://localhost:8795/html/game/liangjian-pingan/';
+const BASE = process.env.LJ_URL || 'http://localhost:8795/html/game/gunfire-assembly/pingan/';
 const OUT = path.join(__dirname, '../media-kit/releases/v0.2.0/captures');
 const view = +(process.argv[2] || 0), startPhase = +(process.argv[3] || 1);
 const BOT = fs.readFileSync(path.join(__dirname, 'bot.browser.js'), 'utf8');

@@ -61,9 +61,7 @@ window.__installBot = function () {
     const err = aimAt(t.x, t.y + 1.3 * t.model.scale, t.z);
     set('KeyJ', err < 0.035 || g.aim.target === t);
     const d = dist(h.x, h.z, t.x, t.z);
-    if (S.nadeT <= 0 && h.nades > 0 && t.y < 2 && d < 20 && d > 7 && err < 0.2) { tap('KeyL'); S.nadeT = 2.4; }
-    if (h.dashCd <= 0 && t.y < 2 && t.type !== 'boss' && d < 5 && err < 0.4) tap('KeyU');
-    if (h.cavCd <= 0 && g.phase !== 5 && g.phase !== 3 && err < 0.5 && alive((e) => e.active && e.y < 2 && dist(e.x, e.z, h.x, h.z) < 42).length >= 3) tap('KeyI');
+    if (S.nadeT <= 0 && h.nades > 0 && t.y < 2 && d < 20 && d > 7 && err < 0.2) { tap('KeyU'); S.nadeT = 2.4; }
     return t;
   }
   function solve(type, ref) {
@@ -106,7 +104,7 @@ window.__installBot = function () {
         set('KeyJ', false);
         const d = goTo(c.x + 0.4, c.z + 2.2, 0.8, dt);
         lookAlong(c.x, c.z - 20);
-        if (d < 2.6) tap('KeyF');
+        if (d < 2.6) tap('KeyI');
         return;
       }
       steer(0, 0, false);
@@ -150,11 +148,11 @@ window.__installBot = function () {
       S.circT -= dt; if (S.circT <= 0) { S.circT = 2.5 + Math.random() * 2; S.circ = -S.circ; }
       let mx = (-dz / d) * S.circ, mz = (dx / d) * S.circ;
       if (d > 12) { mx += dx / d; mz += dz / d; } else if (d < 7) { mx -= dx / d; mz -= dz / d; }
-      // 红线预警：侧移；临出刀时有时亮剑拼刀、有时起跳
+      // 红线预警：侧移；临出刀时多半起跳
       if (b.state === 'dashTele') {
         const side = (h.x - b.x) * (-b.dz) + (h.z - b.z) * b.dx > 0 ? 1 : -1;
         mx = -b.dz * side; mz = b.dx * side;
-        if (b.stT < 0.16 && d < 9) { const r = Math.random(); if (r < 0.4 && h.dashCd <= 0) { mx = dx / d; mz = dz / d; steer(mx, mz, true); tap('KeyU'); return; } else if (r < 0.7) tap('KeyK'); }
+        if (b.stT < 0.16 && d < 9 && Math.random() < 0.7) tap('KeyK');
       }
       const cx = 0 - h.x, cz = -92 - h.z;
       if (Math.abs(h.x) > 13 || h.z > -84.5 || h.z < -100.5) { mx += cx * 0.2; mz += cz * 0.2; }

@@ -1,8 +1,8 @@
-// 核心玩法：主角、视角、枪弹、手榴弹、操炮、骑兵连与五个阶段
+// 核心玩法：主角、视角、枪弹、手榴弹、操炮、阵地机枪与五个阶段
 import * as THREE from '../vendor/three.module.js';
 import { TAU, DEG, clamp, lerp, damp, angDiff, angStep, fwdX, fwdZ, rightX, rightZ, yawTo, dist, dist2, rand, pick, reseed, segPointD2, segRect, fmtTime } from './util.js';
 import { buildWorld, L, resolveCircle, groundAt, pointBlocked, losBlocked } from './world.js';
-import { MAT, buildSoldier, poseSoldier, muzzleWorld, setSoldierMat, buildCannon, buildRider, buildViewGun, buildBroadsword, buildMedkit, buildCrate } from './models.js';
+import { MAT, buildSoldier, poseSoldier, muzzleWorld, setSoldierMat, buildCannon, buildMG, buildViewGun, buildMedkit, buildCrate } from './models.js';
 import { Geo } from './geo.js';
 import { Fx } from './fx.js';
 import { PHASE_NAMES, VIEW_NAMES } from './ui.js';
@@ -14,6 +14,7 @@ export const VIEWS = [
   { fov: 76, minP: -60 * DEG, maxP: 60 * DEG },
 ];
 const SHELL_V = 46, SHELL_G = 18;
+const MG_BELT = 100;                                    // 阵地机枪一条弹链的发数
 const ARMOR = { std: 5, easy: 8, one: 1 };
 const SENS = { low: 0.7, mid: 1, high: 1.4 };
 const JUMP_V = 8.2, GRAVITY = 26, AIR_SPEED = 0.85;    // 起跳约 1.3 米；滞空短一点、空中略慢，容易落在箱子上
@@ -39,7 +40,7 @@ export class Game {
     this.world = buildWorld(scene);
     this.fx = new Fx(scene);
     this.units = []; this.enemies = []; this.allies = [];
-    this.bullets = []; this.nades = []; this.shells = []; this.mortars = []; this.riders = []; this.pickups = []; this.timers = [];
+    this.bullets = []; this.nades = []; this.shells = []; this.mortars = []; this.mgs = []; this.pickups = []; this.timers = [];
     this.cam = { yaw: 0, pitch: 0, pendYaw: 0, pendPitch: 0, view: 0, clip: 1, F: new THREE.Vector3(0, 1.5, 90), turning: false, orbitT: 0 };
     this.mode = 'title';
     this.t = 0; this.phase = 1; this.cut = 0; this.cutCam = null;
@@ -84,7 +85,6 @@ export class Game {
     this.hqDoor = dg.build(MAT.vc); this.hqDoor.position.set(0, 0, L.hqGateZ); s.add(this.hqDoor);
     this.hqDoorCol = { x0: -3.5, x1: 3.5, z0: L.hqGateZ - 0.4, z1: L.hqGateZ + 0.4, h: 4, y0: 0, tag: 'hqdoor', on: true };
     this.world.colliders.push(this.hqDoorCol);
-    this.sword = buildBroadsword(); this.sword.visible = false;
     this.medGeo = buildMedkit().geometry; this.crateGeo = buildCrate().geometry;
     this.smokeT = 0;
   }
@@ -101,10 +101,9 @@ export class Game {
     for (const n of this.nades) this.scene.remove(n.mesh);
     for (const s of this.shells) this.scene.remove(s.mesh);
     for (const m of this.mortars) if (m.mesh) this.scene.remove(m.mesh);
-    for (const r of this.riders) this.scene.remove(r.model.root);
     for (const p of this.pickups) this.scene.remove(p.mesh);
     this.units.length = this.enemies.length = this.allies.length = 0;
-    this.bullets.length = this.nades.length = this.shells.length = this.mortars.length = this.riders.length = this.pickups.length = this.timers.length = 0;
+    this.bullets.length = this.nades.length = this.shells.length = this.mortars.length = this.pickups.length = this.timers.length = 0;
     this.fx.clearWarnings();
     this.ui.clearTransient();
     this.boss = null; this.advYaw = 0; this.sortieT = 9;
@@ -119,7 +118,7 @@ export class Game {
     this.clearDynamic();
     const a = this.app;
     this.t = 0; this.cut = 0; this.cutCam = null; this.over = false; this.slow = 1;
-    this.stats = { kills: 0, elites: 0, genius: 0, clash: 0, loot: 0, deaths: 0, hurt: 0, meds: 0, retries: 0, shells: 0, cav: 0, heads: 0, jumps: 0, startPhase, demo: !!a.get('demo') };
+    this.stats = { kills: 0, elites: 0, genius: 0, loot: 0, deaths: 0, hurt: 0, meds: 0, retries: 0, shells: 0, heads: 0, jumps: 0, startPhase, demo: !!a.get('demo') };
     this.score = 0;
     this.lives = a.get('lives') === 'inf' ? Infinity : 3;
     this.flags = {};
@@ -131,8 +130,7 @@ export class Game {
     const maxHp = ARMOR[a.get('armor')] || 5;
     const model = buildSoldier('hero');
     this.scene.add(model.root);
-    model.armR.add(this.sword);
-    const h = (this.hero = { kind: 'player', type: 'hero', x: L.start.x, z: L.start.z, y: 0, vy: 0, onGround: true, coyote: 0, yaw: 0, hp: maxHp, maxHp, alive: true, inv: 0, model, walk: 0, moving: 0, aim: 0, ads: false, fireCd: 0, weapon: startPhase >= 5 ? 'lmg' : 'pistol', mag: 20, magMax: 20, reloadT: 0, nades: 3, nadeMax: 3, nadeT: 0, dashT: 0, dashCd: 0, dashX: 0, dashZ: -1, dashHit: new Set(), swordT: 0, cavCd: 0, deadT: 0, r: 0.45, flashT: 0, vx: 0, vz: 0, slash: -1, hurtT: 0 });
+    const h = (this.hero = { kind: 'player', type: 'hero', x: L.start.x, z: L.start.z, y: 0, vy: 0, onGround: true, coyote: 0, yaw: 0, hp: maxHp, maxHp, alive: true, inv: 0, model, walk: 0, moving: 0, aim: 0, ads: false, fireCd: 0, weapon: startPhase >= 5 ? 'lmg' : 'pistol', mag: 20, magMax: 20, reloadT: 0, nades: 3, nadeMax: 3, nadeT: 0, deadT: 0, r: 0.45, flashT: 0, vx: 0, vz: 0, slash: -1, hurtT: 0 });
     this.aim = { x: 0, y: 1, z: 0, fx: 0, fy: 0, fz: -1, dist: 30, target: null, near: null, nearAng: 9, nearDYaw: 0, nearDPitch: 0 };
     this.hitT = 0; this.hitKind = 0; this.headT = 0;
     if (h.weapon === 'lmg') { h.magMax = h.mag = 40; }
@@ -145,6 +143,7 @@ export class Game {
     c.hp = c.maxHp; c.alive = true; c.manned = false; c.reload = 0; c.shells = 8; c.aimYaw = 0; c.elev = 0.2; c.recoil = 0; c.resupplyT = 0; c.yaw = 0;
     c.placed = startPhase >= 3; c.visible = startPhase >= 2;
     c.x = c.placed ? L.firePos.x : L.cannonStart.x; c.z = c.placed ? L.firePos.z : L.cannonStart.z;
+    this.initGuns();
     this.cam.yaw = 0; this.cam.pitch = 0; this.cam.pendYaw = 0; this.cam.pendPitch = 0; this.cam.clip = 1; this.cam.gy = 0; this.cam.adsK = 0; this.cam.camDist = 4;
     this.cam.view = clamp(a.get('view') | 0, 0, VIEWS.length - 1);
     this.mode = title ? 'title' : 'play';
@@ -169,6 +168,7 @@ export class Game {
   enterPhase(n, fresh) {
     const h = this.hero, c = this.cannon, ui = this.ui;
     this.phase = n; this.phaseT = 0; this.sub = 0;
+    if (h) h.mg = null;
     this.app.saveCheckpoint(n);
     // 清掉上一阶段残留
     for (const e of this.enemies) if (e.alive && e.type !== 'boss') { e.alive = false; e.deadT = 9; }
@@ -183,7 +183,7 @@ export class Game {
       ui.say('李云龙', '传我命令：全团集合，打平安县城！');
       ui.say('张大彪', '一营听令，跟团长上！');
       ui.danmaku(['名场面预定', '李云龙：咱不过了！', '独立团，冲！', '前方高能'], '');
-      this.after(4.5, () => ui.toast(this.app.isTouch() ? '准星对着敌人开火，靠近会吸附，打头加倍；机枪阵地正面打不穿，绕到侧面、跳进去，或者扔手榴弹、叫骑兵连' : '准星对着敌人开火，靠近会吸附，打头加倍；机枪阵地正面打不穿——绕到侧面、跳进去，或者用手榴弹（G / L）、骑兵连（X / I）', 7));
+      this.after(4.5, () => ui.toast(this.app.isTouch() ? '准星对着敌人开火，靠近会吸附，打头加倍；机枪阵地正面打不穿，绕到侧面、跳进去，或者扔手榴弹。打掉机枪手，机枪就归你用' : '准星对着敌人开火，靠近会吸附，打头加倍；机枪阵地正面打不穿——绕到侧面、跳进去，或者用手榴弹（U / G）。打掉机枪手，机枪就归你用（I）', 7));
     } else if (n === 2) {
       if (fresh) this.place(h, 2, 84);
       c.visible = true; c.placed = false; c.x = L.cannonStart.x; c.z = L.cannonStart.z; c.hp = c.maxHp;
@@ -222,8 +222,8 @@ export class Game {
       ui.say('山本一木', '李云龙，你来得正好。', { now: true, foe: true });
       ui.say('李云龙', '山本！狭路相逢——');
       this.after(2.6, () => { ui.stamp('勇者胜！', 1.5); this.audio.voice('yongzhesheng'); this.audio.play('drum'); });
-      this.after(3.6, () => ui.toast('山本拔刀突进时地上有红线：侧移或跳起来躲开，或者用亮剑和他拼刀！', 6));
-      ui.danmaku(['决战！', '山本特工队队长', '亮剑！！！', '拼刀拼刀'], 'red');
+      this.after(3.6, () => ui.toast('山本拔刀突进时地上有红线：侧移，或者跳起来躲开！', 6));
+      ui.danmaku(['决战！', '山本特工队队长', '亮剑！！！', '狭路相逢勇者胜'], 'red');
     }
     this.syncCannonModel(0);
   }
@@ -311,6 +311,7 @@ export class Game {
     this.spawnMed(pos.x, pos.z - 0.4);
     this.ui.say('和尚', side + '机枪哑火了！');
     this.ui.danmaku(['拿下！', '漂亮', '这仗打得痛快'], '');
+    if (!this.flags.mgHint) { this.flags.mgHint = 1; this.after(2.8, () => this.ui.toast(this.app.isTouch() ? '阵地里的机枪归你了：走进去点“机枪”接管' : '阵地里的机枪归你了：走进去按 I 接管', 4.5)); }
   }
 
   // 第二阶段：护送火炮
@@ -398,6 +399,7 @@ export class Game {
     this.cut = 6.2; this.cutCam = { px: 8, py: 3.6, pz: -86.5, lx: L.flag.x + 2, ly: 5.6, lz: L.flag.z };
     this.setHqDoor(false);
     for (const al of this.allies) { al.hold = false; al.cheer = 0.01; }
+    ui.stamp('狭路相逢勇者胜！', 1.1);
     this.after(1.2, () => { w.flagEnemy.visible = false; w.flagRed.visible = true; this.audio.play('win'); ui.stamp('拿下平安县城！', 2.4); });
     ui.say('李云龙', '山本完了！平安县城，拿下了！', { now: true });
     ui.say('旅长', '李云龙！你把晋西北搅成了一锅粥！', { dur: 3 });
@@ -417,7 +419,7 @@ export class Game {
       : '李云龙：“胜败乃兵家常事，重整队伍，再来！”';
     this.app.onResult({
       win, rank, quote, score, demo: s.demo,
-      rows: [['用时', fmtTime(this.t)], ['歼敌', s.kills], ['干掉精锐', s.elites], ['开炮', s.shells + ' 发'], ['“天才”炮击', s.genius], ['拼刀成功', s.clash], ['骑兵连出击', s.cav], ['缴获军火库', s.loot ? '是' : '否'], ['阵亡', s.deaths], ['受击', s.hurt], ['爆头', s.heads], ['规则', (this.app.get('lives') === 'inf' ? '无限命' : '经典 3 命') + ' · ' + ({ std: '标准', easy: '宽松', one: '一发' }[this.app.get('armor')])]],
+      rows: [['用时', fmtTime(this.t)], ['歼敌', s.kills], ['干掉精锐', s.elites], ['开炮', s.shells + ' 发'], ['“天才”炮击', s.genius], ['缴获军火库', s.loot ? '是' : '否'], ['阵亡', s.deaths], ['受击', s.hurt], ['爆头', s.heads], ['规则', (this.app.get('lives') === 'inf' ? '无限命' : '经典 3 命') + ' · ' + ({ std: '标准', easy: '宽松', one: '一发' }[this.app.get('armor')])]],
     });
   }
   addScore(n) { this.score += n; }
@@ -439,7 +441,6 @@ export class Game {
     this.updateNades(dt);
     this.updateShells(dt);
     this.updateMortars(dt);
-    this.updateRiders(dt);
     this.updatePickups(dt);
     this.updatePhase(dt);
     this.poseAll(dt);
@@ -527,50 +528,41 @@ export class Game {
   updateHero(dt) {
     const h = this.hero, inp = this.input, c = this.cam, can = this.cannon, ui = this.ui;
     h.inv = Math.max(0, h.inv - dt); h.hurtT = Math.max(0, h.hurtT - dt); h.flashT = Math.max(0, h.flashT - dt);
-    h.dashCd = Math.max(0, h.dashCd - dt); h.cavCd = Math.max(0, h.cavCd - dt); h.swordT = Math.max(0, h.swordT - dt);
     this.hitT = Math.max(0, this.hitT - dt); this.headT = Math.max(0, this.headT - dt);
     if (h.nades < h.nadeMax) { h.nadeT += dt; if (h.nadeT >= 12) { h.nadeT = 0; h.nades++; } }
-    const drain = () => { for (const e of ['fire', 'jump', 'reload', 'nade', 'dash', 'cav', 'use']) inp.take(e); };
+    const drain = () => { for (const e of ['fire', 'jump', 'reload', 'nade', 'use']) inp.take(e); };
     if (!h.alive) {
-      h.deadT += dt; h.moving = 0; h.ads = false;
+      h.deadT += dt; h.moving = 0; h.ads = false; h.mg = null;
       if (h.deadT > 1.8 && !this.over) this.respawn();
       drain(); ui.setUse(null);
       return;
     }
     if (this.cut > 0) { h.moving = 0; h.ads = false; h.aim = damp(h.aim, 0, 10, dt); drain(); return; }
-    // 互动键：炮位旁上炮，操炮时离开
+    // 互动键（I / F）：炮位旁上炮、阵地里接管机枪，再按一次离开
     let use = inp.take('use');
     if (can.manned) {
       ui.setUse('离开炮位'); ui.setPrompt(null);
       if (use) { this.leaveCannon(); use = false; }   // 同一下按键只离开，不会马上又坐回去
       else { this.controlCannon(dt); return; }
     }
+    if (h.mg) {
+      ui.setUse('离开机枪'); ui.setPrompt(null);
+      if (use) { this.leaveMG(); use = false; }
+      else { this.controlMG(dt); return; }
+    }
     const nearCannon = this.phase === 3 && can.placed && can.alive && h.y < 0.5 && dist2(h.x, h.z, can.x, can.z + 1.6) < 3.4 * 3.4;
-    ui.setUse(nearCannon ? '操炮' : null);
-    ui.setPrompt(nearCannon && !this.app.isTouch() ? '按 F 操炮' : null);
+    const gun = nearCannon ? null : this.gunNear();
+    ui.setUse(nearCannon ? '操炮' : gun ? '机枪' : null);
+    ui.setPrompt(this.app.isTouch() ? null : nearCannon ? '按 I 操炮' : gun ? '按 I 接管机枪' : null);
     if (nearCannon && use) { this.manCannon(); drain(); return; }
+    if (gun && use) { this.manMG(gun); drain(); return; }
 
-    h.ads = inp.held.ads && h.dashT <= 0 && h.reloadT <= 0;
+    h.ads = inp.held.ads && h.reloadT <= 0;
     const mv = inp.move, yaw = c.yaw, fp = c.view === 1;
     const wx = rightX(yaw) * mv.x + fwdX(yaw) * mv.y, wz = rightZ(yaw) * mv.x + fwdZ(yaw) * mv.y;
     const mag = Math.min(1, Math.hypot(mv.x, mv.y));
     const ox = h.x, oz = h.z;
-    if (h.dashT > 0) {
-      h.dashT -= dt;
-      const sp = 34;
-      h.x += h.dashX * sp * dt; h.z += h.dashZ * sp * dt;
-      if (rand() < 0.9) this.fx.spawn({ x: h.x, y: h.y + 1.0, z: h.z, life: 0.2, s0: 0.26, s1: 0.04, c0: 0xdfe9ff, c1: 0x6f9fdc, spin: 0 });
-      for (const e of this.enemies) {
-        if (!e.alive || Math.abs(e.y - h.y) > 1.8 || h.dashHit.has(e)) continue;
-        if (segPointD2(ox, oz, h.x, h.z, e.x, e.z) < 1.9 * 1.9) {
-          h.dashHit.add(e);
-          if (e.type === 'boss' && this.tryClash(e)) continue;
-          this.hurtUnit(e, e.type === 'boss' ? 8 : 6, h.dashX, h.dashZ, 'blade');
-          this.audio.play('slash'); this.fx.sparks(e.x, e.y + 1.2, e.z, 8, 0xffffff);
-        }
-      }
-      if (h.dashT <= 0) h.inv = Math.max(h.inv, 0.3);
-    } else if (mag > 0.01) {
+    if (mag > 0.01) {
       const sp = 6.3 * (h.ads ? 0.6 : inp.held.fire ? 0.85 : 1) * (h.onGround ? 1 : AIR_SPEED);
       h.x += wx * sp * dt; h.z += wz * sp * dt;
     }
@@ -583,7 +575,7 @@ export class Game {
     // 跳跃、下落与落地：只有从上面落下才能站到箱子、沙袋、土台上
     const prevY = h.y;
     h.coyote = h.onGround ? 0.1 : Math.max(0, h.coyote - dt);
-    if (inp.take('jump') && h.coyote > 0 && h.dashT <= 0) { h.vy = JUMP_V; h.onGround = false; h.coyote = 0; this.stats.jumps++; this.audio.play('jump', 0.7); }
+    if (inp.take('jump') && h.coyote > 0) { h.vy = JUMP_V; h.onGround = false; h.coyote = 0; this.stats.jumps++; this.audio.play('jump', 0.7); }
     h.vy -= GRAVITY * dt;
     h.y += h.vy * dt;
     const gnd = groundAt(this.world, h.x, h.z, prevY);
@@ -592,10 +584,10 @@ export class Game {
       h.y = gnd; h.vy = 0; h.onGround = true;
     } else h.onGround = false;
     h.vx = (h.x - ox) / Math.max(dt, 1e-4); h.vz = (h.z - oz) / Math.max(dt, 1e-4);
-    h.moving = damp(h.moving, h.dashT > 0 ? 1 : h.onGround ? mag : 0.25, 14, dt);
+    h.moving = damp(h.moving, h.onGround ? mag : 0.25, 14, dt);
     if (mag > 0.01 && h.onGround) h.walk += dt * (4 + 8 * mag);
     // 身体跟着瞄准方向（枪战类：平移时不转身）
-    const faceYaw = h.dashT > 0 ? yawTo(h.dashX, h.dashZ) : c.yaw;
+    const faceYaw = c.yaw;
     h.yaw = fp ? faceYaw : angStep(h.yaw, faceYaw, 16 * dt);
 
     this.computeAim();
@@ -606,10 +598,8 @@ export class Game {
     if (h.reloadT > 0) { h.reloadT -= dt; if (h.reloadT <= 0) h.mag = h.magMax; }
     else if ((wantReload && h.mag < h.magMax) || h.mag <= 0) this.startReload();
     h.aim = damp(h.aim, firing || h.ads || h.fireCd > -0.6 ? 1 : 0, 16, dt);
-    if (firing && h.fireCd <= 0 && h.reloadT <= 0 && h.dashT <= 0 && h.mag > 0) this.heroShoot();
+    if (firing && h.fireCd <= 0 && h.reloadT <= 0 && h.mag > 0) this.heroShoot();
     if (inp.take('nade')) this.throwNade();
-    if (inp.take('dash')) this.startDash(wx, wz, mag);
-    if (inp.take('cav')) this.callCavalry();
   }
   startReload() { const h = this.hero; h.reloadT = h.weapon === 'lmg' ? 1.6 : 1.1; this.audio.play('reload'); }
 
@@ -698,77 +688,66 @@ export class Game {
     this.audio.play('throw');
     h.slash = 0.36;
   }
-  startDash(wx, wz, mag) {
-    const h = this.hero, c = this.cam;
-    if (h.dashCd > 0 || h.dashT > 0) return;
-    // 有方向输入就朝那边突进，否则朝准星方向
-    let dx = fwdX(c.yaw), dz = fwdZ(c.yaw);
-    if (mag > 0.1) { const l = Math.hypot(wx, wz) || 1; dx = wx / l; dz = wz / l; }
-    h.dashX = dx; h.dashZ = dz; h.dashT = 0.3; h.dashCd = 7; h.dashHit.clear(); h.inv = Math.max(h.inv, 0.5); h.swordT = 0.9; h.slash = 0;
-    this.audio.play('unsheathe'); this.audio.voice('liangjian', 0.9);
-    this.ui.stamp('亮剑！', 0.8);
-    if (!this.flags.dm_lj) { this.flags.dm_lj = 1; this.ui.danmaku(['面对强敌，也要毅然亮剑', '亮剑精神！', '剑锋所指'], ''); }
-  }
-  tryClash(b) {
-    // 山本突进（或起手）时亮剑撞上：拼刀
-    if (b.state !== 'dash' && b.state !== 'dashTele') return false;
-    b.state = 'stun'; b.stT = 2.8;
-    this.hero.dashT = 0; this.hero.inv = Math.max(this.hero.inv, 1.0);
-    this.hurtUnit(b, 7, 0, 0, 'blade');
-    this.stats.clash++; this.addScore(400);
-    const mx = (b.x + this.hero.x) / 2, mz = (b.z + this.hero.z) / 2;
-    this.fx.sparks(mx, 1.4, mz, 26, 0xffffff); this.fx.ring(mx, 0.1, mz, 5, 0.4, 0xffffff, 1);
-    this.fx.clearWarnings();
-    this.audio.play('clang');
-    this.ui.stamp('狭路相逢勇者胜！', 1.5);
-    this.ui.danmaku(['拼刀赢了！', '勇者胜！！！', '山本：？？？', '帅'], 'hot');
-    return true;
-  }
-  callCavalry() {
-    const h = this.hero;
-    if (h.cavCd > 0) { this.ui.toast('骑兵连正在整队（' + Math.ceil(h.cavCd) + ' 秒）', 1.2); return; }
-    if (this.phase === 5) { this.ui.toast('院子太窄，骑兵连冲不进来', 1.6); return; }
-    h.cavCd = 45; this.stats.cav++;
-    const inCity = h.z < -23;
-    const yaw = inCity ? 0 : this.cam.yaw;
-    const fx_ = fwdX(yaw), fz_ = fwdZ(yaw), rx = rightX(yaw), rz = rightZ(yaw);
-    // 五骑分列两侧冲过去，中间留出主角和镜头的位置
-    const lanes = inCity ? [-5.6, -3.6, -1.9, 2.3, 4.6] : [-8.2, -5.2, -2.4, 2.8, 5.8];
-    for (let i = 0; i < 5; i++) {
-      const off = lanes[i];
-      const model = buildRider();
-      const x = (inCity ? 0 : h.x) + rx * off - fx_ * (24 + Math.abs(i - 2) * 2.5), z = h.z + rz * off - fz_ * (24 + Math.abs(i - 2) * 2.5);
-      model.root.rotation.y = yaw; model.root.position.set(x, 0, z);
+  // ---------- 阵地机枪：打掉机枪手后可以接管，枪身跟着准星转 ----------
+  initGuns() {
+    for (const m of this.mgs) this.scene.remove(m.model.root);
+    this.mgs = [['A', L.nestA], ['B', L.nestB], ['S', L.streetNest]].map(([id, n]) => {
+      const model = buildMG();
+      model.root.position.set(n.x, 1.47, n.z + 1.2); model.root.rotation.set(0, Math.PI, 0);   // 架在正面沙袋上，枪口朝外（+Z）
       this.scene.add(model.root);
-      this.riders.push({ model, x, z, fx: fx_, fz: fz_, d: 0, hit: new Set(), t: rand(TAU), hop: 0 });
-    }
-    this.audio.voice('qibinglian'); this.audio.play('bugle', 0.7);
-    this.ui.say('孙德胜', '骑兵连——进攻！', { now: true });
-    this.ui.stamp('骑兵连，进攻！', 1.5);
-    this.ui.danmaku(['骑兵连，进攻！', '孙连长！！', '泪目', '进攻！！！', '全体都有'], 'hot');
+      return { id, x: n.x, z: n.z + 0.15, model, ammo: MG_BELT, cd: 0, reload: 0 };
+    });
   }
-  updateRiders(dt) {
-    this.hoofT = (this.hoofT || 0) - dt;
-    if (this.riders.length && this.hoofT <= 0) { this.hoofT = 0.11; this.audio.play('hoof', 0.5); }
-    for (let i = this.riders.length - 1; i >= 0; i--) {
-      const r = this.riders[i];
-      const sp = 18;
-      r.x += r.fx * sp * dt; r.z += r.fz * sp * dt; r.d += sp * dt; r.t += dt * 16;
-      // 遇到矮障碍就跃过去
-      const blocked = pointBlocked(this.world, r.x + r.fx * 1.5, 0.5, r.z + r.fz * 1.5);
-      r.hop = damp(r.hop, blocked && blocked.h < 3 ? 1.5 : 0, 9, dt);
-      if (blocked && blocked.h >= 3) r.d = 999;
-      r.model.root.position.set(r.x, r.hop + Math.abs(Math.sin(r.t)) * 0.16, r.z);
-      r.model.root.rotation.x = Math.sin(r.t) * 0.05;
-      r.model.legs.forEach((l, k) => { l.rotation.x = Math.sin(r.t + (k < 2 ? 0 : Math.PI) + (k % 2) * 0.6) * 0.9; });
-      r.model.rider.armR.rotation.x = 2.5 + Math.sin(r.t * 0.5) * 0.5;
-      if (rand() < dt * 14) this.fx.dust(r.x, 0.1, r.z, 1);
-      for (const e of this.enemies) {
-        if (!e.alive || e.y > 2 || r.hit.has(e)) continue;
-        if (dist2(e.x, e.z, r.x, r.z) < 2.0 * 2.0) { r.hit.add(e); this.hurtUnit(e, e.type === 'boss' ? 3 : 5, r.fx, r.fz, 'blade'); this.audio.play('slash', 0.7); this.fx.sparks(e.x, 1.3, e.z, 6, 0xffffff); }
-      }
-      if (r.d > 78) { this.scene.remove(r.model.root); this.riders.splice(i, 1); }
+  gunNear() {
+    const h = this.hero;
+    if (h.y > 0.5) return null;
+    for (const m of this.mgs) {
+      if (dist2(h.x, h.z, m.x, m.z) > 2.3 * 2.3) continue;
+      if (this.enemies.some((e) => e.alive && e.type === 'mg' && e.nest === m.id)) continue;   // 机枪手还在
+      return m;
     }
+    return null;
+  }
+  manMG(m) {
+    const h = this.hero;
+    h.mg = m; h.x = m.x; h.z = m.z; h.y = 0; h.vy = 0; h.onGround = true; h.moving = 0; h.ads = false;
+    this.ui.setPrompt(null);
+    this.audio.play('uiok');
+    if (!this.flags.mgTip) { this.flags.mgTip = 1; this.ui.toast(this.app.isTouch() ? '滑屏瞄准，按住开火键扫射；点“离开机枪”下来' : '转动准星瞄准，按住开火键扫射；再按 I 下来', 5); }
+  }
+  leaveMG() { this.hero.mg = null; }
+  controlMG(dt) {
+    const h = this.hero, m = h.mg, inp = this.input, c = this.cam;
+    h.x = m.x; h.z = m.z; h.y = 0; h.vy = 0; h.onGround = true; h.moving = 0; h.yaw = c.yaw; h.ads = false;
+    this.computeAim();
+    m.cd -= dt;
+    const firing = inp.held.fire; inp.take('fire');
+    const wantReload = inp.take('reload');
+    if (m.reload > 0) { m.reload -= dt; if (m.reload <= 0) m.ammo = MG_BELT; }
+    else if ((wantReload && m.ammo < MG_BELT) || m.ammo <= 0) { m.reload = 2.2; this.audio.play('reload'); }
+    h.aim = damp(h.aim, 1, 16, dt);
+    if (firing && m.cd <= 0 && m.reload <= 0 && m.ammo > 0) this.shootMG(m);
+    for (const e of ['jump', 'nade']) inp.take(e);
+    const fx = fwdX(c.yaw), fz = fwdZ(c.yaw);
+    m.model.root.position.set(m.x + fx * 0.8, 1.05, m.z + fz * 0.8);
+    m.model.root.rotation.set(c.pitch, c.yaw, 0);
+  }
+  shootMG(m) {
+    const c = this.cam, a = this.aim;
+    m.cd = 0.075; m.ammo--;
+    const fx = fwdX(c.yaw), fz = fwdZ(c.yaw);
+    const mx = m.x + fx * 1.9, my = Math.max(1.0, 1.25 + Math.sin(c.pitch) * 1.1), mz = m.z + fz * 1.9;
+    let dx = a.x - mx, dy = a.y - my, dz = a.z - mz;
+    let l = Math.hypot(dx, dy, dz);
+    if (l < 2.2 || dx * a.fx + dy * a.fy + dz * a.fz < 0) { dx = a.fx; dy = a.fy; dz = a.fz; l = 1; }
+    dx /= l; dy /= l; dz /= l;
+    const sp = 0.016;
+    dx += rand(-sp, sp); dy += rand(-sp, sp) * 0.7; dz += rand(-sp, sp);
+    l = Math.hypot(dx, dy, dz); dx /= l; dy /= l; dz /= l;
+    // 自己阵地的沙袋不挡自己的子弹
+    this.bullets.push({ team: 0, x: mx, y: my, z: mz, dx, dy, dz, sp: 95, life: 0.75, dmg: 1, ign: 'nest', age: 0, hero: true });
+    this.fx.sparks(mx, my, mz, 1, 0xffe08a);
+    this.audio.play('mg', 0.8);
   }
 
   // ---------- 意大利炮 ----------
@@ -778,7 +757,7 @@ export class Game {
     h.x = c.x + 0.9; h.z = c.z + 1.7; h.y = 0; h.vy = 0; h.onGround = true; h.yaw = 0; h.moving = 0; h.aim = 0; h.ads = false;
     this.ui.setPrompt(null);
     this.audio.play('uiok');
-    if (!this.flags.manned) { this.flags.manned = 1; this.ui.toast(this.app.isTouch() ? '摇杆或滑屏转炮口、调仰角，落点对准目标后点开火键开炮' : 'A/D 或鼠标转炮口，W/S 或 Y/H 调仰角，落点对准目标后按开火键（左键 / J）开炮；F 离开炮位', 7); }
+    if (!this.flags.manned) { this.flags.manned = 1; this.ui.toast(this.app.isTouch() ? '摇杆或滑屏转炮口、调仰角，落点对准目标后点开火键开炮' : 'A/D 或鼠标转炮口，W/S 或 Y/H 调仰角，落点对准目标后按开火键（左键 / J）开炮；I 离开炮位', 7); }
   }
   leaveCannon() {
     const c = this.cannon, h = this.hero;
@@ -799,8 +778,7 @@ export class Game {
       if (c.shells > 0) this.fireCannon();
       else if (!this.flags.noShell || this.t - this.flags.noShell > 2) { this.flags.noShell = this.t; this.ui.toast('炮弹打光了，和尚正在扛（稍等几秒）', 1.8); }
     }
-    for (const e of ['jump', 'reload', 'nade', 'dash']) inp.take(e);
-    if (inp.take('cav')) this.callCavalry();
+    for (const e of ['jump', 'reload', 'nade']) inp.take(e);
     // 弹道预览
     const pre = this.simShell(c.aimYaw, c.elev, true);
     this.arc.visible = true; this.aimRing.visible = true;
@@ -1133,7 +1111,7 @@ export class Game {
     else if (p === 3) { x = 4; z = 31; }
     else if (p === 4) { x = 0; z = this.flags.s2 ? -61 : this.flags.s1 ? -37 : -12; }
     else if (p === 5) { x = 0; z = -85.5; }
-    h.alive = true; h.hp = h.maxHp; h.inv = 2.6; h.deadT = 0; h.nades = h.nadeMax; h.mag = h.magMax; h.reloadT = 0; h.dashT = 0;
+    h.alive = true; h.hp = h.maxHp; h.inv = 2.6; h.deadT = 0; h.nades = h.nadeMax; h.mag = h.magMax; h.reloadT = 0; h.mg = null;
     this.place(h, x, z);
     this.bullets = this.bullets.filter((b) => b.team === 0 || dist2(b.x, b.z, x, z) > 30 * 30);
     for (const e of this.enemies) if (e.alive) { e.stT = Math.max(e.stT, 1.6); if (e.type === 'boss') { e.state = 'walk'; e.cd = 2; } }
@@ -1185,7 +1163,7 @@ export class Game {
         const dx = b.x - a.x, dz = b.z - a.z, d2 = dx * dx + dz * dz, rr = a.r + b.r;
         if (d2 >= rr * rr || d2 < 1e-6) continue;
         const d = Math.sqrt(d2), push = (rr - d) * 0.5, nx = dx / d, nz = dz / d;
-        const fa = a.hold || a.type === 'mg' || (a === this.hero && (this.cannon.manned || a.dashT > 0)), fb = b.hold || b.type === 'mg';
+        const fa = a.hold || a.type === 'mg' || (a === this.hero && (this.cannon.manned || a.mg)), fb = b.hold || b.type === 'mg';
         if (!fa) { a.x -= nx * push; a.z -= nz * push; }
         if (!fb) { b.x += nx * push; b.z += nz * push; }
       }
@@ -1196,10 +1174,8 @@ export class Game {
   poseHero(dt) {
     const h = this.hero, m = h.model;
     if (h.slash >= 0 && dt) { h.slash += dt * 2.6; if (h.slash > 1) h.slash = -1; }
-    const blade = h.swordT > 0;
-    this.sword.visible = blade;
     const pitch = h.aim > 0.3 && !this.cannon.manned ? this.cam.pitch : 0;
-    poseSoldier(m, { walk: h.walk, moving: h.moving, aim: blade ? 0 : h.aim, pitch, carry: blade ? 'blade' : 'side', slash: blade || h.slash >= 0 ? (h.slash >= 0 ? h.slash : 0.9) : -1, cheer: this.flags.won ? this.t : 0 });
+    poseSoldier(m, { walk: h.walk, moving: h.moving, aim: h.aim, pitch, carry: 'side', slash: h.slash, cheer: this.flags.won ? this.t : 0 });
     m.root.position.set(h.x, h.y, h.z);
     m.root.rotation.y = h.yaw;
     m.root.updateMatrixWorld(true);
@@ -1313,8 +1289,10 @@ export class Game {
         const rx = rightX(c.yaw), rz = rightZ(c.yaw);
         const want = pointBlocked(this.world, h.x + rx * 0.8, c.gy + 1.5, h.z + rz * 0.8) ? 0.12 : lerp(0.7, 0.95, adsK);
         c.shoulder = damp(c.shoulder === undefined ? 0.7 : c.shoulder, want, 12, dt);
-        const px = h.x + rx * c.shoulder, py = c.gy + 1.95 + (h.y - c.gy) * 0.4, pz = h.z + rz * c.shoulder;
-        const d = lerp(v.dist, 3.1, adsK);
+        // 接管机枪时人在沙袋围子里：镜头抬高、贴近，从沙袋上方看出去，免得被正面沙袋挡住
+        const onGun = !!h.mg;
+        const px = h.x + rx * c.shoulder, py = c.gy + (onGun ? 2.35 : 1.95) + (h.y - c.gy) * 0.4, pz = h.z + rz * c.shoulder;
+        const d = onGun ? 1.5 : lerp(v.dist, 3.1, adsK);
         const cx = px - fx * d, cy = py - fy * d, cz = pz - fz * d;
         let clip = 1;
         if (cy < 0.3) clip = Math.min(clip, (py - 0.3) / Math.max(0.01, py - cy));
@@ -1390,13 +1368,13 @@ export class Game {
     ui.setCrossTip(c.manned || !h.alive || this.cut > 0 ? null : this.headT > 0 ? '爆头！' : h.reloadT > 0 ? '换弹中…' : h.mag > 0 && h.mag <= 3 ? '子弹不多了' : null, this.headT > 0);
     // 动作键状态（触屏按钮与电脑右下角的状态条共用）
     if (c.manned) ui.setAction('fire', '开炮', c.shells > 0 ? (c.reload > 0 ? '装填' : '×' + c.shells) : '等炮弹', c.reload > 0 || c.shells <= 0, 'J');
+    else if (h.mg) ui.setAction('fire', touch ? '开火' : '重机枪', h.mg.reload > 0 ? '换弹' : h.mg.ammo + '/' + MG_BELT, h.mg.reload > 0, 'J');
     else ui.setAction('fire', touch ? '开火' : h.weapon === 'lmg' ? '歪把子' : '驳壳枪', h.reloadT > 0 ? '换弹' : h.mag + '/' + h.magMax, h.reloadT > 0, 'J');
-    ui.setAction('nade', '手榴弹', '×' + h.nades, h.nades <= 0 || c.manned, 'L');
-    ui.setAction('dash', '亮剑', c.manned ? '操炮中' : h.dashCd > 0 ? Math.ceil(h.dashCd) + '秒' : '', h.dashCd > 0 || c.manned, 'U');
-    ui.setAction('cav', '骑兵连', this.phase === 5 ? '进不来' : h.cavCd > 0 ? Math.ceil(h.cavCd) + '秒' : '', h.cavCd > 0 || this.phase === 5, 'I');
+    ui.setAction('nade', '手榴弹', '×' + h.nades, h.nades <= 0 || c.manned || !!h.mg, 'U');
     ui.setKeyHint(c.manned
-      ? '<kbd>A</kbd><kbd>D</kbd> 转炮口　<kbd>W</kbd><kbd>S</kbd> 调仰角　<kbd>J</kbd>/左键 开炮　<kbd>F</kbd> 离开炮位　<kbd>C</kbd> 切换人称'
-      : '<kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移动　鼠标拖动或 <kbd>Q</kbd><kbd>E</kbd><kbd>Y</kbd><kbd>H</kbd> 瞄准　<kbd>空格</kbd>/<kbd>K</kbd> 跳　<kbd>R</kbd> 换弹　<kbd>O</kbd>/右键 开镜　<kbd>C</kbd> 切换人称　<kbd>Esc</kbd> 暂停');
+      ? '<kbd>A</kbd><kbd>D</kbd> 转炮口　<kbd>W</kbd><kbd>S</kbd> 调仰角　<kbd>J</kbd>/左键 开炮　<kbd>I</kbd> 离开炮位　<kbd>C</kbd> 切换人称'
+      : h.mg ? '鼠标或 <kbd>Q</kbd><kbd>E</kbd><kbd>Y</kbd><kbd>H</kbd> 瞄准　<kbd>J</kbd>/左键 扫射　<kbd>R</kbd> 换弹链　<kbd>I</kbd> 离开机枪　<kbd>C</kbd> 切换人称'
+      : '<kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移动　鼠标或 <kbd>Q</kbd><kbd>E</kbd><kbd>Y</kbd><kbd>H</kbd> 瞄准　<kbd>空格</kbd>/<kbd>K</kbd> 跳　<kbd>U</kbd> 手榴弹　<kbd>I</kbd> 互动　<kbd>R</kbd> 换弹　<kbd>O</kbd>/右键 开镜　<kbd>C</kbd> 切换人称　<kbd>Esc</kbd> 暂停');
     // 目标指示
     const [w, hgt] = this.app.size();
     const o = this._o || (this._o = {});

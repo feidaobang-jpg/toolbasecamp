@@ -1,5 +1,5 @@
 {
- "at": "2026-10-13T15:26:05.032Z",
+ "at": "2026-10-13T16:15:33.792Z",
  "results": [
   {
    "name": "第三人称：W 朝镜头前方走",
@@ -571,11 +571,11 @@
    }
   },
   {
-   "name": "炮位旁提示“按 F 操炮”，按 F 上炮；上炮时按着开火键也不会直接开炮",
+   "name": "炮位旁提示“按 I 操炮”，按 F（或 I）上炮；上炮时按着开火键也不会直接开炮",
    "ok": true,
    "detail": {
     "pr": {
-     "prompt": "按 F 操炮",
+     "prompt": "按 I 操炮",
      "hidden": false
     },
     "m1": {
@@ -669,7 +669,7 @@
    "detail": {
     "tgtAlive": true,
     "heads": 0,
-    "heroLost": 3,
+    "heroLost": 4,
     "enemyShots": 9,
     "used": 0
    }
@@ -680,7 +680,7 @@
    "detail": {
     "tgtAlive": true,
     "heads": 0,
-    "heroLost": 4,
+    "heroLost": 3,
     "enemyShots": 9,
     "used": 0
    }
@@ -690,7 +690,7 @@
    "ok": true,
    "detail": {
     "y0": 0,
-    "y1": -0.28123741396332935
+    "y1": -0.281237512822829
    }
   },
   {
@@ -704,7 +704,7 @@
    "detail": {
     "locked": true,
     "el": "stage",
-    "toast": "A/D 或鼠标转炮口，W/S 或 Y/H 调仰角，落点对准目标后按开火键（左键 / J）开炮；F 离开炮位",
+    "toast": "A/D 或鼠标转炮口，W/S 或 Y/H 调仰角，落点对准目标后按开火键（左键 / J）开炮；I 离开炮位",
     "state": "play"
    }
   }

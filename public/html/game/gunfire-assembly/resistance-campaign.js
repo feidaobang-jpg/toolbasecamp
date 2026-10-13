@@ -52,7 +52,10 @@ export function createResistanceCampaign(a){
   s.phaseKills=s.kills;s.hold=0;
  }
  function start(chapter=0,phase=0,progress=null){
-  chapter=clamp(Math.floor(chapter)||0,0,2);phase=clamp(Math.floor(phase)||0,0,WAR_CHAPTERS[chapter].stages.length-1);
+  chapter=clamp(Math.floor(chapter)||0,0,2);
+  // 第三章「平安县城」已换成重做版（同包内的独立页面，自带菜单与进度）；旧存档里的第三章进度也转到那里。
+  if(chapter===2){location.href='./pingan/index.html';return;}
+  phase=clamp(Math.floor(phase)||0,0,WAR_CHAPTERS[chapter].stages.length-1);
   const backup=s.backup||JSON.parse(JSON.stringify(a.Game));if(!s.active)viewBackup=a.viewState();if(s.active)stop(false);a.prepare();s.backup=backup;
   Object.assign(s,{active:true,chapter,phase,checkpoint:phase,units:[],shots:[],effects:[],elapsed:progress?.elapsed||0,kills:progress?.kills||0,hold:0,invulnerable:4,deadT:0,failedT:0,order:'follow',cannon:false,carrying:false,loaded:chapter===2&&phase>=2?3:0,grenades:4,medkits:3,grenadeCd:0,reload:0,fireCd:0,chargeT:0,chargeCd:0,damageFlash:0,over:false,weapon:'rifle',ammo:{rifle:5,mauser:10,zb26:20,arisaka:5},supplyCooldown:0,wagonHp:550,gateShots:0,finished:false,aiming:false,towing:false,hitT:0});
   Object.assign(a.Game,{state:'battle',testMode:false,pausedFrom:'battle',msgTimer:0});ui.$('msg').classList.add('hidden');a.AudioSys.init();a.AudioSys.pause(false);a.Input.reset();setupScene();
@@ -257,7 +260,7 @@ export function createResistanceCampaign(a){
   $('warTow').classList.toggle('hidden',!(s.chapter===2&&s.phase<3&&!s.carrying&&(s.towing||distance(p.root.position,s.map.objectives.cannon.position)<5)));$('warTow').textContent=s.towing?'放下炮':'拉动炮';
   if(a.isTouch()){for(const id of ['warHint','warStatus'])$(id).textContent=$(id).textContent.replace(/Q\/E 左右 · W\/S 高低/g,'拖动左右/高低').replace(/WASD 慢速拉炮/g,'摇杆慢速拉炮').replace(/\b[IJKU] /g,'');}
   for(const [id,label] of Object.entries({vJ:p.mounted?'军刀':s.cannon?'开炮':'射击',vK:s.towing?'放炮':s.chapter===2&&s.phase<3&&!s.carrying&&distance(p.root.position,s.map.objectives.cannon.position)<5?'拉炮':p.mounted?'冲刺':'跳跃',vU:'手雷',vI:s.towing?'放炮':p.mounted?'下马':s.cannon?'离炮':'互动',vO:'切枪',vL:'换弹',vR:'换弹',vZ:'举枪',vH:'医疗'})){if($(id)&&$(id).textContent!==label)$(id).textContent=label;}
-  $('keysHint').textContent='WASD 移动 · 按住 J/左键 射击（骑马挥刀）· 右键拖动或 Q/E 转视角 · Z/右键点按 举枪 · U 手雷 · I 互动 · K 跳跃/骑马冲刺 · O 切枪 · R/L 手动换弹 · H 医疗 · T 队友 · C 骑马视角';
+  $('keysHint').textContent='WASD 移动 · 按住 J/左键 射击（骑马挥刀）· 右键拖动或 Q/E 转视角 · Z/右键点按 举枪 · U 手雷 · I 互动 · K 跳跃/骑马冲刺 · O 切枪 · R/L 手动换弹 · N 医疗 · Y/H 抬头低头 · T 队友 · C 骑马视角';
   const ctx=$('warMap').getContext('2d'),map=(x,z)=>({x:90+x*1.15,y:194-(z+35)*.84});ctx.clearRect(0,0,180,204);ctx.fillStyle='#8c886b';ctx.fillRect(84,0,12,204);for(const c of s.map.colliders)if(!c.disabled){const q=map(c.x,c.z);ctx.fillStyle='#637463';ctx.fillRect(q.x-c.w*.575,q.y-c.d*.42,Math.max(1,c.w*1.15),Math.max(1,c.d*.84));}for(const u of s.units)if(!u.dead){const q=map(u.root.position.x,u.root.position.z);ctx.fillStyle=u===p?'#fff4ba':u.team==='ally'?'#90c9e6':'#d68165';ctx.beginPath();ctx.arc(q.x,q.y,u===p?3.5:2.2,0,6.3);ctx.fill();}const goal=map(o.x,o.z);ctx.strokeStyle='#ffd577';ctx.lineWidth=2;ctx.strokeRect(goal.x-5,goal.y-5,10,10);
  }
  function update(dt,playing){

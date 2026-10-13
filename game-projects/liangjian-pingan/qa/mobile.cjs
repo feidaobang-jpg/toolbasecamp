@@ -35,7 +35,7 @@ const center = (page, sel) => page.evaluate((s) => { const r = document.querySel
 const step = (page, n) => page.evaluate((k) => __lj.step(k, true), n);
 const gs = (page) => page.evaluate(() => { const g = __lj.game, h = g.hero; return { x: h.x, y: h.y, z: h.z, yaw: g.cam.yaw, pitch: g.cam.pitch, bullets: g.bullets.filter((b) => b.team === 0).length, state: __lj.app.state, view: g.cam.view, mode: __lj.app.mode(), rot: __lj.app.rot, size: __lj.app.size(), nades: h.nades, dashCd: h.dashCd, cavCd: h.cavCd, mag: h.mag, reloadT: h.reloadT, ads: h.ads, manned: g.cannon.manned }; });
 const cleanField = (page, phase = 1, x = 0, z = 80) => page.evaluate(([ph, px, pz]) => { __lj.manual(true); const g = __lj.game; if (g.phase !== ph) g.reset(ph, false); for (const e of g.enemies) { e.alive = false; e.deadT = 9; } g.timers.length = 0; g.cut = 0; g.flags.counter = 1; g.flags.nA = 1; g.flags.nB = 1; g.flags.p1done = 1; for (const b of g.world.bunkers) b.cd = 999; g.place(g.hero, px, pz); g.cam.yaw = 0; g.cam.pitch = 0; __lj.app.demo = true; __lj.step(6, true); }, [phase, x, z]);
-const BTN_IDS = ['joy-base', 'act-fire', 'act-jump', 'act-ads', 'act-reload', 'act-nade', 'act-dash', 'act-cav', 'btn-view', 'btn-pause', 'btn-full'];
+const BTN_IDS = ['joy-base', 'act-fire', 'act-jump', 'act-ads', 'act-reload', 'act-nade', 'btn-view', 'btn-pause', 'btn-full'];
 const layoutScript = (ids) => {
   const vw = innerWidth, vh = innerHeight;
   const rs = ids.map((id) => { const e = document.getElementById(id); const r = e.getBoundingClientRect(); return { id, hidden: e.hidden || !e.getClientRects().length, l: r.left, t: r.top, r: r.right, b: r.bottom, w: r.width, h: r.height }; }).filter((r) => !r.hidden);
@@ -195,10 +195,6 @@ const layoutScript = (ids) => {
       await step(page, 50);
       p0 = await gs(page); await tapBtn('#act-nade'); p1 = await gs(page);
       check(`${tag}：手榴弹键`, p1.nades === p0.nades - 1, [p0.nades, p1.nades]);
-      await tapBtn('#act-dash'); p1 = await gs(page);
-      check(`${tag}：亮剑键`, p1.dashCd > 0, p1.dashCd);
-      await tapBtn('#act-cav'); p1 = await gs(page);
-      check(`${tag}：骑兵连键`, p1.cavCd > 0, p1.cavCd);
       await step(page, 40);
       await tapBtn('#act-ads'); p1 = await gs(page);
       const adsOn = await page.evaluate(() => document.getElementById('act-ads').classList.contains('on'));

@@ -234,6 +234,23 @@ export function buildCannon() {
 
 // ---------- 战马与骑兵 ----------
 let horseGeos = null;
+// 阵地上的重机枪：枪管朝 -Z，原点在枪身下方的支架顶端；接管后跟着准星转
+export function buildMG() {
+  const root = new THREE.Group();
+  root.rotation.order = 'YXZ';
+  const g = new Geo();
+  g.box(0.11, 0.13, 1.25, 0, 0.2, -0.45, 0x2b2b2b, 0, 0, 0, 0);       // 枪管
+  g.box(0.2, 0.2, 0.55, 0, 0.18, 0.2, 0x35332e, 0, 0, 0, 0);           // 机匣
+  g.box(0.3, 0.2, 0.2, 0.24, 0.16, 0.12, 0x5a6038, 0, 0, 0, 0);        // 弹药盒
+  g.box(0.06, 0.16, 0.06, 0, 0.02, 0.5, 0x2b2b2b, 0, 0, 0, 0);         // 握把
+  g.box(0.05, 0.42, 0.05, -0.22, -0.02, -0.3, 0x2b2b2b, 0, 0, 0.5, 0);  // 前脚架
+  g.box(0.05, 0.42, 0.05, 0.22, -0.02, -0.3, 0x2b2b2b, 0, 0, -0.5, 0);
+  g.box(0.07, 1.05, 0.07, 0, -0.5, 0.05, 0x33382c, 0, 0, 0, 0);        // 立柱（架在沙袋上时埋在沙袋里）
+  const mesh = g.build(MAT.vc); mesh.castShadow = true;
+  root.add(mesh);
+  return { root };
+}
+
 export function buildRider() {
   if (!horseGeos) {
     const body = new Geo();

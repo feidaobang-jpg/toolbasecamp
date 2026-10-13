@@ -14,7 +14,11 @@ const GAME = JSON.parse(fs.readFileSync(path.join(HERE, 'media-kit/game.json'), 
 const VERSION = GAME.current_version;
 const SLUG = 'feidao-gunfire';
 
-const RUNTIME_FILES = ['index.html', 'boot.js', 'game.compat.js', 'combat-controls.css', 'author-home.js', 'base.css', 'icon.svg', 'vendor/LICENSE.txt'];
+const BASE_FILES = ['index.html', 'boot.js', 'game.compat.js', 'combat-controls.css', 'author-home.js', 'base.css', 'icon.svg', 'vendor/LICENSE.txt'];
+// 抗战战役第三章「平安县城」重做版：同包内的独立页面（入口、样式、兼容包与喊话语音）
+const PINGAN_FILES = ['pingan/index.html', 'pingan/style.css', 'pingan/game.compat.js',
+  ...fs.readdirSync(path.join(SOURCE, 'pingan/assets/voice')).sort().map(n => 'pingan/assets/voice/' + n)];
+const RUNTIME_FILES = [...BASE_FILES, ...PINGAN_FILES];
 const sha256 = p => createHash('sha256').update(fs.readFileSync(p)).digest('hex');
 
 function writeZip(archive, entries) {

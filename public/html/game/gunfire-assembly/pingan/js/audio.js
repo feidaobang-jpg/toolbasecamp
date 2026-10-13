@@ -1,5 +1,5 @@
 // 声音：全部用 WebAudio 合成（原创），可选加载本机合成的喊话语音
-const VOICES = ['kaipao', 'yidalipao', 'lashanglai', 'qibinglian', 'liangjian', 'jingrui', 'fuyu', 'tiancai', 'yongzhesheng', 'chong'];
+const VOICES = ['kaipao', 'yidalipao', 'lashanglai', 'jingrui', 'fuyu', 'tiancai', 'yongzhesheng', 'chong'];
 
 export class GameAudio {
   constructor() {

@@ -5,7 +5,7 @@
   cd /d/sd/index-tts && PYTHONPATH="D:/sd/index-tts/.venv/Lib/site-packages;D:/sd/index-tts" \
     C:/Users/37818/AppData/Roaming/uv/python/cpython-3.11.13-windows-x86_64-none/python.exe <本文件>
 环境变量 REF 可换参考人声（默认 D:/sd/index-tts/yunxi-ref-8s.wav）。
-输出：public/html/game/liangjian-pingan/assets/voice/<id>.mp3 与 index.json（游戏只加载清单里有的）。
+输出：public/html/game/gunfire-assembly/pingan/assets/voice/<id>.mp3 与 index.json（游戏只加载清单里有的）。
 原始 wav 留在 media-kit/assets/voice-raw/（不入库）。
 """
 import json, os, subprocess, sys
@@ -13,7 +13,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 GAME = HERE.parent
-PUB = GAME.parent.parent / 'public' / 'html' / 'game' / 'liangjian-pingan' / 'assets' / 'voice'
+PUB = GAME.parent.parent / 'public' / 'html' / 'game' / 'gunfire-assembly' / 'pingan' / 'assets' / 'voice'
 RAW = GAME / 'media-kit' / 'assets' / 'voice-raw'
 REF = os.environ.get('REF', 'D:/sd/index-tts/yunxi-ref-8s.wav')
 if not Path(REF).is_file():

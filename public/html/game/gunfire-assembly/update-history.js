@@ -1,6 +1,10 @@
 // Player-facing notes travel with the same game package; no network or account required.
-export const GAME_VERSION='0.1.7';
+export const GAME_VERSION='0.2.0';
 export const UPDATE_HISTORY=[
+  {version:'0.2.0',date:'2026-10-14',title:'平安县城整章重做',changes:[
+    '抗战战役第三章「平安县城 · 开炮」换成重做版：越肩第三人称与第一人称可切换，自己瞄准带轻度吸附，能跳跃；扫清机枪阵地、护送意大利炮、开炮轰塌城楼、巷战、决战山本。',
+    '打掉机枪手后，阵地里的机枪可以接管（I 互动）；电脑端默认鼠标接管瞄准，Esc 释放。本章有自己的菜单和进度，旧的第三章进度不再沿用。',
+    '医疗 / 直升机降低的默认键从 H 改为 N，直升机升高只用 K；Y / H 改为抬头 / 低头。自己改过的键位保持不变。']},
   {version:'0.1.7',date:'2026-10-13',title:'平安县城场景精修',changes:[
     '平安县城增加城墙砖缝、石板路、房屋山墙与瓦檐、炮身铆钉和制服细节，调整日光与远处烟尘。',
     '保留原关卡路线、手动枪战和检查点；拉炮及破门时细节跟随实际物体。']},

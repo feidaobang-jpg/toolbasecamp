@@ -2024,7 +2024,7 @@ function enterVehicle(v){
   player.inVehicle=v;player.mesh.visible=false;player.vy=0;player.onGround=false;
   if(reassigned)autoSave();
   AudioSys.sfx('vehicle');
-  showMsg(v.cfg.fly?'🚁 驾驶 '+v.cfg.name+(isTouch?'（升 / 降 按钮调高度，互动下车）':'（Y 升高 / H 降低，再按I下车）'):'🚗 驾驶 '+v.cfg.name+'（再按I下车）',v.cfg.fly?2.4:1.6);
+  showMsg(v.cfg.fly?'🚁 驾驶 '+v.cfg.name+(isTouch?'（升 / 降 按钮调高度，互动下车）':'（'+keyBindings.label('K')+' 升高 / '+keyBindings.label('H')+' 降低，再按I下车）'):'🚗 驾驶 '+v.cfg.name+'（再按I下车）',v.cfg.fly?2.4:1.6);
 }
 function exitVehicle(){
   const v=player.inVehicle;if(!v)return;
@@ -2599,7 +2599,7 @@ function automaticFireTarget(from,range,aim){
 }
 function interactionTarget(){
   if(rvOn()){const action=rvBreakout.interaction();if(action)return action;}
-  if(player.inVehicle)return {kind:'exit',label:'下车',tip:'I 下车'+(player.inVehicle.cfg.fly?(isTouch?' · 升 / 降 按钮调高度':' · Y 升高 / H 降低'):'')};
+  if(player.inVehicle)return {kind:'exit',label:'下车',tip:'I 下车'+(player.inVehicle.cfg.fly?(isTouch?' · 升 / 降 按钮调高度':' · '+keyBindings.label('K')+' 升高 / '+keyBindings.label('H')+' 降低'):'')};
   let vehicle=null,best=20;
   for(const v of vehicles){const d=dist2(player.pos,v.mesh.position);if(!v.dead&&(!vsOn()||v.team===player.team)&&!coopHumans.some(p=>p!==player&&p.inVehicle===v)&&!(v.noEnter>0)&&d<best&&Math.abs(player.pos.y-v.mesh.position.y)<3){vehicle=v;best=d;}}
   if(vehicle)return {kind:'vehicle',vehicle,label:vehicle.driver?'接管':'驾驶',tip:'I '+(vehicle.driver?'接管（队友下车） ':'驾驶 ')+vehicle.cfg.name};
@@ -2673,6 +2673,9 @@ function updLook(dt){
     Input.look.yaw=Input.look.pitch=0;Input.lastLook=performance.now();
   }
   lookControl.step(dt,(Input.keys.E?1:0)-(Input.keys.Q?1:0));
+  // 键盘上下转视角（默认 Y 抬头 / H 低头），与拖动共用 camPitch 和限位
+  const keyPitch=(Input.keys.LOOKUP?1:0)-(Input.keys.LOOKDOWN?1:0);
+  if(keyPitch)camPitch=clamp(camPitch+keyPitch*1.05*dt,-1,1);
   if(!direct)pitchControl.step(dt);
   camYaw=(camYaw%TAU+TAU)%TAU;
 }
@@ -2742,9 +2745,8 @@ function updPlayer(dt){
       }else v.stuckT=0;
     }
     if(v.cfg.fly){
-      // 升降：Y 升 / H 降（键盘上下相邻）；驾驶中本来就不能用医疗包，H 不冲突。
-      // K/空格 也算升高（手机“升”就是 K 键位）。
-      const up=Input.network?Input.network.rise:Input.keys.Y||Input.keys.K,down=Input.network?Input.network.lower:Input.keys.H;
+      // 升降：K/空格 升高，降低用“医疗 / 直升机降低”动作（默认 N）；Y / H 留给抬头低头。驾驶中本来就不能用医疗包，不冲突。
+      const up=Input.network?Input.network.rise:Input.keys.K,down=Input.network?Input.network.lower:Input.keys.H;
       if(up&&!down)v.alt=Math.min(18,v.alt+dt*8);
       if(down&&!up)v.alt=Math.max(0,v.alt-dt*8);
       v.mesh.position.y=Math.max(groundY(v.mesh.position.x,v.mesh.position.z),fortress.topAt(v.mesh.position.x,v.mesh.position.z))+2+v.alt;
@@ -2933,7 +2935,7 @@ function claimSandbox(type,id){
   else if(type==='vehicle'){
     let v=vehicles.find(v=>v.kind===id&&!v.dead);
     if(!v){Game.vehiclesOwned.push(id);v=spawnVehicle(id);}
-    enterVehicle(v);showMsg('已登上 '+VEHICLES[id].name+' · I 下车'+(v.cfg.fly?(isTouch?'；升 / 降 按钮调高度':'；Y 升高 / H 降低'):''),3);
+    enterVehicle(v);showMsg('已登上 '+VEHICLES[id].name+' · I 下车'+(v.cfg.fly?(isTouch?'；升 / 降 按钮调高度':'；'+keyBindings.label('K')+' 升高 / '+keyBindings.label('H')+' 降低'):''),3);
   }else if(type==='squad'){
     while(squad.length<squadLimit())spawnSquad();Game.squadCount=squad.length;showMsg(squad.length+'名队友已就位');
   }else if(type==='item')grantSupply({type,id});
@@ -4434,7 +4436,7 @@ function applyRoot(obj,row){
 function starshipInput(){
   const axis=Input.axis(),cs=Math.cos(camYaw),sn=Math.sin(camYaw),f=-axis.y,r=axis.x,edges=[];
   edges.push(...coopPendingEdges.splice(0));
-  const input={x:f*sn-r*cs,z:f*cs+r*sn,edges,yaw:camYaw,fp:camMode==='first',run:!!Input.keys.SPRINT,rise:!!(Input.keys.K||Input.keys.Y),lower:!!Input.keys.H,
+  const input={x:f*sn-r*cs,z:f*cs+r*sn,edges,yaw:camYaw,fp:camMode==='first',run:!!Input.keys.SPRINT,rise:!!Input.keys.K,lower:!!Input.keys.H,
     fire:isTouch?!!Input.keys.J:CombatControls.firing(true),autoFire:!isTouch&&CombatControls.settings.fire==='auto',autoAim:isTouch||CombatControls.settings.aim==='auto'};
   // 战地：客人只在按住时开火；俯仰和镜头距离（look，步行为 0）让房主还原准星，autoAim 表示触屏/纯键盘的轻度吸附。
   if(battleOn())Object.assign(input,{pitch:camPitch,look:player.inVehicle?camState.dist:0,fire:isTouch?!!Input.keys.J:CombatControls.held,autoFire:false,autoAim:!!aimAssistKind()});

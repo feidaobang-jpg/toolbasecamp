@@ -279,7 +279,7 @@ const DEG = Math.PI / 180;
   await page.keyboard.press('KeyF'); await step(6);
   const m1 = await page.evaluate(() => ({ manned: __lj.game.cannon.manned, shells: __lj.game.cannon.shells }));
   await page.keyboard.up('KeyJ'); await step(3);
-  check('炮位旁提示“按 F 操炮”，按 F 上炮；上炮时按着开火键也不会直接开炮', !pr.hidden && /F/.test(pr.prompt) && m1.manned && m1.shells === 8, { pr, m1 });
+  check('炮位旁提示“按 I 操炮”，按 F（或 I）上炮；上炮时按着开火键也不会直接开炮', !pr.hidden && /I/.test(pr.prompt) && m1.manned && m1.shells === 8, { pr, m1 });
   for (let v = 0; v < 2; v++) {
     await page.evaluate((view) => { const g = __lj.game; g.app.s.view = view; g.setView(view); g.cam.yaw = 0; g.cannon.elev = 0.2; __lj.step(20, true); }, v);
     const c0 = await page.evaluate(() => ({ yaw: __lj.game.cannon.aimYaw, el: __lj.game.cannon.elev }));

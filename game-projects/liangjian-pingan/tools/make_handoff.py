@@ -4,7 +4,8 @@
 
 每个版本的内容写在下面的 SPECS 里。qa/out-*.json 只保存最近一次运行的结果，
 所以只能给“当前这一版”生成；旧版本的清单以当时提交的 handoff.json 为准，不要重新生成
-（v0.1.0 的清单由提交 d45a57a7 里的本脚本生成，那一版的验收结果文件已被 v0.2.0 的覆盖）。
+（v0.1.0 的清单由提交 d45a57a7 里的本脚本生成；v0.2.0 的清单见提交 ea676271，其验收结果文件已被 v0.3.0 的覆盖）。
+从 v0.3.0 起游戏并入《枪火集结》，目录是 public/html/game/gunfire-assembly/pingan。
 """
 import hashlib, json, subprocess, sys
 from datetime import datetime, timezone, timedelta
@@ -12,13 +13,59 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
 GAME = ROOT / 'game-projects' / 'liangjian-pingan'
-PUB = ROOT / 'public' / 'html' / 'game' / 'liangjian-pingan'
+PUB = ROOT / 'public' / 'html' / 'game' / 'gunfire-assembly' / 'pingan'
 KIT = GAME / 'media-kit'
 QA = GAME / 'qa'
 
 AUTO = '（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）'
 
 SPECS = {
+    'v0.3.0': {
+        'base': 'v0.2.0',
+        'shots': [
+            ('mg-tp', 'qa/scene-mg-tp.png', '接管阵地机枪扫射（第三人称，镜头从沙袋上方看出去）'),
+            ('mg-fp', 'qa/scene-mg-fp.png', '接管阵地机枪（第一人称）'),
+            ('view-tp', 'qa/scene-field-tp.png', '越肩第三人称，城外起点；右下状态条只剩开火与手榴弹'),
+            ('view-fp', 'qa/scene-field-fp.png', '第一人称，城外起点'),
+            ('cannon-tp', 'qa/scene-cannon-tp.png', '操炮·炮后视角（I 上炮）'),
+            ('street', 'qa/scene-street-tp.png', '城内主街与街垒'),
+            ('touch-play', 'qa/play-844x390.png', '手机横屏布局：去掉亮剑、骑兵连两个键之后（触控模拟）'),
+            ('touch-play-toy', 'qa/play-844x346.png', 'Toy 外壳高度 844×346 下的布局（触控模拟）'),
+            ('touch-portrait', 'qa/play-390x844.png', '手机竖屏旋转后的布局（触控模拟）'),
+            ('menu', 'qa/menu-1280x720.png', '主菜单：鼠标瞄准默认“鼠标接管”，多了“返回大厅”'),
+            ('menu-phone', 'qa/menu-844x346.png', '手机横屏紧凑主菜单（触控模拟）'),
+        ],
+        'video_desc': '实时运行的脚本录像（{view}，无声音，不是真人操作）',
+        'features': [
+            {'id': 'mg', 'desc': '阵地机枪可接管：机枪手被打掉后走进阵地按 I，枪身跟准星转，弹链 100 发', 'status': 'implemented', 'evidence_ids': ['mg-tp', 'mg-fp']},
+            {'id': 'interact', 'desc': '互动键统一为 I（F 别名）：上炮、离炮、接管机枪、离开机枪；手榴弹改到 U', 'status': 'implemented', 'evidence_ids': ['cannon-tp', 'mg-tp']},
+            {'id': 'mouse-lock', 'desc': '电脑端默认鼠标接管，失败时退回按住拖动；锁定状态下左键开火、右键开镜', 'status': 'implemented', 'evidence_ids': ['menu']},
+            {'id': 'no-skills', 'desc': '去掉亮剑、骑兵连与拼刀', 'status': 'implemented', 'evidence_ids': ['view-tp', 'touch-play']},
+            {'id': 'gunfire', 'desc': '并入《枪火集结》：抗战战役第三章进入本页，主菜单可返回大厅；入口改用兼容包', 'status': 'implemented', 'evidence_ids': ['menu']},
+            {'id': 'campaign', 'desc': '一关五个阶段、手动瞄准、跳跃、两视角等沿用 v0.2.0', 'status': 'implemented', 'evidence_ids': ['view-tp', 'view-fp', 'street']},
+        ],
+        'changes': [
+            {'id': 'remove-skills', 'feature_ids': ['no-skills'], 'before': 'U 亮剑突进、I 骑兵连，亮剑可与山本拼刀', 'after': '两个技能和拼刀都去掉；山本突进靠侧移或跳起来躲', 'user_visible': '右下少了两个技能，战报少两行', 'evidence_ids': ['view-tp', 'touch-play'], 'verification': 'automated-pass; human-play not-run'},
+            {'id': 'usable-mg', 'feature_ids': ['mg'], 'before': '阵地上的机枪只是摆设', 'after': '打掉机枪手后可以接管扫射', 'user_visible': '拿下阵地后能用它的机枪打反扑', 'evidence_ids': ['mg-tp', 'mg-fp'], 'verification': 'automated-pass; human-play not-run'},
+            {'id': 'keys', 'feature_ids': ['interact'], 'before': 'F 上炮；L / G 手榴弹', 'after': 'I 互动（F 别名）；U 手榴弹（G 别名）；L 换弹别名、Z 开镜别名，与枪火集结其余模式一致', 'user_visible': '键位换了', 'evidence_ids': ['cannon-tp'], 'verification': 'automated-pass'},
+            {'id': 'mouse-default', 'feature_ids': ['mouse-lock'], 'before': '默认按住拖动，鼠标锁定是可选项，且锁定后左键开不了火（未被发现）', 'after': '默认鼠标接管；锁定下左键开火、右键开镜可用；失败退回拖动', 'user_visible': '电脑上进游戏鼠标直接控制准星，Esc 释放并暂停', 'evidence_ids': ['menu'], 'verification': 'automated-pass（无头 Edge）; Toy 外壳内 not-run'},
+            {'id': 'into-gunfire', 'feature_ids': ['gunfire'], 'before': '独立的本地页面，未发布', 'after': '作为《枪火集结》抗战战役第三章随该游戏发布', 'user_visible': '线上枪火集结的平安县城换成了这一版', 'evidence_ids': ['menu'], 'verification': 'automated-pass（本地跳转与返回）'},
+        ],
+        'bugs': [
+            {'id': 'lock-no-fire', 'found_in': 'v0.2.0（发布前读代码时发现，v0.2.0 未发布）', 'repro': '设置里选鼠标锁定，锁定后点左键', 'observed': '不开火、右键也不开镜（无头 Edge 里确认：锁定后 pointerdown 的目标是舞台元素，#look 的监听收不到）', 'cause': '开火与开镜只挂在 #look 上，而鼠标锁定后事件发给被锁定的元素', 'status': 'fixed', 'fix': '在文档级补上锁定状态下的 mousedown / mouseup 处理', 'before_media_ids': [], 'after_media_ids': [], 'retest': 'interact.cjs「鼠标接管时：左键开火、右键按住开镜、移动鼠标转视角」'},
+            {'id': 'mg-view-blocked', 'found_in': 'v0.3.0 开发中', 'repro': '接管机枪后看第三人称画面', 'observed': '镜头落在阵地正面沙袋后面，沙袋挡住下半屏', 'cause': '镜头在人身后 4.4 米，正好隔着沙袋', 'status': 'fixed', 'fix': '接管时镜头抬到 2.35 米、离人 1.5 米', 'before_media_ids': [], 'after_media_ids': ['mg-tp'], 'retest': '截图复查'},
+        ],
+        'bugs_gap': '修复前的画面没有留存。',
+        'qa': lambda r: [
+            {'what': '机枪接管与扫射、U 手榴弹、I/F 上炮、默认接管下左键开火 / 右键开镜 / 转视角、Esc 即暂停、旧设置换算、枪火集结第三章进入重做版并返回大厅、枪火集结键位默认值', 'method': 'qa/interact.cjs，Edge 无头', 'viewport': '1280×720', 'result': r['interact'], 'evidence': 'qa/out-interact.json'},
+            {'what': '两视角、射击、跳跃、街垒、操炮（沿用并对齐新键位）', 'method': 'qa/views.cjs', 'viewport': '1280×720', 'result': r['views'], 'evidence': 'qa/out-views.json'},
+            {'what': '双端布局（去掉两个技能键后）', 'method': 'qa/mobile.cjs，CDP 触控模拟，不是真机', 'result': r['mobile'], 'evidence': 'qa/out-mobile.json'},
+            {'what': '选项、命数耐久、暂停与声音、隐私', 'method': 'qa/options.cjs', 'result': r['options'], 'evidence': 'qa/out-options.json'},
+            {'what': '自动通关', 'method': 'qa/playthrough.cjs，确定性步进', 'result': r['plays'], 'evidence': 'qa/out-playthrough-p1-*.json', 'note': '一发档没有打完：脚本卡在第一处机枪阵地反复阵亡直到 15 分钟超时（以前靠骑兵连清阵地，脚本不会借掩体）。标准、宽松通关'},
+        ],
+        'untested': ['用户明确说本版不用测试，以下都没有做：真人试玩', '手机真机', '帧时间重测（上次测量在 v0.2.0）', '整局录像重录', 'Toy 外壳内的鼠标接管是否生效（不生效会退回按住拖动）', '语音听感'],
+        'readiness': {'overview': 'partial', 'update': 'partial', 'gaps': ['没有这一版的整局录像，v0.2.0 的录像里还有已去掉的技能', '没有真人、带声音的实机素材', '手机真机未测']},
+    },
     'v0.2.0': {
         'base': 'v0.1.0',
         'shots': [
@@ -48,7 +95,7 @@ SPECS = {
         ],
         'stage': {
             'version': 'v0.2.0-dev01',
-            'build': {'id': 'local-50630872913a', 'commit': 'd45a57a7', 'dirty': True, 'fingerprint': 'sha256:50630872913a2bfbc8109a34655fc10bb6ac6dc0f77ae6394b3aac0562a09bdb（public/html/game/liangjian-pingan 下 26 个文件按路径排序连接）；修复街垒之前的工作区，文件已被后续修改覆盖，无法重算', 'entrypoint': 'public/html/game/liangjian-pingan/index.html'},
+            'build': {'id': 'local-50630872913a', 'commit': 'd45a57a7', 'dirty': True, 'fingerprint': 'sha256:50630872913a2bfbc8109a34655fc10bb6ac6dc0f77ae6394b3aac0562a09bdb（public/html/game/gunfire-assembly/pingan 下 26 个文件按路径排序连接）；修复街垒之前的工作区，文件已被后续修改覆盖，无法重算', 'entrypoint': 'public/html/game/gunfire-assembly/pingan/index.html'},
             'media': [
                 ('stalemate-video', 'barricade-stalemate-before-fix.webm', 'video', '修复前的实时录像（脚本操作、无声音）：前约 130 秒打到第四阶段，之后主角站在街垒前，与沙袋后的敌人互相打不到，一直僵持到 12 分钟超时', [(118, 150, '走到街垒前开始僵持'), (600, 620, '僵持中，画面几乎不动')]),
                 ('stalemate-sheet', 'sheet-barricade-stalemate.jpg', 'screenshot', '同一段录像第 330 / 450 / 600 / 720 秒的四帧拼图：主角与街垒后的三个敌人互相打不到', []),
@@ -195,7 +242,7 @@ def main():
     fp, nfiles = fingerprint()
     build_id = 'local-' + fp[:12]
     commit = subprocess.run(['git', '-C', str(ROOT), 'rev-parse', '--short', 'HEAD'], capture_output=True, text=True).stdout.strip() or None
-    dirty = bool(subprocess.run(['git', '-C', str(ROOT), 'status', '--porcelain', '--', 'public/html/game/liangjian-pingan'], capture_output=True, text=True).stdout.strip())
+    dirty = bool(subprocess.run(['git', '-C', str(ROOT), 'status', '--porcelain', '--', 'public/html/game/gunfire-assembly/pingan'], capture_output=True, text=True).stdout.strip())
 
     media, missing = [], []
     for mid, r, desc in spec['shots']:
@@ -217,8 +264,8 @@ def main():
     perf = load('out-perf.json')
     plays = {a: load(f'out-playthrough-p1-{a}.json') for a in ('std', 'easy', 'one')}
     results = {
-        'views': passed(load('out-views.json')), 'mobile': passed(load('out-mobile.json')), 'options': passed(load('out-options.json')),
-        'plays': {a: (None if not d else {'finished': d['finished'], 'game_seconds': d['gameSeconds'], 'phases': d['phases'], 'deaths': d['final']['deaths'], 'hurt': d['final']['hurt'], 'kills': d['final']['kills'], 'score': d['final']['score'], 'errors': d['errors']}) for a, d in plays.items()},
+        'views': passed(load('out-views.json')), 'mobile': passed(load('out-mobile.json')), 'options': passed(load('out-options.json')), 'interact': passed(load('out-interact.json')),
+        'plays': {a: (None if not d else {'finished': d['finished'], 'game_seconds': d['gameSeconds'], 'phases': d['phases'], 'deaths': (d.get('final') or {}).get('deaths'), 'hurt': (d.get('final') or {}).get('hurt'), 'kills': (d.get('final') or {}).get('kills'), 'score': (d.get('final') or {}).get('score'), 'errors': d['errors']}) for a, d in plays.items()},
         'perf': None if not perf else [{'name': r['name'], 'renderer': r['env']['renderer'], 'dpr': r['env']['dpr'], 'samples': [{k: s[k] for k in ('phase', 'view', 'avgFps', 'medianMs', 'p95Ms', 'maxMs', 'over50ms', 'avgCalls', 'avgTris', 'canvas', 'quality')} for s in r['samples']]} for r in perf['runs']],
     }
 
@@ -235,7 +282,7 @@ def main():
     handoff = {
         'schema_version': 1, 'game_id': 'liangjian-pingan', 'version': version, 'base_version': spec['base'],
         'created_at': datetime.now(timezone(timedelta(hours=8))).isoformat(timespec='seconds'),
-        'build': {'id': build_id, 'commit': commit, 'dirty': dirty, 'fingerprint': 'sha256:' + fp + f'（public/html/game/liangjian-pingan 下 {nfiles} 个文件按路径排序连接）', 'entrypoint': 'public/html/game/liangjian-pingan/index.html'},
+        'build': {'id': build_id, 'commit': commit, 'dirty': dirty, 'fingerprint': 'sha256:' + fp + f'（public/html/game/gunfire-assembly/pingan 下 {nfiles} 个文件按路径排序连接）', 'entrypoint': 'public/html/game/gunfire-assembly/pingan/index.html'},
         'feature_inventory': features, 'changes': changes, 'bugs': bugs,
         'media': media, 'historical_media': hist, 'qa': spec['qa'](results),
         'untested': spec['untested'], 'readiness': spec['readiness'],

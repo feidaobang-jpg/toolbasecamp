@@ -6,8 +6,8 @@ import { Input } from './input.js';
 import { GameAudio } from './audio.js';
 
 const NS = 'lj_pingan_v1_';
-const DEFAULTS = { startPhase: 1, lives: 'inf', armor: 'std', view: 0, quality: 'auto', volume: 80, danmaku: true, touchKeys: 'auto', fps: false, mode: 'auto', aimSens: 'mid', mouseAim: 'drag', leftFire: false };
-const SETTINGS_VERSION = 2;   // 2：视角从四个精简为 第三人称 / 第一人称
+const DEFAULTS = { startPhase: 1, lives: 'inf', armor: 'std', view: 0, quality: 'auto', volume: 80, danmaku: true, touchKeys: 'auto', fps: false, mode: 'auto', aimSens: 'mid', mouseAim: 'lock', leftFire: false };
+const SETTINGS_VERSION = 3;   // 2：视角从四个精简为 第三人称 / 第一人称；3：电脑端默认鼠标接管
 const CYCLE = {
   startPhase: [1, 2, 3, 4, 5], lives: ['inf', '3'], armor: ['std', 'easy', 'one'], demo: [false, true], view: [0, 1],
   aimSens: ['low', 'mid', 'high'], mouseAim: ['drag', 'lock'], leftFire: [false, true],
@@ -26,7 +26,9 @@ class App {
     this.canvas = $('gl');
     const saved = store.get('settings') || {};
     // 旧存档的视角只换算一次：斜俯视 / 战术俯视 / 正视 → 第三人称，第一人称保持
-    if (saved.sv !== SETTINGS_VERSION && saved.view !== undefined) saved.view = saved.view === 3 ? 1 : 0;
+    const sv = saved.sv || 0;
+    if (sv < 2 && saved.view !== undefined) saved.view = saved.view === 3 ? 1 : 0;
+    if (sv < 3) delete saved.mouseAim;   // 默认改为鼠标接管，旧存档跟着换一次；之后玩家自己选的照旧保留
     this.s = Object.assign({}, DEFAULTS);
     for (const k in DEFAULTS) if (saved[k] !== undefined && (!CYCLE[k] || CYCLE[k].includes(saved[k]) || k === 'mode')) this.s[k] = saved[k];
     if (!['auto', 'pc', 'touch'].includes(this.s.mode)) this.s.mode = 'auto';
@@ -55,7 +57,7 @@ class App {
       onDevice: (k) => this.onDevice(k), onEdge: () => this.audio.unlock(),
       mouseAim: () => (this.state === 'play' && !this.isTouch() ? this.s.mouseAim : 'drag'),
       onLockLost: () => { if (this.state === 'play') this.pause(); },
-      onLockFail: () => { this.ui.toast('这里不能锁定鼠标，继续用“按住拖动”瞄准', 2.6); },
+      onLockFail: (silent) => { if (!silent && this.state === 'play') this.ui.toast('鼠标没接管上：再点一下画面试试，不行就按住拖动瞄准', 3); },
     });
     this.game = new Game(this);
     this.applyQuality();
@@ -90,6 +92,9 @@ class App {
   setMode(v) { this.s.mode = v; this.save(); this.applyMode(); this.audio.unlock(); this.sfx('uiok'); }
   mode() { return this.s.mode === 'auto' ? this.device : this.s.mode; }
   isTouch() { return this.mode() === 'touch'; }
+  // 电脑端默认鼠标接管：开局、继续时自动试一次；浏览器或外壳不允许时保持按住拖动，点一下画面会再试
+  engageLock() { if (!this.manual && !this.isTouch() && this.s.mouseAim === 'lock') this.input.requestLock(true); }
+  toLobby() { this.input.exitLock(); location.href = '../index.html'; }
   onDevice(kind) { if (this.device === kind) return; this.device = kind; if (this.s.mode === 'auto') this.applyMode(); }
   applyMode() {
     const touch = this.isTouch();
@@ -187,6 +192,7 @@ class App {
     this.input.clear();
     this.sfx('uiok');
     this.last = performance.now();
+    this.engageLock();
   }
   pause() {
     if (this.state !== 'play' || this.game.over) return;
@@ -203,16 +209,17 @@ class App {
     this.ui.show(null);
     this.input.clear();
     this.last = performance.now();
+    this.engageLock();
   }
   restart() {
     this.audio.unlock(); this.audio.resume();
     this.game.reset(this.game.stats.startPhase || 1, false);
-    this.state = 'play'; this.ui.show(null); this.input.clear(); this.last = performance.now();
+    this.state = 'play'; this.ui.show(null); this.input.clear(); this.last = performance.now(); this.engageLock();
   }
   retryPhase() {
     this.audio.unlock(); this.audio.resume();
     this.game.reset(this.game.phase, false);
-    this.state = 'play'; this.ui.show(null); this.input.clear(); this.last = performance.now();
+    this.state = 'play'; this.ui.show(null); this.input.clear(); this.last = performance.now(); this.engageLock();
   }
   toMenu() {
     this.audio.resume();

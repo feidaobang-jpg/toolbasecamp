@@ -29,11 +29,13 @@ const { open, shot, start, BASE } = require('./lib.cjs');
     ['platform-top-tp', 1, 0, 6, 66, 1.2, 'g.hero.x = 6; g.hero.z = 60; g.hero.y = 1.5; g.hero.vy = 0; g.cam.gy = 1.5; g.addUnit("enemy", "mg", -16, 58.3, { group: "T", hold: true, wake: 0 })'],
   ];
   for (const [name, phase, view, x, z, yaw, extra] of cases) { await put(phase, view, x, z, yaw, extra || ''); await shot(page, `scene-${name}.png`); }
-  // 骑兵连、亮剑、跳跃、开镜、操炮的动态截图
+  // 接管机枪、跳跃、开镜、操炮的动态截图
   await put(1, 0, 0, 70, 0);
-  await page.keyboard.press('KeyI'); await page.evaluate(() => __lj.step(75, true)); await shot(page, 'scene-cavalry-tp.png');
+  await page.evaluate(() => { const g = __lj.game, m = g.mgs[0]; g.place(g.hero, m.x, m.z - 1.2); g.cam.yaw = 0; __lj.step(4, true); });
+  await page.keyboard.press('KeyI'); await page.keyboard.down('KeyJ'); await page.evaluate(() => __lj.step(20, true)); await shot(page, 'scene-mg-tp.png'); await page.keyboard.up('KeyJ');
   await put(1, 0, 0, 70, 0);
-  await page.keyboard.press('KeyU'); await page.evaluate(() => __lj.step(9, true)); await shot(page, 'scene-dash-tp.png');
+  await page.evaluate(() => { const g = __lj.game, m = g.mgs[0]; g.setView(1); g.place(g.hero, m.x, m.z - 1.2); g.cam.yaw = 0; __lj.step(4, true); });
+  await page.keyboard.press('KeyI'); await page.keyboard.down('KeyJ'); await page.evaluate(() => __lj.step(20, true)); await shot(page, 'scene-mg-fp.png'); await page.keyboard.up('KeyJ');
   await put(1, 0, 0, 70, 0);
   await page.keyboard.press('KeyK'); await page.evaluate(() => __lj.step(14, true)); await shot(page, 'scene-jump-tp.png');
   await put(1, 0, 0, 84, 0);
@@ -58,7 +60,7 @@ const { open, shot, start, BASE } = require('./lib.cjs');
   const p2 = await ctx.newPage();
   await p2.setContent(`<html><body style="margin:0;background:#000"><iframe id="f" src="${BASE}?qa=1" style="border:0;width:0;height:0" allow="fullscreen"></iframe></body></html>`);
   await p2.waitForTimeout(2500);
-  const fr = p2.frames().find((f) => f.url().includes('liangjian-pingan'));
+  const fr = p2.frames().find((f) => f.url().includes('gunfire-assembly/pingan'));
   const z0 = await fr.evaluate(() => ({ ok: !!window.__lj, size: window.__lj && __lj.app.size(), loading: document.getElementById('loading').hidden }));
   await p2.evaluate(() => { const f = document.getElementById('f'); f.style.width = '844px'; f.style.height = '390px'; });
   await p2.waitForTimeout(1200);

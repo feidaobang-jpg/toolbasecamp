@@ -1,17 +1,18 @@
 // 输入（枪战类布局）：键盘、鼠标瞄准、触屏浮动摇杆 / 滑屏瞄准 / 功能键，统一映射成动作状态
-// 纯键盘：WASD 移动，Q/E 左右转、Y/H 上下转，J 开火，K 跳，U 亮剑，I 骑兵连，L 手榴弹，O 开镜，R 换弹，F 互动
-// 鼠标：按住任一键拖动转视角（可选鼠标锁定），左键开火，右键开镜；空格跳，G 手榴弹，V 亮剑，X 骑兵连
+// 纯键盘：WASD 移动，Q/E 左右转、Y/H 上下转，J 开火，K 跳，U 手榴弹，I 互动（上炮 / 上机枪 / 离开），O 或 Z 开镜，R 或 L 换弹
+// 鼠标：电脑端默认鼠标接管（锁定），被拒绝时按住拖动；左键开火，右键开镜；空格跳，G 手榴弹，F 互动
+// 键位与《枪火集结》其余模式对齐：J 射击、K 跳、U 手雷、I 互动
 import { clamp } from './util.js';
 
-const HOLD_KEYS = { KeyJ: 'fire', KeyO: 'ads', ShiftLeft: 'ads', ShiftRight: 'ads' };
-const EDGE_KEYS = { KeyK: 'jump', Space: 'jump', KeyR: 'reload', KeyL: 'nade', KeyG: 'nade', KeyU: 'dash', KeyV: 'dash', KeyI: 'cav', KeyX: 'cav', KeyF: 'use' };
+const HOLD_KEYS = { KeyJ: 'fire', KeyO: 'ads', KeyZ: 'ads', ShiftLeft: 'ads', ShiftRight: 'ads' };
+const EDGE_KEYS = { KeyK: 'jump', Space: 'jump', KeyR: 'reload', KeyL: 'reload', KeyU: 'nade', KeyG: 'nade', KeyI: 'use', KeyF: 'use' };
 const OTHER_KEYS = ['KeyW', 'KeyA', 'KeyS', 'KeyD', 'ArrowUp', 'ArrowLeft', 'ArrowDown', 'ArrowRight', 'KeyQ', 'KeyE', 'KeyY', 'KeyH', 'KeyC'];
-const EDGES = ['jump', 'reload', 'nade', 'dash', 'cav', 'use', 'fire'];
+const EDGES = ['jump', 'reload', 'nade', 'use', 'fire'];
 
 export class Input {
   constructor(stage, hooks) {
     this.stage = stage;
-    this.hooks = hooks;         // { rotated(), size(), toLogical(x,y), onDevice(kind), onEdge(name), mouseAim(), onLockLost(), onLockFail() }
+    this.hooks = hooks;         // { rotated(), size(), toLogical(x,y), onDevice(kind), onEdge(name), mouseAim(), onLockLost(), onLockFail(silent) }
     this.keys = new Set();
     this.src = { fireKey: false, fireMouse: false, fireTouch: 0, adsKey: false, adsMouse: false };
     this.adsToggle = false;     // 触屏开镜键、未锁定时右键单击：点一下切换
@@ -158,21 +159,36 @@ export class Input {
     look.addEventListener('contextmenu', (e) => e.preventDefault());
     this._lookEnd = end;
 
-    // ---- 鼠标锁定（可选）：锁定后直接移动鼠标瞄准 ----
+    // ---- 鼠标接管（锁定）：直接移动鼠标瞄准。锁定后鼠标事件发给被锁定的舞台，不再经过 #look，所以按键在这里单独接 ----
     document.addEventListener('mousemove', (e) => { if (this.locked) this._look(e.movementX || 0, e.movementY || 0, 'mouse'); });
+    document.addEventListener('mousedown', (e) => {
+      if (!this.locked) return;
+      if (e.button === 0) { this.src.fireMouse = true; this.edges.fire = true; }
+      if (e.button === 2) this.src.adsMouse = true;
+      this._sync();
+    });
+    document.addEventListener('mouseup', (e) => {
+      if (!this.locked) return;
+      if (e.button === 0) this.src.fireMouse = false;
+      if (e.button === 2) this.src.adsMouse = false;
+      this._sync();
+    });
     document.addEventListener('pointerlockchange', () => {
       const was = this.locked;
       this.locked = document.pointerLockElement === this.stage;
       if (was && !this.locked) { this.src.adsMouse = false; this.src.fireMouse = false; this._sync(); this.hooks.onLockLost(); }
     });
-    document.addEventListener('pointerlockerror', () => { this.locked = false; this.hooks.onLockFail(); });
+    document.addEventListener('pointerlockerror', () => { this.locked = false; this.hooks.onLockFail(this._lockSilent); });
   }
-  requestLock() {
+  // silent：开局 / 继续时的自动尝试，失败不提示（下一次点击画面会再试）
+  requestLock(silent = false) {
+    if (this.locked) return;
+    this._lockSilent = silent;
     try {
       const p = this.stage.requestPointerLock && this.stage.requestPointerLock();
-      if (p && p.catch) p.catch(() => this.hooks.onLockFail());
-      if (!this.stage.requestPointerLock) this.hooks.onLockFail();
-    } catch (err) { this.hooks.onLockFail(); }
+      if (p && p.catch) p.catch(() => this.hooks.onLockFail(silent));
+      if (!this.stage.requestPointerLock) this.hooks.onLockFail(silent);
+    } catch (err) { this.hooks.onLockFail(silent); }
   }
   exitLock() { if (this.locked && document.exitPointerLock) document.exitPointerLock(); }
 
@@ -197,7 +213,7 @@ export class Input {
       this.keys.delete(code);
       const hk = HOLD_KEYS[code];
       if (hk === 'fire') this.src.fireKey = false;
-      if (hk === 'ads') this.src.adsKey = this.keys.has('KeyO') || this.keys.has('ShiftLeft') || this.keys.has('ShiftRight');
+      if (hk === 'ads') this.src.adsKey = this.keys.has('KeyO') || this.keys.has('KeyZ') || this.keys.has('ShiftLeft') || this.keys.has('ShiftRight');
     }
     this._sync();
   }
