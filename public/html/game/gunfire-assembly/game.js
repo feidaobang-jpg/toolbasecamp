@@ -2653,16 +2653,27 @@ function selectWeapon(id,quiet=false){
   renderWeaponBar();updViewModel();
 }
 function cycleWeapon(step){if(Game.weapons.length<2){showMsg('只有一把枪：O 商店购买更多武器',1.6);return;}const i=Game.weapons.indexOf(Game.curWeapon);selectWeapon(Game.weapons[(i+step+Game.weapons.length)%Game.weapons.length]);}
-// 虫潮需要快速扫视战场；保留按时钟平滑消费及第一人称的较低转速。
+// 虫潮式第三人称扫视仍用平滑消费；枪战模式（战地/抗战）鼠标与触屏瞄准必须 1:1，不能进队列限速否则发飘。
 const pitchControl=createPitchController({sensitivity:1,response:30,speed:Math.PI,maxPending:.65,turn:d=>{camPitch=clamp(camPitch+d,-1,1);}});
 const lookControl=createLookController({firstPerson:()=>camMode==='first',sensitivity:1,response:30,
   firstPersonSpeed:Math.PI,thirdPersonSpeed:TAU,maxPending:()=>camMode==='first'?Math.PI/3:Math.PI/2,turn:delta=>{
   camYaw-=delta;player.lookHeading=camYaw;
   if(player.inVehicle){const v=player.inVehicle;if(v.mesh.userData.turret)v.mesh.userData.turret.rotation.y=camYaw-v.yaw;}
 }});
+function applyDirectLook(yawDelta,pitchDelta){
+  // 与 lookControl 符号一致：queue(-look.yaw) 再 camYaw-=delta ⇒ camYaw+=look.yaw
+  camYaw+=yawDelta;camPitch=clamp(camPitch+pitchDelta,-1,1);player.lookHeading=camYaw;
+  if(player.inVehicle){const v=player.inVehicle;if(v.mesh.userData.turret)v.mesh.userData.turret.rotation.y=camYaw-v.yaw;}
+}
 function updLook(dt){
-  if(Input.look.yaw||Input.look.pitch){lookControl.queue(-Input.look.yaw);pitchControl.queue(Input.look.pitch);Input.look.yaw=Input.look.pitch=0;Input.lastLook=performance.now();}
-  lookControl.step(dt,(Input.keys.E?1:0)-(Input.keys.Q?1:0));pitchControl.step(dt);
+  const direct=fpsRules();
+  if(Input.look.yaw||Input.look.pitch){
+    if(direct){lookControl.clear();pitchControl.clear();applyDirectLook(Input.look.yaw,Input.look.pitch);}
+    else{lookControl.queue(-Input.look.yaw);pitchControl.queue(Input.look.pitch);}
+    Input.look.yaw=Input.look.pitch=0;Input.lastLook=performance.now();
+  }
+  lookControl.step(dt,(Input.keys.E?1:0)-(Input.keys.Q?1:0));
+  if(!direct)pitchControl.step(dt);
   camYaw=(camYaw%TAU+TAU)%TAU;
 }
 

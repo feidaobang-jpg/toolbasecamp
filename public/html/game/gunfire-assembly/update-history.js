@@ -1,6 +1,9 @@
 // Player-facing notes travel with the same game package; no network or account required.
-export const GAME_VERSION='0.1.2';
+export const GAME_VERSION='0.1.3';
 export const UPDATE_HISTORY=[
+  {version:'0.1.3',date:'2026-10-13',title:'第一人称鼠标不再发飘',changes:[
+    '战地与抗战第一人称瞄准改为跟鼠标/触屏 1:1，不再走第三人称扫视用的平滑限速。',
+    'Q/E 按住转视角仍按原转速；打空自动换弹与大厅模式布局暂未改。']},
   {version:'0.1.2',date:'2026-10-12',title:'顶部点枪换枪',changes:[
     '战地模式顶部显示已购枪械，点一下即可换枪，不必轮切过头或开商店。',
     '抗战战役枪械条挪到屏幕上方，手机更容易点中。']},
