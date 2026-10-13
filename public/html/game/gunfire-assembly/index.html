@@ -728,7 +728,7 @@ html,body{overscroll-behavior:none}
     <div id="cloudSaveTools">
     <h4 id="cloudProvider">Toy 账号云存档</h4>
     <p id="cloudSaveStatus" role="status">尚未连接云备份；本地游戏可继续。</p>
-    <label class="saveAuto"><input id="cloudAuto" type="checkbox" checked> 自动备份普通进度到云端</label>
+    <label class="saveAuto"><input id="cloudAuto" type="checkbox"> 自动备份普通进度到云端</label>
     <p class="small">关键进度合并上传。网络失败会保留本地档；两端进度不同时暂停上传，由你选择。联机与测试模式独立。</p>
     <div class="btnRow"><button class="mbtn" id="cloudRead">查看云档 / 重试</button><button class="mbtn" id="cloudWrite">选择上传本地进度</button><button class="mbtn green hidden" id="cloudConfirm">确认上传并保留旧云档</button></div>
     <p id="cloudConfirmInfo" class="small"></p><p id="cloudInfo" class="small"></p>
@@ -737,7 +737,7 @@ html,body{overscroll-behavior:none}
     <div id="toyExtras">
       <div id="rankTools"><div class="btnRow"><button class="mbtn" id="rankRead">普通通关积分榜</button><button class="mbtn" id="rankSubmit">提交最佳通关成绩</button></div>
       <p class="small">普通通关积分，自由测试与调试不参与；这是休闲榜单。</p><ol id="rankList"></ol></div>
-      <p id="platformStatus" role="status">云存档和排行榜需在 B站 Toy 中登录。</p>
+      <p id="platformStatus" role="status">单机与匿名联机无需游戏内登录；Toy 云存档和提交排行榜为可选登录功能。</p>
       <p id="authorInfo">作者：飞刀班长 · 万物皆可游戏</p>
       <div class="btnRow"><a class="mbtn" id="authorVisit" data-author-home href="https://space.bilibili.com/16214353" target="_blank" rel="noopener noreferrer">作者B站主页</a><button class="mbtn" id="videoVisit">查看游戏视频</button><button class="mbtn" id="toyShare">分享试玩</button></div>
       <p class="small">玩得开心的话，去视频给开发者空投个三连补给？</p>
@@ -757,7 +757,7 @@ html,body{overscroll-behavior:none}
   </div>
 </div>
 <script src="./boot.js?v=mobile12"></script>
-<script defer src="./game.compat.js?v=wbar-012" onerror="window.__ccBootError('游戏资源下载失败')"></script>
+<script defer src="./game.compat.js?v=anonymous-20261013" onerror="window.__ccBootError('游戏资源下载失败')"></script>
 <script src="../../../js/game/thumb-preview.js"></script>
 <script type="module">
 // 内联自 /js/game/landscape-typing.js：Toy/TapTap 包不含站点共享目录，外链模块会缺失

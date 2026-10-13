@@ -1,5 +1,5 @@
-import {GAMES} from './coop.js?v=lobby-safety1';
-import {publicText} from './input-safety.js?v=safety1';
+import {GAMES} from './coop.js?v=lobby-anonymous1';
+import {publicText} from './input-safety.js?v=anonymous1';
 const $=id=>document.getElementById(id),filter=$('online-filter'),password=$('online-password');
 let page=1,inflight=false;
 for(const [id,g] of Object.entries(GAMES)){

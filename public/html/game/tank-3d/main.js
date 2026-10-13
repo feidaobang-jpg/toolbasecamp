@@ -3,7 +3,7 @@ import { installRemakeUI, createPitchController, bindDragLook, addControlModeBut
 // （幕布 → 游玩 → 原版计分页 → 下一关 / GAME OVER）、输入映射、HUD、布局（手机竖屏自动旋转）、主循环与测试钩子。
 import { createScene, PRESETS } from './scene.js?v=views4';
 import { createRun, createWorld, step, turnPlayer, localPlayer, localStats, SCORE, TYPE_NAMES, qa } from './sim.js?v=coop-unstick1';
-import { CoopConnection, snapshot, hydrate, installNicknameButton } from './coop.js?v=coop-safety1';
+import { CoopConnection, snapshot, hydrate, installNicknameButton, installAnonymousControls } from './coop.js?v=coop-anonymous1';
 import { installLandscapeTyping } from '../../../js/game/landscape-typing.js?v=lt1';
 installLandscapeTyping();
 import { CLASSIC_COUNT, REMIX_LEVELS, remixInfo, MINI_INFO, CHAPTERS } from './levels.js?v=merge1';
@@ -90,10 +90,11 @@ let remoteInputs = {}, lastInputAt = 0;
 let pendingEvents = [], networkStarted = false, snapshotReceivedAt = 0;
 const coop = new CoopConnection(onCoopMessage, text => { $('coop-message').textContent = text; });
 coop.onInputRejected=field=>{$(field==='name'?'coop-name':'coop-room-name').value='';};
-installNicknameButton($('coop-bili-name'),$('coop-name'),text=>{$('coop-message').textContent=text;});
+const useCustomIdentity=installAnonymousControls($('coop-anonymous'),$('coop-name'),$('coop-room-name'),()=>{if(!coop.room)coop.disconnect();});
+installNicknameButton($('coop-bili-name'),$('coop-name'),text=>{$('coop-message').textContent=text;},useCustomIdentity);
 const roomConfig = () => ({ mode: settings.mode, stage: startStageOf(settings.mode).stage, lives: settings.lives[settings.mode], armor: settings.armor[settings.mode] });
-$('coop-create').addEventListener('click', () => { coop.connect('create', $('coop-name').value.trim() || '坦克手', undefined, { roomName: $('coop-room-name').value.trim(), password: $('coop-create-password').value, maxPlayers: Number($('coop-capacity').value), config: roomConfig() }); });
-function joinRoom() { coop.connect('join', $('coop-name').value.trim() || '坦克手', $('coop-code').value.trim(), { password: $('coop-password').value }); }
+$('coop-create').addEventListener('click', () => { coop.connect('create', $('coop-name').value.trim(), undefined, { anonymous:$('coop-anonymous').checked, roomName: $('coop-room-name').value.trim(), password: $('coop-create-password').value, maxPlayers: Number($('coop-capacity').value), config: roomConfig() }); });
+function joinRoom() { coop.connect('join', $('coop-name').value.trim(), $('coop-code').value.trim(), { anonymous:$('coop-anonymous').checked, password: $('coop-password').value }); }
 // 邀请链接（?coop=六位房号）进来时：公开房直接加入，密码房/满员房给出明确下一步，不再要求玩家重复确认一次点击。
 function autoJoinInvite() {
   const code = pendingInvite; pendingInvite = null;
@@ -134,7 +135,7 @@ window.addEventListener('pagehide', () => coop.disconnect());
 function renderLobby() {
   const room = coop.room;
   $('coop-room').textContent = room ? room.code : '尚未加入';
-  $('coop-roster').textContent = room ? room.players.map(p => `${p.slot + 1}P ${p.name} · ${p.slot === 0 ? '房主' : p.ready ? '已准备' : '未准备'}`).join('　 /　 ') : '输入昵称后建房，或填写好友的六位房间码。';
+  $('coop-roster').textContent = room ? room.players.map(p => `${p.slot + 1}P ${p.name} · ${p.slot === 0 ? '房主' : p.ready ? '已准备' : '未准备'}`).join('　 /　 ') : '直接匿名建房，或填写好友的六位房间码加入，无需游戏内登录。';
   if(room&&coop.host)for(const p of room.players.filter(p=>p.slot!==0)){const b=document.createElement('button');b.dataset.kick=p.slot;b.textContent='踢出 '+(p.slot+1)+'P '+p.name;b.onclick=()=>coop.send({type:'kick',slot:p.slot});$('coop-roster').append(b);}
   $('coop-create').disabled = $('coop-join').disabled = !!room;
   $('coop-ready').hidden = !room || coop.host || room.started;
@@ -148,6 +149,7 @@ function renderLobby() {
   $('coop-create-fields').hidden = !!room;
   $('coop-join-fields').hidden = !!room;
   $('coop-name').disabled = !!room;
+  $('coop-anonymous').disabled = !!room;
   $('coop-bili-name').disabled = !!room || !$('coop-bili-name').dataset.profileReady;
   $('lobby').querySelector('.coop-panel').classList.toggle('in-room', !!room);
 }
@@ -1027,5 +1029,5 @@ if (coopIntent) {
   openLobby();
   if (/^\d{6}$/.test(coopIntent)) { pendingInvite = coopIntent; $('coop-code').value = coopIntent; $('coop-message').textContent = `邀请房间 ${coopIntent} 已填入，正在确认房间状态…`; }
   // 联机大厅的「创建房间」只把玩家带到建房表单前，不自动建房，避免昵称/房间名/密码未填就静默开房。
-  else if (coopIntent === 'create') { intentHint = '填好昵称、房间名称与密码后点「创建房间」建房。'; $('coop-message').textContent = intentHint; $('coop-room-name').focus(); }
+  else if (coopIntent === 'create') { intentHint = '选择人数与可选密码后点「创建房间」，默认匿名，无需游戏内登录。'; $('coop-message').textContent = intentHint; $('coop-create').focus(); }
 }

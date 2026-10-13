@@ -1,0 +1,61 @@
+{
+  "task_id": "01a13301-3312-76a3-ad58-649445d278ee-anonymous-coop-01",
+  "version": "anonymous-coop-20261013",
+  "base_commit": "63a61920c1e164774da0e3033dabf5b366681c88",
+  "branch": "codex/anonymous-coop-20261013",
+  "affected": [
+    "tank-3d",
+    "jackal-stage1-3d",
+    "cadillacs-stage1-3d",
+    "starship-defense",
+    "gunfire-assembly"
+  ],
+  "versions": {
+    "tank-3d": "remix-entry1-views4-anonymous1",
+    "jackal-stage1-3d": "v0.11.1-anonymous1",
+    "cadillacs-stage1-3d": "v0.11.0-hellroad.1-menu-desk1-anonymous1",
+    "starship-defense": "web-weapon-bar-v0.36.5-anonymous1",
+    "gunfire-assembly": "web-weapon-bar-v0.1.2-anonymous1"
+  },
+  "behavior": {
+    "single_player": "No account requirement; local saves and file backup preserved",
+    "anonymous": "Default on; server generates bounded seat/room names; no account-dependent SDK calls",
+    "custom_text": "Optional; exact final text must pass strict Toy safety check before transport/display",
+    "profile": "Optional player gesture; no avatar/openId collected or sent",
+    "cloud": "Official Toy provider retained; connected only after player cloud action; previous cloud snapshots retained"
+  },
+  "verification": {
+    "unit_cases": 17,
+    "server_tests": 24,
+    "package_browser_cases": 11,
+    "privacy_browser_cases": 13,
+    "cloud_save_unit_cases": 26,
+    "save_browser_viewports": 3,
+    "real_room_relay": {
+      "starship": "four players passed",
+      "tank": "four players passed on isolated rerun; first run had hub read timeout under concurrent browser load"
+    },
+    "physical_phone": false,
+    "artifacts": "D:/project/task-artifacts/anonymous-coop-20261013"
+  },
+  "channels": {
+    "website": "not_pushed",
+    "toy": "not_submitted",
+    "bilibili": "deferred_accumulating",
+    "taptap": "not_requested"
+  },
+  "bilibili_decision": {
+    "reason": "Existing text-safety and restored-entry descriptions remain accurate; login-flow refinement is a small update and last public verification was 2026-10-12, less than seven days ago",
+    "pending_summary": "单机与默认匿名联机无需游戏内登录；可选B站昵称；Toy云档按需连接"
+  },
+  "cover": {
+    "decision": "reuse",
+    "reason": "Menu/login flow changed; gameplay, art and scenes unchanged"
+  },
+  "media": {
+    "capture_mode": "realtime-automation",
+    "screenshots": "D:/project/task-artifacts/anonymous-coop-20261013/packages",
+    "video_readiness": "partial; menu screenshots and actual multiplayer QA available; no new edited video requested"
+  },
+  "created_at": "2026-10-13T10:28:05.864252+08:00"
+}

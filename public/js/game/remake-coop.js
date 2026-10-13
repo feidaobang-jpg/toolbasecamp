@@ -1,4 +1,4 @@
-import {CooperativeLobby} from './coop.js?v=lobby-safety1';
+import {CooperativeLobby} from './coop.js?v=lobby-anonymous1';
 export function installRemakeCoop({game,container,menu,getConfig,onStart,onState,onEnd,onJoin=()=>{},onAction,getState,getInput,getUI,onGuestFrame=()=>{},notify=()=>{},stateEvery=()=>65}){
  const driver={snapshot:getState,config:null,applying:false,lastSend:0,lastInput:0,result:null,lobby:null};
  driver.lobby=new CooperativeLobby({

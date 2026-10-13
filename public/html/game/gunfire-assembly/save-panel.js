@@ -3,15 +3,15 @@ import {saveSignature} from './save-store.js';
 import {campaignDifficulty} from './campaign-difficulty.js';
 export function mountSavePanel(game,{toyProvider,storage}={}){
   const $=id=>document.getElementById(id),store=game.store;
-  let sync=null,pending=null,selected=null,localMessage='';
+  let sync=null,pending=null,selected=null,localMessage='',cloudRequested=false;
   const toy=!!toyProvider;
   const friendly=text=>/toy id not available|toy_context_unavailable/i.test(text)?'预览中云备份暂不可用；本地存档与文件备份可用':text;
   const status=text=>{text=friendly(text);if(!toy)localMessage=text;if($('cloudSaveStatus'))$('cloudSaveStatus').textContent=text;updateNotice();};
   const describe=d=>d?`${campaignDifficulty(d.difficulty).name} · 周目${d.loop} 第${d.chapter}章第${d.level}关 · 金币${Math.floor(d.gold)} · ${new Date(d.time).toLocaleString('zh-CN',{timeZone:'Asia/Shanghai'})}`:'尚无存档';
   let noticeTimer=0;
   function updateNotice(){
-    const text=store.status+'；'+friendly(sync?.statusText||(toy?'连接 Toy 云备份中':localMessage||'本地存档可用，可导出文件备份'));
-    const cloud=friendly(sync?.statusText||''),cloudLabel=!toy?'可导出备份':/已备份/.test(cloud)?'云端已备份':/不同|另一份/.test(cloud)?'云档待选择':/失败|不可用|不兼容|异常/.test(cloud)?'云备份暂停':/登录/.test(cloud)?'云备份未登录':/关闭/.test(cloud)?'云备份已关闭':/发现云端/.test(cloud)?'可恢复云档':/连接/.test(cloud)?'云备份已连接':'云备份待写入';
+    const text=store.status+'；'+friendly(sync?.statusText||(toy?'Toy 云备份可按需开启；本地存档可用':localMessage||'本地存档可用，可导出文件备份'));
+    const cloud=friendly(sync?.statusText||''),cloudLabel=!toy?'可导出备份':!cloudRequested?'可选Toy云备份':/已备份/.test(cloud)?'云端已备份':/不同|另一份/.test(cloud)?'云档待选择':/失败|不可用|不兼容|异常/.test(cloud)?'云备份暂停':/登录/.test(cloud)?'云备份未登录':/关闭/.test(cloud)?'云备份已关闭':/发现云端/.test(cloud)?'可恢复云档':/连接/.test(cloud)?'云备份已连接':'云备份待写入';
     if($('saveNotice')){$('saveNotice').textContent=store.status+'；'+cloudLabel;$('saveNotice').title=text;}
     if($('saveHealth')){$('saveHealth').textContent=store.status.split(' · ')[0].split('：')[0]+' · '+cloudLabel;$('saveHealth').title=text;}
     if($('localSaveStatus'))$('localSaveStatus').textContent=store.status+(!toy&&localMessage?'；'+localMessage:'');
@@ -33,7 +33,8 @@ export function mountSavePanel(game,{toyProvider,storage}={}){
     sync?.destroy();sync=new CloudSaveSync({provider,store,getSave:game.getSave,validate:game.validate,isTest:game.isTest,onStatus:status,onCloud:renderCloud});
     sync.enabled=$('cloudAuto').checked;
     $('cloudProvider').textContent=provider.label;
-    sync.start();
+    // Creating the panel never requests account-backed storage. The player opts in.
+    sync.status('Toy 云备份尚未连接；点击「查看云档」或开启自动备份，本地存档可用');
   }
   function error(e){status(e.message||'操作失败；已有进度已保留');}
   async function action(button,fn){button.disabled=true;try{await fn();}catch(e){error(e);}finally{button.disabled=false;}}
@@ -41,11 +42,11 @@ export function mountSavePanel(game,{toyProvider,storage}={}){
   const open=()=>{game.open();updateNotice();renderCloud(sync?.current,sync?.backups||[]);};
   for(const id of ['btnPlatformMenu','platformBtn','platformBtnMenu','saveRecovery','saveHealth'])if($(id))$(id).onclick=open;
   $('platformClose').onclick=game.close;
-  $('cloudRead').onclick=()=>action($('cloudRead'),async()=>{sync.paused=false;await sync.refresh();if(sync.base!==undefined)sync.checkpoint(game.getSave());});
-  $('cloudAuto').checked=store.readRaw(game.prefix+'cloud-auto')!=='off';
-  $('cloudAuto').onchange=()=>{sync.enabled=$('cloudAuto').checked;try{storage?.setItem(game.prefix+'cloud-auto',sync.enabled?'on':'off');}catch{}if(sync.enabled){sync.paused=false;sync.start().then(()=>sync.checkpoint(game.getSave()));}else status('自动云备份已关闭；本地自动存档继续');};
+  $('cloudRead').onclick=()=>action($('cloudRead'),async()=>{cloudRequested=true;sync.paused=false;await sync.refresh();if(sync.base!==undefined)sync.checkpoint(game.getSave());});
+  $('cloudAuto').checked=store.readRaw(game.prefix+'cloud-auto')==='on';
+  $('cloudAuto').onchange=()=>{sync.enabled=$('cloudAuto').checked;try{storage?.setItem(game.prefix+'cloud-auto',sync.enabled?'on':'off');}catch{}if(sync.enabled){cloudRequested=true;sync.paused=false;sync.start().then(()=>sync.checkpoint(game.getSave()));}else status('自动云备份已关闭；本地自动存档继续');};
   $('cloudWrite').onclick=()=>action($('cloudWrite'),async()=>{
-    const d=JSON.parse(JSON.stringify(requireNormal()));await sync.refresh();pending={save:d,revision:sync.current?.revision||null};
+    const d=JSON.parse(JSON.stringify(requireNormal()));cloudRequested=true;await sync.refresh();pending={save:d,revision:sync.current?.revision||null};
     $('cloudConfirm').classList.remove('hidden');$('cloudConfirmInfo').textContent='即将上传：'+describe(d)+'。当前云档：'+describe(sync.current?.save)+'。确认后保留上一份云档。';
   });
   $('cloudConfirm').onclick=()=>action($('cloudConfirm'),async()=>{
@@ -83,8 +84,8 @@ export function mountSavePanel(game,{toyProvider,storage}={}){
     if(!rows.length)$('localHistory').textContent='还没有历史备份；游玩时会保留最近三个不同进度。';
   };
   $('cloudSaveTools').hidden=!toy;
-  window.addEventListener('online',()=>{if(sync){sync.paused=false;sync.start().then(()=>sync.checkpoint(game.getSave()));}});
+  window.addEventListener('online',()=>{if(sync&&cloudRequested){sync.paused=false;sync.start().then(()=>sync.checkpoint(game.getSave()));}});
   if(toy)connect(toyProvider);
   updateNotice();
-  return {checkpoint:d=>{if(sync)sync.checkpoint(d);},localStatus:updateNotice,open,get sync(){return sync;}};
+  return {checkpoint:d=>{if(sync&&cloudRequested)sync.checkpoint(d);},localStatus:updateNotice,open,get sync(){return sync;}};
 }
