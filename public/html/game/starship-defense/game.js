@@ -1,3 +1,6 @@
+import {installMenuScroll} from './menu-scroll.js';
+import {mountMenuShell} from './menu-shell.js';
+let menuShell=null;
 import {GAME_VERSION,UPDATE_HISTORY} from './update-history.js';
 import {installRemakeCoop} from '../../../js/game/remake-coop.js';
 import {markTree,treeState,applyTree,scalarState,createSoundRelay} from '../../../js/game/coop.js?v=lobby-hint1';
@@ -102,9 +105,11 @@ function fitStage(){
   let vw=rotated?h:w, vh=rotated?w:h;
   BASE_H=BASE_W*vh/vw;stage.style.height=BASE_H+'px';
   stage.classList.toggle('vs-compact',BASE_H<400);
+  stage.classList.toggle('menu-compact',BASE_H<500);
   stageScale=Math.min(vw/BASE_W,vh/BASE_H);
   // Keep utility targets and edge spacing in CSS pixels even when the stage scales.
   const safe=getComputedStyle(cornerSafeProbe);
+  stage.style.setProperty('--menu-font',Math.max(16,14/stageScale)+'px');
   stage.style.setProperty('--corner-top',(10+(parseFloat(rotated?safe.paddingRight:safe.paddingTop)||0))/stageScale+'px');
   stage.style.setProperty('--corner-right',(10+(parseFloat(rotated?safe.paddingBottom:safe.paddingRight)||0))/stageScale+'px');
   stage.style.setProperty('--corner-height',Math.max(44,44/stageScale)+'px');
@@ -3462,7 +3467,7 @@ function placementInput(){
 function closePanels(){
   $('rvPanel')?.classList.add('hidden');
   if(!$('tacticsPanel').classList.contains('hidden'))AudioSys.pause(Game.state==='paused');
-  bindingAction=null;['keyPanel','operationsPanel','tacticsPanel','updatesPanel','helpPanel'].forEach(id=>$(id).classList.add('hidden'));
+  bindingAction=null;['keyPanel','operationsPanel','tacticsPanel','updatesPanel','helpPanel','menuSettingsPanel','menuSavePanel','menuMorePanel'].forEach(id=>$(id).classList.add('hidden'));
   $('shopPanel').classList.add('hidden');$('buildPanel').classList.add('hidden');$('savePanel').classList.add('hidden');$('sandboxPanel').classList.add('hidden');$('platformPanel').classList.add('hidden');
   panelOpen=false;Input.reset();
 }
@@ -3887,12 +3892,7 @@ function selectLobbyMode(modeId){
     if(el.hasAttribute('aria-pressed'))el.setAttribute('aria-pressed',on?'true':'false');
   });
 }
-function selectCampaignMode(){selectLobbyMode('btnCampaign');}
-$('btnCampaign')?.addEventListener('click',()=>{
-  selectCampaignMode();AudioSys.init();AudioSys.sfx('click');
-  const focus=hasProgress(slotInfo(SAVE_PREFIX+'auto'))?$('btnContinue'):$('btnStart');
-  focus?.focus?.();
-});
+function selectCampaignMode(){selectLobbyMode('btnCampaign');menuShell?.select('campaign');}
 $('btnStart').onclick=requestNewGame;
 $('btnTest').onclick=()=>{selectLobbyMode('btnTest');AudioSys.init();AudioSys.resume();newGame(true);};
 $('btnContinue').onclick=()=>{
@@ -3912,9 +3912,8 @@ function showAlert(t){
   el.textContent=t;el.style.display='block';
   clearTimeout(el._t);el._t=setTimeout(()=>el.style.display='none',1800);
 }
-$('btnLoadMenu').onclick=()=>{AudioSys.init();saveMode='load';renderSlots();$('savePanel').classList.remove('hidden');panelOpen=true;};
-$('btnLoadMenu2').onclick=()=>{saveMode='load';renderSlots();$('savePanel').classList.remove('hidden');panelOpen=true;};
-$('btnSaveMenu').onclick=()=>{saveMode='save';renderSlots();$('savePanel').classList.remove('hidden');panelOpen=true;};
+$('btnLoadMenu').onclick=()=>{closePanels();AudioSys.init();saveMode='load';renderSlots();$('savePanel').classList.remove('hidden');panelOpen=true;};
+$('btnSaveMenu').onclick=()=>{closePanels();saveMode='save';renderSlots();$('savePanel').classList.remove('hidden');panelOpen=true;};
 $('btnOverLoad').onclick=()=>{saveMode='load';renderSlots();$('savePanel').classList.remove('hidden');panelOpen=true;};
 $('saveClose').onclick=closePanels;
 $('btnResume').onclick=togglePause;
@@ -3981,7 +3980,7 @@ for(const el of document.querySelectorAll('[data-device-mode]'))el.onclick=()=>s
 /* ================= 纯键盘界面导航 =================
    最上层可见的面板/菜单自动选中第一项（带黄色选中框）；方向键按屏幕位置移动，
    Tab/Shift+Tab 在面板内循环，回车/空格确认，Esc 关闭或返回。重新渲染后回到原位置。 */
-const NAV_ROOTS=['updatesPanel','helpPanel','vsPanel','touchLayoutEditor','confirmPanel','keyPanel','tacticsPanel','operationsPanel','sandboxPanel','platformPanel','savePanel','shopPanel','buildPanel','warResult','warMenu','rvResult','rvPanel','rvMenu','vsResult','zergEvolve','zergResult','zergMenu','menuOver','menuPause','vsMenu','menuMain'];
+const NAV_ROOTS=['menuSettingsPanel','menuSavePanel','menuMorePanel','updatesPanel','helpPanel','vsPanel','touchLayoutEditor','confirmPanel','keyPanel','tacticsPanel','operationsPanel','sandboxPanel','platformPanel','savePanel','shopPanel','buildPanel','warResult','warMenu','rvResult','rvPanel','rvMenu','vsResult','zergEvolve','zergResult','zergMenu','menuOver','menuPause','vsMenu','menuMain'];
 const nav={root:null,index:0};
 function navRoot(){
   // The modal owns its native text fields and Tab/Escape handling.
@@ -3993,14 +3992,14 @@ function navItems(root){
 }
 function navDefault(root){
   const items=navItems(root);
-  const pick=root.id==='menuMain'?(hasProgress(slotInfo(SAVE_PREFIX+'auto'))?$('btnContinue'):$('btnStart'))
+  const pick=root.id==='menuMain'?(menuShell?.selected!=='campaign'?$('btnModeStart'):hasProgress(slotInfo(SAVE_PREFIX+'auto'))?$('btnContinue'):$('btnStart'))
     :root.id==='menuPause'?$('btnResume'):root.id==='menuOver'?$('btnRetry'):root.id==='confirmPanel'?$('confirmCancel')
     :root.id==='vsResult'?$('vsRematch'):root.id==='vsMenu'?root.querySelector('[data-vs-ai="normal"]')
     :root.id==='zergMenu'?$('zergStart'):root.id==='zergResult'?$('zergAgain')
     :root.querySelector('.shopItem,.saveSlot button,select')||items.find(el=>!el.classList.contains('closeX'));
   return pick&&items.includes(pick)?pick:items[0];
 }
-function navFocus(el,scroll=true){if(!el)return;el.focus({preventScroll:!scroll});if(scroll&&el.scrollIntoView)el.scrollIntoView({block:'nearest'});nav.index=Math.max(0,navItems(nav.root).indexOf(el));}
+function navFocus(el,scroll=true){if(!el)return;if(el.getAttribute('role')==='region')scroll=false;el.focus({preventScroll:!scroll});if(scroll&&el.scrollIntoView)el.scrollIntoView({block:'nearest'});nav.index=Math.max(0,navItems(nav.root).indexOf(el));}
 function navTick(){
   const root=navRoot();
   if(root!==nav.root){nav.root=root;nav.index=0;if(root){if(navItems(root).includes(document.activeElement))nav.index=navItems(root).indexOf(document.activeElement);else navFocus(navDefault(root));}return;}
@@ -4053,7 +4052,7 @@ window.addEventListener('keydown',e=>{
   }
   if(e.code==='KeyK'||e.code==='Escape'){
     e.preventDefault();e.stopImmediatePropagation();if(e.repeat)return;Input.reset();
-    if(['updatesPanel','helpPanel'].includes(root.id))closeInfoPanel();
+    if(['updatesPanel','helpPanel','menuSettingsPanel','menuSavePanel','menuMorePanel'].includes(root.id))closeInfoPanel();
     else if(root.id==='confirmPanel')$('confirmCancel').click();
     else if(root.id==='warMenu')$('warBack').click();
     else if(root.id==='warResult')$('warResultBack').click();
@@ -4081,7 +4080,7 @@ let infoReturn=null;
 function openInfoPanel(id,source=document.activeElement){
   infoReturn=source;
   if(['prep','battle'].includes(Game.state))togglePause();
-  closePanels();Input.reset();panelOpen=true;$(id).classList.remove('hidden');
+  closePanels();Input.reset();panelOpen=true;$(id).classList.remove('hidden');$(id).scrollTop=0;
 }
 function closeInfoPanel(){const back=infoReturn;closePanels();if(back&&back.getClientRects().length)back.focus({preventScroll:true});}
 $('gameVersion').textContent='v'+GAME_VERSION;
@@ -4094,7 +4093,7 @@ for(const entry of UPDATE_HISTORY){
   for(const text of entry.changes){const li=document.createElement('li');li.textContent=text;list.appendChild(li);}
   section.appendChild(heading);section.appendChild(date);section.appendChild(list);$('updatesList').appendChild(section);
 }
-$('updatesMenu').onclick=$('updatesPause').onclick=e=>openInfoPanel('updatesPanel',e.currentTarget);
+$('updatesMenu').onclick=e=>openInfoPanel('updatesPanel',e.currentTarget);
 $('helpMenu').onclick=e=>openInfoPanel('helpPanel',e.currentTarget);
 $('updatesClose').onclick=$('helpClose').onclick=closeInfoPanel;
 
@@ -4224,7 +4223,7 @@ function renderKeys(){
 }
 function setupFeaturePanels(){
   const open=()=>{closePanels();Input.reset();panelOpen=true;$('keyPanel').classList.remove('hidden');$('keyStatus').textContent='选择要修改的动作';renderKeys();combatSection?.lockAim(fpsRules());if(document.pointerLockElement)document.exitPointerLock();};
-  $('keysMenu').onclick=$('keysPause').onclick=open;$('keysClose').onclick=closePanels;
+  $('keysMenu').onclick=open;$('keysClose').onclick=closePanels;
   $('keysReset').onclick=()=>{bindingAction=null;keyBindings.reset();Input.reset();renderKeys();syncKeyLabels();$('keyStatus').textContent='已恢复默认键位';};
   $('menuButton').onclick=()=>pauseKey();
   $('opsButton').onclick=$('opsPause').onclick=operations.open;$('opsClose').onclick=closePanels;
@@ -4242,7 +4241,7 @@ const explorationLight=new ExplorationLight(scene);
 let battlefield;
 function syncLightingLabels(){
   const label='地表：'+(battlefield.timeOfDay==='day'?'白天':'夜晚');
-  $('daylightMain').textContent=$('daylightPause').textContent=label;
+  $('daylightMain').textContent=label;
   const p=battlefield.current;$('environmentName').textContent=(p.id==='desert'?'荒漠':p.name)+' · '+(battlefield.timeOfDay==='day'?'白天':'夜晚')+' · '+p.chapters;
 }
 function setBattlefieldEnvironment(profile){
@@ -4307,6 +4306,13 @@ newGame=function(t){if(zergOn())zergMode.stop();player.mesh.visible=true;_origNe
 const _origLoadGame=loadGame;
 loadGame=function(d){if(zergOn())zergMode.stop();player.mesh.visible=true;_origLoadGame(d);};
 setupWebControls();
+menuShell=mountMenuShell(stage);
+installMenuScroll(stage,toStage);
+for(const button of stage.querySelectorAll('[data-menu-panel]'))button.onclick=e=>{
+  syncPauseOptions();$('btnSaveMenu').hidden=Game.state==='menu';
+  openInfoPanel(button.dataset.menuPanel,e.currentTarget);
+};
+for(const button of stage.querySelectorAll('[data-menu-close]'))button.onclick=closeInfoPanel;
 loop();window.__ccReady=true;
 /* 页面隐藏时自动暂停并保存（手机切后台可能直接被系统关闭） */
 document.addEventListener('visibilitychange',()=>{
@@ -4323,7 +4329,7 @@ window.addEventListener('beforeunload',()=>autoSave());
 function frameStats(now){if(measuring&&previousFrame)frameTimes.push(now-previousFrame);previousFrame=now;}
 function setupWebControls(){
   setupSandbox();setupFeaturePanels();
-  $('daylightMain').onclick=$('daylightPause').onclick=()=>{
+  $('daylightMain').onclick=()=>{
     battlefield.setTimeOfDay(battlefield.timeOfDay==='day'?'night':'day');
     try{localStorage.setItem('chongchao-daylight',battlefield.timeOfDay);}catch(_e){}
     syncLightingLabels();
@@ -4862,6 +4868,7 @@ function installStarshipCoop(){
  });
  // 虫潮：联机大厅入口只放在主菜单（#startRow），不重复出现在暂停菜单里；移除共享 coop 注入的「房间与队友」副本。
  $('menuPause').querySelector('[data-act="team"]')?.remove();
+ coopDriver.lobby.entry.textContent='联机 · 2–4人';
  coopDriver.lobby.entry.addEventListener('click',()=>{lobbyMode='coop';syncLobbyMode();},true);
  const original=coopDriver.lobby.onMessage;
  coopDriver.lobby.onMessage=m=>{original(m);
@@ -4869,7 +4876,7 @@ function installStarshipCoop(){
   if((m.type==='joined'||m.type==='roster')&&m.room?.settings?.mode==='versus'){selectVersusRules(m.room.settings.rules);lobbyMode='versus';syncLobbyMode();}
   if(m.type==='command'&&coopDriver.connection.host)handleCoopCommand(m.slot,m.command);};
  const saveBlock=e=>{if(coopDriver.config){e.preventDefault();e.stopImmediatePropagation();showMsg('联机不读写单机存档',1.5);}};
- for(const id of ['btnSaveMenu','btnLoadMenu','btnLoadMenu2'])$(id).addEventListener('click',saveBlock,true);
+ for(const id of ['btnSaveMenu','btnLoadMenu'])$(id).addEventListener('click',saveBlock,true);
  const openOps=operations.open;operations.open=()=>{if(coopDriver.config){showMsg('本版联机合作守城，副本使用单机入口',2);return;}openOps();};
  if(new URLSearchParams(location.search).get('test')==='1'){coopDriver.snapshot=starshipSnapshot;window.__COOP_QA__=coopDriver;}
 }

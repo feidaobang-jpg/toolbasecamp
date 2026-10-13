@@ -13,7 +13,7 @@ const PACKAGE = path.join(OUT, 'package');
 const GAME = JSON.parse(fs.readFileSync(path.join(HERE, 'media-kit/game.json'), 'utf-8'));
 const VERSION = GAME.current_version;
 
-const RUNTIME_FILES = ['index.html', 'boot.js', 'game.compat.js', 'combat-controls.css', 'author-home.js', 'base.css', 'icon.svg', 'vendor/LICENSE.txt'];
+const RUNTIME_FILES = ['index.html', 'boot.js', 'game.compat.js', 'combat-controls.css', 'menu.css', 'author-home.js', 'base.css', 'icon.svg', 'vendor/LICENSE.txt'];
 const sha256 = p => createHash('sha256').update(fs.readFileSync(p)).digest('hex');
 
 // Minimal zip writer: same result as Python's zipfile(ZIP_DEFLATED) with entries in list order.
