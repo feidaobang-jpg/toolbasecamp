@@ -1,0 +1,20 @@
+{
+  "checked_at": "2026-10-13T19:15:57.1063202+08:00",
+  "source": "Codex",
+  "task_id": "01a1349d-e1d4-7110-b7bf-9b348b92cca6-rv-publish-02",
+  "followers": 303,
+  "available_exposure": 0,
+  "reward_source": "https://member.bilibili.com/platform/home",
+  "incentive_status": "LV3_requirement_not_met_credit80_met",
+  "incentive_source": "https://member.bilibili.com/platform/allowance/excitation/pc",
+  "growth_task": "2610057300_already_claimed_ends_2026-10-18",
+  "toy_challenge": "current_until_2026-10-31_related_to_episode",
+  "recheck_triggers": [
+    "首页奖励库存或可领奖提示变化",
+    "创作权益或官方门槛变化",
+    "新一期相关活动或官方通知",
+    "本期内容改变",
+    "用户主动要求"
+  ],
+  "policy": "先资格与库存快速判断；不逐片全面巡检，不建定时任务"
+}
