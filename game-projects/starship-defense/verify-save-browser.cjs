@@ -26,6 +26,7 @@ const cases=[['toy',{width:1280,height:720}],['toy',{width:390,height:844}],['to
   const url=route;await p.goto(url);await p.locator('#btnContinue').waitFor({state:'visible'});
   assert.equal(await p.evaluate(()=>window.__cloudMock.reads),0,'startup requested account cloud storage');
   await p.locator('#btnPlatformMenu').click();assert.equal(await p.evaluate(()=>window.__cloudMock.reads),0,'opening local saves requested cloud storage');
+  assert((await p.locator('#cloudInfo').innerText()).includes('尚未查看'),'unread cloud save was incorrectly reported as absent');
   assert.equal(await p.locator('#cloudAuto').isChecked(),false,'new players were opted into account storage');
   await p.locator('#cloudRead').click();await p.waitForFunction(()=>window.__cloudMock.reads>0);
   await p.locator('#cloudAuto').check();await p.locator('#platformClose').click();await p.locator('#btnContinue').click();

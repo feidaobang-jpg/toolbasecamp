@@ -25,7 +25,7 @@ export function mountSavePanel(game,{toyProvider,storage}={}){
     $('cloudChoices').replaceChildren();
     for(const [i,r] of rows.entries()){const o=document.createElement('option');o.value=r.revision;o.textContent=(i?'云端备份：':'当前云档：')+describe(r.save);$('cloudChoices').append(o);}
     selected=rows[0]||null;$('cloudLoad').classList.toggle('hidden',!selected);$('cloudChoices').hidden=!rows.length;
-    $('cloudInfo').textContent='本地：'+describe(game.getSave())+'\n云端：'+describe(current?.save);
+    $('cloudInfo').textContent='本地：'+describe(game.getSave())+'\n云端：'+(cloudRequested?describe(current?.save):'尚未查看（已有云档会保留）');
     $('cloudChoices').onchange=()=>{selected=rows.find(r=>r.revision===$('cloudChoices').value)||null;};
     updateNotice();
   }
