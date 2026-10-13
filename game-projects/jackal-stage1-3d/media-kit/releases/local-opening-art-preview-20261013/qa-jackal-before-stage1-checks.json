@@ -1,0 +1,145 @@
+{
+  "version": "before",
+  "stage": 1,
+  "gridHash": 4175767513,
+  "reach": {
+    "cells": 15705,
+    "pad": true,
+    "boss": true,
+    "huts": [
+      {
+        "name": "H0",
+        "ok": true
+      },
+      {
+        "name": "H1",
+        "ok": true
+      },
+      {
+        "name": "B1",
+        "ok": true
+      },
+      {
+        "name": "B2",
+        "ok": true
+      },
+      {
+        "name": "H2",
+        "ok": true
+      },
+      {
+        "name": "H3",
+        "ok": true
+      },
+      {
+        "name": "H4",
+        "ok": true
+      }
+    ],
+    "checkpoints": [
+      {
+        "name": "海滩",
+        "ok": true
+      },
+      {
+        "name": "营地外",
+        "ok": true
+      },
+      {
+        "name": "营地内",
+        "ok": true
+      },
+      {
+        "name": "南岸",
+        "ok": true
+      },
+      {
+        "name": "北岸",
+        "ok": true
+      },
+      {
+        "name": "崖顶",
+        "ok": true
+      },
+      {
+        "name": "丛林",
+        "ok": true
+      },
+      {
+        "name": "最后阵地",
+        "ok": true
+      },
+      {
+        "name": "场地入口",
+        "ok": true
+      }
+    ]
+  },
+  "render": {
+    "calls": 62,
+    "tris": 148722,
+    "geometries": 53,
+    "textures": 2,
+    "gl": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+  },
+  "wheelShared": true,
+  "wheelCount": 4,
+  "detailCount": 0,
+  "destroyedDetailsHidden": 0,
+  "remainingIntactDetails": 0,
+  "gate": {
+    "alive": false,
+    "hp": 8
+  },
+  "huts": [
+    {
+      "name": "H0",
+      "alive": false,
+      "x": -14.5,
+      "y": 36,
+      "hp": 4
+    },
+    {
+      "name": "H1",
+      "alive": true,
+      "x": 26.5,
+      "y": 24,
+      "hp": 4
+    },
+    {
+      "name": "B1",
+      "alive": true,
+      "x": -18,
+      "y": 70,
+      "hp": 4
+    },
+    {
+      "name": "B2",
+      "alive": true,
+      "x": 18,
+      "y": 80,
+      "hp": 4
+    },
+    {
+      "name": "H2",
+      "alive": true,
+      "x": -28.5,
+      "y": 186,
+      "hp": 4
+    },
+    {
+      "name": "H3",
+      "alive": true,
+      "x": -26.5,
+      "y": 232,
+      "hp": 4
+    },
+    {
+      "name": "H4",
+      "alive": true,
+      "x": -30.5,
+      "y": 282,
+      "hp": 4
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "schema_version": 2,
+  "game_name": "虫潮围城",
+  "game_version": "web-rv-art-v0.37.4",
+  "requested_variants": [
+    "bilibili-zh"
+  ],
+  "ready_to_review": true,
+  "ready_to_upload": false,
+  "variants": [
+    {
+      "variant_id": "bilibili-zh",
+      "manifest_file": "publish/bilibili-zh/publish.json",
+      "ready_to_upload": false,
+      "blocking_issues": [],
+      "publication_status": "published",
+      "bvid": "BV1Grpq6JEW5"
+    }
+  ],
+  "publication": {
+    "status": "published",
+    "bvid": "BV1Grpq6JEW5",
+    "url": "https://www.bilibili.com/video/BV1Grpq6JEW5/",
+    "published_at": "2026-10-13T19:17:34+08:00",
+    "public_verified_at": "2026-10-13T19:18:22.3038934+08:00",
+    "aid": 117433314578743,
+    "evidence": "work/publication-evidence/published.png"
+  },
+  "human_review": {
+    "status": "approved",
+    "event_id": "rv-visual-video-20261013-final-review-v1",
+    "variant_id": "bilibili-zh",
+    "video_sha256": "cfca0b3a80b0e8c4985725e3f36038334137028c53ea29b508fbc0fdfd5f85e3",
+    "statement": "发布",
+    "accepted_at": "2026-10-13T19:12:51.1810387+08:00"
+  }
+}

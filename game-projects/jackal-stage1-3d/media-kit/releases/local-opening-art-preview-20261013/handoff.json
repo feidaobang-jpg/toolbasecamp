@@ -1,0 +1,55 @@
+{
+  "status": "user_accepted_superseded_by_v0.11.2",
+  "authorization": "Only stage1/opening; user tests before deciding later stages/remakes; do not merge/publish this preview until user decides.",
+  "version": "v0.11.1-opening-art-local",
+  "branch": "codex/three-art-previews-20261013",
+  "website": "not_published",
+  "toy": "not_submitted",
+  "scope": [
+    "stage1 jeep only",
+    "first two beach rescue huts",
+    "first camp gate and south wall"
+  ],
+  "unchanged": [
+    "stages2/3 visuals",
+    "gameplay/collisions/save IDs/music/controls",
+    "grass and road colors, cartoon proportions"
+  ],
+  "artifact_directory": "D:\\project\\task-artifacts\\art-rollout-20261013",
+  "preview_url": "http://127.0.0.1:8837/review.html#jackal",
+  "play_url": "http://127.0.0.1:8837/source/html/game/jackal-stage1-3d/index.html?stage=1&q=high",
+  "build_sha256": "87ba4554b5b81eb348449eb5a0f8a79d54cb4ba1f4078ad1275f987b32280ab4",
+  "size": {
+    "before": {
+      "bundle_bytes": 720923,
+      "gzip_bytes": 209302
+    },
+    "after": {
+      "bundle_bytes": 723350,
+      "gzip_bytes": 210255
+    },
+    "gzip_delta_bytes": 953
+  },
+  "validation": {
+    "build": "passed",
+    "native_input": "W moved y45 to51.02; J11 shots; K destroyed camp gate hp0",
+    "collision_grid": "old/new 4175767513; all huts, checkpoints, helipad and boss reachable",
+    "destruction": "gate and H0 details hide with destruction; remaining H1 detail stays",
+    "stage_isolation": "stage2 and stage3 detailCount0",
+    "views": "oblique, top, front, fp screenshot evidence",
+    "mobile": "844x390 and390x844 desktop simulation; real phone not tested",
+    "performance": "Realtime samples discarded due 1fps background throttling. Manual fixed-step render submission + gl.finish measured 300 frames old0.501ms/new0.508ms average. Not FPS proof; actual player device performance pending user test.",
+    "dynamic_media": "Native movement/shooting/turning tested. No usable realtime video due browser background throttling; do not market media as ready."
+  },
+  "notification_event": {
+    "id": "jackal-opening-art-test-20261013",
+    "reason": "Approval",
+    "status": "resolved"
+  },
+  "preserve_workspace_and_server": "Preview gate resolved; original media retained outside repository.",
+  "approval_resolution": {
+    "user": "按你说的做吧",
+    "scope": "All stages shared jeep detail; other games unchanged",
+    "release": "../v0.11.2/handoff.json"
+  }
+}

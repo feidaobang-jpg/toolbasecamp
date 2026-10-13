@@ -1,0 +1,57 @@
+{
+  "version": "web-defense-art-v0.37.5",
+  "scope": "Base defense main mode only; shared UI/gameplay/save namespaces retained. RV/bank/war/zerg restore original environment.",
+  "artifact_directory": "D:\\project\\task-artifacts\\art-rollout-20261013",
+  "changes": [
+    "Armour panels follow front terrain slope; two merged static batches plus one destructible gate fitting batch",
+    "128x128 generated ground grain",
+    "Chapter-aware cool day illumination, preserved night switch and cave light blend"
+  ],
+  "validation": {
+    "build": "passed",
+    "unit": "verify-platform-unit.mjs passed",
+    "four_views": "qa-defense-views.webm, 24 seconds, reviewed frame sequence",
+    "new_old_collision_comparison": "passed; identical terrain checksum and all 7697 collider records",
+    "mobile": "844x390 desktop simulation, real phone not tested",
+    "performance": {
+      "desktop_before_fps": 163.83932143712047,
+      "desktop_after_fps": 163.305715700013,
+      "route": "third person close view, 24 added bugs plus normal wave, held E 23s while measuring20s; variable AI kills affect last-frame draw calls",
+      "background_sample": "One 1fps sample was discarded due to inactive tab throttling; retest used native continuous input."
+    }
+  },
+  "package": {
+    "bytes": 436379,
+    "baseline_bytes": 434710,
+    "delta_bytes": 1669,
+    "entry_bytes": 66140,
+    "sha256": "ec1bc8120cb04e50e0ac369e4d3f4d687175fbb3cfc8c3e79c30db8c93381f14",
+    "doctor": "pass; only existing unhashed filename advisory"
+  },
+  "website": {
+    "status": "verified",
+    "commit": "91fc9515",
+    "evidence": "website.json",
+    "at": "2026-10-13T19:54:20.141082+08:00"
+  },
+  "toy": {
+    "id": "38678478981120",
+    "status": "included_in_newer_published_version",
+    "submitted_at": "2026-10-13T19:54:20.141082+08:00",
+    "tested_preview": "https://www.bilibili.com/toy/preview/preview_bNDrkv7L/index.html",
+    "submission_preview": "https://www.bilibili.com/toy/preview/preview_4Pe20Hax/index.html",
+    "zip_sha256": "ec1bc8120cb04e50e0ac369e4d3f4d687175fbb3cfc8c3e79c30db8c93381f14",
+    "validation": "Official Toy preview: continue existing level2 progress, W movement, jump, desktop/touch switch, landscape and portrait desktop simulation; no console errors. Real phone not tested.",
+    "public_verified_at": "2026-10-13T20:12:54.608733+08:00",
+    "public_runtime_revision": "v25876",
+    "current_public_version": "v0.38.0",
+    "public_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+    "public_validation": "Official public entry rendered version label; defense continued prior level2 save and new gate/ground art visible."
+  },
+  "bilibili": {
+    "decision": "deferred_accumulating",
+    "reason": "Appearance refinement of existing defense mode, no new gameplay or changed controls; existing description remains applicable. Latest public description verification 2026-10-12, less than 7 days."
+  },
+  "taptap": "not_in_scope",
+  "thumbnail_decision": "retain: current card still represents the same game; this is local chapter/base material refinement, not a new identity or changed core gameplay"
+}

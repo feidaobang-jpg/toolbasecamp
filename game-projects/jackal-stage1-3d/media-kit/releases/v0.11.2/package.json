@@ -1,0 +1,11 @@
+{
+  "version": "v0.11.2",
+  "index_bytes": 10198,
+  "zip_bytes": 8838299,
+  "zip_sha256": "ec35f7fbef36e8a9efcba06aa3681605a5550f2b7611eb932a63f385952acc45",
+  "bundle_sha256": "74bbe27753678119af96ac76352e74746197eabe18a1009f350db553c2e6b478",
+  "old_bundle_bytes": 720923,
+  "bundle_bytes": 723336,
+  "old_gzip_bytes": 209302,
+  "gzip_bytes": 210250
+}

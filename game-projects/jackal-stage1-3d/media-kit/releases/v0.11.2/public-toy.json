@@ -1,0 +1,15 @@
+{
+  "status": "public_verified",
+  "version": "v0.11.2",
+  "runtime_revision": "v25918",
+  "verified_at": "2026-10-13T21:03:57.307405+08:00",
+  "url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
+  "bundle_url": "https://www.bilibilitoy.com/toy/feidao-jackal-3d/39863936092160-v25918/js/game.min.js?v=jeep-detail-20261013",
+  "bundle_sha256": "74bbe27753678119af96ac76352e74746197eabe18a1009f350db553c2e6b478",
+  "bytes": 723336,
+  "checks": [
+    "public runtime bundle matches tested package",
+    "third stage starts and native move/fire works"
+  ],
+  "screenshot": "D:/project/task-artifacts/art-rollout-20261013/jeep-toy-published.png"
+}

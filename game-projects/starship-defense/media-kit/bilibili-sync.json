@@ -7,26 +7,26 @@
     {
       "bvid": "BV1WbHq6eEBt",
       "url": "https://www.bilibili.com/video/BV1WbHq6eEBt/",
-      "last_public_verified_version": "web-fps-mouse-v0.36.2-input-safety1",
+      "last_public_verified_version": "web-acid-arena-v0.38.0",
       "status": "public_verified",
       "submit_toast": "稿件投递成功",
-      "description_revision": "input-safety-restoration-20261012",
-      "description_public_verified_at": "2026-10-12T12:27:13.659Z",
-      "description_sha256": "9084e7946eb5513702b9c7caecb6ca6535003f0b296ba6a73c5fc7f274e7bb02",
-      "submitted_version": "web-fps-mouse-v0.36.2-input-safety1",
+      "description_revision": "web-acid-arena-v0.38.0",
+      "description_public_verified_at": "2026-10-13T12:06:35.561Z",
+      "description_sha256": "1e9fbbb415718b039d8bf31e56f52114a29d0a192b1e3f6ec4546f1f166e626f",
+      "submitted_version": "web-acid-arena-v0.38.0",
       "submitted_at": "2026-10-12T12:25:02.395Z",
-      "lastPublicVerifiedVersion": "web-fps-mouse-v0.36.2-input-safety1",
-      "publicVerifiedAt": "2026-10-12T12:27:13.659Z",
-      "descriptionHash": "9084e7946eb5513702b9c7caecb6ca6535003f0b296ba6a73c5fc7f274e7bb02",
-      "public_verified_at": "2026-10-12T12:27:13.659Z",
-      "last_public_verified_at": "2026-10-12T12:27:13.659Z",
+      "lastPublicVerifiedVersion": "web-acid-arena-v0.38.0",
+      "publicVerifiedAt": "2026-10-13T12:06:35.561Z",
+      "descriptionHash": "1e9fbbb415718b039d8bf31e56f52114a29d0a192b1e3f6ec4546f1f166e626f",
+      "public_verified_at": "2026-10-13T12:06:35.561Z",
+      "last_public_verified_at": "2026-10-13T12:06:35.561Z",
       "new_episode_guide_record": "../video/wish-versus-20261008/work/publication-result.json",
-      "record": "releases/backfill-20261010/release-status.json",
+      "record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
       "description_hash_note": "UTF-8 normalized paragraph text without trailing newline; exact match to public text",
-      "last_sync_record": "game-projects/site-games/releases/input-safety-20261012/bilibili-sync.json",
-      "release_record": "game-projects/site-games/releases/input-safety-20261012/bilibili-sync.json",
-      "release": "releases/backfill-20261010/release-status.json",
-      "exact_text_record": "game-projects/site-games/releases/input-safety-20261012/bilibili-sync.json",
+      "last_sync_record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
+      "release_record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
+      "release": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
+      "exact_text_record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
       "takeover_history": [
         {
           "last_public_verified_version": "web-resistance-v0.33.0",
@@ -43,34 +43,39 @@
         "web-menu-history-v0.36.1"
       ],
       "covered_versions": [
-        "web-feedback-v0.34.1",
-        "web-bank-restore-v0.35.0",
-        "web-zerg-v0.36.0",
-        "web-menu-history-v0.36.1"
-      ]
+        "web-acid-arena-v0.38.0",
+        "web-defense-art-v0.37.5",
+        "web-rv-art-v0.37.4",
+        "web-fire-v0.37.3",
+        "web-shallow-hive-v0.37.2",
+        "web-slope-aim-v0.37.1",
+        "web-menu-v0.37.0"
+      ],
+      "pending_updates": [],
+      "pending_stable_versions": []
     },
     {
       "bvid": "BV1Ujad6DEuf",
       "url": "https://www.bilibili.com/video/BV1Ujad6DEuf/",
-      "last_public_verified_version": "web-fps-mouse-v0.36.2-input-safety1",
-      "last_public_verified_at": "2026-10-12T12:27:15.425Z",
+      "last_public_verified_version": "web-acid-arena-v0.38.0",
+      "last_public_verified_at": "2026-10-13T12:06:36.569Z",
       "status": "public_verified",
       "submit_toast": "稿件投递成功",
-      "description_revision": "input-safety-restoration-20261012",
-      "description_public_verified_at": "2026-10-12T12:27:15.425Z",
-      "description_sha256": "dc3fe9bac263b6dee0ab45642f8fc0610368c0d50daf711d7ef02751ddaa0854",
-      "submitted_version": "web-fps-mouse-v0.36.2-input-safety1",
+      "description_revision": "web-acid-arena-v0.38.0",
+      "description_public_verified_at": "2026-10-13T12:06:36.569Z",
+      "description_sha256": "cfb7be5369e756e07129d5f7910b25fb53addc1203cebed7be678f129ab8ba71",
+      "submitted_version": "web-acid-arena-v0.38.0",
       "submitted_at": "2026-10-12T12:25:08.871Z",
-      "lastPublicVerifiedVersion": "web-fps-mouse-v0.36.2-input-safety1",
-      "publicVerifiedAt": "2026-10-12T12:27:15.425Z",
-      "descriptionHash": "dc3fe9bac263b6dee0ab45642f8fc0610368c0d50daf711d7ef02751ddaa0854",
-      "public_verified_at": "2026-10-12T12:27:15.425Z",
-      "record": "releases/backfill-20261010/release-status.json",
+      "lastPublicVerifiedVersion": "web-acid-arena-v0.38.0",
+      "publicVerifiedAt": "2026-10-13T12:06:36.569Z",
+      "descriptionHash": "cfb7be5369e756e07129d5f7910b25fb53addc1203cebed7be678f129ab8ba71",
+      "public_verified_at": "2026-10-13T12:06:36.569Z",
+      "record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
       "description_hash_note": "UTF-8 normalized paragraph text without trailing newline; exact match to public text",
-      "last_sync_record": "game-projects/site-games/releases/input-safety-20261012/bilibili-sync.json",
-      "release_record": "game-projects/site-games/releases/input-safety-20261012/bilibili-sync.json",
-      "release": "releases/backfill-20261010/release-status.json",
-      "exact_text_record": "game-projects/site-games/releases/input-safety-20261012/bilibili-sync.json",
+      "last_sync_record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
+      "release_record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
+      "release": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
+      "exact_text_record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
       "takeover_history": [
         {
           "last_public_verified_version": "web-resistance-v0.33.0",
@@ -87,38 +92,43 @@
         "web-menu-history-v0.36.1"
       ],
       "covered_versions": [
-        "web-feedback-v0.34.1",
-        "web-bank-restore-v0.35.0",
-        "web-zerg-v0.36.0",
-        "web-menu-history-v0.36.1"
-      ]
+        "web-acid-arena-v0.38.0",
+        "web-defense-art-v0.37.5",
+        "web-rv-art-v0.37.4",
+        "web-fire-v0.37.3",
+        "web-shallow-hive-v0.37.2",
+        "web-slope-aim-v0.37.1",
+        "web-menu-v0.37.0"
+      ],
+      "pending_updates": [],
+      "pending_stable_versions": []
     },
     {
       "bvid": "BV1C5HQ6gEvD",
       "url": "https://www.bilibili.com/video/BV1C5HQ6gEvD/",
       "recorded_game_version": "web-versus-teams-v0.27.0",
-      "last_public_verified_version": "web-fps-mouse-v0.36.2-input-safety1",
+      "last_public_verified_version": "web-acid-arena-v0.38.0",
       "status": "public_verified",
-      "last_public_verified_at": "2026-10-12T12:27:12.331Z",
+      "last_public_verified_at": "2026-10-13T12:06:34.761Z",
       "publication_record": "../video/wish-versus-20261008/work/publication-result.json",
       "development_model": "Claude Opus 5.5",
       "note": "本期演示虫潮对战，1v1和4v4为两场独立电脑对局，非8真人实测。",
-      "submitted_version": "web-fps-mouse-v0.36.2-input-safety1",
-      "description_revision": "input-safety-restoration-20261012",
-      "description_sha256": "50b6707f136044a30ab6a5d9a49689d75bc2ad2ed26d208490b74246a4b4607d",
-      "description_public_verified_at": "2026-10-12T12:27:12.331Z",
+      "submitted_version": "web-acid-arena-v0.38.0",
+      "description_revision": "web-acid-arena-v0.38.0",
+      "description_sha256": "c826b3dce52b02187edaa9393540bf2d7f7ae11ffb20417563e47e0e66da25c7",
+      "description_public_verified_at": "2026-10-13T12:06:34.761Z",
       "submit_toast": "稿件投递成功",
       "submitted_at": "2026-10-12T12:24:51.125Z",
-      "record": "releases/backfill-20261010/release-status.json",
+      "record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
       "description_hash_note": "UTF-8 normalized paragraph text without trailing newline; exact match to public text",
-      "lastPublicVerifiedVersion": "web-fps-mouse-v0.36.2-input-safety1",
-      "descriptionHash": "50b6707f136044a30ab6a5d9a49689d75bc2ad2ed26d208490b74246a4b4607d",
-      "public_verified_at": "2026-10-12T12:27:12.331Z",
-      "publicVerifiedAt": "2026-10-12T12:27:12.331Z",
-      "last_sync_record": "game-projects/site-games/releases/input-safety-20261012/bilibili-sync.json",
-      "release_record": "game-projects/site-games/releases/input-safety-20261012/bilibili-sync.json",
-      "release": "releases/backfill-20261010/release-status.json",
-      "exact_text_record": "game-projects/site-games/releases/input-safety-20261012/bilibili-sync.json",
+      "lastPublicVerifiedVersion": "web-acid-arena-v0.38.0",
+      "descriptionHash": "c826b3dce52b02187edaa9393540bf2d7f7ae11ffb20417563e47e0e66da25c7",
+      "public_verified_at": "2026-10-13T12:06:34.761Z",
+      "publicVerifiedAt": "2026-10-13T12:06:34.761Z",
+      "last_sync_record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
+      "release_record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
+      "release": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
+      "exact_text_record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
       "takeover_history": [
         {
           "last_public_verified_version": "web-resistance-v0.33.0",
@@ -135,36 +145,41 @@
         "web-menu-history-v0.36.1"
       ],
       "covered_versions": [
-        "web-feedback-v0.34.1",
-        "web-bank-restore-v0.35.0",
-        "web-zerg-v0.36.0",
-        "web-menu-history-v0.36.1"
-      ]
+        "web-acid-arena-v0.38.0",
+        "web-defense-art-v0.37.5",
+        "web-rv-art-v0.37.4",
+        "web-fire-v0.37.3",
+        "web-shallow-hive-v0.37.2",
+        "web-slope-aim-v0.37.1",
+        "web-menu-v0.37.0"
+      ],
+      "pending_updates": [],
+      "pending_stable_versions": []
     },
     {
       "bvid": "BV1xdpx63ETu",
       "url": "https://www.bilibili.com/video/BV1xdpx63ETu/",
       "recorded_game_version": "web-three-lanes-v0.31.0",
-      "last_public_verified_version": "web-fps-mouse-v0.36.2-input-safety1",
+      "last_public_verified_version": "web-acid-arena-v0.38.0",
       "status": "public_verified",
-      "last_public_verified_at": "2026-10-12T12:27:10.585Z",
+      "last_public_verified_at": "2026-10-13T12:06:34.051Z",
       "publication_record": "../video/rv-town-20261009/work/publication-result.json",
       "development_model": "Codex辅助开发；具体RV模型未完整核对",
       "note": "正常规则房车城镇实战；搜2/6区、击退12只、带回314零件；新片发布不推进其他旧稿说明基线。",
-      "lastPublicVerifiedVersion": "web-fps-mouse-v0.36.2-input-safety1",
-      "submitted_version": "web-fps-mouse-v0.36.2-input-safety1",
-      "description_revision": "input-safety-restoration-20261012",
-      "description_sha256": "b291ab18e7fd78523f0ed9640c263ea94ade060e072ec5f20675a16e52f1ffa2",
-      "descriptionHash": "b291ab18e7fd78523f0ed9640c263ea94ade060e072ec5f20675a16e52f1ffa2",
-      "public_verified_at": "2026-10-12T12:27:10.585Z",
-      "publicVerifiedAt": "2026-10-12T12:27:10.585Z",
-      "description_public_verified_at": "2026-10-12T12:27:10.585Z",
-      "last_sync_record": "game-projects/site-games/releases/input-safety-20261012/bilibili-sync.json",
-      "record": "releases/backfill-20261010/release-status.json",
-      "release_record": "game-projects/site-games/releases/input-safety-20261012/bilibili-sync.json",
-      "release": "releases/backfill-20261010/release-status.json",
+      "lastPublicVerifiedVersion": "web-acid-arena-v0.38.0",
+      "submitted_version": "web-acid-arena-v0.38.0",
+      "description_revision": "web-acid-arena-v0.38.0",
+      "description_sha256": "97c1f9a800fb84b5e3bb8418531b0cb75ed1e355ec689af462f89914806ee7f6",
+      "descriptionHash": "97c1f9a800fb84b5e3bb8418531b0cb75ed1e355ec689af462f89914806ee7f6",
+      "public_verified_at": "2026-10-13T12:06:34.051Z",
+      "publicVerifiedAt": "2026-10-13T12:06:34.051Z",
+      "description_public_verified_at": "2026-10-13T12:06:34.051Z",
+      "last_sync_record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
+      "record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
+      "release_record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
+      "release": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
       "submitted_at": "2026-10-12T12:24:46.022Z",
-      "exact_text_record": "game-projects/site-games/releases/input-safety-20261012/bilibili-sync.json",
+      "exact_text_record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
       "takeover_history": [
         {
           "last_public_verified_version": "web-resistance-v0.33.0",
@@ -182,11 +197,16 @@
         "web-menu-history-v0.36.1"
       ],
       "covered_versions": [
-        "web-feedback-v0.34.1",
-        "web-bank-restore-v0.35.0",
-        "web-zerg-v0.36.0",
-        "web-menu-history-v0.36.1"
-      ]
+        "web-acid-arena-v0.38.0",
+        "web-defense-art-v0.37.5",
+        "web-rv-art-v0.37.4",
+        "web-fire-v0.37.3",
+        "web-shallow-hive-v0.37.2",
+        "web-slope-aim-v0.37.1",
+        "web-menu-v0.37.0"
+      ],
+      "pending_updates": [],
+      "pending_stable_versions": []
     },
     {
       "bvid": "BV14hpL62EZ5",
@@ -195,19 +215,19 @@
         {}
       ],
       "status": "public_verified",
-      "last_public_verified_version": "web-fps-mouse-v0.36.2-input-safety1",
-      "lastPublicVerifiedVersion": "web-fps-mouse-v0.36.2-input-safety1",
-      "submitted_version": "web-fps-mouse-v0.36.2-input-safety1",
-      "description_revision": "input-safety-restoration-20261012",
-      "description_sha256": "940169de3c1389fac5052599cad23ff8405670a23d1c686cf84cfdb49ac286de",
-      "descriptionHash": "940169de3c1389fac5052599cad23ff8405670a23d1c686cf84cfdb49ac286de",
-      "description_public_verified_at": "2026-10-12T12:27:48.849Z",
-      "public_verified_at": "2026-10-12T12:27:48.849Z",
-      "publicVerifiedAt": "2026-10-12T12:27:48.849Z",
-      "last_public_verified_at": "2026-10-12T12:27:48.849Z",
-      "exact_text_record": "game-projects/site-games/releases/input-safety-20261012/bilibili-sync.json",
-      "last_sync_record": "game-projects/site-games/releases/input-safety-20261012/bilibili-sync.json",
-      "release_record": "game-projects/site-games/releases/input-safety-20261012/bilibili-sync.json",
+      "last_public_verified_version": "web-acid-arena-v0.38.0",
+      "lastPublicVerifiedVersion": "web-acid-arena-v0.38.0",
+      "submitted_version": "web-acid-arena-v0.38.0",
+      "description_revision": "web-acid-arena-v0.38.0",
+      "description_sha256": "929d7bc675c689c9af946464149532428104134b018cbe5a3e6a0f7945934b1f",
+      "descriptionHash": "929d7bc675c689c9af946464149532428104134b018cbe5a3e6a0f7945934b1f",
+      "description_public_verified_at": "2026-10-13T12:06:33.316Z",
+      "public_verified_at": "2026-10-13T12:06:33.316Z",
+      "publicVerifiedAt": "2026-10-13T12:06:33.316Z",
+      "last_public_verified_at": "2026-10-13T12:06:33.316Z",
+      "exact_text_record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
+      "last_sync_record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
+      "release_record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
       "submitted_at": "2026-10-12T12:24:39.440Z",
       "submit_toast": "稿件投递成功",
       "submitted_description_sha256": "f8545be6197c9e035ac0d5ffa38b561b547917f3f51656b061a9ee67848cb924",
@@ -218,11 +238,16 @@
         "web-menu-history-v0.36.1"
       ],
       "covered_versions": [
-        "web-feedback-v0.34.1",
-        "web-bank-restore-v0.35.0",
-        "web-zerg-v0.36.0",
-        "web-menu-history-v0.36.1"
-      ]
+        "web-acid-arena-v0.38.0",
+        "web-defense-art-v0.37.5",
+        "web-rv-art-v0.37.4",
+        "web-fire-v0.37.3",
+        "web-shallow-hive-v0.37.2",
+        "web-slope-aim-v0.37.1",
+        "web-menu-v0.37.0"
+      ],
+      "pending_updates": [],
+      "pending_stable_versions": []
     },
     {
       "bvid": "BV1KFpJ6sEEK",
@@ -260,9 +285,33 @@
         "web-zerg-v0.36.0",
         "web-menu-history-v0.36.1"
       ]
+    },
+    {
+      "bvid": "BV1Grpq6JEW5",
+      "url": "https://www.bilibili.com/video/BV1Grpq6JEW5/",
+      "mapping_evidence": "toy video list 38678478981120 + 本人稿件编辑页",
+      "status": "public_verified",
+      "last_public_verified_version": "web-acid-arena-v0.38.0",
+      "last_public_verified_at": "2026-10-13T12:06:32.470Z",
+      "description_public_verified_at": "2026-10-13T12:06:32.470Z",
+      "description_sha256": "1bb7fe9b2544e444ff736d9c663a9f2472d6df2170ceec064c0526069b55f5b5",
+      "last_sync_record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
+      "covered_versions": [
+        "web-acid-arena-v0.38.0",
+        "web-defense-art-v0.37.5",
+        "web-rv-art-v0.37.4",
+        "web-fire-v0.37.3",
+        "web-shallow-hive-v0.37.2",
+        "web-slope-aim-v0.37.1",
+        "web-menu-v0.37.0"
+      ],
+      "pending_updates": [],
+      "pending_stable_versions": [],
+      "submitted_version": "web-acid-arena-v0.38.0",
+      "description_revision": "web-acid-arena-v0.38.0"
     }
   ],
-  "latest_record": "game-projects/site-games/releases/input-safety-20261012/bilibili-sync.json",
+  "latest_record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
   "pending": [],
   "pending_note": null,
   "pending_release": {
@@ -530,68 +579,89 @@
       ]
     },
     {
-      "status": "deferred_accumulating",
+      "status": "public_verified",
       "decision": "deferred_accumulating",
-      "reason": "菜单与触摸体验优化，没有增加玩法；上次相关简介公开核验2026-10-12，未满7天，当前已知说明没有指定旧菜单布局。",
+      "reason": "随酸液围场重大玩法合并更新六条简介并公开核验",
       "version": "web-menu-v0.37.0",
       "summary": "虫潮菜单重排、触摸滚动修复、暂停与设置统一深色主题；游客和本地存档路径保留。",
       "website_verified": true,
       "website_verified_at": "2026-10-13T15:48:54.728137+08:00",
-      "record": "releases/web-menu-v0.37.0/handoff.json",
+      "record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
       "recorded_at": "2026-10-13T16:00:14.100933+08:00",
       "channels": [
         "bilibili"
-      ]
+      ],
+      "covered_by": "web-acid-arena-v0.38.0",
+      "public_verified_at": "2026-10-13T20:10:19.195225+08:00"
     },
     {
       "version": "web-slope-aim-v0.37.1",
-      "record": "releases/web-slope-aim-v0.37.1/handoff.json",
+      "record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
       "website_verified_at": "2026-10-13T16:00:50.401538+08:00",
-      "status": "deferred_accumulating",
+      "status": "public_verified",
       "decision": "deferred_accumulating",
       "summary": "六处野外山坡降低至2米；自动瞄准按自己的距离锁定最近目标，电脑、触屏与联机一致。",
-      "reason": "普通地形与选敌体验调整；现有简介未声称首领优先或特定坡高，最后公开核验2026-10-12，尚未满7天；不另发评论绕过频率。",
+      "reason": "随酸液围场重大玩法合并更新六条简介并公开核验",
       "channels": [
         "bilibili"
-      ]
+      ],
+      "covered_by": "web-acid-arena-v0.38.0",
+      "public_verified_at": "2026-10-13T20:10:19.195225+08:00"
     },
     {
       "version": "web-shallow-hive-v0.37.2",
-      "record": "releases/web-shallow-hive-v0.37.2/handoff.json",
+      "record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
       "website_verified_at": "2026-10-13T16:29:48.402342+08:00",
-      "status": "deferred_accumulating",
+      "status": "public_verified",
       "decision": "deferred_accumulating",
       "summary": "母巢深度22米减为4米，三路坡道放缓，回程上坡接近平地速度。",
-      "reason": "普通地形回程体验优化；上次公开简介核验2026-10-12未满7天，既有简介未指定22米深度。",
+      "reason": "随酸液围场重大玩法合并更新六条简介并公开核验",
       "channels": [
         "bilibili"
-      ]
+      ],
+      "covered_by": "web-acid-arena-v0.38.0",
+      "public_verified_at": "2026-10-13T20:10:19.195225+08:00"
     },
     {
       "version": "web-fire-v0.37.3",
-      "status": "deferred_accumulating",
+      "status": "public_verified",
       "decision": "deferred_accumulating",
       "summary": "电脑手机共用自动/按住/点击开关连射，独立瞄准设置，连射安全清理与联机目标判定。",
-      "reason": "操作体验小更新；相关B站简介上次公开核验2026-10-12，未满7天。沿用已有手动按键仍有效，暂未发现必须立即更正的说明。",
+      "reason": "随酸液围场重大玩法合并更新六条简介并公开核验",
       "website_verified": true,
       "website_verified_at": "2026-10-13T16:36:51.514448+08:00",
-      "record": "releases/web-fire-v0.37.3/handoff.json",
+      "record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
       "recorded_at": "2026-10-13T16:44:09.436239+08:00",
       "channels": [
         "bilibili"
-      ]
+      ],
+      "covered_by": "web-acid-arena-v0.38.0",
+      "public_verified_at": "2026-10-13T20:10:19.195225+08:00"
     },
     {
       "version": "web-rv-art-v0.37.4",
-      "record": "releases/web-rv-art-v0.37.4/handoff.json",
+      "record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
       "website_verified_at": "2026-10-13T16:47:44.115897+08:00",
-      "status": "deferred_accumulating",
+      "status": "public_verified",
       "decision": "deferred_accumulating",
       "summary": "房车模型、真实车灯、夕阳城镇与僵尸外形细化，存档和探索路线兼容。",
-      "reason": "单个模式视觉细化，不改变试玩入口或现有玩法说明；最后简介公开核验2026-10-12，尚未满7天。",
+      "reason": "随酸液围场重大玩法合并更新六条简介并公开核验",
       "channels": [
         "bilibili"
-      ]
+      ],
+      "covered_by": "web-acid-arena-v0.38.0",
+      "public_verified_at": "2026-10-13T20:10:19.195225+08:00"
+    },
+    {
+      "version": "web-defense-art-v0.37.5",
+      "status": "included_in_public_verified_release",
+      "classification": "普通美术精修",
+      "summary": "防守主模式基地装甲与城门细节、轻量地表颗粒、按章节区分的冷色日光；玩法/操作保持。",
+      "reason": "六条简介已于本轮公开核验，合并说明基地与房车美术更新。",
+      "record": "releases/web-defense-art-v0.37.5/handoff.json",
+      "recorded_at": "2026-10-13T19:54:20.141082+08:00",
+      "included_version": "web-acid-arena-v0.38.0",
+      "public_verification_record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json"
     }
   ],
   "comment_corrections": [
@@ -996,22 +1066,23 @@
       }
     }
   ],
-  "last_release_record": "releases/web-slope-aim-v0.37.1/handoff.json",
+  "last_release_record": "releases/web-acid-arena-v0.38.0/handoff.json",
   "status": "public_verified",
-  "version": "web-menu-history-v0.36.1",
-  "updated_at": "2026-10-13T16:03:23.299989+08:00",
+  "version": "web-acid-arena-v0.38.0",
+  "updated_at": "2026-10-13T20:10:19.195225+08:00",
   "last_public_verified": {
-    "version": "web-fps-mouse-v0.36.2-input-safety1",
-    "at": "2026-10-12T12:27:48.849Z",
+    "version": "web-acid-arena-v0.38.0",
+    "at": "2026-10-13T20:10:19.195225+08:00",
     "bvids": [
       "BV14hpL62EZ5",
-      "BV1xdpx63ETu",
       "BV1C5HQ6gEvD",
+      "BV1Grpq6JEW5",
+      "BV1Ujad6DEuf",
       "BV1WbHq6eEBt",
-      "BV1Ujad6DEuf"
+      "BV1xdpx63ETu"
     ],
-    "record": "game-projects/site-games/releases/input-safety-20261012/bilibili-sync.json",
-    "scope": "availability status and website safety notice"
+    "record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
+    "scope": "酸液围场重大更新，合并菜单/地形/射击/美术说明"
   },
   "takeover_sync": {
     "task_id": "01a129f8-5691-7273-aab0-54954767f34f-takeover-20261011-01",
@@ -1217,6 +1288,20 @@
         "reason": "Studio字幕页的标题和说明单元格未展示编辑入口；点击仅打开删除译文确认，已取消，未删除。",
         "next_action": "从官方可编辑入口重读译文全文后合并更正；不得删除重建、重传视频或把主简介成功当作译文成功。"
       }
+    ]
+  },
+  "last_decision": {
+    "at": "2026-10-13T20:08:24.969238+08:00",
+    "decision": "sync_major_feature",
+    "reason": "新增独立酸液围场，合并已有有意义更新",
+    "version": "web-acid-arena-v0.38.0",
+    "public_verified_targets": [
+      "BV1Grpq6JEW5",
+      "BV14hpL62EZ5",
+      "BV1xdpx63ETu",
+      "BV1C5HQ6gEvD",
+      "BV1WbHq6eEBt",
+      "BV1Ujad6DEuf"
     ]
   }
 }

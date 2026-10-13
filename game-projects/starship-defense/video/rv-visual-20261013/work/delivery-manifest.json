@@ -1,0 +1,46 @@
+{
+  "files": [
+    {
+      "file": "final/bilibili-zh/cover-home-4x3.png",
+      "sha256": "27fc21428391098a28217bb783673bfe9ade5a619e6f946f329fbace5eb91511",
+      "bytes": 1791321
+    },
+    {
+      "file": "final/bilibili-zh/cover-space-16x9.png",
+      "sha256": "0d89f1ac26776622609654cb197d7205386c8b31b1c2b042418eaf8c6f579b71",
+      "bytes": 1739598
+    },
+    {
+      "file": "final/bilibili-zh/gameplay-zh-final.mp4",
+      "sha256": "cfca0b3a80b0e8c4985725e3f36038334137028c53ea29b508fbc0fdfd5f85e3",
+      "bytes": 90005227
+    },
+    {
+      "file": "final/bilibili-zh/投稿文案.txt",
+      "sha256": "4b2ace50e9c44ec8a57d83a51e53818ce8f46ad01d464a161d2381b44ffb41b7",
+      "bytes": 1329
+    }
+  ],
+  "video_sha256": "cfca0b3a80b0e8c4985725e3f36038334137028c53ea29b508fbc0fdfd5f85e3",
+  "duration_seconds": 111.5,
+  "artifact_root": "D:\\project\\toolbasecamp-artifacts\\rv-visual-video-20261013",
+  "generated_at": "2026-10-13T18:14:50.523356+08:00",
+  "publication": {
+    "status": "published",
+    "bvid": "BV1Grpq6JEW5",
+    "url": "https://www.bilibili.com/video/BV1Grpq6JEW5/",
+    "published_at": "2026-10-13T19:17:34+08:00",
+    "public_verified_at": "2026-10-13T19:18:22.3038934+08:00",
+    "aid": 117433314578743,
+    "evidence": "work/publication-evidence/published.png"
+  },
+  "human_review": {
+    "status": "approved",
+    "event_id": "rv-visual-video-20261013-final-review-v1",
+    "variant_id": "bilibili-zh",
+    "video_sha256": "cfca0b3a80b0e8c4985725e3f36038334137028c53ea29b508fbc0fdfd5f85e3",
+    "statement": "发布",
+    "accepted_at": "2026-10-13T19:12:51.1810387+08:00"
+  },
+  "updated_at": "2026-10-13T19:35:59+08:00"
+}

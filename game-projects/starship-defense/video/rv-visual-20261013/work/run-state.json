@@ -1,0 +1,28 @@
+{
+  "task_id": "01a1349d-e1d4-7110-b7bf-9b348b92cca6-rv-video-01",
+  "tool": "Codex",
+  "status": "completed",
+  "production_status": "completed",
+  "artifact_root": "D:\\project\\toolbasecamp-artifacts\\rv-visual-video-20261013",
+  "workspace": "C:\\Users\\37818\\.codex\\worktrees\\rv-before-after-video\\toolbasecamp\\game-projects\\starship-defense\\video\\rv-visual-20261013",
+  "requested_variants": [
+    "bilibili-zh"
+  ],
+  "render_entry": "render.py",
+  "video_sha256": "cfca0b3a80b0e8c4985725e3f36038334137028c53ea29b508fbc0fdfd5f85e3",
+  "duration_seconds": 111.5,
+  "human_review": {
+    "event_id": "rv-visual-video-20261013-final-review-v1",
+    "reason": "Approval",
+    "status": "approved"
+  },
+  "next_step": "已发布并完成Toy绑定、合集、置顶、旧视频维护、自动动态核验与推流申请。",
+  "other_platforms": "not_requested",
+  "server": "stopped_at_handoff",
+  "cover_stage": "completed",
+  "publication_task_id": "01a1349d-e1d4-7110-b7bf-9b348b92cca6-rv-publish-02",
+  "publication_status": "published",
+  "publication_bvid": "BV1Grpq6JEW5",
+  "completed_at": "2026-10-13T19:35:59+08:00",
+  "pending_actions": []
+}

@@ -1,3 +1,4 @@
+import { openingArtEnabled, openingStaticDetail, addOpeningWallDetail } from './opening-art.js';
 // 静态场景：灯光常驻；每关的地面、水面、建筑、树林放在 stageRoot 里，换关时整体释放再重建。
 import * as THREE from 'three';
 import * as L from './level.js';
@@ -444,10 +445,13 @@ export function buildWorld(scene) {
       if (m) {
         m.position.set(s.x, 0, Z(s.y));
         if (s.kind === 'crate') m.rotation.y = (s.id % 4) * 0.3;
+        let detail = null;
+        if (L.STAGE_NO === 1 && openingArtEnabled) { detail = openingStaticDetail(s); if (detail) m.add(detail); }
         add(m);
-        handles.set(s.id, { mesh: m, kind: s.kind });
+        handles.set(s.id, { mesh: m, kind: s.kind, detail });
       }
     }
+    if (L.STAGE_NO === 1 && openingArtEnabled) addOpeningWallDetail(root);
     // Boss 入口路障（开战前埋在地下）
     W.barricade = null;
     if (L.BARRICADE) {
@@ -564,6 +568,7 @@ export function buildWorld(scene) {
       const d = new THREE.Object3D(); d.scale.set(0, 0, 0); d.updateMatrix();
       h.inst.setMatrixAt(h.index, d.matrix); h.inst.instanceMatrix.needsUpdate = true;
     } else if (h.mesh) {
+      if (h.detail) h.detail.visible = false;
       if (s.kind === 'hut') { h.mesh.geometry = hutGeo(s.x1 - s.x0, s.y1 - s.y0, true, s.data.style || L.STAGE.hutStyle || 'wood'); }
       else if (s.kind === 'gate') { h.mesh.geometry = gateGeo(true, s.data.style || L.STAGE.gateStyle || 'wood', s.data.ew ? s.y1 - s.y0 : s.x1 - s.x0); }
       else { h.mesh.visible = false; }
@@ -591,6 +596,7 @@ export function buildWorld(scene) {
       if (!h) continue;
       if (h.inst) { h.inst.setMatrixAt(h.index, h.matrix); h.inst.instanceMatrix.needsUpdate = true; }
       else if (h.mesh) {
+        if (h.detail) h.detail.visible = true;
         if (s.kind === 'hut') h.mesh.geometry = hutGeo(s.x1 - s.x0, s.y1 - s.y0, false, s.data.style || L.STAGE.hutStyle || 'wood');
         else if (s.kind === 'gate') h.mesh.geometry = gateGeo(false, s.data.style || L.STAGE.gateStyle || 'wood', s.data.ew ? s.y1 - s.y0 : s.x1 - s.x0);
         h.mesh.visible = true; h.mesh.position.x = s.x; h.mesh.userData.shake = 0;

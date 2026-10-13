@@ -337,5 +337,14 @@
     "purpose": "铜色弹头、深棕外圈/橙金内芯曳光、短枪口闪光、灰色烟团和炮弹预计落点",
     "processing": "代码几何与材质，共用几何；简化重力积分，无下载素材、视频、真实弹道参数或镜头震动。",
     "sha256": "d748ab677bebc8c48a840c404ac156c086e39759b70caf3dc33be0ac677425bc"
+  },
+  {
+    "id": "acid-arena-procedural-v038",
+    "type": "procedural",
+    "runtime": "public/html/game/starship-defense/acid-arena.js",
+    "description": "原创程序化围场、固定朝向酸液虫、喷射预警、酸液弹幕与弱点材质；复用既有玩家、枪械及合成音效，无新增外部素材。",
+    "tool": "Codex / Three.js r152",
+    "version": "web-acid-arena-v0.38.0",
+    "sha256": "d3d1626be6bc5b9502a85a5932956e3cb931491a64f641145b25ac7b3611d50f"
   }
 ]

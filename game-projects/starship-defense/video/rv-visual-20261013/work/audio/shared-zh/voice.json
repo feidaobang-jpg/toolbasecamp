@@ -1,0 +1,7 @@
+{
+ "engine": "IndexTTS-2.5（本地，D:/sd/index-tts）",
+ "reference": "yunxi-ref-8s.wav",
+ "note": "本地合成；复用此前已采用的合成人声参考音，不标称微软官方云希",
+ "timestamp_source": "逐句合成的真实时长",
+ "subjective_listening": "not-run"
+}

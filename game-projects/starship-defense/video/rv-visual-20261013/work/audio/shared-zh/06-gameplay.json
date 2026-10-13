@@ -1,0 +1,30 @@
+{
+ "text": "画面换了，原来的玩法没变。开车进城，遇到僵尸先清掉。下车搜物资，再回到房车继续走。",
+ "voice": "IndexTTS-2.5 本地合成（参考音 yunxi-ref-8s.wav）",
+ "rate": "1.0",
+ "unit_level": true,
+ "timestamp_source": "逐句合成，按解码采样数累计的真实起止时间",
+ "marks": [
+  {
+   "offset": 0,
+   "duration": 23679583,
+   "text": "画面换了，原来的玩法没变。",
+   "pos": 0,
+   "chars": 13
+  },
+  {
+   "offset": 26679583,
+   "duration": 30134166,
+   "text": "开车进城，遇到僵尸先清掉。",
+   "pos": 13,
+   "chars": 13
+  },
+  {
+   "offset": 59813750,
+   "duration": 28586666,
+   "text": "下车搜物资，再回到房车继续走。",
+   "pos": 26,
+   "chars": 15
+  }
+ ]
+}
