@@ -131,6 +131,15 @@
       "channels": [
         "bilibili"
       ]
+    },
+    {
+      "version": "v0.11.2",
+      "status": "deferred_accumulating",
+      "decision": "deferred_accumulating",
+      "summary": "三关共用吉普格栅、踏板、车灯、牵引环、轮胎胎纹和轮毂细节；保留卡通风格及第一关开局地物精修。",
+      "reason": "Ordinary cosmetic update; last public description verification 2026-10-12T21:15:36+08:00, less than 7 days; no changed gameplay instructions.",
+      "record": "releases/v0.11.2/handoff.json",
+      "website_verified_at": "2026-10-13T12:54:28.714475+00:00"
     }
   ],
   "resolved_updates": [
@@ -236,7 +245,7 @@
   ],
   "status": "public_verified",
   "version": "v0.11.0",
-  "updated_at": "2026-10-12T21:15:36+08:00",
+  "updated_at": "2026-10-13T21:02:01.536300+08:00",
   "history": [
     {
       "bvid": "BV1EyHz6wE5u",
@@ -301,7 +310,7 @@
   ],
   "last_public_verified": "2026-10-12T21:15:36+08:00",
   "latest_record": "video/stage3-20261012/work/publication-result.json",
-  "pending_note": "无待合并项（v0.11.0 已覆盖）",
+  "pending_note": "包含已核验的普通更新，未距2026-10-12简介公开核验满7天；保留全部待合并项。",
   "last_release_record": "video/stage3-20261012/work/publication-result.json",
   "other_platforms": {
     "douyin": [

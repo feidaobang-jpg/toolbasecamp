@@ -1,0 +1,18 @@
+{
+  "checked_at": "2026-10-13T12:54:28.714475+00:00",
+  "source_commit": "916e499b",
+  "files": {
+    "index.html": {
+      "sha256": "89d7ff69a9a6c58752f4e3e7d298d405bbc538fb8c6060e23737d4fda657315a",
+      "bytes": 10272,
+      "cache_revision_present": true
+    },
+    "js/game.min.js": {
+      "sha256": "74bbe27753678119af96ac76352e74746197eabe18a1009f350db553c2e6b478",
+      "bytes": 723336,
+      "cache_revision_present": null
+    }
+  },
+  "passed": true,
+  "html_script_ref": "js/game.min.js?v=916e499b"
+}

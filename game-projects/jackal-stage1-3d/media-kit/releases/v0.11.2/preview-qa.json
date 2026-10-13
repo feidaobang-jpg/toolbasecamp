@@ -1,0 +1,23 @@
+{
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_bBfstP44/index.html",
+  "viewports": [
+    "1280x720",
+    "844x390",
+    "390x844"
+  ],
+  "checks": [
+    "desktop stage2 starts; native movement and machine gun",
+    "touch mode: fire/pause/resume/restart",
+    "portrait rotates menu; starts game",
+    "same source package; no new gameplay console errors"
+  ],
+  "limitations": [
+    "desktop simulated mobile; no real-phone performance test",
+    "native pointer hold inside Toy iframe unsupported by automation; touch buttons used semantic clicks, analog joystick not revalidated on Toy"
+  ],
+  "screenshots": [
+    "D:\\project\\task-artifacts\\art-rollout-20261013\\jeep-toy-desktop.png",
+    "D:\\project\\task-artifacts\\art-rollout-20261013\\jeep-toy-mobile-landscape.png",
+    "D:\\project\\task-artifacts\\art-rollout-20261013\\jeep-toy-portrait-menu.png"
+  ]
+}

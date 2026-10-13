@@ -22,5 +22,10 @@
     "sounds/stage3.mp3": "780427f4293d31f3ac35e35fc85523015b76af94603d35a3d04bb78130272949",
     "author-home.js": "5b4b8fc50b73dec1d8f70182453c35f3d07101336345ccad6b689de7e2eb19f7"
   },
-  "status": "built_not_submitted"
+  "status": "published",
+  "submitted_once": true,
+  "submitted_at": "2026-10-13T20:59:05.617803+08:00",
+  "package_sha256": "ec35f7fbef36e8a9efcba06aa3681605a5550f2b7611eb932a63f385952acc45",
+  "public_verified_at": "2026-10-13T21:03:57.307405+08:00",
+  "runtime_revision": "v25918"
 }
