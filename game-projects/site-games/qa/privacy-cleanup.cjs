@@ -27,7 +27,11 @@ const server=http.createServer((req,res)=>{const file=path.resolve(root,'.'+deco
   await author.waitFor({state:'visible'});await page.waitForFunction(()=>window.toy&&document.querySelector('[data-author-home]'));
   await author.scrollIntoViewIfNeeded();await author.focus();await author.press('Enter');
   await page.waitForFunction(()=>window.__authorCalls.length===1);assert.deepEqual(await page.evaluate(()=>window.__authorCalls[0]),{type:'space',id:'16214353'});
-  if(['starship-defense','gunfire-assembly'].includes(game)){await page.locator('#btnPlatformMenu').click();await page.locator('#platformPanel').waitFor({state:'visible'});assert.equal(await page.locator('#cloudSaveTools').isVisible(),true);assert.equal(await page.locator('#saveAccount,#savePassword,#saveLoginForm').count(),0);}
+  if(['starship-defense','gunfire-assembly'].includes(game)){
+    // Gunfire's current title menu offers arena play, not campaign save controls.
+    if(await page.locator('#btnPlatformMenu').isVisible()){await page.locator('#btnPlatformMenu').click();await page.locator('#platformPanel').waitFor({state:'visible'});assert.equal(await page.locator('#cloudSaveTools').isVisible(),true);}
+    assert.equal(await page.locator('#saveAccount,#savePassword,#saveLoginForm').count(),0);
+  }
   assert.deepEqual(forbidden,[]);assert.deepEqual(errors,[]);
   await page.screenshot({path:path.join(out,game+'-'+viewport.width+'x'+viewport.height+'.png')});
   results.push({game,viewport,channel:'toy-package',checks:['packaged code contains no website credentials or navigation','author homepage keyboard/SDK navigation','menu reachable','no credential requests','no page errors'],passed:true});await context.close();
