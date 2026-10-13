@@ -15,16 +15,6 @@ Top nav shows a single admin entry「后台」; stats / ladder live as cards ins
 
 Server module: `server/ladder.py` (needs `requests`, `beautifulsoup4`).
 
-## Stock picks
-
-- 2026-10-13 起暂停：定时器停用、`config.js` 里的入口分组已移除，页面仍可直接打开；恢复见 `docs/stock-etf-dip.md`。
-- Page: `stock-picks.html` — 指数ETF急跌低吸（etf-dip-v1，默认）/ 回调企稳（pullback-v1），按策略版本分别模拟记账
-- API (admin JWT required)，`version` 省略时取默认策略:
-  - `GET /api/stocks/status?version=`、`GET /api/stocks/preview?version=`、`GET /api/stocks/records?version=`
-  - `POST /api/stocks/run`（依次运行全部策略）、`GET /api/stocks/review-export`（默认策略在顶层，其余在 `others`）
-
-Server modules: `server/stocks.py`、`server/stock_strategy.py`、`server/stock_market.py`；说明见 `docs/stock-etf-dip.md`、`docs/stock-pullback.md`。
-
 Android 工具已全部公开，见首页「Android」分类。
 
 ## 家里电脑（ComfyUI）

@@ -30,7 +30,6 @@ const TAILWIND_FILES = [
   'html/admin/private/chat-inbox.html',
   'html/admin/private/ladder-update.html',
   'html/admin/private/stickers.html',
-  'html/admin/private/stock-picks.html',
   'html/admin/private/traditional-music.html',
 ];
 

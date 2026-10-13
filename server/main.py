@@ -61,8 +61,6 @@ from pc_builds import (
     router as pc_builds_router,
     wire as wire_pc_builds,
 )
-from stocks import ensure_stock_pick_tables, router as stocks_router
-from stocks import wire as wire_stocks
 from mark_six_stats import (
     ensure_mark_six_tables,
     router as mark_six_router,
@@ -431,7 +429,6 @@ def ensure_tables():
             ensure_site_stats_tables(cur)
             ensure_news_tables(cur)
             ensure_pc_builds_tables(cur)
-            ensure_stock_pick_tables(cur)
             ensure_mark_six_tables(cur)
             ensure_downloads_tables(cur)
             ensure_game_votes_tables(cur)
@@ -803,8 +800,6 @@ wire_site_stats(
     is_admin,
     _client_ip,
 )
-wire_stocks(get_current_user, require_admin, get_conn, require_db)
-app.include_router(stocks_router)
 wire_mark_six(get_conn, require_db, get_current_user, require_admin, is_admin)
 app.include_router(mark_six_router)
 wire_ladder(get_current_user, require_admin)
@@ -1098,13 +1093,6 @@ def health():
         and "/pcbuilds/status" in paths
         and "/pcbuilds/refresh" in paths,
         "pc_builds_api_rev": PC_BUILDS_API_REV,
-        "stocks_api": (
-            "/stocks/recommend-pullback" in paths
-            and "/stocks/preview" in paths
-            and "/stocks/status" in paths
-            and "/stocks/review-export" in paths
-            and "/stocks/records" in paths
-        ),
         "fx_allowed_rev": FX_ALLOWED_REV,
         "fx_thb_twd": "THB" in FX_ALLOWED and "TWD" in FX_ALLOWED,
         "life_plans_kinds": sorted(LIFE_PLAN_KINDS),
