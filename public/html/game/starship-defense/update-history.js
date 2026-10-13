@@ -1,6 +1,9 @@
 // Player-facing notes travel with the same game package; no network or account required.
-export const GAME_VERSION='0.37.5';
+export const GAME_VERSION='0.38.0';
 export const UPDATE_HISTORY=[
+  {version:'0.38.0',date:'2026-10-13',title:'酸液围场 · 三轮躲避挑战',changes:[
+    '新增可选单人挑战：封闭围场内躲避固定朝向、交错喷射的酸液，金线预警，喷后蓝色弱点可集中反击。',
+    '三次命中容错，受伤短暂无敌；闪避与穿甲、贯穿、护盾升级帮助突破三轮。独立本机通关纪录，原有模式存档保留。']},
   {version:'0.37.5',date:'2026-10-13',title:'基地防线装甲与战场质感',changes:[
     '基地防守增加合并绘制的装甲墙、加固撑杆、城门五金和坡道引导标记，细化地面颗粒与冷色环境光。',
     '保留昼夜和各章节环境、原地形与通行路线；切换房车等独立模式后恢复对应场景。']},
