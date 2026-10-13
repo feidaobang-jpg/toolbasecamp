@@ -1,6 +1,9 @@
 // Player-facing notes travel with the same game package; no network or account required.
-export const GAME_VERSION='0.36.9';
+export const GAME_VERSION='0.36.10';
 export const UPDATE_HISTORY=[
+  {version:'0.36.10',date:'2026-10-13',title:'一人高山坡与最近目标瞄准',changes:[
+    '六处野外山坡降到约一个角色高，山顶堡垒、行走与碰撞同步调整。',
+    '自动瞄准改为锁定射程内离自己最近的敌人，不再优先首领、精英或镜头正前方；电脑、触屏与联机一致。']},
   {version:'0.36.9',date:'2026-10-13',title:'游客先玩，账号功能按需使用',changes:[
     '联机昵称不再自由填写，只用系统匿名称呼或主动授权并通过检测的B站昵称；房间名称统一自动生成。',
     '单机、本地存档与文件备份直接可用；Toy云存档和成绩提交在主动使用时才连接账号。']},

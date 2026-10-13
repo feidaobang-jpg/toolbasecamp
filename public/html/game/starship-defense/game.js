@@ -33,7 +33,7 @@ import {createPitchController,createLookController} from '../../../js/game/drag-
 import * as THREE from './vendor/three.module.js';
 import {DarkVisuals} from './dark-visuals.js?v=fb97';
 import {FortressWorld} from './fortress-world.js?v=toy3dui2';
-import {HILL_FORTS,hillHeight,slopeSpeed} from './terrain-controls.js';
+import {HILL_HEIGHT,HILL_FORTS,hillHeight,slopeSpeed} from './terrain-controls.js';
 import {setupToyPlatform} from './toy-platform.js?v=cloud240';
 import {LocalSaveStore,newSaveId} from './save-store.js';
 import {validateNormalSave} from './save-validation.js?v=fb9';
@@ -498,10 +498,10 @@ function plateauH(x,z){
 }
 function terrainH(x,z){
   let h=Math.max(plateauH(x,z),hillHeight(x,z));
-  const hills=[[0,150,22,8],[-40,160,14,5],[50,55,12,4]];
-  for(const [hx,hz,r,hh] of hills){
+  const hills=[[0,150,22],[-40,160,14],[50,55,12]];
+  for(const [hx,hz,r] of hills){
     const d=Math.hypot(x-hx,z-hz);
-    if(d<r)h=Math.max(h,hh*Math.cos(d/r*Math.PI/2)**2);
+    if(d<r)h=Math.max(h,HILL_HEIGHT*Math.cos(d/r*Math.PI/2)**2);
   }
   return hiveFloor(x,z,h);
 }
@@ -2511,22 +2511,20 @@ function updSquad(dt){
 }
 
 /* ---------- 玩家控制 ---------- */
-// 自动瞄准：在 facing 周围 minDot 锥形内挑目标（首领/精英优先），返回 {dir,target,mo}
-function autoAim(from,facing,range,minDot=.2){
-  let best=null,bestScore=minDot<0?-Infinity:-1;
+// 自动瞄准按玩家的水平距离选最近的活目标；minDot 只供手动射击检测准星附近目标。
+function autoAim(from,facing,range,minDot=-1){
+  let best=null,bestDistance=Infinity;
+  const origin=player.inVehicle?player.inVehicle.mesh.position:player.pos;
   const flat=new THREE.Vector3(facing.x,0,facing.z).normalize();
   for(const mo of (vsOn()?versus.aimTargets(player.team):monsters)){
     if(mo.dead||mo.emerge>0)continue;
-    const d2=dist2(from,mo.mesh.position);
+    const d2=dist2(origin,mo.mesh.position);
     if(d2>range*range)continue;
     if(battleOn()&&!versus.visible(from,mo.mesh.position.clone().add(new THREE.Vector3(0,mo.hitH||1,0))))continue;
     const dir=new THREE.Vector3().subVectors(mo.mesh.position,from);dir.y=0;dir.normalize();
     const dot=dir.dot(flat);
     if(dot<minDot)continue;
-    let score=dot*2-Math.sqrt(d2)/range;
-    if(mo.kind==='boss'||mo.kind==='queen')score+=1.2;else if(mo.kind==='miniboss')score+=.8;else if(mo.elite)score+=.5;
-    score+=mo.aimBias||0;
-    if(score>bestScore){bestScore=score;best=mo;}
+    if(d2<bestDistance){bestDistance=d2;best=mo;}
   }
   if(best){
     const to=best.mesh.position.clone();to.y+=(best.hitH||1)*1.1;
@@ -2536,9 +2534,7 @@ function autoAim(from,facing,range,minDot=.2){
 }
 function autoAimDir(from,facing,range){return autoAim(from,facing,range).dir;}
 function camForward(withPitch){const cp=withPitch?Math.cos(camPitch):1;return new THREE.Vector3(Math.sin(camYaw)*cp,withPitch?Math.sin(camPitch):0,Math.cos(camYaw)*cp).normalize();}
-function lookUser(){return !!document.pointerLockElement||performance.now()-(Input.lastLook||-1e9)<5000;}
-// PC 第三人称自动瞄准覆盖四周；手动瞄准沿镜头，第一人称保留准星附近辅助。
-// 触屏沿用镜头前方寻敌和移动方向兜底。
+// 自动瞄准在所有视角、触屏和联机中覆盖四周；手动瞄准仍沿镜头。
 // 战地手动瞄准：沿准星射线找第一个落点（敌人、掩体、地面或最大射程），子弹从枪口汇聚到这一点。
 // 键鼠完全手动；触屏和纯键盘保留准星附近约 7° 的轻度吸附，纯键盘没有俯仰键所以吸附不看高低差。
 const AIM_ASSIST_COS=Math.cos(7*Math.PI/180);
@@ -2574,21 +2570,10 @@ function crosshairPoint(range){
 function manualAim(from,range){const target=crosshairPoint(range);return {dir:target.clone().sub(from).normalize(),target,mo:null};}
 function playerAim(from,range,moveDir){
   if(manualHuman())return manualAim(from,range);
-  if(Input.network){if(Input.network.autoAim)return autoAim(from,camForward(false),range,.3);return {dir:camForward(false),target:null,mo:null};}
-  if(!isTouch){
-    const f=camForward(camMode==='first');
-    if(!CombatControls.autoAim)return {dir:f,target:from.clone().addScaledVector(f,Math.min(range,26)),mo:null};
-    // Full-circle targeting keeps keyboard retreat independent of aim. First person retains crosshair control.
-    if(camMode==='third')return autoAim(from,f,range,-1);
-  }
-  if(camMode==='first'){
-    const f=camForward(true),a=autoAim(from,f,range,isTouch?.94:.975);
-    if(a.mo&&Math.abs(a.dir.y-f.y)<(isTouch?.2:.12))return a;
-    return {dir:f,target:from.clone().addScaledVector(f,Math.min(range,26)),mo:null};
-  }
-  const f=camForward(false);let a=autoAim(from,f,range,.5);
-  if(!a.mo&&moveDir&&!lookUser()){a=autoAim(from,moveDir,range,.3);if(!a.mo)return {dir:moveDir.clone(),target:null,mo:null};}
-  return a.mo?a:{dir:f,target:null,mo:null};
+  const f=camForward(camMode==='first');
+  const auto=Input.network?Input.network.autoAim:isTouch||CombatControls.autoAim;
+  if(auto)return autoAim(from,f,range);
+  return {dir:f,target:from.clone().addScaledVector(f,Math.min(range,26)),mo:null};
 }
 function automaticFireTarget(from,range,aim){
   if(rvOn())return !!aim.mo&&aim.mo.mode==='chase';
@@ -2637,8 +2622,8 @@ function throwGrenade(){
   player.grenadeCd=vsOn()?versus.grenadeCooldown(player):3;
   const from=player.pos.clone();from.y+=1.45;
   // 战地真人手动投掷：朝镜头方向扔，抬头扔得远、低头扔得近；电脑英雄和其他模式沿用自动寻敌。
-  const manual=manualHuman(),auto=battleOn()?!manual&&!!Input.network?.autoAim:CombatControls.autoAim;
-  const facing=camForward(false),aim=auto?autoAim(from,facing,26,.65):{mo:null};
+  const manual=manualHuman(),auto=battleOn()?!manual&&!!Input.network?.autoAim:Input.network?Input.network.autoAim:isTouch||CombatControls.autoAim;
+  const facing=camForward(false),aim=auto?autoAim(from,facing,26):{mo:null};
   const target=aim.mo?aim.mo.mesh.position.clone():from.clone().addScaledVector(facing,manual?clamp(22+camPitch*25,8,28):22);
   target.y=groundY(target.x,target.z)+.2;
   fireBullet(from,facing,{arc:true,grenade:true,dmg:160,explode:6,speed:20,range:26,spread:0,color:0x96a85a},true,target);
@@ -2743,14 +2728,11 @@ function updPlayer(dt){
     if(player.lookHeading!==undefined)vehicleAim(v,camForward(false));
     player.pos.set(v.mesh.position.x,v.mesh.position.y,v.mesh.position.z);
     player.mesh.position.copy(player.pos);
-    // 载具开火：优先镜头前方目标，其次车头方向；弹从炮管口出，炮塔转向目标
+    // 载具和步行共享最近目标选择；弹从炮管口出，炮塔转向目标。
     player.fireCd-=dt;
     const facing=new THREE.Vector3(Math.sin(v.yaw),0,Math.cos(v.yaw));
     const probe=v.mesh.position.clone();probe.y+=v.cfg.seatH+.6;
-    let aim;
-    // 战地里本机和联机真人都沿准星手动瞄准；其他模式的触屏仍自动寻敌。
-    if(isTouch&&!manualHuman()){aim=autoAim(probe,camForward(false),v.cfg.range,.5);if(!aim.mo)aim=autoAim(probe,facing,v.cfg.range,.2);}
-    else aim=playerAim(probe,v.cfg.range,facing);
+    const aim=playerAim(probe,v.cfg.range,facing);
     if(Input.firing(automaticFireTarget(probe,v.cfg.range,aim))&&player.fireCd<=0){
       player.fireCd=v.cfg.rate;
       const dmg=v.cfg.dmg*(1+(Game.chapter-1)*.1)*(1+(Game.loop-1)*.4);

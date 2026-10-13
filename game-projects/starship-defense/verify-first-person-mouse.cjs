@@ -50,7 +50,7 @@ const pass=(name,data)=>{results.push({name,data});console.log('PASS',name,JSON.
   pass('Shop releases the mouse; closing it returns to first-person control');
   await p.keyboard.press('KeyC');await settle(p);assert.equal(await locked(p),null);assert.equal((await state(p)).playing,true);
   pass('Changing to third-person releases the mouse without pausing');
-   for(let i=0;i<5;i++){await p.keyboard.press('KeyC');await p.waitForTimeout(100);}await p.waitForFunction(()=>document.pointerLockElement?.id==='c3d');
+   for(let i=0;i<3;i++){await p.keyboard.press('KeyC');await p.waitForTimeout(100);}await p.waitForFunction(()=>document.pointerLockElement?.id==='c3d');
   pass('Cycling back to first-person captures the mouse');
   const progress=await state(p);
   await p.evaluate(()=>__gameQA.setDeviceMode('touch'));await settle(p);assert.equal(await locked(p),null);
