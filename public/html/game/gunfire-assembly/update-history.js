@@ -1,6 +1,8 @@
 // Player-facing notes travel with the same game package; no network or account required.
-export const GAME_VERSION='0.2.0';
+export const GAME_VERSION='0.2.1';
 export const UPDATE_HISTORY=[
+  {version:'0.2.1',date:'2026-10-14',title:'修正提示里的旧键位',changes:[
+    '战地模式和互动提示里还写着“H 兵种支援 / 医疗”“直升机 Y 升 H 降”，实际默认键在 0.2.0 已改成 N 和 K；提示文字改为跟随当前键位。']},
   {version:'0.2.0',date:'2026-10-14',title:'平安县城整章重做',changes:[
     '抗战战役第三章「平安县城 · 开炮」换成重做版：越肩第三人称与第一人称可切换，自己瞄准带轻度吸附，能跳跃；扫清机枪阵地、护送意大利炮、开炮轰塌城楼、巷战、决战山本。',
     '打掉机枪手后，阵地里的机枪可以接管（I 互动）；电脑端默认鼠标接管瞄准，Esc 释放。本章有自己的菜单和进度，旧的第三章进度不再沿用。',

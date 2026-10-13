@@ -638,7 +638,7 @@ const BUILDINGS={
   mortarTurret:{name:'重型迫击炮',hp:450,price:1400,dmg:180,rate:2.4,range:64,explode:7,desc:'64米预判抛射，爆炸覆盖7米，专打地面虫群'},
 };
 const ITEMS={
-  medkit:{name:'医疗包',price:120,desc:'按H回复60生命(按最大生命比例增强)',heal:60},
+  medkit:{name:'医疗包',price:120,desc:'按N回复60生命(按最大生命比例增强)',heal:60},
   shield:{name:'护盾电池',price:300,desc:'获得60点能量护盾(上限150)',shield:60},
   adren:{name:'肾上腺素',price:250,desc:'20秒内移速+40%、射速+40%',buff:20},
   hpUp:{name:'强化装甲',price:500,desc:'最大生命+40',permanent:true},
@@ -2613,7 +2613,7 @@ function updInteraction(){
   if(!tip&&!player.inVehicle&&medicalDistance<10)tip=medicalDistance<fortress.shelter.r?(player.hp<player.maxHp?'＋ 野战医疗站 · 正在自动回血':'＋ 野战医疗站 · 生命已恢复'):'＋ 野战医疗站 · 走进绿色圆圈自动回血';
   if(player.dead)tip='';
   else if(!tip&&!player.inVehicle&&player.hp<player.maxHp*.5&&vsOn())tip=bankMode?'生命偏低：回己方核心附近自动回血':'生命偏低：回营地治疗，或向医疗兵靠拢';
-  else if(!tip&&!player.inVehicle&&player.hp<player.maxHp*.5)tip=Game.testMode||Game.items.medkit>0?'生命偏低：H 使用医疗包（剩'+(Game.testMode?'∞':Game.items.medkit)+'）':'医疗包用完：O 商店购买，或回基地医疗平台回血';
+  else if(!tip&&!player.inVehicle&&player.hp<player.maxHp*.5)tip=Game.testMode||Game.items.medkit>0?'生命偏低：'+keyBindings.label('H')+' 使用医疗包（剩'+(Game.testMode?'∞':Game.items.medkit)+'）':'医疗包用完：O 商店购买，或回基地医疗平台回血';
   if($('interactHint').textContent!==tip){$('vI').setAttribute('aria-label',a.tip||'互动');$('interactHint').textContent=tip;}
   $('interactHint').classList.toggle('hidden',!tip);
   const mk=battleOn()?(player.inVehicle?.cfg.fly?'降低':player.bfKit==='engineer'?'维修':player.bfKit==='support'?'补弹':'医疗'):'医疗'+(Game.testMode?'∞':Game.items.medkit);if($('vH').textContent!==mk)$('vH').textContent=mk;
@@ -2882,7 +2882,7 @@ function updPlayer(dt){
     if(action.kind==='rv-search')rvBreakout.interact();
     else if(action.kind==='vehicle')enterVehicle(action.vehicle);
     else if(action.kind==='gate'){if(!gate.dead)setGate(!gate.open);else showMsg(action.tip,2);}
-    else showMsg(bankOn()?'R 出兵、0 升级银行、Z 切换路线；靠近核心回血':battleOn()?'靠近本方载具按 I 驾驶；H 使用当前兵种支援能力':'附近没有可互动的东西：靠近载具驾驶，靠近城门开关门；H 是医疗包',2.4);
+    else showMsg(bankOn()?'R 出兵、0 升级银行、Z 切换路线；靠近核心回血':battleOn()?'靠近本方载具按 I 驾驶；'+keyBindings.label('H')+' 使用当前兵种支援能力':'附近没有可互动的东西：靠近载具驾驶，靠近城门开关门；'+keyBindings.label('H')+' 是医疗包',2.4);
     updInteraction();
   }
   if(Input.pop('H'))useMedkit();
@@ -3213,7 +3213,7 @@ function renderShop(){
       if(owned)extra=lv>=WEAPON_MAX_LV?'<div class="upg max">已满级</div>':`<button class="upg" data-up="${it.id}">强化 Lv${lv+1} · 💰${upgradePrice(it.id)}</button>`;
     }
     else if(it.type==='item'){const c=ITEMS[it.id];nm=c.name;pr=c.price;desc=c.desc;owned=(it.id==='magnet'&&Game.magnet)||(it.id==='regen'&&Game.regen);}
-    else if(it.type==='vehicle'){const c=VEHICLES[it.id];nm=c.name;pr=c.price;desc=`血量${c.hp} 伤害${c.dmg}${c.fly?' 可飞行(Y/升高，H/降低)':''}<br><span class="desc">可在「队友」分配驾驶；停放时无敌，损毁下关修好</span>`;owned=Game.vehiclesOwned.includes(it.id);
+    else if(it.type==='vehicle'){const c=VEHICLES[it.id];nm=c.name;pr=c.price;desc=`血量${c.hp} 伤害${c.dmg}${c.fly?' 可飞行('+keyBindings.label('K')+'/升高，'+keyBindings.label('H')+'/降低)':''}<br><span class="desc">可在「队友」分配驾驶；停放时无敌，损毁下关修好</span>`;owned=Game.vehiclesOwned.includes(it.id);
       if(owned&&!vehicles.some(v=>v.kind===it.id))extra=`<button class="upg" data-fix="${it.id}">立即修复 · 💰${Math.round(c.price*.25)}</button>`;}
     else{const role=SQUAD_ROLES[it.id];nm=role.name;pr=squadPrice(it.id);desc=`${role.brief} · 生命${role.hp}<br><span class="desc">最多${squadLimit()}名（现有${Game.squadCount}）；暂停选择任务，商店分配载具</span>`;owned=Game.squadCount>=squadLimit();}
     const pending=airdrops.some(a=>a.it.id===it.id&&a.it.type===it.type);
@@ -4735,7 +4735,7 @@ function versusEnterUI(){
   showHUD();$('readyBtn').classList.add('hidden');$('sandboxBtn').classList.add('hidden');showHint(null);
   vsUI.open=false;vsUI.tab='units';$('vsPanel').classList.add('hidden');$('vsTeamTab').classList.remove('hidden');
   const hint=$('keysHint');if(!hint.dataset.campaign)hint.dataset.campaign=hint.textContent;
-  hint.textContent='WASD移动 · 按住J/左键射击 · 右键拖动或Q/E转视角 · Z/右键点按举枪 · R换弹 · O装备 · L部署 · T战况 · H兵种支援 · I上/下载具 · U手雷 · K跳跃 · C载具视角 · Esc暂停';
+  hint.textContent='WASD移动 · 按住J/左键射击 · 右键拖动或Q/E转视角 · Z/右键点按举枪 · R换弹 · O装备 · L部署 · T战况 · '+keyBindings.label('H')+'兵种支援 · I上/下载具 · U手雷 · K跳跃 · C载具视角 · Esc暂停';
   const rl=$('btnRestartLv');if(!rl.dataset.campaign)rl.dataset.campaign=rl.textContent;rl.textContent='🔄 重开对战';
   $('vH').classList.remove('hidden');$('vO').textContent='装备';$('vL').textContent='部署';$('vR').textContent='换弹';
   bfVehicleView=0;syncViewLabels();

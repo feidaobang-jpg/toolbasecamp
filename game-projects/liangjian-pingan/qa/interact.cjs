@@ -103,7 +103,7 @@ const check = (name, ok, detail) => { out.push({ name, ok: !!ok, detail }); cons
   await p2.waitForURL(/gunfire-assembly\/pingan\/index\.html/, { timeout: 8000 }).catch(() => {});
   await p2.waitForTimeout(1500);
   const landed = await p2.evaluate(() => ({ url: location.pathname, menu: !!document.getElementById('menu') && !document.getElementById('menu').hidden, title: document.title }));
-  check('枪火集结 v0.2.0 大厅正常；抗战战役第三章点进去是重做版主菜单', ver === 'v0.2.0' && /pingan\/index\.html$/.test(landed.url) && landed.menu, { ver, chap, landed });
+  check('枪火集结 0.2.x 大厅正常；抗战战役第三章点进去是重做版主菜单', /^v0\.2\.\d+$/.test(ver) && /pingan\/index\.html$/.test(landed.url) && landed.menu, { ver, chap, landed });
   await p2.evaluate(() => [...document.querySelectorAll('#menu button')].find((b) => /返回大厅/.test(b.textContent)).click());
   await p2.waitForURL(/gunfire-assembly\/index\.html/, { timeout: 8000 }).catch(() => {});
   await p2.waitForTimeout(800);

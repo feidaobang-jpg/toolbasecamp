@@ -490,7 +490,7 @@ html,body{overscroll-behavior:none}
     <div id="hint" class="hidden"></div>
     <div id="interactHint" class="hidden"></div>
     <div id="weaponBar" aria-label="武器栏"></div>
-    <div id="keysHint">WASD移动 · 按住Shift跑步 · J/鼠标左键射击 · 点画面用鼠标转视角 · K/空格跳跃 · I互动(门/载具) · H医疗包 · U手雷 · 直升机Y升/H降 · 1-6/X/滚轮换枪 · C切换视角 · Q/E转视角 · O商店 · L建造 · R开战 · P/Esc暂停</div>
+    <div id="keysHint">WASD移动 · 按住Shift跑步 · J/鼠标左键射击 · 点画面用鼠标转视角 · K/空格跳跃 · I互动(门/载具) · N医疗包 · U手雷 · 直升机K升/N降 · Y/H抬头低头 · 1-6/X/滚轮换枪 · C切换视角 · Q/E转视角 · O商店 · L建造 · R开战 · P/Esc暂停</div>
   </div>
   <!-- 虫族战况面板必须在 #hud 之外：虫族开局会隐藏战役 HUD，面板要能独立显示。 -->
   <div id="zergHud" class="hidden" aria-label="虫族战况"></div>
@@ -659,7 +659,7 @@ html,body{overscroll-behavior:none}
     <div class="btnRow"><button class="mbtn green" data-vs-ai="easy">对战电脑 · 简单</button><button class="mbtn green" data-vs-ai="normal">对战电脑 · 普通</button><button class="mbtn green" data-vs-ai="hard">对战电脑 · 困难</button></div>
     <div class="btnRow"><button class="mbtn" id="vsOnline">👥 好友对战（联机，最多 8 人，空位电脑补）</button><button class="mbtn" id="vsMenuBack">← 返回</button></div>
     <p class="small" id="vsRecordTxt" role="status"></p>
-    <div class="small vs-rules">射击：按住 J 或左键 / 转视角：第一人称鼠标接管 / 未接管时右键拖动或 Q E / 举枪：Z 或右键点按 / 装备：O / 部署：L / 战况：T / 换弹：R（空仓不会自动装填） / 支援：H / 上下车：I。手机：左摇杆移动，空白处拖视角，按住射击可继续拖枪；右侧有举枪与换弹键。双方各有8名电脑步兵与越野车、坦克、装甲车、直升机；备用弹药无限。联机由房主计算战局，中途加入接手电脑座位。</div>
+    <div class="small vs-rules">射击：按住 J 或左键 / 转视角：第一人称鼠标接管 / 未接管时右键拖动或 Q E / 举枪：Z 或右键点按 / 装备：O / 部署：L / 战况：T / 换弹：R（空仓不会自动装填） / 支援：N / 抬头低头：Y H / 上下车：I。手机：左摇杆移动，空白处拖视角，按住射击可继续拖枪；右侧有举枪与换弹键。双方各有8名电脑步兵与越野车、坦克、装甲车、直升机；备用弹药无限。联机由房主计算战局，中途加入接手电脑座位。</div>
   </div>
   <div id="vsResult" class="overlay menu hidden" role="dialog" aria-modal="true" aria-labelledby="vsResultTitle">
     <h2 id="vsResultTitle"></h2>
@@ -771,7 +771,7 @@ html,body{overscroll-behavior:none}
   </div>
 </div>
 <script src="./boot.js?v=mobile12"></script>
-<script defer src="./game.compat.js?v=pingan-remake-020" onerror="window.__ccBootError('游戏资源下载失败')"></script>
+<script defer src="./game.compat.js?v=pingan-remake-021" onerror="window.__ccBootError('游戏资源下载失败')"></script>
 <script src="../../../js/game/thumb-preview.js"></script>
 <script type="module">
 // 内联自 /js/game/landscape-typing.js：Toy/TapTap 包不含站点共享目录，外链模块会缺失
