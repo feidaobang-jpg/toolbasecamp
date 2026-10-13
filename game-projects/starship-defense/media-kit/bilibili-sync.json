@@ -566,6 +566,18 @@
       "channels": [
         "bilibili"
       ]
+    },
+    {
+      "version": "web-rv-art-v0.37.4",
+      "record": "releases/web-rv-art-v0.37.4/handoff.json",
+      "website_verified_at": "2026-10-13T16:47:44.115897+08:00",
+      "status": "deferred_accumulating",
+      "decision": "deferred_accumulating",
+      "summary": "房车模型、真实车灯、夕阳城镇与僵尸外形细化，存档和探索路线兼容。",
+      "reason": "单个模式视觉细化，不改变试玩入口或现有玩法说明；最后简介公开核验2026-10-12，尚未满7天。",
+      "channels": [
+        "bilibili"
+      ]
     }
   ],
   "comment_corrections": [

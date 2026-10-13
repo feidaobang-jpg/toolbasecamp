@@ -18,7 +18,6 @@
       "description": "房车城镇探索、六个感染区、修车补给、自由撤离与独立存档",
       "status": "implemented",
       "evidence_ids": [
-        "final-behaviour",
         "final-realtime"
       ]
     },
@@ -109,26 +108,16 @@
           "description": "实际射击、转向和驾驶；采集起点经QA重定位"
         }
       ]
-    },
-    {
-      "id": "before-street",
-      "file": "releases/web-rv-art-v0.37.3/captures/before-street.png",
-      "sha256": "102317cfbd84ad51d4a40c37da47b5673e40089f5c33c3ef4bad39364043b57c",
-      "kind": "screenshot",
-      "version": "web-guest-v0.36.9",
-      "build_id": "89349e39acbf3fba8048fdf74a2ed0344351d5139f283cbdcd2ba2af94cf1230",
-      "capture_mode": "reconstruction",
-      "description": "旧版0.36.9固定站位重演，仅作房车画面对比",
-      "width": 1280,
-      "height": 720,
-      "duration_seconds": null,
-      "audio": "none",
-      "visual_review": "pass",
-      "audio_review": "not-applicable",
-      "segments": []
     }
   ],
-  "historical_media": [],
+  "historical_media": [
+    {
+      "id": "before-street",
+      "handoff": "releases/web-rv-art-baseline-v0.36.9/handoff.json",
+      "media_id": "before-street",
+      "reason": "房车美术变化前的同站位重演"
+    }
+  ],
   "qa": [
     {
       "id": "final-behaviour",
@@ -181,18 +170,19 @@
   ],
   "readiness": {
     "overview": "partial",
-    "update": "ready",
+    "update": "partial",
     "gaps": [
       "本次仅采集房车视觉更新，不能替代整款游戏完整介绍；未做手机真机性能测试。"
     ]
   },
   "channels": {
     "website": {
-      "status": "pending_deploy"
+      "status": "superseded_before_deploy",
+      "by": "web-rv-art-v0.37.4"
     },
     "toy": {
-      "id": "38678478981120",
-      "status": "pending_preview"
+      "status": "not_submitted",
+      "by": "web-rv-art-v0.37.4"
     },
     "bilibili": {
       "decision": "deferred_accumulating",

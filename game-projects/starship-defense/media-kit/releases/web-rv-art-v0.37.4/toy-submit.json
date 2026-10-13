@@ -1,0 +1,26 @@
+{
+  "version": "web-rv-art-v0.37.4",
+  "zip_sha256": "95411959a5ddfa8402f1bca9107a307c32e77a8d915fd4df6027023192bc557c",
+  "at": "2026-10-13T16:45:40.437154+08:00",
+  "previous_status": "published",
+  "receipt": {
+    "status": "auditing",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_5tKCpy1N/index.html"
+  },
+  "readback": {
+    "id": 38678478981120,
+    "title": "虫潮围城",
+    "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+    "user_info": {
+      "mid": 16214353,
+      "name": "飞刀班长",
+      "face": "https://i1.hdslb.com/bfs/face/e4aedc71448ab8376bf794163001785b16f25e62.jpg"
+    },
+    "status": "auditing",
+    "visibility": "PUBLIC",
+    "category": "GAME",
+    "watermark_enabled": false,
+    "ctime": 1791881138,
+    "mtime": 1791881138
+  }
+}
