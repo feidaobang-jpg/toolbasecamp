@@ -16,8 +16,8 @@
   "release_intent": "web_demo",
   "development_model": "Codex（抗战战役、战地据点模式）；历史版本工具见各 release",
   "toy_id": "38678478981120",
-  "publication_status": "website_live_toy_auditing",
-  "preview_url": "https://www.bilibili.com/toy/preview/preview_JAFAakbx/index.html",
+  "publication_status": "website_live_toy_published",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_tFCaXCNQ/index.html",
   "public_play_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
   "media_readiness": "房车视觉样板与动态阶段证据已保存；正式视频仍需取材审片",
   "qa": "releases/web-rv-art-v0.37.4/handoff.json",
@@ -47,8 +47,8 @@
     "slug": "chongchao-qianshao",
     "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
     "visibility": "PUBLIC",
-    "review_status": "auditing",
-    "verified_at": "2026-10-13T16:47:44.115897+08:00",
+    "review_status": "published",
+    "verified_at": "2026-10-13T16:52:13.082189+08:00",
     "video_bindings": [
       "BV1Ujad6DEuf",
       "BV1WbHq6eEBt",
@@ -62,9 +62,9 @@
     "submitted_date": "2026-10-13",
     "release_record": "releases/web-rv-art-v0.37.4/handoff.json",
     "submitted_version": "web-rv-art-v0.37.4",
-    "published_version": "web-fire-v0.37.3",
+    "published_version": "web-rv-art-v0.37.4",
     "preview_url": "https://www.bilibili.com/toy/preview/preview_tFCaXCNQ/index.html",
-    "note": "房车美术0.37.4同包预览通过后已提交审核；published_version保留上一成功基线。",
+    "note": "房车美术0.37.4已published；正式入口菜单、继续房车进度和新画面可见，保留游客设置和存档。",
     "package_sha256": "95411959a5ddfa8402f1bca9107a307c32e77a8d915fd4df6027023192bc557c",
     "pending_updates": [
       {
@@ -175,7 +175,7 @@
     },
     "submitted_package_sha256": "95411959a5ddfa8402f1bca9107a307c32e77a8d915fd4df6027023192bc557c",
     "watermark_enabled": false,
-    "public_runtime_revision": null,
+    "public_runtime_revision": "v25804",
     "last_zip_sha256": "deb723413e1fdb51b2a9e20ae06ab173c493710a6afb999b1fdc5b427d9925fd",
     "last_preview_url": "https://www.bilibili.com/toy/preview/preview_ywZcH4SZ/index.html",
     "public_verified_without_login": true,
@@ -198,8 +198,8 @@
     "platform_readback_at": "2026-10-13T16:42:38.168100+08:00"
   },
   "website_url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
-  "published_toy_version": "web-fire-v0.37.3",
-  "web_toy_versions_match": false,
+  "published_toy_version": "web-rv-art-v0.37.4",
+  "web_toy_versions_match": true,
   "migration": {
     "source": "D:/project/gpt/worlds/breachline",
     "mode": "asset-and-presentation-merge",
@@ -1449,7 +1449,7 @@
     "deployed_script_src": "./game.compat.js?v=f07e5c81",
     "action_url": "https://github.com/feidaobang-jpg/toolbasecamp/actions/runs/38140856542"
   },
-  "toy_status": "auditing",
+  "toy_status": "published",
   "rv_visual_update": {
     "version": "web-rv-art-v0.37.4",
     "scope": "房车生存模式的车辆、城镇与光照细化；保留玩法和存档",
