@@ -46,11 +46,16 @@
     },
     "final_cloud_package_cases": 5,
     "save_browser_logged_out_fallback": true,
-    "production_relay_games": 4
+    "production_relay_games": 4,
+    "actual_toy_public_entries": {
+      "passed": true,
+      "games": 5,
+      "verified_at": "2026-10-13T11:04:41.015087+08:00"
+    }
   },
   "channels": {
     "website": "deployed_verified",
-    "toy": "all_five_submitted_auditing",
+    "toy": "all_five_published_public_verified",
     "bilibili": "deferred_accumulating",
     "taptap": "not_requested"
   },
@@ -72,5 +77,5 @@
   "website_commit": "da4c54e89677f56a80183bc037dbc3285d5cf06d",
   "website_verified_at": "2026-10-13T10:57:12.528971+08:00",
   "toy_results": "toy-results.json",
-  "finished_at": "2026-10-13T10:57:12.528971+08:00"
+  "finished_at": "2026-10-13T11:04:41.015087+08:00"
 }

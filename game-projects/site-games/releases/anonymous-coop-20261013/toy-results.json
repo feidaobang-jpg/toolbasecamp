@@ -13,9 +13,17 @@
     "preview_verified": true,
     "preview_method": "Codex IAB real Toy iframe; desktop and portrait viewport; anonymous room created and left without profile/cloud request",
     "submit_attempt_at": "2026-10-13T02:55:17.699739+00:00",
-    "status": "auditing",
+    "status": "published",
     "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_Rch25BB2/index.html",
-    "submitted_at": "2026-10-13T02:55:18.702761+00:00"
+    "submitted_at": "2026-10-13T02:55:18.702761+00:00",
+    "submitted_status": "auditing",
+    "public_verified_at": "2026-10-13T11:04:41.015087+08:00",
+    "public_url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
+    "public_evidence": {
+      "method": "Codex IAB official public iframe; actual published version directory; default anonymous checkbox checked and optional Bilibili nickname present",
+      "anonymous_default": true,
+      "no_room_created_or_account_profile_requested": true
+    }
   },
   "jackal-stage1-3d": {
     "game": "jackal-stage1-3d",
@@ -31,9 +39,17 @@
     "preview_verified": true,
     "preview_method": "Codex IAB real Toy iframe; desktop and portrait viewport; anonymous room created and left without profile/cloud request",
     "submit_attempt_at": "2026-10-13T02:55:18.906272+00:00",
-    "status": "auditing",
+    "status": "published",
     "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_umfcBOH5/index.html",
-    "submitted_at": "2026-10-13T02:55:24.584433+00:00"
+    "submitted_at": "2026-10-13T02:55:24.584433+00:00",
+    "submitted_status": "auditing",
+    "public_verified_at": "2026-10-13T11:04:41.015087+08:00",
+    "public_url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
+    "public_evidence": {
+      "method": "Codex IAB official public iframe; actual published version directory; default anonymous checkbox checked and optional Bilibili nickname present",
+      "anonymous_default": true,
+      "no_room_created_or_account_profile_requested": true
+    }
   },
   "cadillacs-stage1-3d": {
     "game": "cadillacs-stage1-3d",
@@ -49,9 +65,17 @@
     "preview_verified": true,
     "preview_method": "Codex IAB real Toy iframe; desktop and portrait viewport; anonymous room created and left without profile/cloud request",
     "submit_attempt_at": "2026-10-13T02:55:24.831436+00:00",
-    "status": "auditing",
+    "status": "published",
     "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_D9g3jDBe/index.html",
-    "submitted_at": "2026-10-13T02:55:36.396355+00:00"
+    "submitted_at": "2026-10-13T02:55:36.396355+00:00",
+    "submitted_status": "auditing",
+    "public_verified_at": "2026-10-13T11:04:41.015087+08:00",
+    "public_url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
+    "public_evidence": {
+      "method": "Codex IAB official public iframe; actual published version directory; default anonymous checkbox checked and optional Bilibili nickname present",
+      "anonymous_default": true,
+      "no_room_created_or_account_profile_requested": true
+    }
   },
   "starship-defense": {
     "game": "starship-defense",
@@ -80,9 +104,17 @@
     "preview_method": "Codex IAB real Toy iframe; desktop and portrait viewport; anonymous create/exit succeeded; final cloud unknown state and optional backup controls checked on starship",
     "preview_verified_at": "2026-10-13T02:55:17.414497+00:00",
     "submit_attempt_at": "2026-10-13T02:55:36.592537+00:00",
-    "status": "auditing",
+    "status": "published",
     "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_K3HxzO6f/index.html",
-    "submitted_at": "2026-10-13T02:55:37.676971+00:00"
+    "submitted_at": "2026-10-13T02:55:37.676971+00:00",
+    "submitted_status": "auditing",
+    "public_verified_at": "2026-10-13T11:04:41.015087+08:00",
+    "public_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+    "public_evidence": {
+      "method": "Codex IAB official public iframe; actual published version directory; default anonymous checkbox checked and optional Bilibili nickname present",
+      "anonymous_default": true,
+      "no_room_created_or_account_profile_requested": true
+    }
   },
   "gunfire-assembly": {
     "game": "gunfire-assembly",
@@ -111,8 +143,16 @@
     "preview_method": "Codex IAB real Toy iframe; desktop and portrait viewport; anonymous create/exit succeeded; final cloud unknown state and optional backup controls checked on starship",
     "preview_verified_at": "2026-10-13T02:55:17.414497+00:00",
     "submit_attempt_at": "2026-10-13T02:55:37.842789+00:00",
-    "status": "auditing",
+    "status": "published",
     "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_E5cmnDxD/index.html",
-    "submitted_at": "2026-10-13T02:55:38.866344+00:00"
+    "submitted_at": "2026-10-13T02:55:38.866344+00:00",
+    "submitted_status": "auditing",
+    "public_verified_at": "2026-10-13T11:04:41.015087+08:00",
+    "public_url": "https://www.bilibili.com/toy/feidao-gunfire/index.html",
+    "public_evidence": {
+      "method": "Codex IAB official public iframe; actual published version directory; default anonymous checkbox checked and optional Bilibili nickname present",
+      "anonymous_default": true,
+      "no_room_created_or_account_profile_requested": true
+    }
   }
 }

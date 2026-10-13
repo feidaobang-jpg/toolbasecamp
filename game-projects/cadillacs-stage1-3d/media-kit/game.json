@@ -51,9 +51,9 @@
     "bound_videos": [
       "BV18XHW66E55"
     ],
-    "review_status": "auditing",
+    "review_status": "published",
     "version": "v0.11.0-hellroad.1-privacy1-input-safety1",
-    "verified_at": "2026-10-13T10:57:12.528971+08:00",
+    "verified_at": "2026-10-13T11:04:41.015087+08:00",
     "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
     "last_published_version": "v0.11.0-hellroad.1-privacy1-input-safety1",
     "pending_updates": [
@@ -138,7 +138,7 @@
     "submitted_version": "v0.11.0-hellroad.1-menu-desk1-anonymous1",
     "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_D9g3jDBe/index.html",
     "release_record": "releases/v0.11.0-hellroad.1-menu-desk1-anonymous1/handoff.json",
-    "published_version": "v0.11.0-hellroad.1-privacy1-input-safety1",
+    "published_version": "v0.11.0-hellroad.1-menu-desk1-anonymous1",
     "published_verified_at": "2026-10-12T12:26:46.405Z",
     "previous_published_version": "v0.10.0",
     "previous_published_verified_at": "2026-10-07T21:52:04+08:00",
@@ -159,7 +159,7 @@
     "last_successful_sync_version": "v0.11.0-hellroad.1-privacy1-input-safety1",
     "last_successful_sync_at": "2026-10-12T12:26:46.405Z",
     "package_tree_sha256": "97073435dcaa5c8b1c380bd6abc6acbef489335d1a824758254dceb2ac7fac4b",
-    "public_verified_at": "2026-10-12T12:26:46.405Z",
+    "public_verified_at": "2026-10-13T11:04:41.015087+08:00",
     "public_runtime_evidence": {
       "status": "public_verified",
       "at": "2026-10-12T12:26:46.405Z",
@@ -815,7 +815,7 @@
       "resolution": "网站已部署；Toy 合并提交；B站简介已公开核验，原文渠道字段保留为历史状态"
     }
   ],
-  "publication_status": "website_live_toy_auditing",
+  "publication_status": "website_live_toy_published",
   "withdrawn_releases": [
     {
       "version": "v0.10.0",

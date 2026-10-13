@@ -5,8 +5,8 @@
     "slug": "feidao-jackal-3d",
     "url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
     "visibility": "public",
-    "review_status": "auditing",
-    "verified_at": "2026-10-13T10:57:12.528971+08:00",
+    "review_status": "published",
+    "verified_at": "2026-10-13T11:04:41.015087+08:00",
     "video_bindings": [
       "BV1EyHz6wE5u"
     ],
@@ -20,7 +20,7 @@
     "submitted_version": "v0.11.1-anonymous1",
     "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_umfcBOH5/index.html",
     "release_record": "releases/v0.11.1-anonymous1/handoff.json",
-    "published_version": "v0.11.0-input-safety1",
+    "published_version": "v0.11.1-anonymous1",
     "published_entry": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
     "pending_updates": [
       {
@@ -154,7 +154,7 @@
     "last_published_version": "v0.11.0-input-safety1",
     "status_verified": "toy mylist published；正式入口combo-fire 46/46，实际v0.8.0",
     "public_verified_version": "v0.11.0-input-safety1",
-    "public_verified_at": "2026-10-12T12:18:21.938Z",
+    "public_verified_at": "2026-10-13T11:04:41.015087+08:00",
     "public_runtime_evidence": {
       "status": "public_verified",
       "at": "2026-10-12T12:18:21.938Z",
@@ -625,7 +625,7 @@
     "previous_version": "v0.7.6",
     "physical_phone_test": false
   },
-  "publication_status": "website_live_toy_auditing",
+  "publication_status": "website_live_toy_published",
   "menu_text_update": {
     "version": "v0.10.3-menu-text1",
     "record": "releases/menu-text-20261009/handoff.json",
