@@ -4538,7 +4538,7 @@ function setupVersus(){
   $('vsOnline').onclick=()=>{
     if(!coopDriver){showMsg('联机服务还在连接，请稍后再试',1.6);return;}
     lobbyMode='versus';syncLobbyMode();$('vsMenu').classList.add('hidden');$('menuMain').classList.remove('hidden');coopDriver.lobby.open();
-    coopDriver.lobby.status('对战房间：选好对战规模和队伍，填好昵称后点「创建房间」，再「复制邀请链接」发给朋友；空位由电脑补上');
+    coopDriver.lobby.status('对战房间：选好对战规模和队伍，默认匿名，无需游戏内登录；直接点「创建房间」，再「复制邀请链接」发给朋友；空位由电脑补上');
   };
   $('vsRematch').onclick=()=>versusRematch();
   $('vsToMenu').onclick=()=>$('btnQuit').click();
