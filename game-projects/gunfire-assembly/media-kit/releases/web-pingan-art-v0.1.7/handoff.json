@@ -1,0 +1,67 @@
+{
+  "version": "web-pingan-art-v0.1.7",
+  "scope": "Only resistance campaign chapter 2 (Pingan); cosmetic scenery, lights, soldier/cannon detail; other chapters, combat, collision and save identifiers retained.",
+  "artifact_directory": "D:\\project\\task-artifacts\\art-rollout-20261013",
+  "validation": {
+    "build": "passed",
+    "regression": {
+      "towStarts": true,
+      "towStops": true,
+      "cannonMount": true,
+      "gateDestroyed": true,
+      "doorDetailsHidden": true,
+      "openPassage": true,
+      "phase": 3,
+      "cannonAttachments": 2,
+      "checkpoint": 3,
+      "resumeOpen": true,
+      "manualShot": true,
+      "otherChapter": [
+        true,
+        true
+      ]
+    },
+    "dynamic_capture": "Final build qa-pingan-turn.webm, 360 degree turn inspected; no open gable or obvious surface artifacts.",
+    "desktop": "qa-pingan-after-desktop.json",
+    "mobile_viewport": "qa-pingan-after-mobile.json",
+    "real_phone": "not tested",
+    "privacy": "New module has no navigation, account collection, networking or SDK calls; existing anonymous entry and platform save preserved."
+  },
+  "package": {
+    "sha256": "21e4c8af756a110f499be0ca08a0834eb18198a25c0188ba87296753a292fafc",
+    "bytes": 428880,
+    "baseline_bytes": 426644,
+    "delta_bytes": 2236,
+    "entry_bytes": 70743,
+    "doctor": "pass; advisory unhashed asset filenames"
+  },
+  "website": {
+    "status": "deployed_verified",
+    "at": "2026-10-13T11:21:26.378862+00:00",
+    "source_commit": "6aa6e727cf726a8c4c6fd07c5586f24101b410e4",
+    "runtime_sha256": "3a37915cc806e382c64828efa618ab242ef0adc21a01ed808d72588494cdb12c"
+  },
+  "toy": {
+    "id": "43022175699968",
+    "status": "auditing",
+    "package_sha256": "21e4c8af756a110f499be0ca08a0834eb18198a25c0188ba87296753a292fafc",
+    "submitted_at": "2026-10-13T11:24:38.275047+00:00",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_fDjEZ3hN/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_jfdJViBm/index.html",
+    "preview_qa": {
+      "desktop": "real UI started chapter 3; moved 7m, jumped, manual shot 5 to 4",
+      "mobile_layouts": [
+        "844x390",
+        "390x844 rotated"
+      ],
+      "true_touch_device": "not tested",
+      "errors": []
+    }
+  },
+  "bilibili": {
+    "decision": "deferred_accumulating",
+    "reason": "Local chapter appearance refinement; no new gameplay, controls or entry change. Prior description verification 2026-10-12, less than seven days. Existing recorded video remains accurate for its recording version."
+  },
+  "taptap": "not_in_scope",
+  "source_commit": "6aa6e727cf726a8c4c6fd07c5586f24101b410e4"
+}

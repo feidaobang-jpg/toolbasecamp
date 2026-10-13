@@ -1,5 +1,6 @@
 import * as T from './vendor/three.module.js';
 import {mergeGeometries} from './vendor/BufferGeometryUtils.js';
+import {addPinganHouseDetail,addPinganUniformDetail,addPinganCannonDetail,createPinganDressing} from './pingan-art.js';
 
 // Original code-built period props. No film footage, downloaded models or modern kit.
 export const PERIOD_GUNS={
@@ -35,7 +36,7 @@ export function periodGun(id='rifle'){
  if(id==='arisaka'){b.box(0x9eaaab,0,-.02,len*.87,.018,.025,.32);b.box(steel,0,-.02,len*.70,.10,.015,.025);}
  const muzzle=new T.Object3D();muzzle.position.set(0,.038,len*.70);g.add(muzzle);g.userData={muzzle,weapon:id};return compact(g);
 }
-export function periodSoldier(team='ally',weapon='rifle',officer=false){
+export function periodSoldier(team='ally',weapon='rifle',officer=false,art=false){
  const g=new T.Group(),b=build(g),enemy=team==='enemy',cloth=enemy?0xa18f50:officer?0x536676:0x6d7d85,leather=0x57402c,skin=0xb99673;
  b.box(cloth,0,1.18,0,.56,.65,.34);b.box(cloth,0,.9,-.01,.64,.24,.40);
  b.box(leather,0,.91,0,.59,.065,.39);b.box(0xb59a57,.0,.91,.21,.07,.06,.025);
@@ -51,6 +52,7 @@ export function periodSoldier(team='ally',weapon='rifle',officer=false){
  const gun=periodGun(weapon);gun.position.set(.17,1.23,.23);gun.rotation.x=-.04;g.add(gun);
  for(const s of [-1,1]){const arm=b.box(cloth,s*.34,1.29,.11,.19,.44,.23);arm.rotation.x=-.85;b.ball(skin,s*.23,1.18,.31,.085);}
  const saber=new T.Group(),sb=build(saber);sb.box(0xc3c8bd,0,.49,0,.045,.85,.018).rotation.z=-.11;sb.box(leather,0,-.02,0,.07,.18,.06);sb.box(0xb39a59,0,.08,0,.20,.025,.08);saber.position.set(.41,1.30,.22);saber.visible=false;g.add(saber);compact(saber);
+ if(art)addPinganUniformDetail(b,enemy,cloth);
  compact(g);g.userData={legs,gun,muzzle:gun.userData.muzzle,saber,team};return g;
 }
 export function horse(color=0x70503b){
@@ -64,17 +66,19 @@ export function horse(color=0x70503b){
  const legs=[];for(const x of [-.24,.24])for(const z of [-.68,.66]){const p=new T.Group();p.position.set(x,1.05,z);g.add(p);b.box(hide,0,-.38,0,.14,.74,.15,p);b.box(black,0,-.83,.045,.18,.16,.25,p);legs.push(p);}
  compact(g);g.userData={legs};return g;
 }
-export function fieldGun(){
+export function fieldGun(art=false){
  const g=new T.Group(),b=build(g),green=0x646847,steel=0x373b30;
  const wheels=[];for(const s of [-1,1]){const wheelRoot=new T.Group();wheelRoot.position.set(s*1.08,.68,0);g.add(wheelRoot);wheels.push(wheelRoot);const wb=build(wheelRoot);const wheel=wb.cyl(0x3c3d30,0,0,0,.63,.17,16);wheel.rotation.z=Math.PI/2;const hub=wb.cyl(green,s*.11,0,0,.16,.19,10);hub.rotation.z=Math.PI/2;for(let a=0;a<Math.PI;a+=Math.PI/4){wb.box(0x8d7e57,s*.12,0,0,.03,1.08,.038).rotation.x=a;}b.box(green,s*.48,.42,-1.15,.16,.18,2.9).rotation.y=s*.24;}
  b.box(green,0,1.11,.04,1.95,1.30,.14);b.box(green,0,.6,-.2,1.4,.23,1.1);
  const tube=new T.Group();tube.position.set(0,1.35,0);g.add(tube);const gun=b.cyl(steel,0,0,1.25,.13,3.0,14,tube);gun.rotation.x=Math.PI/2;b.box(green,0,-.19,.72,.30,.22,1.5,tube);b.box(steel,0,.03,-.34,.34,.30,.58,tube);
+ if(art)addPinganCannonDetail(b,tube);
  const muzzle=new T.Object3D();muzzle.position.set(0,0,2.75);tube.add(muzzle);compact(g);g.userData={tube,muzzle,wheels};return g;
 }
 export function sign(text,color='#eadfc3',bg='#343b36',width=4,height=.9){
  const c=document.createElement('canvas');c.width=512;c.height=128;const ctx=c.getContext('2d');ctx.fillStyle=bg;ctx.fillRect(0,0,512,128);ctx.strokeStyle='#998360';ctx.lineWidth=8;ctx.strokeRect(4,4,504,120);ctx.fillStyle=color;ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='bold 58px sans-serif';ctx.fillText(text,256,66,476);const texture=new T.CanvasTexture(c);texture.colorSpace=T.SRGBColorSpace;const mesh=new T.Mesh(new T.PlaneGeometry(width,height),new T.MeshBasicMaterial({map:texture,side:T.DoubleSide}));mesh.rotation.y=Math.PI;return mesh;
 }
-export function buildResistanceMap(chapter){
+export function buildResistanceMap(chapter,art=true){
+ let dressing=null;
  const root=new T.Group(),staticRoot=new T.Group(),b=build(staticRoot),colliders=[],objectives={},stations=[],destructibles=[];root.add(staticRoot);
  let seed=1942+chapter;const rnd=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};
  const bounds={minX:-64,maxX:64,minZ:-38,maxZ:170};
@@ -83,7 +87,7 @@ export function buildResistanceMap(chapter){
  // Ground details are geometry batched into one draw; relief stays below walking height.
  for(let i=0;i<480;i++){const x=(rnd()-.5)*125,z=rnd()*205-36;b.box(i%3?0x827758:0xafa082,x,.018,z,.1+rnd()*.6,.024,.15+rnd()*.6);}
  function wall(x,z,w,d,h=2,c=0x8c8776){b.box(c,x,h/2,z,w,h,d);b.box(0xaaa18a,x,h+.08,z,w+.1,.15,d+.12);solid(x,z,w,d,h);for(let i=0;i<w;i+=1.2)b.box(0x6c6b5e,x-w/2+i,h*.5,z+d/2+.006,.025,h,.012);}
- function house(x,z,w=9,d=10,c=0xb9aa84,lift=0){const group=new T.Group(),hb=build(group);group.position.set(x,lift,z);staticRoot.add(group);hb.box(c,0,2,0,w,4,d);if(!lift)solid(x,z,w,d,5.1);hb.box(0x6d6656,0,.33,0,w+.3,.65,d+.3);for(const side of [-1,1]){const roof=hb.box(0x5b6060,side*w*.255,4.54,0,w*.56,.19,d+1.4);roof.rotation.z=-side*.34;}for(let n=0;n<d;n+=.65)hb.box(0x777c76,0,5.03,-d/2+n,.35,.14,.14);hb.box(0x484e48,0,5.1,0,.22,.17,d+1.3);hb.box(0x584631,0,1.35,-d/2-.03,1.7,2.7,.12);for(const side of [-1,1]){hb.box(0x303e3b,side*w*.3,2.2,-d/2-.06,1.5,1.25,.1);for(let k=-1;k<=1;k++)hb.box(0x776b50,side*w*.3+k*.42,2.2,-d/2-.13,.06,1.25,.08);}return {x,z};}
+ function house(x,z,w=9,d=10,c=0xb9aa84,lift=0){const group=new T.Group(),hb=build(group);group.position.set(x,lift,z);staticRoot.add(group);hb.box(c,0,2,0,w,4,d);if(!lift)solid(x,z,w,d,5.1);hb.box(0x6d6656,0,.33,0,w+.3,.65,d+.3);for(const side of [-1,1]){const roof=hb.box(0x5b6060,side*w*.255,4.54,0,w*.56,.19,d+1.4);roof.rotation.z=-side*.34;}for(let n=0;n<d;n+=.65)hb.box(0x777c76,0,5.03,-d/2+n,.35,.14,.14);hb.box(0x484e48,0,5.1,0,.22,.17,d+1.3);hb.box(0x584631,0,1.35,-d/2-.03,1.7,2.7,.12);for(const side of [-1,1]){hb.box(0x303e3b,side*w*.3,2.2,-d/2-.06,1.5,1.25,.1);for(let k=-1;k<=1;k++)hb.box(0x776b50,side*w*.3+k*.42,2.2,-d/2-.13,.06,1.25,.08);}if(chapter===2&&art)addPinganHouseDetail(hb,w,d,group,c);return {x,z};}
  function sandbags(x,z,w=7,angle=0){const group=new T.Group(),sb=build(group);group.position.set(x,0,z);group.rotation.y=angle;for(let row=0;row<3;row++)for(let n=0;n<Math.floor(w/.9);n++){const bag=sb.box(row%2?0x9f946e:0xaba27e,-w/2+n*.9+(row%2)*.25,.18+row*.29,0,.88,.29,.59);bag.rotation.y=(rnd()-.5)*.15;}staticRoot.add(group);solid(x,z,angle?1:w,angle?w:1,1.08);}
  function tree(x,z){b.cyl(0x65513b,x,2.5,z,.20,5,7);for(let i=0;i<3;i++){const twig=b.box(0x65513b,x+(i-1)*.5,3.9,z,.13,2.9,.13);twig.rotation.z=(i-1)*.5;}if(chapter!==1){const crown=b.ball(0x626c47,x,5,z,2.3);crown.scale.y=.65;}solid(x,z,.65,.65,5);}
  for(let i=0;i<36;i++){const side=i%2?1:-1,x=side*(66+rnd()*64),z=rnd()*270-60;const m=b.cone(chapter===1?0x8a896b:0x8b896e,x,8,z,18+rnd()*30,16+rnd()*20,5);m.rotation.y=rnd()*6.28;}
@@ -112,14 +116,15 @@ export function buildResistanceMap(chapter){
   b.box(0x7d827b,0,7.5,87,17,3,4.2);house(0,88,15,7,0x928977,8.5);
   const plaque=sign('平 安 县 城','#ede1b9','#484e42',6,1.2);plaque.position.set(0,8.1,84.8);root.add(plaque);
   bunker(-12,52,'street-bunker');sandbags(13,43,10);sandbags(-11,23,7);
-  const cannon=fieldGun();cannon.position.set(0,0,64);root.add(cannon);objectives.cannon=cannon;objectives.ammo={x:-12,z:59};supply(-12,59,'炮弹木箱');supply(-6,-12);objectives.outpost={x:0,z:42};objectives.final={x:0,z:143};house(0,156,15,9,0xb0a182);
+  const cannon=fieldGun(art);cannon.position.set(0,0,64);root.add(cannon);objectives.cannon=cannon;objectives.ammo={x:-12,z:59};supply(-12,59,'炮弹木箱');supply(-6,-12);objectives.outpost={x:0,z:42};objectives.final={x:0,z:143};house(0,156,15,9,0xb0a182);
   const command=sign('守 备 队 部','#e6d9b4','#423e33',6,1);command.position.set(0,3.4,151.3);root.add(command);
+  if(art)dressing=createPinganDressing(root,gate);
  }
  // Decorative crates, telephone poles and visible edge embankments establish the period.
  for(const x of [-62,62]){b.box(0x7e775b,x,1.15,65,3,2.3,212);solid(x,65,3,212,2.3);}
  for(let z=-10;z<170;z+=28){b.cyl(0x61513a,35,3.7,z,.14,7.4,7);b.box(0x61513a,35,6.7,z,1.9,.13,.14);}
  for(let i=0;i<16;i++){const x=(i%2?1:-1)*(9+rnd()*26),z=5+rnd()*149;b.box(0x756142,x,.40,z,1,.8,.8);solid(x,z,1,.8,.8);}
  compact(staticRoot);
- return {root,colliders,objectives,stations,destructibles,bounds};
+ return {root,colliders,objectives,stations,destructibles,bounds,dressing};
 }
 export function disposeTree(root){const gs=new Set(),ms=new Set();root.traverse(o=>{if(o.geometry)gs.add(o.geometry);for(const m of Array.isArray(o.material)?o.material:[o.material])if(m&&m!==material)ms.add(m);});gs.forEach(g=>g.dispose());ms.forEach(m=>{m.map?.dispose();m.dispose();});root.clear();}
