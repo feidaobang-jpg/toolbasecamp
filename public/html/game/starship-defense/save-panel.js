@@ -3,7 +3,7 @@ import {saveSignature} from './save-store.js';
 import {campaignDifficulty} from './campaign-difficulty.js';
 export function mountSavePanel(game,{toyProvider,storage}={}){
   const $=id=>document.getElementById(id),store=game.store;
-  let sync=null,pending=null,selected=null,localMessage='',cloudRequested=false;
+  let sync=null,pending=null,selected=null,localMessage='',cloudRequested=false,cloudViewed=false;
   const toy=!!toyProvider;
   const friendly=text=>/toy id not available|toy_context_unavailable/i.test(text)?'预览中云备份暂不可用；本地存档与文件备份可用':text;
   const status=text=>{text=friendly(text);if(!toy)localMessage=text;if($('cloudSaveStatus'))$('cloudSaveStatus').textContent=text;updateNotice();};
@@ -25,12 +25,12 @@ export function mountSavePanel(game,{toyProvider,storage}={}){
     $('cloudChoices').replaceChildren();
     for(const [i,r] of rows.entries()){const o=document.createElement('option');o.value=r.revision;o.textContent=(i?'云端备份：':'当前云档：')+describe(r.save);$('cloudChoices').append(o);}
     selected=rows[0]||null;$('cloudLoad').classList.toggle('hidden',!selected);$('cloudChoices').hidden=!rows.length;
-    $('cloudInfo').textContent='本地：'+describe(game.getSave())+'\n云端：'+(cloudRequested?describe(current?.save):'尚未查看（已有云档会保留）');
+    $('cloudInfo').textContent='本地：'+describe(game.getSave())+'\n云端：'+(cloudViewed?describe(current?.save):'尚未查看（已有云档会保留）');
     $('cloudChoices').onchange=()=>{selected=rows.find(r=>r.revision===$('cloudChoices').value)||null;};
     updateNotice();
   }
   function connect(provider){
-    sync?.destroy();sync=new CloudSaveSync({provider,store,getSave:game.getSave,validate:game.validate,isTest:game.isTest,onStatus:status,onCloud:renderCloud});
+    sync?.destroy();sync=new CloudSaveSync({provider,store,getSave:game.getSave,validate:game.validate,isTest:game.isTest,onStatus:status,onCloud:(current,backups)=>{cloudViewed=true;renderCloud(current,backups);}});
     sync.enabled=$('cloudAuto').checked;
     $('cloudProvider').textContent=provider.label;
     // Creating the panel never requests account-backed storage. The player opts in.
