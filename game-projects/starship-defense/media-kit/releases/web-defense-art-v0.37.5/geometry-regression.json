@@ -1,0 +1,39 @@
+{
+  "sameTerrainAndCollision": true,
+  "before": {
+    "version": "before",
+    "terrainHash": 4156790724,
+    "colliders": 7697,
+    "gateClear": true,
+    "leftRamp": 7.3,
+    "rightRamp": 7.3,
+    "defenseVisible": false,
+    "groundGrain": false,
+    "destroyedGateHidesFittings": true,
+    "night": "night",
+    "day": "day",
+    "rvExcludesArmor": true,
+    "rvRestoresGround": true,
+    "defenseRestored": true,
+    "saveSchema": "0.9",
+    "colliders_sha256": "35af59dd37a1ad3ba9c85f95c06498b67f5162e3c0a62eec220d061c825bfafe"
+  },
+  "after": {
+    "version": "after",
+    "terrainHash": 4156790724,
+    "colliders": 7697,
+    "gateClear": true,
+    "leftRamp": 7.3,
+    "rightRamp": 7.3,
+    "defenseVisible": true,
+    "groundGrain": true,
+    "destroyedGateHidesFittings": true,
+    "night": "night",
+    "day": "day",
+    "rvExcludesArmor": true,
+    "rvRestoresGround": true,
+    "defenseRestored": true,
+    "saveSchema": "0.9",
+    "colliders_sha256": "35af59dd37a1ad3ba9c85f95c06498b67f5162e3c0a62eec220d061c825bfafe"
+  }
+}

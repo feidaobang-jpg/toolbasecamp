@@ -1,6 +1,9 @@
 // Player-facing notes travel with the same game package; no network or account required.
-export const GAME_VERSION='0.37.4';
+export const GAME_VERSION='0.37.5';
 export const UPDATE_HISTORY=[
+  {version:'0.37.5',date:'2026-10-13',title:'基地防线装甲与战场质感',changes:[
+    '基地防守增加合并绘制的装甲墙、加固撑杆、城门五金和坡道引导标记，细化地面颗粒与冷色环境光。',
+    '保留昼夜和各章节环境、原地形与通行路线；切换房车等独立模式后恢复对应场景。']},
   {version:'0.37.4',date:'2026-10-13',title:'房车与城镇画面细化',changes:[
     '装甲房车增加车窗边框、轮毂、保险杠、车顶装备与实际车灯照明。',
     '废弃城镇加入夕阳冷暖光、远处天际线、建筑窗框与街边细节；探索路线、战斗规则与原有存档保持兼容。']},

@@ -36,6 +36,7 @@ import {createPitchController,createLookController} from '../../../js/game/drag-
 import * as THREE from './vendor/three.module.js';
 import {DarkVisuals} from './dark-visuals.js?v=fb97';
 import {FortressWorld} from './fortress-world.js?v=toy3dui2';
+import {createDefenseArt} from './defense-art.js';
 import {HILL_HEIGHT,HILL_FORTS,hillHeight,slopeSpeed} from './terrain-controls.js';
 import {setupToyPlatform} from './toy-platform.js?v=cloud240';
 import {LocalSaveStore,newSaveId} from './save-store.js';
@@ -552,6 +553,7 @@ function clearOfFeatures(x,z,pad=0){
 })();
 
 const fortress=new FortressWorld(scene,terrainH,PAL);
+const defenseArtAllowed=!(new URLSearchParams(location.search).has('qa')&&new URLSearchParams(location.search).get('art')==='before');
 fortress.solids.push(...rockColliders);
 const hive=new HiveWorld(scene,terrainH,PAL,fortress.solids);
 
@@ -1132,6 +1134,8 @@ function gateBlocked(){return !gate.open&&!gate.dead;}
   grp.position.y=PLAT.H;
   scene.add(grp);
 })();
+
+const defenseArt=createDefenseArt(scene,terrainH,groundMesh,gate.door);
 
 /* ---------- 通用工具 ---------- */
 function groundY(x,z){return rvOn()?0:terrainH(x,z);}
@@ -4115,6 +4119,8 @@ function loop(){
   const now=performance.now();
   let dt=Math.min(.05,(now-lastT)/1000);lastT=now;
   rvFrameDt=dt;
+  const showDefenseArt=defenseArtAllowed&&!rvOn()&&!vsOn()&&!warOn()&&!zergOn();
+  defenseArt.setEnabled(showDefenseArt);battlefield.setDefenseArt(showDefenseArt);
   if(warOn()){
     const playing=Game.state==='battle'&&!panelOpen;
     if(Game.msgTimer>0){Game.msgTimer-=dt;if(Game.msgTimer<=0)$('msg').classList.add('hidden');}
