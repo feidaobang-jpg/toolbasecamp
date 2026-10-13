@@ -11,7 +11,9 @@
 
 | SLOPE-AIM-005：虫潮 `terrain-controls.js`、`game.js` 与最终包 | 六处野外山坡最高2米，堡垒可从坡上步行进入；自动瞄准按自己水平距离选射程内最近活敌，不因首领、精英或朝向选远敌。四视角、触屏和联机一致，手动瞄准保留。 | `game-projects/starship-defense/verify-slope-aim.cjs`；v0.37.1取代旧山坡高度与朝向/首领优先。`verify-platform-unit.mjs`、`verify-low-walls.cjs`、`verify-first-person-mouse.cjs`检查相邻行为。 |
 
-| FIRE-INPUT-006：虫潮 `combat-controls.js`、`game.js` 的本机输入、射击设置与联机输入 | 基地防守电脑/触屏默认自动瞄准+自动射击，已有偏好保留；瞄准与开火各自可选。按住松开即停，切换连射再次点击关闭；暂停/失焦/取消触摸/切模式清除开启状态。正常 pointerup 后的 lostpointercapture 不误关切换连射。联机分开传明确开火意图与自动开火选择，房主判断目标；菜单/建造不发送开火。房车仅向追击敌人自动射击，主动技能仍手动，不把本规则推广到所有游戏。 | v0.37.3；`verify-combat-controls.mjs`、`verify-fire-modes.cjs`（FIRE_URL/FIRE_OUT），`verify-fire-online.cjs`（实际本地房间服务8769 + 两浏览器）；最近目标用 `verify-slope-aim.cjs`，第一人称用 `verify-first-person-mouse.cjs`。公开游客入口须复验，浏览器触屏不等于真机。 |
+| HIVE-RETURN-006：虫潮 `hive-world.js` 与地下移动 | 母巢深4米、最大路径坡度约3.5°，回程保持至少95%平地速度；三洞往返、虫潮出洞、队友载具通行与存档有效。取代v0.15.0旧22米深度。 | `verify-hive-return.cjs`、`verify-underground.cjs`、`HIVE_ONLY=1 verify-rescue-economy.cjs`（均位于game-projects/starship-defense）；v0.37.2含三视口真实输入与旧高度恢复。 |
+
+| FIRE-INPUT-007：虫潮 `combat-controls.js`、`game.js` 的本机输入、射击设置与联机输入 | 基地防守电脑/触屏默认自动瞄准+自动射击，已有偏好保留；瞄准与开火各自可选。按住松开即停，切换连射再次点击关闭；暂停/失焦/取消触摸/切模式清除开启状态。正常 pointerup 后的 lostpointercapture 不误关切换连射。联机分开传明确开火意图与自动开火选择，房主判断目标；菜单/建造不发送开火。房车仅向追击敌人自动射击，主动技能仍手动，不把本规则推广到所有游戏。 | v0.37.3；`verify-combat-controls.mjs`、`verify-fire-modes.cjs`（FIRE_URL/FIRE_OUT），`verify-fire-online.cjs`（实际本地房间服务8769 + 两浏览器）；最近目标用 `verify-slope-aim.cjs`，第一人称用 `verify-first-person-mouse.cjs`。公开游客入口须复验，浏览器触屏不等于真机。 |
 
 新增条目需包含触发条件、受影响路径、期望行为、修复版本和可复验入口。可以稳定自动复现的缺陷优先增加行为回归；视觉调整留同视口截图和人工检查项。后续需求明确改变行为时更新条目并写明取代关系，不永久冻结旧实现或只写「禁止再犯」。
 

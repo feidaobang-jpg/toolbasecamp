@@ -1,0 +1,44 @@
+{
+  "zip": "D:\\project\\task-artifacts\\starship-fire-20261013\\stable\\chongchao-qianshao.zip",
+  "zip_sha256": "3ab3666092841b97efc47cf3934e0fb2588f421e70ca412f917ef95321653359",
+  "version": "web-fire-v0.37.3",
+  "index_bytes": 66132,
+  "files": [
+    {
+      "name": "author-home.js",
+      "sha256": "5b4b8fc50b73dec1d8f70182453c35f3d07101336345ccad6b689de7e2eb19f7"
+    },
+    {
+      "name": "base.css",
+      "sha256": "cdc418b7d801cfb1bfbb2750774e22d6c65464a3964ec1f6797d5b8a86d9b245"
+    },
+    {
+      "name": "boot.js",
+      "sha256": "7979d9681c198fee05dc861861e68034e693a2e9510c962f5c0664242cfbae82"
+    },
+    {
+      "name": "combat-controls.css",
+      "sha256": "022bd4e122e134ebaa9ecb03b3a9ce221b85179a1392041c2346cf220a96d38e"
+    },
+    {
+      "name": "game.compat.js",
+      "sha256": "249cdabd4e515c6d02536c2c03f5f1a9bba2b27d9a18c38efdbf2d611b0c594b"
+    },
+    {
+      "name": "icon.svg",
+      "sha256": "d7a884ba6651019625c5e9090514367ce597505d1f887e8ca2135c1bfd28c5c9"
+    },
+    {
+      "name": "index.html",
+      "sha256": "1063c1ffb4b1164a68bcc76df50528618d8abd425884571221f434068634b0f0"
+    },
+    {
+      "name": "menu.css",
+      "sha256": "97bc98d67f1b8bdb3e1f549bed87c4452f40339455fc233f5a19c721db1ebc6c"
+    },
+    {
+      "name": "vendor/LICENSE.txt",
+      "sha256": "852e0e8699169bf9f6fdc6bda3e682d078dcbc738b5d33e74df594721bff271d"
+    }
+  ]
+}

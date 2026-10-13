@@ -16,7 +16,7 @@
   "release_intent": "web_demo",
   "development_model": "Codex（抗战战役、战地据点模式）；历史版本工具见各 release",
   "toy_id": "38678478981120",
-  "publication_status": "website_live_toy_published",
+  "publication_status": "website_live_toy_auditing",
   "preview_url": "https://www.bilibili.com/toy/preview/preview_mMzZgpip/index.html",
   "public_play_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
   "media_readiness": "partial",
@@ -47,7 +47,7 @@
     "slug": "chongchao-qianshao",
     "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
     "visibility": "PUBLIC",
-    "review_status": "published",
+    "review_status": "auditing",
     "verified_at": "2026-10-13T16:04:35.117448+08:00",
     "video_bindings": [
       "BV1Ujad6DEuf",
@@ -56,16 +56,16 @@
       "BV1xdpx63ETu"
     ],
     "linked_game_video": "https://www.bilibili.com/video/BV1Ujad6DEuf",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_vfXAtOKB/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_XIFOwro1/index.html",
     "title": "虫潮围城",
-    "zip_sha256": "640f2738ec88ac4f14f6dc5b819709d0e2d04f8607f24afb33465f872870bd74",
+    "zip_sha256": "deb723413e1fdb51b2a9e20ae06ab173c493710a6afb999b1fdc5b427d9925fd",
     "submitted_date": "2026-10-13",
-    "release_record": "releases/web-slope-aim-v0.37.1/handoff.json",
-    "submitted_version": "web-slope-aim-v0.37.1",
+    "release_record": "releases/web-shallow-hive-v0.37.2/handoff.json",
+    "submitted_version": "web-shallow-hive-v0.37.2",
     "published_version": "web-slope-aim-v0.37.1",
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_mMzZgpip/index.html",
-    "note": "v0.37.1已published，独立未登录浏览器三视口实测六处2米山坡、四视角最近目标及射击通过。",
-    "package_sha256": "640f2738ec88ac4f14f6dc5b819709d0e2d04f8607f24afb33465f872870bd74",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_NOQ8LieJ/index.html",
+    "note": "v0.37.2母巢4米浅坡已同包预览实测并提交审核；公开核验后推进成功基线。",
+    "package_sha256": "deb723413e1fdb51b2a9e20ae06ab173c493710a6afb999b1fdc5b427d9925fd",
     "pending_updates": [
       {
         "version": "web-controls-v0.18.2",
@@ -119,10 +119,10 @@
     ],
     "published_entry": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
     "published_verified_at": "2026-10-13T16:04:35.117448+08:00",
-    "status": "published",
-    "package_hash": "640f2738ec88ac4f14f6dc5b819709d0e2d04f8607f24afb33465f872870bd74",
+    "status": "auditing",
+    "package_hash": "deb723413e1fdb51b2a9e20ae06ab173c493710a6afb999b1fdc5b427d9925fd",
     "submission_time_note": "本次提交时间与CLI回执已保存于 release。",
-    "submitted_at": "2026-10-13T16:01:40.548756+08:00",
+    "submitted_at": "2026-10-13T16:30:38.738986+08:00",
     "public_verified_at": "2026-10-13T16:04:35.117448+08:00",
     "public_runtime_evidence": {
       "task_id": "01a13436-765b-75a1-867d-066a2e3e5763-01",
@@ -144,8 +144,8 @@
     "published_at": "2026-10-13T15:57:58+08:00",
     "publication_time_note": "平台mtime记录为本次published状态时间；公开实测时间另记。",
     "last_published_version": "web-slope-aim-v0.37.1",
-    "last_submitted_version": "web-slope-aim-v0.37.1",
-    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_vfXAtOKB/index.html",
+    "last_submitted_version": "web-shallow-hive-v0.37.2",
+    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_XIFOwro1/index.html",
     "current_public_verification": "verified",
     "channel_authorization": {
       "instruction": "昨天没发布的都做一下",
@@ -159,15 +159,15 @@
     "video_binding_verified_at": "2026-10-09T17:53:41.810316+08:00",
     "source_commit": "ccaaeb00355b92e629d187dce1bdf004d23df3b7",
     "package": {
-      "path": "D:\\project\\task-artifacts\\starship-menu-20261013\\stable\\chongchao-qianshao.zip",
-      "sha256": "c7f3c60524327fc310984ddefde339af0105cabac37eaa399078c109576c9925",
-      "bytes": 429927,
+      "path": "C:\\Users\\37818\\.claude\\state\\game-releases\\artifacts\\chongchao-shallow-hive-20261013\\package\\chongchao-qianshao.zip",
+      "sha256": "deb723413e1fdb51b2a9e20ae06ab173c493710a6afb999b1fdc5b427d9925fd",
+      "bytes": 429993,
       "submitted": true
     },
-    "submitted_package_sha256": "7fdcde9a3e849d51d78b25ef6a67137e85b3addc3103a425aacf9e26ff31edd5",
+    "submitted_package_sha256": "deb723413e1fdb51b2a9e20ae06ab173c493710a6afb999b1fdc5b427d9925fd",
     "watermark_enabled": false,
     "public_runtime_revision": null,
-    "last_zip_sha256": "bcba022aad44d7c04553bfe0505b6d7e2b357512365323d27e8df814bbd80d38",
+    "last_zip_sha256": "deb723413e1fdb51b2a9e20ae06ab173c493710a6afb999b1fdc5b427d9925fd",
     "last_preview_url": "https://www.bilibili.com/toy/preview/preview_ywZcH4SZ/index.html",
     "public_verified_without_login": true,
     "public_runtime_history": [
@@ -208,7 +208,7 @@
   "controls": "原有多动作按键和Shift按住冲刺保留；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。",
   "default_theme": "dark",
   "feedback_ledger": "feedback-ledger.json",
-  "handoff": "releases/web-slope-aim-v0.37.1/handoff.json",
+  "handoff": "releases/web-shallow-hive-v0.37.2/handoff.json",
   "squad_controls": "商店雇佣机枪/突击/医疗/工程队友；准备阶段免费转职，强化保留；队友卡片分配四种已购载具，玩家I接管；暂停菜单跟随/守基地。",
   "environments": {
     "desert": "第1–3章：荒漠，可选白天/夜晚",
@@ -941,11 +941,31 @@
     ]
   },
   "website": {
-    "status": "deployed_verified",
-    "source_commit": "ccaaeb00355b92e629d187dce1bdf004d23df3b7",
-    "version": "web-menu-v0.37.0",
-    "verified_at": "2026-10-13T15:48:54.728137+08:00",
-    "record": "releases/web-menu-v0.37.0/website.json"
+    "at": "2026-10-13T16:29:48.402342+08:00",
+    "source_commit": "abbdd30b846f66e1f871218ce67d0496e4708ffc",
+    "checks": [
+      {
+        "file": "game.compat.js",
+        "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/game.compat.js",
+        "sha256": "3b5e5448edb6e5424bd9fed8b0b12ab76247577221a9cd9b39da3916d98e8ef2",
+        "matches_origin_master": true
+      },
+      {
+        "file": "hive-world.js",
+        "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/hive-world.js",
+        "sha256": "b2e10d1095e99a63b83ae4b3e86d92a95940cce034dd880bbc3150cc915fa549",
+        "matches_origin_master": true
+      },
+      {
+        "file": "update-history.js",
+        "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/update-history.js",
+        "sha256": "4b157c46ea35a84491fe68a8d6c6b033590b44fef9ef236418ee3fc1cae1e1b1",
+        "matches_origin_master": true
+      }
+    ],
+    "status": "public_verified",
+    "version": "web-shallow-hive-v0.37.2",
+    "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html"
   },
   "current_development_tool": "Codex",
   "rv_town": {
@@ -1349,7 +1369,7 @@
     "new_video_authorized": false
   },
   "website_status": "public_verified",
-  "website_runtime_sha256": "aadc0293545a6d99376280e33adad99939cc75c320e30451492000ebe37cdebe",
+  "website_runtime_sha256": "3b5e5448edb6e5424bd9fed8b0b12ab76247577221a9cd9b39da3916d98e8ef2",
   "feedback_oct11": {
     "version": "web-feedback-v0.34.1",
     "status": "website_verified_toy_auditing",
@@ -1440,5 +1460,5 @@
     "deployed_script_src": "./game.compat.js?v=f07e5c81",
     "action_url": "https://github.com/feidaobang-jpg/toolbasecamp/actions/runs/38140856542"
   },
-  "toy_status": "published"
+  "toy_status": "auditing"
 }

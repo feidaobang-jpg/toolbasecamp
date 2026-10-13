@@ -1,0 +1,25 @@
+{
+  "at": "2026-10-13T16:29:48.402342+08:00",
+  "source_commit": "abbdd30b846f66e1f871218ce67d0496e4708ffc",
+  "checks": [
+    {
+      "file": "game.compat.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/game.compat.js",
+      "sha256": "3b5e5448edb6e5424bd9fed8b0b12ab76247577221a9cd9b39da3916d98e8ef2",
+      "matches_origin_master": true
+    },
+    {
+      "file": "hive-world.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/hive-world.js",
+      "sha256": "b2e10d1095e99a63b83ae4b3e86d92a95940cce034dd880bbc3150cc915fa549",
+      "matches_origin_master": true
+    },
+    {
+      "file": "update-history.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/update-history.js",
+      "sha256": "4b157c46ea35a84491fe68a8d6c6b033590b44fef9ef236418ee3fc1cae1e1b1",
+      "matches_origin_master": true
+    }
+  ],
+  "status": "public_verified"
+}
