@@ -280,16 +280,7 @@ const privateToolsConfig = {
                 }
             ]
         },
-        {
-            titleKey: 'privateHub.groups.stock',
-            items: [
-                {
-                    titleKey: 'privateHub.stock.picksTitle',
-                    descriptionKey: 'privateHub.stock.picksDesc',
-                    url: 'html/admin/private/stock-picks.html'
-                }
-            ]
-        },
+        // 股票模拟 2026-10-13 起暂停，入口分组已隐藏；页面 html/admin/private/stock-picks.html 仍可直接打开，恢复见 docs/stock-etf-dip.md。
         {
             titleKey: 'privateHub.groups.homePc',
             items: [

@@ -17,6 +17,7 @@ Server module: `server/ladder.py` (needs `requests`, `beautifulsoup4`).
 
 ## Stock picks
 
+- 2026-10-13 起暂停：定时器停用、`config.js` 里的入口分组已移除，页面仍可直接打开；恢复见 `docs/stock-etf-dip.md`。
 - Page: `stock-picks.html` — 指数ETF急跌低吸（etf-dip-v1，默认）/ 回调企稳（pullback-v1），按策略版本分别模拟记账
 - API (admin JWT required)，`version` 省略时取默认策略:
   - `GET /api/stocks/status?version=`、`GET /api/stocks/preview?version=`、`GET /api/stocks/records?version=`

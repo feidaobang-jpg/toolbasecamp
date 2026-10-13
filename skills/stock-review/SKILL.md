@@ -5,6 +5,8 @@ description: 复盘本人toolbasecamp股票后台的模拟策略（指数ETF急�
 
 # 股票策略复盘
 
+**2026-10-13 起股票模拟已暂停**（用户决定专注 B站游戏）：服务器定时器停用、后台入口隐藏，代码和数据保留。暂停期间没有新的运行记录和信号属于预期，不算故障，不需要每日复盘；只有用户明确要求复盘历史记录或恢复运行时才使用本技能。恢复方法见仓库 docs/stock-etf-dip.md 开头。
+
 网站地址：https://www.zhengxiaohui.cn/html/admin/private/stock-picks.html
 服务器：toolbasecamp-cn。2026-10-13 起并行两个策略，按版本分别记账：默认的指数ETF急跌低吸 etf-dip-v1（有历史日线回测，规则与局限见仓库 docs/stock-etf-dip.md）和回调企稳 pullback-v1（无回测）。两者都处于前向模拟验证阶段，回测数字不能当作已证实的实盘胜率。网站承担选股、交易模拟和客观统计，本技能承担解释与研究。
 
