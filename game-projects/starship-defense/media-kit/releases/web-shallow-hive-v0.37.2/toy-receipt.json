@@ -1,0 +1,18 @@
+{
+  "id": "38678478981120",
+  "version": "web-shallow-hive-v0.37.2",
+  "task_id": "01a13436-765b-75a1-867d-066a2e3e5763-02",
+  "source": "Codex",
+  "source_commit": "abbdd30b846f66e1f871218ce67d0496e4708ffc",
+  "package_sha256": "deb723413e1fdb51b2a9e20ae06ab173c493710a6afb999b1fdc5b427d9925fd",
+  "package_path": "C:\\Users\\37818\\.claude\\state\\game-releases\\artifacts\\chongchao-shallow-hive-20261013\\package\\chongchao-qianshao.zip",
+  "at": "2026-10-13T16:30:38.738986+08:00",
+  "response": {
+    "status": "auditing",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_XIFOwro1/index.html"
+  },
+  "mode": "submit",
+  "submitted_once": true,
+  "status": "auditing",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_XIFOwro1/index.html"
+}

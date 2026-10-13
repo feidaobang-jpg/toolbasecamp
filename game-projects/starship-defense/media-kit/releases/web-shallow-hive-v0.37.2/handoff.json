@@ -7,8 +7,8 @@
   "task_id": "01a13436-765b-75a1-867d-066a2e3e5763-02",
   "build": {
     "id": "3b5e5448edb6e5424bd9fed8b0b12ab76247577221a9cd9b39da3916d98e8ef2",
-    "commit": null,
-    "dirty": true,
+    "commit": "abbdd30b846f66e1f871218ce67d0496e4708ffc",
+    "dirty": false,
     "entrypoint": "public/html/game/starship-defense/index.html"
   },
   "changes": [
@@ -125,20 +125,6 @@
       "audio_review": "not-applicable",
       "description": "QA定位后真实按键/摇杆操作；浏览器模拟，非手机真机。",
       "duration_seconds": 23.64
-    },
-    {
-      "id": "page@3b27e29e5bc6f51e585a688641e1afb2",
-      "file": "C:\\Users\\37818\\.claude\\state\\game-releases\\artifacts\\chongchao-shallow-hive-20261013\\visual\\page@3b27e29e5bc6f51e585a688641e1afb2.webm",
-      "sha256": "e7bc932e6db84a6de018a43dcec557ab1dcaea70af8ac0efbe6da6d902071c6d",
-      "kind": "video",
-      "version": "web-shallow-hive-v0.37.2",
-      "build_id": "3b5e5448edb6e5424bd9fed8b0b12ab76247577221a9cd9b39da3916d98e8ef2",
-      "capture_mode": "realtime-automation",
-      "audio": "none",
-      "visual_review": "sequence-frames-reviewed",
-      "audio_review": "not-applicable",
-      "description": "QA定位后真实按键/摇杆操作；浏览器模拟，非手机真机。",
-      "duration_seconds": 1.24
     }
   ],
   "readiness": {
@@ -149,13 +135,49 @@
     ]
   },
   "website": {
-    "status": "pending"
+    "at": "2026-10-13T16:29:48.402342+08:00",
+    "source_commit": "abbdd30b846f66e1f871218ce67d0496e4708ffc",
+    "checks": [
+      {
+        "file": "game.compat.js",
+        "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/game.compat.js",
+        "sha256": "3b5e5448edb6e5424bd9fed8b0b12ab76247577221a9cd9b39da3916d98e8ef2",
+        "matches_origin_master": true
+      },
+      {
+        "file": "hive-world.js",
+        "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/hive-world.js",
+        "sha256": "b2e10d1095e99a63b83ae4b3e86d92a95940cce034dd880bbc3150cc915fa549",
+        "matches_origin_master": true
+      },
+      {
+        "file": "update-history.js",
+        "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/update-history.js",
+        "sha256": "4b157c46ea35a84491fe68a8d6c6b033590b44fef9ef236418ee3fc1cae1e1b1",
+        "matches_origin_master": true
+      }
+    ],
+    "status": "public_verified"
   },
   "toy": {
-    "id": 38678478981120,
-    "status": "pending",
+    "id": "38678478981120",
+    "status": "auditing",
     "package_sha256": "deb723413e1fdb51b2a9e20ae06ab173c493710a6afb999b1fdc5b427d9925fd",
-    "entry_bytes": 65854
+    "entry_bytes": 65854,
+    "version": "web-shallow-hive-v0.37.2",
+    "task_id": "01a13436-765b-75a1-867d-066a2e3e5763-02",
+    "source": "Codex",
+    "source_commit": "abbdd30b846f66e1f871218ce67d0496e4708ffc",
+    "package_path": "C:\\Users\\37818\\.claude\\state\\game-releases\\artifacts\\chongchao-shallow-hive-20261013\\package\\chongchao-qianshao.zip",
+    "at": "2026-10-13T16:30:38.738986+08:00",
+    "response": {
+      "status": "auditing",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_XIFOwro1/index.html"
+    },
+    "mode": "submit",
+    "submitted_once": true,
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_NOQ8LieJ/index.html",
+    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_XIFOwro1/index.html"
   },
   "bilibili": {
     "decision": "deferred_accumulating",
