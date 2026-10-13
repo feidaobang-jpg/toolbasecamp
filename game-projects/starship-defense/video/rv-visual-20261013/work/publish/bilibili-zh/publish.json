@@ -30,9 +30,9 @@
   "topic": {
     "name": "哔哩哔哩Toy创意挑战",
     "url": "https://www.bilibili.com/v/topic/detail?topic_id=1346285",
-    "selection_status": "pending_at_publication"
+    "selection_status": "public_verified"
   },
-  "pinned_comment_draft": "新版房车已经可以玩了，进入游戏选择「房车生存」，I上下车/搜索。\nToy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n下一步你更希望细化人物，还是继续补城镇细节？",
+  "pinned_comment_draft": "新版房车已经可以玩了，进入游戏选择「房车生存」，I上下车/搜索。\nToy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n下一步你更希望细化人物，还是继续补城镇细节？\n投票／愿望单（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）",
   "description_file": "../../../final/bilibili-zh/投稿文案.txt",
   "cover_file": "../../../final/bilibili-zh/cover-home-4x3.png",
   "cover_files": {
@@ -57,7 +57,7 @@
   "subtitle_mode": "burned_in",
   "subtitles": [],
   "credits": "../../sources.md",
-  "category": null,
+  "category": "游戏",
   "copyright_type": "本人游戏实机与原创解说",
   "disclosures": {
     "AI_generated_narration": true,
@@ -65,31 +65,33 @@
     "AI_assisted_game_development": true,
     "voice": "IndexTTS-2.5 local; previously used synthetic reference voice",
     "exact_foundation_model": "not asserted",
-    "platform_setting": "pending_at_publication"
+    "platform_setting": "含AI生成内容"
   },
   "platform_requirements_checked_at": "2026-10-13T18:14:50.523356+08:00",
   "platform_sources": [
     "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
     "https://www.bilibili.com/v/topic/detail?topic_id=1346285"
   ],
-  "unverified_fields": [
-    "当期活动适用条件、正式投稿入口与声明设置须发布时核对"
-  ],
+  "unverified_fields": [],
   "ready_to_review": true,
   "ready_to_upload": false,
-  "blocking_issues": [
-    "human subjective listening and final review pending"
-  ],
+  "blocking_issues": [],
   "human_review": {
-    "status": "pending",
+    "status": "approved",
     "event_id": "rv-visual-video-20261013-final-review-v1",
     "variant_id": "bilibili-zh",
     "video_sha256": "cfca0b3a80b0e8c4985725e3f36038334137028c53ea29b508fbc0fdfd5f85e3",
-    "statement": null
+    "statement": "发布",
+    "accepted_at": "2026-10-13T19:12:51.1810387+08:00"
   },
   "publication": {
-    "status": "not_uploaded",
-    "bvid": null
+    "status": "published",
+    "bvid": "BV1Grpq6JEW5",
+    "url": "https://www.bilibili.com/video/BV1Grpq6JEW5/",
+    "published_at": "2026-10-13T19:17:34+08:00",
+    "public_verified_at": "2026-10-13T19:18:22.3038934+08:00",
+    "aid": 117433314578743,
+    "evidence": "work/publication-evidence/published.png"
   },
   "toy": {
     "id": "38678478981120",
@@ -98,18 +100,19 @@
     "public_container": "38678478981120-v25804",
     "public_check_at": "2026-10-13T18:14:50.523356+08:00",
     "proof": "../../qa/toy-public-menu.png",
-    "video_binding": "pending_after_publication"
+    "video_binding": "verified"
   },
   "season": {
     "id": 9248439,
     "name": "合集·虫潮围城开发实录",
-    "status": "pending_after_publication"
+    "status": "public_verified_position_8_of_8"
   },
   "post_publication": [
-    "核对UID16214353与当期活动；审片通过后投稿B站",
-    "过审后绑定Toy38678478981120并读回",
-    "置顶评论、归入合集9248439并公开核验",
-    "核对并按条件使用已领取免费流量券，完成Toy推流申请"
+    "已公开发布并核验UID、AI声明、双封面、标签和Toy话题",
+    "已绑定Toy并读回，合集第8/8条",
+    "本期与上一期置顶及旧简介均公开核验",
+    "可用曝光奖励0，跳过券详情；Toy推流申请A412:E412云端保存"
   ],
-  "created_at": "2026-10-13T18:14:50.523356+08:00"
+  "created_at": "2026-10-13T18:14:50.523356+08:00",
+  "publication_result_file": "../../publication-result.json"
 }

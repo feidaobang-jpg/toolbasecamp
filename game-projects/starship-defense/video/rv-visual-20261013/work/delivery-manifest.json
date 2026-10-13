@@ -17,12 +17,30 @@
     },
     {
       "file": "final/bilibili-zh/投稿文案.txt",
-      "sha256": "059c0f9bdfc5f762048dfb938036d8c8e6f3957aadf0560181a4c1f0193cd014",
-      "bytes": 1184
+      "sha256": "4b2ace50e9c44ec8a57d83a51e53818ce8f46ad01d464a161d2381b44ffb41b7",
+      "bytes": 1329
     }
   ],
   "video_sha256": "cfca0b3a80b0e8c4985725e3f36038334137028c53ea29b508fbc0fdfd5f85e3",
   "duration_seconds": 111.5,
   "artifact_root": "D:\\project\\toolbasecamp-artifacts\\rv-visual-video-20261013",
-  "generated_at": "2026-10-13T18:14:50.523356+08:00"
+  "generated_at": "2026-10-13T18:14:50.523356+08:00",
+  "publication": {
+    "status": "published",
+    "bvid": "BV1Grpq6JEW5",
+    "url": "https://www.bilibili.com/video/BV1Grpq6JEW5/",
+    "published_at": "2026-10-13T19:17:34+08:00",
+    "public_verified_at": "2026-10-13T19:18:22.3038934+08:00",
+    "aid": 117433314578743,
+    "evidence": "work/publication-evidence/published.png"
+  },
+  "human_review": {
+    "status": "approved",
+    "event_id": "rv-visual-video-20261013-final-review-v1",
+    "variant_id": "bilibili-zh",
+    "video_sha256": "cfca0b3a80b0e8c4985725e3f36038334137028c53ea29b508fbc0fdfd5f85e3",
+    "statement": "发布",
+    "accepted_at": "2026-10-13T19:12:51.1810387+08:00"
+  },
+  "updated_at": "2026-10-13T19:35:59+08:00"
 }
