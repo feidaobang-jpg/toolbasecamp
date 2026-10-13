@@ -9,6 +9,8 @@
 | GUEST-ENTRY-003：已有 Toy 3D 游戏公开入口、昵称、大厅与打包 | 单机和默认匿名联机直接可用；无自由公开昵称/房间名输入，授权昵称仍严格检测。平台访问者水印可能在游戏加载前要求登录，因此不能用已登录预览代替正式游客入口验证。 | `game-projects/site-games/qa/guest-entry.cjs`，参数见文件头；历史证据 `site-games/releases/guest-entry-20261013/`。改到包体时保留原 Toy ID/slug、游客设置及存档命名空间。 |
 | SAVE-PRIVACY-004：游戏存档面板、入口、Toy 构建器 | 不跳作者网站、不恢复网站账号表单；本地继续/导入导出保留，Toy 云档按需请求。重排菜单后通过玩家可见入口打开存档，不能仅调用隐藏按钮跳过导航。 | `game-projects/site-games/qa/privacy-cleanup.cjs`、虫潮 `verify-cloud-save.mjs`；基线 `site-games/releases/guest-entry-20261013/`。 |
 
+| SLOPE-AIM-005：虫潮 `terrain-controls.js`、`game.js` 与最终包 | 六处野外山坡最高2米，堡垒可从坡上步行进入；自动瞄准按自己水平距离选射程内最近活敌，不因首领、精英或朝向选远敌。四视角、触屏和联机一致，手动瞄准保留。 | `game-projects/starship-defense/verify-slope-aim.cjs`；v0.37.1取代旧山坡高度与朝向/首领优先。`verify-platform-unit.mjs`、`verify-low-walls.cjs`、`verify-first-person-mouse.cjs`检查相邻行为。 |
+
 新增条目需包含触发条件、受影响路径、期望行为、修复版本和可复验入口。可以稳定自动复现的缺陷优先增加行为回归；视觉调整留同视口截图和人工检查项。后续需求明确改变行为时更新条目并写明取代关系，不永久冻结旧实现或只写「禁止再犯」。
 
 不重跑全部历史测试；按改动范围选择。检查失败先修复再发布；无法真机验证时如实保留未测项，不能用桌面模拟冒充。

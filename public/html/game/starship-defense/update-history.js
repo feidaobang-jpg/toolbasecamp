@@ -1,6 +1,9 @@
 // Player-facing notes travel with the same game package; no network or account required.
-export const GAME_VERSION='0.37.0';
+export const GAME_VERSION='0.37.1';
 export const UPDATE_HISTORY=[
+  {version:'0.37.1',date:'2026-10-13',title:'一人高山坡与最近目标瞄准',changes:[
+    '六处野外山坡降到约一个角色高，山顶堡垒、行走与碰撞同步调整。',
+    '自动瞄准改为锁定射程内离自己最近的敌人，不再优先首领、精英或镜头正前方；电脑、触屏与联机一致。']},
   {version:'0.37.0',date:'2026-10-13',title:'菜单重排与触屏滑动',changes:[
     '左侧选择模式，右侧查看说明和配置，开始与继续保持可见；存档、设置与更多入口集中收纳。',
     '暂停菜单统一为虫潮深色风格；菜单与说明支持横屏及竖屏旋转后的手指滑动，拖动不会误触按钮。']},

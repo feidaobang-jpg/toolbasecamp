@@ -18,7 +18,7 @@ document.getElementById('run').onclick=async()=>{
  q.setCameraView(0,false);q.Input.keys.Q=true;q.Input.keys.E=true;q.updPlayer(.05);ok(q.getCamYaw()===0,'同时按 Q/E 不漂移');q.Input.reset();
  for(const f of q.fortress.hillForts){
    const up=q.slopeSpeed(q.groundY,f.x,f.z-20,0,1),down=q.slopeSpeed(q.groundY,f.x,f.z-20,0,-1),cross=q.slopeSpeed(q.groundY,f.x,f.z-20,1,0);
-   ok(up<.8&&down>1.15&&cross===1,'山坡顺向减速 / 反向加速 / 横向原速 '+f.x);
+   ok(up<1&&down>1&&cross===1,'山坡顺向减速 / 反向加速 / 横向原速 '+f.x);
    q.setCameraView(0,false);reset(q,f.x,f.z-29);q.Input.keys.up=true;
    for(let i=0;i<110;i++)q.updPlayer(.04);q.Input.reset();
    ok(q.player.pos.z>f.z-4&&q.player.pos.y>=f.h-.05,'实际走坡并从门口进入堡垒 '+f.x);
