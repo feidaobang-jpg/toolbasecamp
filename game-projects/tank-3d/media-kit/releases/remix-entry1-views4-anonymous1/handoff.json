@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "game_id": "tank-3d",
+  "version": "remix-entry1-views4-anonymous1",
+  "created_at": "2026-10-13T10:34:51.431089+08:00",
+  "build": {
+    "id": "remix-entry1-views4-anonymous1",
+    "commit": "da4c54e89677f56a80183bc037dbc3285d5cf06d",
+    "dirty": false,
+    "fingerprint": "ab43d26b0be2eb789bb3faf82f5352c1fe99236396cd89410f2a5f050837d416",
+    "entrypoint": "public/html/game/tank-3d/index.html"
+  },
+  "changes": [
+    {
+      "id": "anonymous-no-login",
+      "before": "Default names used login-dependent Toy text safety; campaign cloud read was requested at startup",
+      "after": "Default anonymous seats and rooms have server-generated labels; cloud storage is requested only on player action",
+      "verification": "passed",
+      "evidence": "../../../../site-games/releases/anonymous-coop-20261013/handoff.json"
+    }
+  ],
+  "qa": {
+    "website": "passed",
+    "final_package": "passed",
+    "physical_phone": "not-tested",
+    "artifact_directory": "D:/project/task-artifacts/anonymous-coop-20261013",
+    "actual_toy_preview": "passed"
+  },
+  "media": [
+    {
+      "id": "anonymous-lobby-desktop",
+      "file": "D:\\project\\task-artifacts\\anonymous-coop-20261013\\final-package-qa\\tank-3d-anonymous-1280x720.png",
+      "sha256": "9109a21553601c7995a8ecd52376957aa5d71528f640990919cedcab1729ab00",
+      "kind": "screenshot",
+      "version": "remix-entry1-views4-anonymous1",
+      "build_id": "remix-entry1-views4-anonymous1",
+      "capture_mode": "realtime-automation",
+      "description": "Actual final package menu with mocked logged-out SDK; default anonymous checked; no account API calls",
+      "width": 1280,
+      "height": 720,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable"
+    }
+  ],
+  "readiness": {
+    "update": "partial",
+    "overview": "not_applicable",
+    "gaps": [
+      "No new edited video; menu screenshots and multiplayer QA are retained for a later combined Bilibili episode"
+    ]
+  },
+  "cover": "reuse; login/menu flow does not change gameplay art",
+  "channel_record": "../../../../site-games/releases/anonymous-coop-20261013/handoff.json",
+  "channels": {
+    "website": "deployed_verified",
+    "toy": {
+      "game": "tank-3d",
+      "id": "39043249461248",
+      "slug": "feidao-tank-3d",
+      "version": "remix-entry1-views4-anonymous1",
+      "zip": "D:\\project\\task-artifacts\\anonymous-coop-20261013\\final-packages\\tank-3d.zip",
+      "sha256": "ab43d26b0be2eb789bb3faf82f5352c1fe99236396cd89410f2a5f050837d416",
+      "previous_platform_status": "published",
+      "watermark_enabled": true,
+      "preview_attempt_at": "2026-10-13T02:38:01.342388+00:00",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_YYo3LSfJ/index.html",
+      "preview_verified": true,
+      "preview_method": "Codex IAB real Toy iframe; desktop and portrait viewport; anonymous room created and left without profile/cloud request",
+      "submit_attempt_at": "2026-10-13T02:55:17.699739+00:00",
+      "status": "auditing",
+      "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_Rch25BB2/index.html",
+      "submitted_at": "2026-10-13T02:55:18.702761+00:00"
+    },
+    "bilibili": "deferred_accumulating",
+    "taptap": "not_requested"
+  }
+}

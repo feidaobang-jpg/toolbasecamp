@@ -187,7 +187,20 @@
       "resolved_version": "v0.9.2"
     }
   ],
-  "pending_updates": [],
+  "pending_updates": [
+    {
+      "version": "v0.11.0-hellroad.1-menu-desk1-anonymous1",
+      "record": "releases/v0.11.0-hellroad.1-menu-desk1-anonymous1/handoff.json",
+      "website_verified_at": "2026-10-13T10:57:12.528971+08:00",
+      "status": "deferred_accumulating",
+      "decision": "deferred_accumulating",
+      "reason": "现有说明仍准确，本次为登录流程的小改；已知上次公开核验在2026-10-12，未满7天。本轮多个提交只计一个稳定更新。枪火同BV沿用虫潮历史说明基线，待后续合并核对。",
+      "summary": "单机与默认匿名联机无需游戏内登录；程序生成房间名和玩家称呼；B站昵称可选，Toy云备份按需连接，本地与旧云档保留。",
+      "channels": [
+        "bilibili"
+      ]
+    }
+  ],
   "version": "v0.11.0-preview.2",
   "history": [
     {

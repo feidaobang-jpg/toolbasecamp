@@ -29,21 +29,21 @@
     "slug": "feidao-tank-3d",
     "url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
     "visibility": "PUBLIC",
-    "review_status": "published",
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_AEEST9eQ/index.html",
-    "verified_at": "2026-10-12T12:26:21.857Z",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_AEEST9eQ/index.html",
-    "submitted_version": "remix-entry1-menu-text1-fp-aim1-privacy1-input-safety1",
-    "submitted_at": "2026-10-12T12:22:20.004524+00:00",
+    "review_status": "auditing",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_YYo3LSfJ/index.html",
+    "verified_at": "2026-10-13T10:57:12.528971+08:00",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_Rch25BB2/index.html",
+    "submitted_version": "remix-entry1-views4-anonymous1",
+    "submitted_at": "2026-10-13T02:55:18.702761+00:00",
     "video_bindings": [
       "BV1TepK69Eet",
       "BV1Wqaz6AEJb"
     ],
-    "release_record": "releases/remix-entry1-menu-text1-fp-aim1-privacy1-input-safety1/handoff.json",
+    "release_record": "releases/remix-entry1-views4-anonymous1/handoff.json",
     "published_version": "remix-entry1-menu-text1-fp-aim1-privacy1-input-safety1",
     "published_entry": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
     "note": "昵称与房间名安全整改包已过审；正式入口可用，访问者水印开启。",
-    "package_sha256": "0e66f8a1f269f1be7731630a6779ee241c1d8521e6c55a7815a5ad4d8ce442d2",
+    "package_sha256": "ab43d26b0be2eb789bb3faf82f5352c1fe99236396cd89410f2a5f050837d416",
     "pending_updates": [
       {
         "version": "toy3dui2",
@@ -334,7 +334,7 @@
     "computer_player": "房主运行普通NPC逻辑，恢复操作立即交还真人",
     "host_kick": true
   },
-  "publication_status": "website_live_toy_published",
+  "publication_status": "website_live_toy_auditing",
   "versions": [
     {
       "version": "coop-live2",
@@ -440,5 +440,6 @@
         }
       }
     }
-  ]
+  ],
+  "qa": "releases/remix-entry1-views4-anonymous1/handoff.json"
 }

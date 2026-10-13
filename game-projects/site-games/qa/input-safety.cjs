@@ -2,7 +2,8 @@
 const {chromium}=require('C:/Users/37818/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const fs=require('fs'),path=require('path'),http=require('http'),assert=require('node:assert/strict');
 const root=path.resolve(__dirname,'../../..'),out=process.env.INPUT_SAFETY_QA_OUT||path.join(require('os').tmpdir(),'input-safety-qa');
-const games=['tank-3d','jackal-stage1-3d','cadillacs-stage1-3d','starship-defense','gunfire-assembly'];
+const games=['tank-3d','jackal-stage1-3d','cadillacs-stage1-3d','starship-defense','gunfire-assembly'].filter(game=>!process.env.INPUT_SAFETY_QA_GAMES||process.env.INPUT_SAFETY_QA_GAMES.split(',').includes(game));
+assert(games.length,'INPUT_SAFETY_QA_GAMES must select a known game');
 const mime={'.html':'text/html','.js':'text/javascript','.css':'text/css','.svg':'image/svg+xml','.mp3':'audio/mpeg','.wav':'audio/wav'};
 const server=http.createServer((req,res)=>{
   const file=path.resolve(root,'.'+decodeURIComponent(new URL(req.url,'http://localhost').pathname));

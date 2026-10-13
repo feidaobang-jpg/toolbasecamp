@@ -28,7 +28,7 @@
     "unit_cases": 17,
     "server_tests": 24,
     "package_browser_cases": 11,
-    "privacy_browser_cases": 13,
+    "privacy_browser_cases": 16,
     "cloud_save_unit_cases": 26,
     "save_browser_viewports": 3,
     "real_room_relay": {
@@ -36,11 +36,21 @@
       "tank": "four players passed on isolated rerun; first run had hub read timeout under concurrent browser load"
     },
     "physical_phone": false,
-    "artifacts": "D:/project/task-artifacts/anonymous-coop-20261013"
+    "artifacts": "D:/project/task-artifacts/anonymous-coop-20261013",
+    "gunfire_extra_local_save_regression": 1,
+    "final_package_cases": 11,
+    "actual_toy_previews": {
+      "passed": true,
+      "games": 5,
+      "method": "Codex IAB real Toy iframes, desktop and portrait viewport; anonymous create and exit; no cloud write or profile authorization attempted"
+    },
+    "final_cloud_package_cases": 5,
+    "save_browser_logged_out_fallback": true,
+    "production_relay_games": 4
   },
   "channels": {
-    "website": "not_pushed",
-    "toy": "not_submitted",
+    "website": "deployed_verified",
+    "toy": "all_five_submitted_auditing",
     "bilibili": "deferred_accumulating",
     "taptap": "not_requested"
   },
@@ -58,5 +68,9 @@
     "video_readiness": "partial; menu screenshots and actual multiplayer QA available; no new edited video requested"
   },
   "created_at": "2026-10-13T10:28:05.864252+08:00",
-  "integrated_mainline": "8534ba8d"
+  "integrated_mainline": "8534ba8d",
+  "website_commit": "da4c54e89677f56a80183bc037dbc3285d5cf06d",
+  "website_verified_at": "2026-10-13T10:57:12.528971+08:00",
+  "toy_results": "toy-results.json",
+  "finished_at": "2026-10-13T10:57:12.528971+08:00"
 }

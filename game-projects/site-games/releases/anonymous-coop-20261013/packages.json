@@ -1,0 +1,92 @@
+[
+  {
+    "game": "tank-3d",
+    "version": "remix-entry1-views4-anonymous1",
+    "id": "39043249461248",
+    "slug": "feidao-tank-3d",
+    "zip": "D:\\project\\task-artifacts\\anonymous-coop-20261013\\final-packages\\tank-3d.zip",
+    "sha256": "ab43d26b0be2eb789bb3faf82f5352c1fe99236396cd89410f2a5f050837d416",
+    "doctor": {
+      "ok": true,
+      "findings": [
+        {
+          "severity": "WARN",
+          "file": ".",
+          "message": "14 个 JS/CSS 产物的文件名都不含内容指纹（形如 assets/index-Ct-l33m_.js）；每次更新访客都要重新下载全部资源。多数构建工具默认已开启：Vite 开箱即用，webpack 配 output.filename '[name].[contenthash].js'。仅为建议，不影响本次发布"
+        }
+      ]
+    }
+  },
+  {
+    "game": "jackal-stage1-3d",
+    "version": "v0.11.1-anonymous1",
+    "id": "39863936092160",
+    "slug": "feidao-jackal-3d",
+    "zip": "D:\\project\\task-artifacts\\anonymous-coop-20261013\\final-packages\\jackal-stage1-3d.zip",
+    "sha256": "9935f5bd5c62cccf287d7a6baea232bbb96bc9f8d56acea7e6d7dbd2c4eadb74",
+    "doctor": {
+      "ok": true,
+      "findings": [
+        {
+          "severity": "WARN",
+          "file": ".",
+          "message": "2 个 JS/CSS 产物的文件名都不含内容指纹（形如 assets/index-Ct-l33m_.js）；每次更新访客都要重新下载全部资源。多数构建工具默认已开启：Vite 开箱即用，webpack 配 output.filename '[name].[contenthash].js'。仅为建议，不影响本次发布"
+        }
+      ]
+    }
+  },
+  {
+    "game": "cadillacs-stage1-3d",
+    "version": "v0.11.0-hellroad.1-menu-desk1-anonymous1",
+    "id": "40412421031936",
+    "slug": "feidao-cadillacs-3d",
+    "zip": "D:\\project\\task-artifacts\\anonymous-coop-20261013\\final-packages\\cadillacs-stage1-3d.zip",
+    "sha256": "a9658ba81e1a31c0ed1da225ad0ac5d39e0dcb654ba015ec4b49b3605c5153db",
+    "doctor": {
+      "ok": true,
+      "findings": [
+        {
+          "severity": "WARN",
+          "file": ".",
+          "message": "2 个 JS/CSS 产物的文件名都不含内容指纹（形如 assets/index-Ct-l33m_.js）；每次更新访客都要重新下载全部资源。多数构建工具默认已开启：Vite 开箱即用，webpack 配 output.filename '[name].[contenthash].js'。仅为建议，不影响本次发布"
+        }
+      ]
+    }
+  },
+  {
+    "game": "starship-defense",
+    "version": "web-anonymous-v0.36.7",
+    "id": "38678478981120",
+    "slug": "chongchao-qianshao",
+    "zip": "D:\\project\\task-artifacts\\anonymous-coop-20261013\\final-packages\\starship-defense.zip",
+    "sha256": "2a99c0665a6b58462e149f55a107ca59923220a0b877922914af9aae0c492fdb",
+    "doctor": {
+      "ok": true,
+      "findings": [
+        {
+          "severity": "WARN",
+          "file": ".",
+          "message": "5 个 JS/CSS 产物的文件名都不含内容指纹（形如 assets/index-Ct-l33m_.js）；每次更新访客都要重新下载全部资源。多数构建工具默认已开启：Vite 开箱即用，webpack 配 output.filename '[name].[contenthash].js'。仅为建议，不影响本次发布"
+        }
+      ]
+    }
+  },
+  {
+    "game": "gunfire-assembly",
+    "version": "web-anonymous-v0.1.3",
+    "id": "43022175699968",
+    "slug": "feidao-gunfire",
+    "zip": "D:\\project\\task-artifacts\\anonymous-coop-20261013\\final-packages\\gunfire-assembly.zip",
+    "sha256": "9604c4ff22f1cb0549b72dd46ed0d3cec69c7045cfffbdc4fd3ba0a4e06b9095",
+    "doctor": {
+      "ok": true,
+      "findings": [
+        {
+          "severity": "WARN",
+          "file": ".",
+          "message": "5 个 JS/CSS 产物的文件名都不含内容指纹（形如 assets/index-Ct-l33m_.js）；每次更新访客都要重新下载全部资源。多数构建工具默认已开启：Vite 开箱即用，webpack 配 output.filename '[name].[contenthash].js'。仅为建议，不影响本次发布"
+        }
+      ]
+    }
+  }
+]
