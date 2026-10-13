@@ -566,6 +566,20 @@
       "channels": [
         "bilibili"
       ]
+    },
+    {
+      "version": "web-fire-v0.37.3",
+      "status": "deferred_accumulating",
+      "decision": "deferred_accumulating",
+      "summary": "电脑手机共用自动/按住/点击开关连射，独立瞄准设置，连射安全清理与联机目标判定。",
+      "reason": "操作体验小更新；相关B站简介上次公开核验2026-10-12，未满7天。沿用已有手动按键仍有效，暂未发现必须立即更正的说明。",
+      "website_verified": true,
+      "website_verified_at": "2026-10-13T16:36:51.514448+08:00",
+      "record": "releases/web-fire-v0.37.3/handoff.json",
+      "recorded_at": "2026-10-13T16:44:09.436239+08:00",
+      "channels": [
+        "bilibili"
+      ]
     }
   ],
   "comment_corrections": [
