@@ -43,7 +43,9 @@
     ],
     "physical_phone": false,
     "network_note": "host-side network input targeting checked; no new full multi-client session needed for unchanged transport",
-    "save": "old local progress, export/import and pre-import backup passed"
+    "save": "old local progress, export/import and pre-import backup passed",
+    "visual_review": "before/after screenshots and sequential captured frames reviewed; smooth lower slopes and four-view rotation",
+    "performance": "RTX4060Ti D3D11 headless Edge, 48 enemies, movement and camera rotation, 10s without recording: ~170 FPS, p95 6.1ms, no frames over 50ms; not physical phone"
   },
   "media": [
     {
@@ -78,13 +80,51 @@
   },
   "channels": {
     "website": {
-      "status": "pending_verification"
+      "status": "public_verified",
+      "source_commit": "63097e26559f2a6be1bd1387c2b0aff5b6cc4461",
+      "at": "2026-10-13T16:00:50.401538+08:00",
+      "files": [
+        {
+          "file": "index.html",
+          "match": true,
+          "sha256": "fd1b9f3086c89affbf8e4871128a010bed6dcef4c47af31e1940981ada54f8ab"
+        },
+        {
+          "file": "terrain-controls.js",
+          "match": true,
+          "sha256": "4e82bd88860acdf50a1b34771479ade39249be4704d9399894c1215fbdab71f0"
+        },
+        {
+          "file": "game.compat.js",
+          "match": true,
+          "sha256": "b4c4e8ebe4f932461afc85462a6166f6bdfa248e024a731ad3e50a9874e7c1e8"
+        },
+        {
+          "file": "update-history.js",
+          "match": true,
+          "sha256": "fae14b25dcfe618e8b3e586ae7e0524389bd8f6f7cb42aaffedad7b98e20e534"
+        }
+      ],
+      "note": "HTML deployment cache-bust normalized; all JS exact Git blob matches",
+      "browser_qa": "website-qa.json"
     },
     "toy": {
       "id": "38678478981120",
-      "status": "built_not_submitted",
+      "status": "published",
       "package_sha256": "640f2738ec88ac4f14f6dc5b819709d0e2d04f8607f24afb33465f872870bd74",
-      "doctor_warning": "6 JS/CSS filenames have no content hash; update downloads all resources; advisory acknowledged"
+      "doctor_warning": "6 JS/CSS filenames have no content hash; update downloads all resources; advisory acknowledged",
+      "submitted_at": "2026-10-13T16:01:40.548756+08:00",
+      "submitted_once": true,
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_mMzZgpip/index.html",
+      "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_vfXAtOKB/index.html",
+      "preview_qa": "toy-preview-qa.json",
+      "watermark_enabled": false,
+      "receipt": "toy-receipt.json",
+      "public_verified_at": "2026-10-13T16:04:35.117448+08:00",
+      "public_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+      "public_qa": "toy-public-qa.json",
+      "authenticated": false,
+      "sdk_mocked": false
     },
     "bilibili": {
       "decision": "deferred_accumulating",

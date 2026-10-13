@@ -1,0 +1,28 @@
+{
+  "status": "public_verified",
+  "source_commit": "63097e26559f2a6be1bd1387c2b0aff5b6cc4461",
+  "at": "2026-10-13T16:00:50.401538+08:00",
+  "files": [
+    {
+      "file": "index.html",
+      "match": true,
+      "sha256": "fd1b9f3086c89affbf8e4871128a010bed6dcef4c47af31e1940981ada54f8ab"
+    },
+    {
+      "file": "terrain-controls.js",
+      "match": true,
+      "sha256": "4e82bd88860acdf50a1b34771479ade39249be4704d9399894c1215fbdab71f0"
+    },
+    {
+      "file": "game.compat.js",
+      "match": true,
+      "sha256": "b4c4e8ebe4f932461afc85462a6166f6bdfa248e024a731ad3e50a9874e7c1e8"
+    },
+    {
+      "file": "update-history.js",
+      "match": true,
+      "sha256": "fae14b25dcfe618e8b3e586ae7e0524389bd8f6f7cb42aaffedad7b98e20e534"
+    }
+  ],
+  "note": "HTML deployment cache-bust normalized; all JS exact Git blob matches"
+}
