@@ -528,6 +528,20 @@
       "channels": [
         "bilibili"
       ]
+    },
+    {
+      "status": "deferred_accumulating",
+      "decision": "deferred_accumulating",
+      "reason": "菜单与触摸体验优化，没有增加玩法；上次相关简介公开核验2026-10-12，未满7天，当前已知说明没有指定旧菜单布局。",
+      "version": "web-menu-v0.37.0",
+      "summary": "虫潮菜单重排、触摸滚动修复、暂停与设置统一深色主题；游客和本地存档路径保留。",
+      "website_verified": true,
+      "website_verified_at": "2026-10-13T15:48:54.728137+08:00",
+      "record": "releases/web-menu-v0.37.0/handoff.json",
+      "recorded_at": "2026-10-13T16:00:14.100933+08:00",
+      "channels": [
+        "bilibili"
+      ]
     }
   ],
   "comment_corrections": [

@@ -9,6 +9,7 @@ const results=[];
 (async()=>{fs.mkdirSync(out,{recursive:true});const browser=await chromium.launch({channel:'msedge',headless:true,args:['--use-angle=d3d11']});try{
  for(const [width,height] of sizes){
   const name=width+'x'+height,ctx=await browser.newContext({viewport:{width,height},hasTouch:width<1000,isMobile:width<1000,recordVideo:{dir:out,size:{width:960,height:540}}});
+  assert.deepEqual(await ctx.cookies(),[],'guest verification must start without account cookies');
   const page=await ctx.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
   try{
    const response=await page.goto(url,{waitUntil:'domcontentloaded',timeout:60000});assert(response.ok());assert(!(await response.text()).includes('__TOY_LOGIN_GATE__'));
@@ -66,18 +67,22 @@ const results=[];
    await frame.locator('[data-menu-panel="menuSettingsPanel"]').first().click();
    for(const mode of ['desktop','touch','auto']){await frame.locator('[data-device-mode="'+mode+'"]').click();assert.equal(await frame.locator('[data-device-mode="'+mode+'"]').getAttribute('aria-pressed'),'true');}
    await frame.locator('#menuSettingsPanel [data-menu-close]').click();
+   await frame.locator('#menuSettingsPanel').waitFor({state:'hidden'});
+   await frame.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
    // The first screenshot is AFTER gestures (Toy iframe emulation loses touches after screenshots).
    await page.screenshot({path:path.join(out,name+'-main.png')});
    await frame.locator('#btnStart').click();if(await frame.locator('#confirmOk').isVisible())await frame.locator('#confirmOk').click();
    await frame.locator('#menuMain').waitFor({state:'hidden'});await frame.locator('#hud').waitFor({state:'visible'});
    await page.keyboard.press('Escape');await frame.locator('#menuPause').waitFor({state:'visible'});await visible('#btnResume');await visible('#btnQuit');
    const pauseColor=await frame.locator('#menuPause').evaluate(e=>getComputedStyle(e).backgroundImage);assert(!pauseColor.includes('247, 234, 208'),'cream pause regressed');
-   await frame.locator('#menuPause [data-menu-panel="menuSettingsPanel"]').click();await frame.locator('#menuSettingsPanel [data-menu-close]').click();assert(await frame.locator('#menuPause').isVisible());
+   await frame.locator('#menuPause [data-menu-panel="menuSettingsPanel"]').click();await frame.locator('#menuSettingsPanel [data-menu-close]').click();await frame.locator('#menuSettingsPanel').waitFor({state:'hidden'});assert(await frame.locator('#menuPause').isVisible());
+   await frame.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
    await page.screenshot({path:path.join(out,name+'-pause.png')});await frame.locator('#btnResume').click();await frame.locator('#menuPause').waitFor({state:'hidden'});
    await page.keyboard.press('Escape');await frame.locator('#btnQuit').click();await frame.locator('#menuMain').waitFor({state:'visible'});
    await frame.locator('[data-menu-panel="menuSavePanel"]').first().click();await frame.locator('#btnLoadMenu').click();await frame.locator('#savePanel').waitFor({state:'visible'});await frame.locator('#saveClose').click();
    await frame.locator('#btnContinue').click();await frame.locator('#menuMain').waitFor({state:'hidden'});
-   assert.deepEqual(errors,[]);results.push({viewport:[width,height],passed:true,touch:width<1000,scroll:{before,after,back:backScroll},checks:['mode selection and back','fixed actions and utilities','touch/keyboard scrolling','input mode switching','dark pause','resume and return','local save menu and continue'],limitations:['browser simulation; physical phone not tested']});
+   assert.deepEqual(errors,[]);assert.deepEqual((await ctx.cookies()).filter(c=>['SESSDATA','DedeUserID','bili_jct'].includes(c.name)),[]);
+   results.push({viewport:[width,height],passed:true,touch:width<1000,authenticated:false,scroll:{before,after,back:backScroll},checks:['mode selection and back','fixed actions and utilities','touch/keyboard scrolling','input mode switching','dark pause','resume and return','local save menu and continue'],limitations:['browser simulation; physical phone not tested']});
    console.log(JSON.stringify(results[results.length-1]));
   }catch(e){await page.screenshot({path:path.join(out,name+'-failure.png')}).catch(()=>{});throw e;}
   finally{await ctx.close();fs.writeFileSync(path.join(out,'results.json'),JSON.stringify({url,results},null,2));}
