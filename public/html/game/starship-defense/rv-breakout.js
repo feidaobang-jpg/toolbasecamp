@@ -1,21 +1,12 @@
 // 房车城镇生存：自由探索、场地整备、分区僵尸与独立进度。
 import {TOWN,RV_SITES,RV_ZONES,buildTown,zombieFactory} from './rv-town.js';
+import {makeDetailedRV,createRVAtmosphere} from './rv-art.js';
 export const RV_SAVE='chongchao-rv-town-v2';
 export const RV_CFG={name:'装甲房车',hp:1400,speed:12,dmg:16,rate:.12,range:36,seatH:2.5,sfx:'mg',color:0x697782};
 export const RV_ROUTE=RV_SITES;
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 export function makeRVMesh(T){
-  const g=new T.Group(),steel=new T.MeshLambertMaterial({color:0x61717d}),dark=new T.MeshLambertMaterial({color:0x182532}),glass=new T.MeshPhongMaterial({color:0x6bafbf,shininess:70}),light=new T.MeshBasicMaterial({color:0xffd894});
-  const box=(sx,sy,sz,x,y,z,m=steel,parent=g)=>{const o=new T.Mesh(new T.BoxGeometry(sx,sy,sz),m);o.position.set(x,y,z);o.castShadow=true;o.receiveShadow=true;parent.add(o);return o;};
-  box(2.8,.5,6.2,0,.75,0,dark);box(2.7,2.5,4.8,0,2,-.6);box(2.6,1.9,1.8,0,1.7,2.4);box(2.25,.8,.08,0,2.15,3.31,glass);
-  for(const s of [-1,1]){
-    for(const z of [-2,2]){const w=new T.Mesh(new T.CylinderGeometry(.65,.65,.38,12),dark);w.rotation.z=Math.PI/2;w.position.set(s*1.48,.65,z);g.add(w);box(.06,.75,1.1,s*1.38,2.25,z<0?-1.2:2.35,glass);}
-    box(.42,.32,.13,s*.9,1.15,3.34,light);box(.15,.6,4.5,s*1.4,1.1,-.6,dark);
-  }
-  box(2.9,.24,.28,0,.85,3.4,dark);box(2.3,.25,2,0,3.39,-1,dark);box(.55,.85,.09,.65,2,-3.05,dark);
-  const turret=new T.Group();turret.position.set(0,3.48,.6);g.add(turret);box(.8,.35,.8,0,0,0,dark,turret);
-  const gun=box(.18,.18,1.65,0,.22,.9,dark,turret);g.userData.turret=turret;g.userData.gun=gun;
-  return g;
+  return makeDetailedRV(T);
 }
 
 export function validRVSave(d){
@@ -86,11 +77,13 @@ export function createRVBreakout(a){
     s.sky=a.skyObjects();s.skyOffset=d?.z||TOWN.start.z;s.sky.forEach(o=>o.position.z+=s.skyOffset);s.world={...WORLD};Object.assign(WORLD,{minX:TOWN.minX,maxX:TOWN.maxX,minZ:TOWN.minZ,maxZ:TOWN.maxZ});
     s.town=buildTown(T,scene);s.zombies=zombieFactory(T);const pos=d&&!blocked(d.x,d.z,3)?d:TOWN.start;
     s.rv=a.spawnVehicle('rv');s.rv.cfg={...RV_CFG};s.rv.mesh.position.set(pos.x,0,pos.z);configure();s.rv.hp=clamp(d?.hp||s.rv.maxHp,1,s.rv.maxHp);a.updHPBar(s.rv.bar,s.rv.hp/s.rv.maxHp);a.enterVehicle(s.rv);player.pos.copy(s.rv.mesh.position);spawnResidents();
+    s.art=createRVAtmosphere(T,{scene,...a.artContext,skyObjects:s.sky});renderFrame(0);
     a.faceForward();a.stage.classList.add('rv-mode');['menuMain','menuPause','menuOver','rvMenu','rvResult'].forEach(id=>$(id).classList.add('hidden'));$('rvHUD').classList.remove('hidden');$('rvMap').classList.remove('hidden');a.showHUD();a.showHint(null);
     $('btnRestartLv').textContent='🔄 重开城镇探索';s.keyHint=$('keysHint').textContent;$('keysHint').textContent='WASD 驾驶/移动 · J 射击 · I 上下车/搜索 · O 地图与设施 · H 医疗 · U 手雷 · K 跳跃 · C 视角 · Q/E 转头 · Esc 暂停';
     save();a.showMsg(a.isTouch()?'街道自由通行；点设施查看地图和服务':'街道自由通行；O 查看地图和设施服务',5);hud();
   }
   function configure(){s.rv.maxHp=RV_CFG.hp+s.armor*200;s.rv.cfg.dmg=RV_CFG.dmg*(1+s.gun*.35);s.rv.cfg.speed=s.fuel>0?RV_CFG.speed:3;Game.weaponLv.lmg=s.gear;Game.weaponLv.shotgun=s.gear;}
+  function renderFrame(dt){if(s.active&&s.rv)s.art?.update(dt,s.rv,a.visuals.quality);}
   function blocked(x,z,r=.8){return s.town?s.town.blocked(x,z,r):false;}
   function atSite(){if(!s.rv||player.dead)return null;const p=s.rv.mesh.position;if(!player.inVehicle&&distance(player.pos,p)>12)return null;return RV_SITES.find(n=>distance(p,n)<10.5)||null;}
   function interaction(){
@@ -180,9 +173,9 @@ export function createRVBreakout(a){
     $('rvResult').classList.remove('hidden');AudioSys.sfx(won?'win':'boom');try{localStorage.removeItem(RV_SAVE);}catch(_e){}refresh();
   }
   function stop(restore=true){
-    if(!s.active)return;save();a.clearEntities(true);s.rv=null;s.active=false;s.over=false;s.lastPos=null;s.hidden.forEach(o=>o.visible=true);s.hidden=[];s.sky.forEach(o=>o.position.z-=s.skyOffset);s.sky=[];Object.assign(WORLD,s.world);
+    if(!s.active)return;save();a.clearEntities(true);s.rv?.mesh.userData.dispose?.();s.art?.dispose();s.art=null;s.rv=null;s.active=false;s.over=false;s.lastPos=null;s.hidden.forEach(o=>o.visible=true);s.hidden=[];s.sky.forEach(o=>o.position.z-=s.skyOffset);s.sky=[];Object.assign(WORLD,s.world);
     s.town?.dispose();s.zombies?.dispose();s.town=null;s.zombies=null;a.stage.classList.remove('rv-mode');['rvHUD','rvMap','rvPanel','rvResult'].forEach(id=>$(id).classList.add('hidden'));$('vO').textContent='商店';$('btnRestartLv').textContent='🔄 重开本关';$('keysHint').textContent=s.keyHint;
     if(restore&&s.backup){Object.assign(Game,s.backup);s.backup=null;}player.inVehicle=null;player.mesh.visible=false;Game.state='menu';a.Input.reset();
   }
-  mount();return {state:s,start,stop,save,read,refresh,update,hud,blocked,target,updateMonster,killed,interaction,interact,panel,job,eat,finish,atSite,sites:RV_SITES,zones:RV_ZONES,visible:(p,q)=>s.town.visible(p,q)};
+  mount();return {state:s,start,stop,save,read,refresh,update,renderFrame,hud,blocked,target,updateMonster,killed,interaction,interact,panel,job,eat,finish,atSite,sites:RV_SITES,zones:RV_ZONES,visible:(p,q)=>s.town.visible(p,q)};
 }
