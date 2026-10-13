@@ -1,0 +1,103 @@
+{
+  "version": "old",
+  "duration": 24.132800000000746,
+  "canvas": {
+    "width": 1920,
+    "height": 1080
+  },
+  "method": "same-position art staging; normal game models; paused world with camera moving under real-time RAF; not normal combat evidence",
+  "events": [
+    {
+      "name": "orbit-start",
+      "t": 0.00019999999925494194,
+      "game": 0,
+      "version": "old",
+      "state": "paused",
+      "testMode": false,
+      "active": true,
+      "over": false,
+      "dead": false,
+      "x": 0,
+      "z": 1555,
+      "px": 0,
+      "pz": 1555,
+      "hp": 1400,
+      "person": 120,
+      "inVehicle": true,
+      "yaw": 2.6,
+      "scrap": 160,
+      "fuel": 85,
+      "looted": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "defeated": 0,
+      "search": null
+    },
+    {
+      "name": "orbit-end",
+      "t": 24.05610000000149,
+      "game": 0,
+      "version": "old",
+      "state": "paused",
+      "testMode": false,
+      "active": true,
+      "over": false,
+      "dead": false,
+      "x": 0,
+      "z": 1555,
+      "px": 0,
+      "pz": 1555,
+      "hp": 1400,
+      "person": 120,
+      "inVehicle": true,
+      "yaw": 8.883185307179586,
+      "scrap": 160,
+      "fuel": 85,
+      "looted": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "defeated": 0,
+      "search": null
+    }
+  ],
+  "final": {
+    "t": 24.132900000002234,
+    "game": 0,
+    "version": "old",
+    "state": "paused",
+    "testMode": false,
+    "active": true,
+    "over": false,
+    "dead": false,
+    "x": 0,
+    "z": 1555,
+    "px": 0,
+    "pz": 1555,
+    "hp": 1400,
+    "person": 120,
+    "inVehicle": true,
+    "yaw": 8.883185307179586,
+    "scrap": 160,
+    "fuel": 85,
+    "looted": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "defeated": 0,
+    "search": null
+  }
+}

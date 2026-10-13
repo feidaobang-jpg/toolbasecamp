@@ -1,0 +1,20 @@
+{
+  "schema_version": 2,
+  "game_name": "虫潮围城",
+  "game_version": "web-rv-art-v0.37.4",
+  "requested_variants": [
+    "bilibili-zh"
+  ],
+  "ready_to_review": true,
+  "ready_to_upload": false,
+  "variants": [
+    {
+      "variant_id": "bilibili-zh",
+      "manifest_file": "publish/bilibili-zh/publish.json",
+      "ready_to_upload": false,
+      "blocking_issues": [
+        "pending_human_review_and_listening"
+      ]
+    }
+  ]
+}

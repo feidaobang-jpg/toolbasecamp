@@ -1,0 +1,5 @@
+/sources/
+/tmp/
+/qa/*.pid
+/audio/shared-zh/units/
+__pycache__/

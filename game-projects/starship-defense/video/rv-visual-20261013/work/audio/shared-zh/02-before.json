@@ -1,0 +1,30 @@
+{
+ "text": "之前能开，也能打。但车身像几个方块拼起来，街道也比较空。所以这次先从离镜头最近的房车下手。",
+ "voice": "IndexTTS-2.5 本地合成（参考音 yunxi-ref-8s.wav）",
+ "rate": "1.0",
+ "unit_level": true,
+ "timestamp_source": "逐句合成，按解码采样数累计的真实起止时间",
+ "marks": [
+  {
+   "offset": 0,
+   "duration": 19102500,
+   "text": "之前能开，也能打。",
+   "pos": 0,
+   "chars": 9
+  },
+  {
+   "offset": 22102500,
+   "duration": 35788333,
+   "text": "但车身像几个方块拼起来，街道也比较空。",
+   "pos": 9,
+   "chars": 19
+  },
+  {
+   "offset": 60890833,
+   "duration": 35557916,
+   "text": "所以这次先从离镜头最近的房车下手。",
+   "pos": 28,
+   "chars": 17
+  }
+ ]
+}
