@@ -1,6 +1,9 @@
 // Player-facing notes travel with the same game package; no network or account required.
-export const GAME_VERSION='0.37.1';
+export const GAME_VERSION='0.37.2';
 export const UPDATE_HISTORY=[
+  {version:'0.37.2',date:'2026-10-13',title:'母巢浅坡与轻松回程',changes:[
+    '母巢深度从22米减到4米，三条洞道同步放缓，回程上坡更轻松。',
+    '保留洞内活动空间、三路虫潮和队友载具通行。']},
   {version:'0.37.1',date:'2026-10-13',title:'一人高山坡与最近目标瞄准',changes:[
     '六处野外山坡降到约一个角色高，山顶堡垒、行走与碰撞同步调整。',
     '自动瞄准改为锁定射程内离自己最近的敌人，不再优先首领、精英或镜头正前方；电脑、触屏与联机一致。']},
