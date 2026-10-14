@@ -7,7 +7,8 @@
   "package": {
     "zip_sha256": "ca4c1bedb6b4a156d0c212ab513f4e4ddcf50e6d63dc923e0ee15c423aa22f34",
     "zip_bytes": 448290,
-    "entry_html_bytes": 68409
+    "entry_html_bytes": 68409,
+    "path": "D:/project/task-evidence/save-notice-20261014/chongchao-qianshao.zip"
   },
   "website": {
     "status": "deployed_verified",

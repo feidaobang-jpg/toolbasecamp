@@ -7,7 +7,8 @@
   "package": {
     "zip_sha256": "a43dfa5c41031febae992413e9d2d766cdef3af624c2be7fd839cafd9aa4ff77",
     "zip_bytes": 2749419,
-    "entry_html_bytes": 69934
+    "entry_html_bytes": 69934,
+    "path": "D:/project/task-evidence/save-notice-20261014/feidao-gunfire.zip"
   },
   "website": {
     "status": "deployed_verified",
