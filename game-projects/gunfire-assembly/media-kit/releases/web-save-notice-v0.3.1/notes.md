@@ -11,7 +11,7 @@
 ## 版本与发布
 
 - 网站：`https://www.zhengxiaohui.cn/html/game/gunfire-assembly/`，线上 `update-history.js` 读回 `GAME_VERSION='0.3.1'`。
-- Toy `43022175699968`：预览 `preview_hvn6TazZ` 实测通过后同包提审（提交预览 `preview_K4UnyEW1`），2026-10-14 21:15:37 提交、21:17:32 published。
+- Toy `43022175699968`：预览 `preview_hvn6TazZ` 实测通过后同包提审（提交预览 `preview_K4UnyEW1`），2026-10-14 21:15:37 提交、21:17:32 published；21:19 正式入口复验通过。随后并行会话在 21:27:13 以李家坡重做 0.4.0 的包再次 published，线上 Toy 现为 0.4.0（已合并本改动，正式入口复验静默心跳仍通过）。本次台账只追加 `channel_baseline_history` 一条，不覆盖 0.4.0 那轮的版本指针。
 - 大厅与亮剑战役页面代码未改，`liangjian/game.compat.js` 内容哈希不变；本次不新增合集卡片（枪火集结已在「飞刀班长游戏合集」内独立展示）。
 - TapTap：未请求同步。B站简介：普通小改，只累计一次稳定更新。
 

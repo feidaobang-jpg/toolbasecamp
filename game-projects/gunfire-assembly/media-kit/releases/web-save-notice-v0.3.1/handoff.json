@@ -25,12 +25,15 @@
     "package_sha256": "a43dfa5c41031febae992413e9d2d766cdef3af624c2be7fd839cafd9aa4ff77",
     "published_version": "web-save-notice-v0.3.1",
     "published_at": "2026-10-14T13:17:32+00:00",
-    "public_verified_at": "2026-10-14T13:22:21+00:00",
-    "public_evidence": "verify-save-notice.cjs 以正式 Toy 入口跑通 6 项（含真实心跳不弹出）"
+    "public_verified_at": "2026-10-14T13:19:45+00:00",
+    "public_evidence": "verify-save-notice.cjs 以正式 Toy 入口跑通 6 项（含真实心跳不弹出）",
+    "superseded_at": "2026-10-14T13:27:13+00:00",
+    "superseded_by": "同账号随后以李家坡重做 0.4.0 的包再次提审并 published；0.4.0 已含本改动，正式入口复验静默心跳仍通过。"
   },
   "bilibili": {
     "decision": "deferred_accumulating",
     "reason": "普通小改，不使现有入口说明或简介失实；按发布节奏只累计一次稳定更新，未达 3 次＋7 天门槛"
   },
-  "taptap": "not_requested"
+  "taptap": "not_requested",
+  "ledger_note": "枪火集结 media-kit/game.json 的 current_version / toy 块由 0.4.0 那一轮登记；本次只追加 channel_baseline_history 一条，不覆盖现行版本指针。"
 }
