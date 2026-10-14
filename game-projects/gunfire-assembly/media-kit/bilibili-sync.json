@@ -5,18 +5,44 @@
     {
       "bvid": "BV1Lfp76KEDd",
       "mapping": "toy video list 43022175699968",
-      "last_public_verified_at": "2026-10-14T09:08:34+08:00",
-      "last_public_verified_version": "web-pingan-remake-v0.2.1",
-      "desc_sha256": "d0e1acd56cb1df2ada2c4a66b9047774ccf6777fa8009a821a7846b624479b01",
-      "record": "releases/web-pingan-remake-v0.2.0/bilibili-sync.json"
+      "last_public_verified_at": "2026-10-14T11:39:31.568Z",
+      "last_public_verified_version": "web-mode-focus-v0.2.4",
+      "desc_sha256": "3a02fca3a65c54349b80519d7819aee210bdf8f568638e364a417138c7a487d0",
+      "record": "../../site-games/releases/mode-focus-20261014/bilibili-entrances.json",
+      "sync_history": [
+        {
+          "last_public_verified_version": "web-pingan-remake-v0.2.1",
+          "last_public_verified_at": "2026-10-14T09:08:34+08:00",
+          "description_sha256": null,
+          "desc_sha256": "d0e1acd56cb1df2ada2c4a66b9047774ccf6777fa8009a821a7846b624479b01",
+          "record": "releases/web-pingan-remake-v0.2.0/bilibili-sync.json"
+        }
+      ],
+      "description_public_verified_at": "2026-10-14T11:39:31.568Z",
+      "description_sha256": "3a02fca3a65c54349b80519d7819aee210bdf8f568638e364a417138c7a487d0",
+      "status": "public_verified",
+      "sync_scope": "menu entry correction; preserves latest editable description"
     },
     {
       "bvid": "BV1KFpJ6sEEK",
       "mapping": "toy video list 43022175699968",
-      "last_public_verified_at": "2026-10-14T09:08:34+08:00",
-      "last_public_verified_version": "web-pingan-remake-v0.2.1",
-      "desc_sha256": "c1652b358069c2ed147becaeb5f6233ade1f1743054bfbc957fa288da7c35242",
-      "record": "releases/web-pingan-remake-v0.2.0/bilibili-sync.json"
+      "last_public_verified_at": "2026-10-14T11:46:07.447Z",
+      "last_public_verified_version": "web-mode-focus-v0.2.4",
+      "desc_sha256": "ea3b01eb073c331230aae7804d67dad04eed316b517911c31ca56f8f8a818701",
+      "record": "../../site-games/releases/mode-focus-20261014/bilibili-entrances.json",
+      "sync_history": [
+        {
+          "last_public_verified_version": "web-pingan-remake-v0.2.1",
+          "last_public_verified_at": "2026-10-14T09:08:34+08:00",
+          "description_sha256": null,
+          "desc_sha256": "c1652b358069c2ed147becaeb5f6233ade1f1743054bfbc957fa288da7c35242",
+          "record": "releases/web-pingan-remake-v0.2.0/bilibili-sync.json"
+        }
+      ],
+      "description_public_verified_at": "2026-10-14T11:46:07.447Z",
+      "description_sha256": "ea3b01eb073c331230aae7804d67dad04eed316b517911c31ca56f8f8a818701",
+      "status": "public_verified",
+      "sync_scope": "menu entry correction; preserves latest editable description"
     }
   ],
   "pending_updates": [
@@ -97,8 +123,8 @@
       "version": "web-cangyunling-v0.3.0",
       "record": "releases/web-cangyunling-v0.3.0/handoff.json",
       "website_verified_at": "2026-10-14T16:11:39+08:00",
-      "status": "pending_user_review",
-      "decision": "immediate_after_user_approval",
+      "status": "approved_waiting_account_lock",
+      "decision": "approved_by_user",
       "reason": "现有简介写的“共三章：李家坡、骑兵连、平安县城”“先玩骑兵冲锋还是先开那门炮”已和线上不符（骑兵连章节删了、第一章换成苍云岭重做版），属于说明失实；但用户在本任务里要求每章发布后先把 BV1Lfp76KEDd 的改法给他看，同意后再改。草稿已在 2026-10-14 会话里给出。",
       "summary": "抗战战役第一章换成重做版苍云岭（抓舌头、两发炮弹、坂田），章节顺序苍云岭 / 李家坡 / 平安县城，删骑兵连，大厅推荐入口改亮剑战役。",
       "channels": [
@@ -106,7 +132,19 @@
       ],
       "targets": [
         "BV1Lfp76KEDd"
-      ]
+      ],
+      "approval_record": "game-projects/site-games/releases/mode-focus-20261014/approval.json"
+    },
+    {
+      "version": "web-mode-focus-v0.2.4",
+      "decision": "updated_for_inaccurate_entry_guidance",
+      "status": "public_verified",
+      "targets": [
+        "BV1Lfp76KEDd",
+        "BV1KFpJ6sEEK"
+      ],
+      "summary": "折叠入口与成熟度标记说明，原视频与当前试玩分开描述",
+      "record": "game-projects/site-games/releases/mode-focus-20261014/bilibili-entrances.json"
     }
   ]
 }

@@ -1,0 +1,137 @@
+{
+  "url": "http://127.0.0.1:8784/html/game/starship-defense/index.html?qa=1",
+  "started": "2026-10-14T11:55:21.582Z",
+  "method": "Real menu clicks and keyboard; no state mutation or time acceleration",
+  "events": [
+    {
+      "name": "New normal game",
+      "at": "2026-10-14T11:55:24.655Z",
+      "state": "prep",
+      "chapter": 1,
+      "level": 1,
+      "gold": 150,
+      "hp": 120,
+      "baseHp": 2000,
+      "gateHp": 2500,
+      "buildings": 3,
+      "squadCount": 0,
+      "activeSquad": 0,
+      "position": {
+        "x": 0,
+        "z": -20
+      },
+      "enemies": 14,
+      "placement": null
+    },
+    {
+      "name": "Built 围墙",
+      "at": "2026-10-14T11:55:26.568Z",
+      "state": "prep",
+      "chapter": 1,
+      "level": 1,
+      "gold": 50,
+      "hp": 120,
+      "baseHp": 2000,
+      "gateHp": 2500,
+      "buildings": 4,
+      "squadCount": 0,
+      "activeSquad": 0,
+      "position": {
+        "x": 0,
+        "z": -11.23943025140107
+      },
+      "enemies": 14,
+      "placement": {
+        "valid": false,
+        "reason": "金币不足（需要 100）"
+      }
+    },
+    {
+      "name": "Wave 1 started",
+      "at": "2026-10-14T11:55:26.727Z",
+      "state": "battle",
+      "chapter": 1,
+      "level": 1,
+      "gold": 50,
+      "hp": 120,
+      "baseHp": 2000,
+      "gateHp": 2500,
+      "buildings": 4,
+      "squadCount": 0,
+      "activeSquad": 0,
+      "position": {
+        "x": 0,
+        "z": -11.23943025140107
+      },
+      "enemies": 14,
+      "placement": null
+    },
+    {
+      "name": "Opening observation ended",
+      "at": "2026-10-14T11:55:36.764Z",
+      "state": "battle",
+      "chapter": 1,
+      "level": 1,
+      "gold": 50,
+      "hp": 120,
+      "baseHp": 2000,
+      "gateHp": 2500,
+      "buildings": 4,
+      "squadCount": 0,
+      "activeSquad": 0,
+      "position": {
+        "x": 0,
+        "z": -11.23943025140107
+      },
+      "enemies": 19,
+      "placement": null
+    },
+    {
+      "name": "Continued after returning to title",
+      "at": "2026-10-14T11:55:37.483Z",
+      "state": "prep",
+      "chapter": 1,
+      "level": 1,
+      "gold": 50,
+      "hp": 120,
+      "baseHp": 2000,
+      "gateHp": 2500,
+      "buildings": 4,
+      "squadCount": 0,
+      "activeSquad": 0,
+      "position": {
+        "x": 0,
+        "z": -20
+      },
+      "enemies": 15,
+      "placement": null
+    }
+  ],
+  "samples": [
+    {
+      "elapsedMs": 10017,
+      "state": "battle",
+      "chapter": 1,
+      "level": 1,
+      "gold": 50,
+      "hp": 120,
+      "baseHp": 2000,
+      "gateHp": 2500,
+      "buildings": 4,
+      "squadCount": 0,
+      "activeSquad": 0,
+      "position": {
+        "x": 0,
+        "z": -11.23943025140107
+      },
+      "enemies": 19,
+      "placement": null
+    }
+  ],
+  "errors": [],
+  "physicalPhoneTested": false,
+  "finished": "2026-10-14T11:55:37.494Z",
+  "status": "observed",
+  "script_sha256": "13e19ffb8bdc18e20bc58cdb2761d5f52fa72b2291c3c6271389b29a1625ec51",
+  "source_version": "web-hud-layout-v0.38.4"
+}

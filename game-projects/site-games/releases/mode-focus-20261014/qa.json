@@ -860,5 +860,308 @@
     "No human playthrough quality judgment",
     "No physical phone testing",
     "Chapter phase and queen checks use fixtures; menu/input audit does not"
-  ]
+  ],
+  "latest_main_followup": {
+    "source_commit": "b1cf7ada",
+    "mode_audit": {
+      "base": "http://127.0.0.1:8784/html/game/",
+      "results": [
+        {
+          "game": "gunfire",
+          "viewport": [
+            1280,
+            580
+          ],
+          "status": "passed",
+          "checks": [
+            "hidden future modes",
+            "direct campaign (Cangyunling) menu and actual return",
+            "keyboard fold without accidental start",
+            "battlefield menu",
+            "chapter maturity labels"
+          ],
+          "limitations": [
+            "browser simulation; physical phone not tested"
+          ]
+        },
+        {
+          "game": "gunfire",
+          "viewport": [
+            844,
+            346
+          ],
+          "status": "passed",
+          "checks": [
+            "hidden future modes",
+            "direct campaign (Cangyunling) menu and actual return",
+            "keyboard fold without accidental start",
+            "battlefield menu",
+            "chapter maturity labels"
+          ],
+          "limitations": [
+            "browser simulation; physical phone not tested"
+          ]
+        },
+        {
+          "game": "gunfire",
+          "viewport": [
+            390,
+            844
+          ],
+          "status": "passed",
+          "checks": [
+            "hidden future modes",
+            "direct campaign (Cangyunling) menu and actual return",
+            "keyboard fold without accidental start",
+            "battlefield menu",
+            "chapter maturity labels"
+          ],
+          "limitations": [
+            "browser simulation; physical phone not tested"
+          ]
+        },
+        {
+          "game": "starship-defense",
+          "mode": "bank",
+          "status": "entry_actions_return_passed",
+          "method": "real menu clicks, W/J/I/K, pause/resume/quit; QA state read only",
+          "before": {
+            "state": "battle",
+            "chapter": 1,
+            "level": 1,
+            "gold": 0,
+            "player": {
+              "x": 8,
+              "z": 821,
+              "hp": 120
+            },
+            "war": null
+          },
+          "after": {
+            "state": "battle",
+            "chapter": 1,
+            "level": 1,
+            "gold": 0,
+            "player": {
+              "x": 8,
+              "z": 831.5041500000309,
+              "hp": 120
+            },
+            "war": null
+          },
+          "fullCompletion": "not_established",
+          "errors": []
+        },
+        {
+          "game": "starship-defense",
+          "mode": "rv",
+          "status": "entry_actions_return_passed",
+          "method": "real menu clicks, W/J/I/K, pause/resume/quit; QA state read only",
+          "before": {
+            "state": "battle",
+            "chapter": 1,
+            "level": 1,
+            "gold": 0,
+            "player": {
+              "x": 0,
+              "z": 1525,
+              "hp": 120
+            },
+            "war": null
+          },
+          "after": {
+            "state": "battle",
+            "chapter": 1,
+            "level": 1,
+            "gold": 0,
+            "player": {
+              "x": 3.5,
+              "z": 1538.2827999998908,
+              "hp": 120
+            },
+            "war": null
+          },
+          "fullCompletion": "not_established",
+          "errors": []
+        },
+        {
+          "game": "starship-defense",
+          "mode": "zerg",
+          "status": "entry_actions_return_passed",
+          "method": "real menu clicks, W/J/I/K, pause/resume/quit; QA state read only",
+          "before": {
+            "state": "battle",
+            "chapter": 1,
+            "level": 1,
+            "gold": 0,
+            "player": {
+              "x": -1.2060440996985058,
+              "z": 168,
+              "hp": 120
+            },
+            "war": null
+          },
+          "after": {
+            "state": "battle",
+            "chapter": 1,
+            "level": 1,
+            "gold": 0,
+            "player": {
+              "x": -1.206044099698547,
+              "z": 157.168509645653,
+              "hp": 120
+            },
+            "war": null
+          },
+          "fullCompletion": "not_established",
+          "errors": []
+        },
+        {
+          "game": "starship-defense",
+          "mode": "acid",
+          "status": "entry_actions_return_passed",
+          "method": "real menu clicks, W/J/I/K, pause/resume/quit; QA state read only",
+          "before": {
+            "state": "battle",
+            "chapter": 1,
+            "level": 1,
+            "gold": 0,
+            "player": {
+              "x": 0,
+              "z": -1700,
+              "hp": 3
+            },
+            "war": null
+          },
+          "after": {
+            "state": "battle",
+            "chapter": 1,
+            "level": 1,
+            "gold": 0,
+            "player": {
+              "x": 0,
+              "z": -1690,
+              "hp": 3
+            },
+            "war": null
+          },
+          "fullCompletion": "not_established",
+          "errors": []
+        },
+        {
+          "game": "gunfire-assembly",
+          "mode": "war2",
+          "status": "entry_actions_return_passed",
+          "method": "real menu clicks, W/J/I/K, pause/resume/quit; QA state read only",
+          "before": {
+            "state": "battle",
+            "chapter": 1,
+            "level": 1,
+            "gold": 0,
+            "player": {
+              "x": 0,
+              "z": -18,
+              "hp": 140
+            },
+            "war": {
+              "chapter": 1,
+              "phase": 0,
+              "ammo": {
+                "rifle": 5,
+                "mauser": 10,
+                "zb26": 20,
+                "arisaka": 5
+              },
+              "position": {
+                "x": 0,
+                "y": 0,
+                "z": -18
+              }
+            }
+          },
+          "after": {
+            "state": "battle",
+            "chapter": 1,
+            "level": 1,
+            "gold": 0,
+            "player": {
+              "x": 0,
+              "z": -11.665589999932038,
+              "hp": 140
+            },
+            "war": {
+              "chapter": 1,
+              "phase": 0,
+              "ammo": {
+                "rifle": 3,
+                "mauser": 10,
+                "zb26": 20,
+                "arisaka": 5
+              },
+              "position": {
+                "x": 0,
+                "y": 0.9423755199923022,
+                "z": -11.665589999932038
+              }
+            }
+          },
+          "fullCompletion": "not_established",
+          "errors": []
+        },
+        {
+          "game": "gunfire-assembly",
+          "mode": "battlefield",
+          "status": "entry_actions_return_passed",
+          "method": "real menu clicks, W/J/I/K, pause/resume/quit; QA state read only",
+          "before": {
+            "state": "battle",
+            "chapter": 1,
+            "level": 1,
+            "gold": 0,
+            "player": {
+              "x": 0,
+              "z": 767,
+              "hp": 100
+            },
+            "war": null
+          },
+          "after": {
+            "state": "battle",
+            "chapter": 1,
+            "level": 1,
+            "gold": 0,
+            "player": {
+              "x": 0,
+              "z": 776.9413999999425,
+              "hp": 100
+            },
+            "war": null
+          },
+          "fullCompletion": "not_established",
+          "errors": []
+        }
+      ]
+    },
+    "public_toy": {
+      "swarm": {
+        "version": "0.38.4",
+        "revision": "v26275",
+        "checks": [
+          "default base defense",
+          "folded four test modes"
+        ]
+      },
+      "gunfire": {
+        "version": "0.3.0",
+        "revision": "v26238",
+        "checks": [
+          "recommended campaign routes to Cangyunling",
+          "switch to Pingan in shared menu",
+          "actual return to lobby",
+          "chapter order and maturity labels"
+        ]
+      },
+      "method": "real in-app browser, existing session; not an anonymous or physical-phone test"
+    }
+  }
 }
