@@ -1,0 +1,63 @@
+{
+ "version": "web-keys-v2-v0.5.0",
+ "base_version": "web-save-ns-split-v0.4.1",
+ "game_version": "0.5.0",
+ "scope": "电脑键位 v2：大厅各模式与亮剑三章统一 CS / 吃鸡式左手布局（左键射击、右键开镜、Shift 跑、空格跳、F 互动、G 手雷、E 医疗、Q 换枪 / 亮剑、V 视角、R 换弹、Tab 战况），默认鼠标接管；键盘转视角取消（大厅可自绑）；亮剑加 Shift 往前跑；旧键作不显示的别名，老玩家提示一次。",
+ "source_commit": "cb8c1a965a41c8913aaf903217d06a9ed852b213",
+ "task_id": "f54e3773-shooter-controls-1",
+ "source": "Claude Code",
+ "user_instruction": "用户 2026-10-14：“虫潮和枪火的所有模式，要不要把pc端按键都重新调整一下，全部改为鼠标默认接管……所有右手的按键都要改到左手附近，跟cs，电脑版吃鸡类似吧。枪火那边都加入跑步按钮”；随后接受整轮方案（本版是第 1 批：键位与鼠标接管）。",
+ "validation": {
+  "local": {
+   "starship-defense/verify-keys-v2.cjs（GAME_URL=枪火）": "10/10",
+   "liangjian-pingan/qa/views.cjs": "82/82",
+   "liangjian-pingan/qa/interact.cjs": "19/19",
+   "liangjian-pingan/qa/story.cjs / cy-story.cjs / ljp-story.cjs": "19/19、26/26、40/40",
+   "liangjian-pingan/qa/options.cjs / mobile.cjs": "43/43、107/107",
+   "liangjian-pingan/qa/gunfire-chapters.cjs": "10/10",
+   "三章机器人通关（平安县城、苍云岭 hit、李家坡）": "通过",
+   "site-games/qa/mode-boot.cjs、save-namespace-split.cjs、sync-shared.mjs": "16/16、全部通过、OK"
+  },
+  "production": {
+   "verify-keys-v2.cjs（线上枪火）": "10/10（web-keys-v2/qa-keys-gunfire-prod.json）",
+   "liangjian-pingan/qa/interact.cjs（LJ_URL=线上）": "19/19"
+  },
+  "toy_preview": {
+   "url": "https://www.bilibili.com/toy/preview/preview_eKpwX3ij/index.html",
+   "package_check": "10/10（releases/web-keys-v2-v0.5.0/toy-preview.json）",
+   "keys_check": "通过（releases/web-keys-v2-v0.5.0/toy-preview-keys.json）"
+  },
+  "toy_doctor": "ok，1 条 WARN（产物文件名无内容指纹，仅建议）",
+  "entry_size": "上传入口 index.html 未压缩 68,246 字节，在 100KB 建议线内"
+ },
+ "package": {
+  "zip": "dist/toy/feidao-gunfire/feidao-gunfire.zip",
+  "zip_sha256": "ed8d7d2bc1ed0c653186a82f889dcfeb61add09aa7387f05b8f2680b4d8478cd",
+  "game.compat.js_sha256_16": "6883e2492a7b3c27（大厅）、8bb1870d3d0ef647（liangjian，与网站逐字节一致）"
+ },
+ "channels": {
+  "website": {
+   "status": "verified",
+   "version": "web-keys-v2-v0.5.0",
+   "commit": "cb8c1a965a41c8913aaf903217d06a9ed852b213",
+   "at": "2026-10-15T07:38:00+08:00",
+   "evidence": "Actions 部署 cb8c1a96 success；线上 game.compat.js sha256 前 16 位 5a062b58856f2610（大厅）、8bb1870d3d0ef647（liangjian） 与主线逐字节一致，index.html 只差部署改写的 ?v="
+  },
+  "toy": {
+   "id": 43022175699968,
+   "slug": "feidao-gunfire",
+   "status": "auditing",
+   "submitted_at": "2026-10-15T07:42:47+08:00",
+   "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_LEmPiij6/index.html",
+   "note": "同一稳定包只提交一次审核；提交前预览 https://www.bilibili.com/toy/preview/preview_eKpwX3ij/index.html 用 toy-package-check.cjs 10/10 与键位抽查通过。"
+  },
+  "taptap": {
+   "status": "not_published_by_default"
+  },
+  "bilibili_description": {
+   "status": "pending_merge",
+   "note": "键位变化记入待合并项，本轮后续批次与新视频一起更新说明"
+  }
+ },
+ "not_done": "手机真机；真实浏览器 / Toy 外壳里鼠标接管被拒绝时的回退只在模拟里测过；蹲下 / 趴下、拔刀近战、去掉骑兵连等属于下一批。"
+}

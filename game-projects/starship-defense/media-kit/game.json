@@ -10,7 +10,7 @@
   },
   "name": "虫潮围城",
   "engine": "Three.js r152",
-  "current_version": "web-drop-resistance-v0.38.7",
+  "current_version": "web-keys-v2-v0.39.0",
   "entrypoint": "public/html/game/starship-defense/index.html",
   "build_command": "cd game-projects/starship-defense && npm ci && npm run build; python build-toy.py",
   "release_intent": "web_demo",
@@ -49,7 +49,7 @@
     "slug": "chongchao-qianshao",
     "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
     "visibility": "PUBLIC",
-    "review_status": "published",
+    "review_status": "auditing",
     "verified_at": "2026-10-14T14:57:16+00:00",
     "video_bindings": [
       "BV1Grpq6JEW5",
@@ -60,16 +60,16 @@
       "BV1Ujad6DEuf"
     ],
     "linked_game_video": "https://www.bilibili.com/video/BV1Ujad6DEuf",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_38BHr3kg/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_6nP6sgwy/index.html",
     "title": "虫潮围城",
-    "zip_sha256": "44689d8799e5ac2d04fe5ed6eacf5f074f20a82347abaf53d1500b48de9d8e38",
-    "submitted_date": "2026-10-14",
-    "release_record": "releases/web-drop-resistance-v0.38.7/handoff.json",
-    "submitted_version": "web-drop-resistance-v0.38.7",
+    "zip_sha256": "077d20d585e9d4accb30a3e37a217deaea390cdbc3e70e855629498d31b4abbc",
+    "submitted_date": "2026-10-15",
+    "release_record": "releases/web-keys-v2/handoff.json",
+    "submitted_version": "web-keys-v2-v0.39.0",
     "published_version": "web-drop-resistance-v0.38.7",
     "preview_url": "https://www.bilibili.com/toy/preview/preview_EEsCwaz1/index.html",
-    "note": "0.38.7 删掉早已搬到《枪火集结》的抗战战役代码（resistance-campaign/ui/assets 与 warOn 分支、__gameQA 暴露、NAV_ROOTS），玩家可见文案同步；战地的 battlefield-* 与 vsMenu 保留，联机房间仍能进。存档键与命名空间未改（chongchao-*／sst_save_ 保持），云档仍标 starship-defense，老玩家不受影响。预览 preview_EEsCwaz1 跑过 toy-package-check.cjs 10 项后，2026-10-14T22:52:37+08:00 以同一稳定包提交一次审核（回执预览 preview_38BHr3kg），22:54 过审 published；正式入口 https://www.bilibili.com/toy/chongchao-qianshao/index.html 复跑同一脚本 10/10（包体逐字节一致、主战役真实开局、视角写 chongchao-person 且不写 gunfire-person、入口 68,409 字节、手机横屏菜单不裁切、无报错），记录见 game-projects/site-games/releases/toy-package-check-20261014/chong-public.json。实体手机未测试。",
-    "package_sha256": "44689d8799e5ac2d04fe5ed6eacf5f074f20a82347abaf53d1500b48de9d8e38",
+    "note": "web-keys-v2-v0.39.0：电脑键位 v2：所有模式默认鼠标接管，左键射击、右键举枪、空格跳、Shift 跑、F 互动 / 上下载具、G 手雷、E 医疗 / 兵种支援、Q 换枪、V 视角、B 商店、T 建造、X 开始虫潮、Tab 战况 / 队伍、C 直升机降低；键盘转视角默认不占键（可自绑）；键位存档 v2、旧自定义不沿用并提示一次，旧键作别名。 同一稳定包只提交一次审核；提交前预览 https://www.bilibili.com/toy/preview/preview_fenpWdm0/index.html 用 toy-package-check.cjs 10/10 与键位抽查通过。",
+    "package_sha256": "077d20d585e9d4accb30a3e37a217deaea390cdbc3e70e855629498d31b4abbc",
     "pending_updates": [
       {
         "version": "web-controls-v0.18.2",
@@ -135,8 +135,8 @@
     ],
     "published_entry": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
     "published_verified_at": "2026-10-14T14:57:16+00:00",
-    "status": "published",
-    "package_hash": "44689d8799e5ac2d04fe5ed6eacf5f074f20a82347abaf53d1500b48de9d8e38",
+    "status": "auditing",
+    "package_hash": "077d20d585e9d4accb30a3e37a217deaea390cdbc3e70e855629498d31b4abbc",
     "submission_time_note": "本次提交回执见 toy-submit.json；published 时间来自平台mtime，公开实测时间单独记录。",
     "public_verified_at": "2026-10-14T14:57:16+00:00",
     "public_runtime_evidence": {
@@ -227,7 +227,7 @@
     "last_successful_sync_at": "2026-10-14T14:57:16+00:00",
     "public_verified_version": "web-drop-resistance-v0.38.7",
     "video_binding_verified_at": "2026-10-09T17:53:41.810316+08:00",
-    "source_commit": "5b3044b459194cb7031dd60eae5987fe270390df",
+    "source_commit": "cb8c1a965a41c8913aaf903217d06a9ed852b213",
     "package": {
       "path": "dist/toy/chongchao-qianshao/chongchao-qianshao.zip",
       "sha256": "44689d8799e5ac2d04fe5ed6eacf5f074f20a82347abaf53d1500b48de9d8e38",
@@ -364,7 +364,7 @@
     "package_hash_kind": "zip_sha256",
     "previous_public_runtime_revision": "v25804",
     "platform_readback_at": "2026-10-14T14:57:16+00:00",
-    "submitted_at": "2026-10-14T13:15:29+00:00",
+    "submitted_at": "2026-10-15T07:42:50+08:00",
     "entry_html_bytes": 68409,
     "platform_mtime": 1791989667,
     "platform_checked_at": "2026-10-14T22:54:46+08:00",
@@ -384,8 +384,8 @@
   "extension_review_status": "published",
   "preview_version": "web-drop-resistance-v0.38.7",
   "submitted_toy_version": "web-drop-resistance-v0.38.7",
-  "website_version": "web-drop-resistance-v0.38.7",
-  "website_verified_at": "2026-10-14T23:02:00+08:00",
+  "website_version": "web-keys-v2-v0.39.0",
+  "website_verified_at": "2026-10-15T07:38:00+08:00",
   "site_list_name": "虫潮围城",
   "controls": "原有多动作按键和Shift按住冲刺保留；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。",
   "default_theme": "dark",
@@ -438,7 +438,7 @@
     "keyboard_modes": "Tab/菜单上下进入模式组，左右或A/D选项，Enter/空格/J确认，有aria-pressed选中状态"
   },
   "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
-  "website_commit": "11140d6351bc9e7e2a4006674f1035d6edda1229",
+  "website_commit": "cb8c1a965a41c8913aaf903217d06a9ed852b213",
   "campaign_difficulty": {
     "default": "normal",
     "choices": [
@@ -1114,14 +1114,15 @@
   },
   "website": {
     "status": "deployed_verified",
-    "version": "web-drop-resistance-v0.38.7",
-    "source_commit": "11140d6351bc9e7e2a4006674f1035d6edda1229",
+    "version": "web-keys-v2-v0.39.0",
+    "source_commit": "cb8c1a965a41c8913aaf903217d06a9ed852b213",
     "runtime_sha256": "3ed814b15f81868176ad0abec4ad5101ed44b3e8b609a354898fb65eb5d089a9",
     "verified_at": "2026-10-14T23:02:00+08:00",
     "record": "game-projects/site-games/releases/game-split-hygiene-20261014/notes.md",
-    "evidence": "curl 线上 game.compat.js 1,280,293 字节，sha256 3ed814b15f818681…89a9 与本地构建逐字节一致，包里搜不到抗战字符串；index.html 无 #btnResistance 残留。存档键与命名空间未改（chongchao-*／sst_save_）。2026-10-14T23:02 复验仍一致，其后 master 提交未再改 public/。",
+    "evidence": "Actions 部署 cb8c1a96 success；线上 game.compat.js sha256 前 16 位 1b19be98d507dd1e 与主线逐字节一致，index.html 只差部署改写的 ?v=",
     "runtime_file": "线上 game.compat.js（含本次 notify 分支）",
-    "runtime_bytes": 1280293
+    "runtime_bytes": 1280293,
+    "at": "2026-10-15T07:38:00+08:00"
   },
   "current_development_tool": "Codex",
   "rv_town": {

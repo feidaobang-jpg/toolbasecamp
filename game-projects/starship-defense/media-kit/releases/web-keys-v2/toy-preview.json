@@ -1,0 +1,102 @@
+{
+ "game": "chong",
+ "url": "https://www.bilibili.com/toy/preview/preview_fenpWdm0/index.html",
+ "at": "2026-10-14T23:41:06.572Z",
+ "results": [
+  {
+   "name": "预览运行的脚本与本次构建的包逐字节一致",
+   "ok": true,
+   "detail": {
+    "live": "000a5d657dd47d1a",
+    "local": "000a5d657dd47d1a",
+    "manifest": "000a5d657dd47d1a",
+    "bytes": 1283582
+   }
+  },
+  {
+   "name": "已删除的玩法不在这次的包里",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "name": "上传入口 index.html 仍在 Toy 建议的 100KB 以内",
+   "ok": true,
+   "detail": {
+    "uploadedEntryBytes": 68396,
+    "innerRuntimeDomBytes": 113435
+   }
+  },
+  {
+   "name": "Toy 包内的本地存档前缀与已发布版本一致",
+   "ok": true,
+   "detail": {
+    "live": "toy-chongchao-v1-sst_save_",
+    "want": "toy-chongchao-v1-sst_save_"
+   }
+  },
+  {
+   "name": "视角偏好写在本游戏自己的存档键上",
+   "ok": true,
+   "detail": {
+    "key": "chongchao-person",
+    "value": "first"
+   }
+  },
+  {
+   "name": "没有写另一款游戏的视角键",
+   "ok": true,
+   "detail": {
+    "key": "gunfire-person",
+    "value": null
+   }
+  },
+  {
+   "name": "预览环境里的存档键清单",
+   "ok": true,
+   "detail": [
+    "chongchao-device-mode",
+    "chongchao-person",
+    "gamehub-player-id",
+    "toy-chongchao-v1-sst_save_cloud-device"
+   ]
+  },
+  {
+   "name": "starship-defense：预览包里主玩法真实点击能开局",
+   "ok": true
+  },
+  {
+   "name": "手机横屏视口：主菜单展开的入口都在画面内",
+   "ok": true,
+   "detail": {
+    "vw": 844,
+    "vh": 346,
+    "shown": [
+     "存档",
+     "设置",
+     "更多",
+     "btnCampaign",
+     "休闲",
+     "普通",
+     "困难",
+     "btnContinue",
+     "btnStart",
+     "联机 · 2–4人"
+    ],
+    "cutOff": [],
+    "foldedReachableLater": [
+     "btnBankVersus",
+     "btnRV",
+     "btnZerg",
+     "btnAcid"
+    ]
+   }
+  },
+  {
+   "name": "桌面与手机视口都没有报错",
+   "ok": true,
+   "detail": []
+  }
+ ],
+ "errors": [],
+ "runtimeErrors": []
+}

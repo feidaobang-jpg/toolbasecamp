@@ -1,0 +1,61 @@
+{
+ "version": "web-keys-v2-v0.39.0",
+ "base_version": "web-drop-resistance-v0.38.7",
+ "game_version": "0.39.0",
+ "scope": "电脑键位 v2：所有模式默认鼠标接管，左键射击、右键举枪、空格跳、Shift 跑、F 互动 / 上下载具、G 手雷、E 医疗 / 兵种支援、Q 换枪、V 视角、B 商店、T 建造、X 开始虫潮、Tab 战况 / 队伍、C 直升机降低；键盘转视角默认不占键（可自绑）；键位存档 v2、旧自定义不沿用并提示一次，旧键作别名。",
+ "source_commit": "cb8c1a965a41c8913aaf903217d06a9ed852b213",
+ "task_id": "f54e3773-shooter-controls-1",
+ "source": "Claude Code",
+ "user_instruction": "用户 2026-10-14：“虫潮和枪火的所有模式，要不要把pc端按键都重新调整一下，全部改为鼠标默认接管……所有右手的按键都要改到左手附近，跟cs，电脑版吃鸡类似吧。枪火那边都加入跑步按钮”；随后接受整轮方案（本版是第 1 批：键位与鼠标接管）。",
+ "validation": {
+  "local": {
+   "verify-keys-v2.cjs": "21/21",
+   "verify-first-person-mouse.cjs": "通过（web-keys-v2/fps-mouse）",
+   "verify-combat-controls.mjs": "通过",
+   "verify-menu.cjs": "各视口通过",
+   "site-games/qa/mode-boot.cjs": "16/16",
+   "site-games/qa/save-namespace-split.cjs": "全部通过",
+   "site-games/shared/sync-shared.mjs": "OK"
+  },
+  "production": {
+   "verify-keys-v2.cjs（线上虫潮）": "21/21（web-keys-v2/qa-keys-starship-prod.json）"
+  },
+  "toy_preview": {
+   "url": "https://www.bilibili.com/toy/preview/preview_fenpWdm0/index.html",
+   "package_check": "10/10（releases/web-keys-v2/toy-preview.json）",
+   "keys_check": "通过（releases/web-keys-v2/toy-preview-keys.json）"
+  },
+  "toy_doctor": "ok，1 条 WARN（产物文件名无内容指纹，仅建议）",
+  "entry_size": "上传入口 index.html 未压缩 68,396 字节，在 100KB 建议线内"
+ },
+ "package": {
+  "zip": "dist/toy/chongchao-qianshao/chongchao-qianshao.zip",
+  "zip_sha256": "077d20d585e9d4accb30a3e37a217deaea390cdbc3e70e855629498d31b4abbc",
+  "game.compat.js_sha256_16": "000a5d657dd47d1a"
+ },
+ "channels": {
+  "website": {
+   "status": "verified",
+   "version": "web-keys-v2-v0.39.0",
+   "commit": "cb8c1a965a41c8913aaf903217d06a9ed852b213",
+   "at": "2026-10-15T07:38:00+08:00",
+   "evidence": "Actions 部署 cb8c1a96 success；线上 game.compat.js sha256 前 16 位 1b19be98d507dd1e 与主线逐字节一致，index.html 只差部署改写的 ?v="
+  },
+  "toy": {
+   "id": 38678478981120,
+   "slug": "chongchao-qianshao",
+   "status": "auditing",
+   "submitted_at": "2026-10-15T07:42:50+08:00",
+   "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_6nP6sgwy/index.html",
+   "note": "同一稳定包只提交一次审核；提交前预览 https://www.bilibili.com/toy/preview/preview_fenpWdm0/index.html 用 toy-package-check.cjs 10/10 与键位抽查通过。"
+  },
+  "taptap": {
+   "status": "not_published_by_default"
+  },
+  "bilibili_description": {
+   "status": "pending_merge",
+   "note": "键位变化记入待合并项，本轮后续批次与新视频一起更新说明"
+  }
+ },
+ "not_done": "手机真机；真实浏览器 / Toy 外壳里鼠标接管被拒绝时的回退只在模拟里测过；蹲下 / 趴下、拔刀近战、去掉骑兵连等属于下一批。"
+}
