@@ -10,17 +10,17 @@
   },
   "name": "虫潮围城",
   "engine": "Three.js r152",
-  "current_version": "web-mode-focus-v0.38.3",
+  "current_version": "web-opening-hints-v0.38.5",
   "entrypoint": "public/html/game/starship-defense/index.html",
   "build_command": "cd game-projects/starship-defense && npm ci && npm run build; python build-toy.py",
   "release_intent": "web_demo",
   "development_model": "Codex（抗战战役、战地据点模式）；历史版本工具见各 release",
   "toy_id": "38678478981120",
-  "publication_status": "website_pending_toy_pending",
-  "preview_url": "https://www.bilibili.com/toy/preview/preview_BEbUAQjC/index.html",
+  "publication_status": "website_published_toy_published",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_nObJMC9b/index.html",
   "public_play_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
   "media_readiness": "酸液围场开发阶段与操作证据已留存，原片无音轨；正式视频须另行取材审片",
-  "qa": "releases/web-acid-arena-v0.38.0/handoff.json",
+  "qa": "releases/web-opening-hints-v0.38.5/qa.json",
   "pending_toy_merge": [
     {
       "version": "web-zerg-corpse-spinfix-v0.33.3-combined",
@@ -33,13 +33,15 @@
     },
     {
       "version": "web-fps-rules-v0.34.0",
-      "status": "blocked_needs_user",
+      "status": "superseded",
       "package_sha256": "c59dd29758b2d4bd41ea52cc8b709f82213214b8bf35bcfd4b492213ad41f3ca",
       "source_commit": "3767ef0bdc27b8ebdee31402d76eb867c027ab47",
       "preview_url": "https://www.bilibili.com/toy/preview/preview_6GeeraCn/index.html",
       "reason": "预览电脑+手机视口实测通过，--yes 提审第 9 次返回 307008 无权限操作；mylist 仍为 published 且 mtime 未推进，登录正常",
       "action": "本人确认 Toy 后台后，从主线最新提交重新构建并补提；此前待补提的包均已被本包包含",
-      "record": "releases/web-fps-rules-v0.34.0/handoff.json"
+      "record": "releases/web-fps-rules-v0.34.0/handoff.json",
+      "superseded_by": "web-hud-layout-v0.38.4",
+      "resolution": "0.38.4 合并包（主线 98583053）已含该内容，2026-10-14T18:31:51+08:00 提审成功并于 18:32:25 published，未再出现 307008。"
     }
   ],
   "toy": {
@@ -48,7 +50,7 @@
     "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
     "visibility": "PUBLIC",
     "review_status": "published",
-    "verified_at": "2026-10-14T09:28:24+08:00",
+    "verified_at": "2026-10-14T12:41:14.487816+00:00",
     "video_bindings": [
       "BV1Grpq6JEW5",
       "BV14hpL62EZ5",
@@ -58,16 +60,16 @@
       "BV1Ujad6DEuf"
     ],
     "linked_game_video": "https://www.bilibili.com/video/BV1Ujad6DEuf",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_hgn7SJ2K/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_h630MSiH/index.html",
     "title": "虫潮围城",
-    "zip_sha256": "22fe69d2c153381252ae9edb3fb8152295b3ea8920fce9fcdd6da922425b75f1",
+    "zip_sha256": "919f6ebdb4df14f732411e4cef2eda17bd02d92a852c12eab3ae614f91653dc6",
     "submitted_date": "2026-10-14",
-    "release_record": "releases/web-look-keys-v0.38.1/handoff.json",
-    "submitted_version": "web-look-keys-v0.38.1",
-    "published_version": "web-look-keys-v0.38.1",
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_dnjzefbX/index.html",
-    "note": "0.38.1（H/Y 键位迁移）于 2026-10-14T09:25:24+08:00 提交审核，已过审并于 2026-10-14T09:28:24+08:00 未登录核验正式入口。",
-    "package_sha256": "4e56f4d4a037b2f3bab76a3a3b315865d9530ccd956aac178e278b24caeec8cb",
+    "release_record": "releases/web-opening-hints-v0.38.5/handoff.json",
+    "submitted_version": "web-opening-hints-v0.38.5",
+    "published_version": "web-opening-hints-v0.38.5",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_nObJMC9b/index.html",
+    "note": "0.38.5开局提示包只提交一次，平台已published；正式入口显示v0.38.5，未登录双视口菜单、操作模式切换与续档通过。实体手机未测试。",
+    "package_sha256": "919f6ebdb4df14f732411e4cef2eda17bd02d92a852c12eab3ae614f91653dc6",
     "pending_updates": [
       {
         "version": "web-controls-v0.18.2",
@@ -117,40 +119,101 @@
         "status": "pending_22_batch",
         "summary": "抗战默认第一人称与举枪瞄准；橙金曳光和简化弹道；拖炮/高低调节/预计落点；手机按钮层级修复。",
         "record": "releases/web-resistance-aim-v0.33.1/handoff.json"
+      },
+      {
+        "version": "web-hud-layout-v0.38.4",
+        "classification": "普通补丁",
+        "summary": "主战役 HUD 重排：本章提示与保存状态胶囊移入左栏、开战与战术/指挥合成底部备战条，六个视口面板零重叠，手机上战术部署与队友指令恢复可点。",
+        "status": "published",
+        "submitted_at": "2026-10-14T18:31:51+08:00",
+        "published_verified_at": "2026-10-14T18:34:00+08:00",
+        "package_sha256": "0dcf451d3ae7765c6fe048bf6c4c4774f22061d2d1c5d264165ec10885ecdea3",
+        "record": "releases/web-hud-layout-20261014/handoff.json"
       }
     ],
     "published_entry": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
-    "published_verified_at": "2026-10-13T20:08:24.969238+08:00",
+    "published_verified_at": "2026-10-14T12:41:14.487816+00:00",
     "status": "published",
-    "package_hash": "4e56f4d4a037b2f3bab76a3a3b315865d9530ccd956aac178e278b24caeec8cb",
+    "package_hash": "919f6ebdb4df14f732411e4cef2eda17bd02d92a852c12eab3ae614f91653dc6",
     "submission_time_note": "本次提交回执见 toy-submit.json；published 时间来自平台mtime，公开实测时间单独记录。",
-    "public_verified_at": "2026-10-13T20:08:24.969238+08:00",
+    "public_verified_at": "2026-10-14T12:41:14.487816+00:00",
     "public_runtime_evidence": {
       "status": "public_verified",
-      "at": "2026-10-13T20:08:24.969238+08:00",
-      "version": "web-acid-arena-v0.38.0",
-      "source_commit": "778b8611d52d1aaac02b61ee131ae5e82ee468c2",
-      "authenticated": false,
-      "sdk_mocked": false,
-      "viewports": [
-        [
-          1280,
-          720
-        ],
-        [
-          390,
-          844
+      "version": "web-opening-hints-v0.38.5",
+      "verified_at": "2026-10-14T12:41:14.487816+00:00",
+      "platform_status": "published",
+      "platform_mtime": 1791980349,
+      "published_at": "2026-10-14T12:19:09+00:00",
+      "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+      "runtime_iframe": "https://www.bilibilitoy.com/toy/chongchao-qianshao/38678478981120-v26319/index.html",
+      "visible_version": "v0.38.5",
+      "package_sha256": "919f6ebdb4df14f732411e4cef2eda17bd02d92a852c12eab3ae614f91653dc6",
+      "guest_behavior_results": {
+        "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+        "results": [
+          {
+            "viewport": [
+              1280,
+              580
+            ],
+            "passed": true,
+            "touch": false,
+            "authenticated": false,
+            "scroll": {
+              "before": 0,
+              "after": 312,
+              "back": 0
+            },
+            "checks": [
+              "mode selection and back",
+              "fixed actions and utilities",
+              "touch/keyboard scrolling",
+              "input mode switching",
+              "dark pause",
+              "resume and return",
+              "local save menu and continue"
+            ],
+            "limitations": [
+              "browser simulation; physical phone not tested"
+            ]
+          },
+          {
+            "viewport": [
+              390,
+              844
+            ],
+            "passed": true,
+            "touch": true,
+            "authenticated": false,
+            "scroll": {
+              "before": 0,
+              "after": 221,
+              "back": 0
+            },
+            "checks": [
+              "mode selection and back",
+              "fixed actions and utilities",
+              "touch/keyboard scrolling",
+              "input mode switching",
+              "dark pause",
+              "resume and return",
+              "local save menu and continue"
+            ],
+            "limitations": [
+              "browser simulation; physical phone not tested"
+            ]
+          }
         ]
-      ],
-      "record": "releases/web-acid-arena-v0.38.0/handoff.json",
+      },
+      "screenshot": "D:/project/task-evidence/game-mode-focus-20261014/swarm-public-v0.38.5.png",
       "physical_phone_tested": false
     },
-    "version": "web-acid-arena-v0.38.0",
-    "published_at": "2026-10-13T19:59:09+08:00",
+    "version": "web-opening-hints-v0.38.5",
+    "published_at": "2026-10-14T12:19:09+00:00",
     "publication_time_note": "平台mtime记录为本次published状态时间；公开实测时间另记。",
-    "last_published_version": "web-acid-arena-v0.38.0",
-    "last_submitted_version": "web-acid-arena-v0.38.0",
-    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_nsBzT0j2/index.html",
+    "last_published_version": "web-opening-hints-v0.38.5",
+    "last_submitted_version": "web-opening-hints-v0.38.5",
+    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_h630MSiH/index.html",
     "current_public_verification": "verified",
     "channel_authorization": {
       "instruction": "昨天没发布的都做一下",
@@ -158,21 +221,21 @@
       "recorded_at": "2026-10-10T03:02:52.978211+00:00",
       "scope": "2026-10-09 已完成并已发布网站的冻结版本补发；替代昨日其他渠道暂缓指令，不包含新视频或其他未完成开发"
     },
-    "last_successful_sync_version": "web-acid-arena-v0.38.0",
-    "last_successful_sync_at": "2026-10-13T20:08:24.969238+08:00",
-    "public_verified_version": "web-acid-arena-v0.38.0",
+    "last_successful_sync_version": "web-opening-hints-v0.38.5",
+    "last_successful_sync_at": "2026-10-14T12:41:14.487816+00:00",
+    "public_verified_version": "web-opening-hints-v0.38.5",
     "video_binding_verified_at": "2026-10-09T17:53:41.810316+08:00",
-    "source_commit": "778b8611d52d1aaac02b61ee131ae5e82ee468c2",
+    "source_commit": "c3942f2d",
     "package": {
-      "path": "C:/Users/37818/.claude/state/game-releases/artifacts/acid-arena-20261013/chongchao-qianshao-v0.38.0.zip",
-      "sha256": "4e56f4d4a037b2f3bab76a3a3b315865d9530ccd956aac178e278b24caeec8cb",
-      "bytes": 444902,
+      "path": "D:/project/task-evidence/game-mode-focus-20261014/packages/chongchao-qianshao-v0.38.5.zip",
+      "sha256": "919f6ebdb4df14f732411e4cef2eda17bd02d92a852c12eab3ae614f91653dc6",
+      "bytes": 448013,
       "submitted": true
     },
-    "submitted_package_sha256": "4e56f4d4a037b2f3bab76a3a3b315865d9530ccd956aac178e278b24caeec8cb",
+    "submitted_package_sha256": "919f6ebdb4df14f732411e4cef2eda17bd02d92a852c12eab3ae614f91653dc6",
     "watermark_enabled": false,
-    "last_zip_sha256": "4e56f4d4a037b2f3bab76a3a3b315865d9530ccd956aac178e278b24caeec8cb",
-    "last_preview_url": "https://www.bilibili.com/toy/preview/preview_BEbUAQjC/index.html",
+    "last_zip_sha256": "919f6ebdb4df14f732411e4cef2eda17bd02d92a852c12eab3ae614f91653dc6",
+    "last_preview_url": "https://www.bilibili.com/toy/preview/preview_nObJMC9b/index.html",
     "public_verified_without_login": true,
     "public_runtime_history": [
       {
@@ -211,14 +274,65 @@
           ]
         ],
         "record": "releases/web-fire-v0.37.3/toy-public-qa.json"
+      },
+      {
+        "status": "public_verified",
+        "at": "2026-10-14T18:34:00+08:00",
+        "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+        "version": "web-hud-layout-v0.38.4",
+        "source_commit": "985830534f1861d69575832774f26a923aca84e5",
+        "package_sha256": "0dcf451d3ae7765c6fe048bf6c4c4774f22061d2d1c5d264165ec10885ecdea3",
+        "authenticated": false,
+        "sdk_mocked": false,
+        "viewports": [
+          [
+            1280,
+            720
+          ],
+          [
+            844,
+            390
+          ]
+        ],
+        "checks": [
+          "inner frame loaded",
+          "new hudLeft/prepDock present",
+          "clicked 开始新游戏 into prep",
+          "HUD zero overlap",
+          "no page errors"
+        ],
+        "record": "releases/web-hud-layout-20261014/handoff.json",
+        "physical_phone_tested": false
+      },
+      {
+        "status": "public_verified",
+        "at": "2026-10-13T20:08:24.969238+08:00",
+        "version": "web-acid-arena-v0.38.0",
+        "source_commit": "778b8611d52d1aaac02b61ee131ae5e82ee468c2",
+        "authenticated": false,
+        "sdk_mocked": false,
+        "viewports": [
+          [
+            1280,
+            720
+          ],
+          [
+            390,
+            844
+          ]
+        ],
+        "record": "releases/web-acid-arena-v0.38.0/handoff.json",
+        "physical_phone_tested": false
       }
     ],
     "package_hash_kind": "zip_sha256",
     "previous_public_runtime_revision": "v25804",
-    "platform_readback_at": "2026-10-13T20:08:24.969238+08:00"
+    "platform_readback_at": "2026-10-14T12:41:14.487816+00:00",
+    "submitted_at": "2026-10-14T12:15:35.198695+00:00",
+    "entry_html_bytes": 68409
   },
   "website_url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
-  "published_toy_version": "web-look-keys-v0.38.1",
+  "published_toy_version": "web-opening-hints-v0.38.5",
   "web_toy_versions_match": true,
   "migration": {
     "source": "D:/project/gpt/worlds/breachline",
@@ -230,14 +344,14 @@
   "steam_status": "Optional possibility only; Toy/video response determines any future decision",
   "extension_review_status": "published",
   "preview_version": "web-acid-arena-v0.38.0",
-  "submitted_toy_version": "web-look-keys-v0.38.1",
-  "website_version": "web-look-keys-v0.38.1",
-  "website_verified_at": "2026-10-14T09:23:54+08:00",
+  "submitted_toy_version": "web-opening-hints-v0.38.5",
+  "website_version": "web-opening-hints-v0.38.5",
+  "website_verified_at": "2026-10-14T12:08:10.901968+00:00",
   "site_list_name": "虫潮围城",
   "controls": "原有多动作按键和Shift按住冲刺保留；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。",
   "default_theme": "dark",
   "feedback_ledger": "feedback-ledger.json",
-  "handoff": "releases/web-mode-focus-v0.38.3/handoff.json",
+  "handoff": "releases/web-opening-hints-v0.38.5/handoff.json",
   "squad_controls": "商店雇佣机枪/突击/医疗/工程队友；准备阶段免费转职，强化保留；队友卡片分配四种已购载具，玩家I接管；暂停菜单跟随/守基地。",
   "environments": {
     "desert": "第1–3章：荒漠，可选白天/夜晚",
@@ -285,7 +399,7 @@
     "keyboard_modes": "Tab/菜单上下进入模式组，左右或A/D选项，Enter/空格/J确认，有aria-pressed选中状态"
   },
   "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
-  "website_commit": "8e21b906824401afc8eb813f12352e71bb241038",
+  "website_commit": "c3942f2d",
   "campaign_difficulty": {
     "default": "normal",
     "choices": [
@@ -954,27 +1068,18 @@
     "handoff": "releases/web-three-lanes-v0.31.0/handoff.json"
   },
   "pending_channel_release": {
-    "version": "web-resistance-v0.33.0",
-    "record": "releases/backfill-20261010/release-status.json",
-    "status": "partial_external_pending",
-    "pending": [
-      {
-        "channel": "xiaohongshu",
-        "platform_ids": [
-          "6ac79a4a000000001402cad8",
-          "6ac79a330000000001008c04"
-        ],
-        "status": "reviewing",
-        "next_action": "已有两条说明修改在审核，查回状态；未生效前不推进公开基线，不重复提交。"
-      }
-    ]
+    "version": "web-opening-hints-v0.38.5",
+    "channel": "Toy",
+    "status": "auditing",
+    "record": "releases/web-opening-hints-v0.38.5/handoff.json"
   },
   "website": {
     "status": "deployed_verified",
-    "version": "web-look-keys-v0.38.1",
-    "source_commit": "8e21b906824401afc8eb813f12352e71bb241038",
-    "verified_at": "2026-10-14T09:23:54+08:00",
-    "record": "releases/web-look-keys-v0.38.1/website-hashes.json"
+    "version": "web-opening-hints-v0.38.5",
+    "source_commit": "c3942f2d",
+    "runtime_sha256": "df8efd5edfe3812d99239ad149640f940edd2e1fb38484f9c6ee648c5c26e71e",
+    "verified_at": "2026-10-14T12:08:10.901968+00:00",
+    "record": "releases/web-opening-hints-v0.38.5/hints-website.json"
   },
   "current_development_tool": "Codex",
   "rv_town": {
@@ -1355,6 +1460,25 @@
       },
       "previous_pending_record": "releases/web-camera-response-v0.31.2/release-status.json",
       "source_commit": "a47bc064903f499c7bb3b2e14205a70dbe13cbda"
+    },
+    {
+      "reason": "保留历史外部状态；用户2026-10-12后只维护B站，本轮不接管其他平台",
+      "archived_record": {
+        "version": "web-resistance-v0.33.0",
+        "record": "releases/backfill-20261010/release-status.json",
+        "status": "partial_external_pending",
+        "pending": [
+          {
+            "channel": "xiaohongshu",
+            "platform_ids": [
+              "6ac79a4a000000001402cad8",
+              "6ac79a330000000001008c04"
+            ],
+            "status": "reviewing",
+            "next_action": "已有两条说明修改在审核，查回状态；未生效前不推进公开基线，不重复提交。"
+          }
+        ]
+      }
     }
   ],
   "last_backfill_record": "releases/backfill-20261010/release-status.json",

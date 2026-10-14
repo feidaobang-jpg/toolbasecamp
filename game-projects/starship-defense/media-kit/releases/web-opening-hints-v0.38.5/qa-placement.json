@@ -1,0 +1,38 @@
+[
+  {
+    "viewport": [
+      1280,
+      720
+    ],
+    "before": {
+      "gold": 150,
+      "count": 3,
+      "text": "✖ 城门通道要留空：前后移动换位置"
+    },
+    "after": {
+      "gold": 50,
+      "count": 4,
+      "text": "✖ 金币不足（需要 100）"
+    },
+    "errors": [],
+    "method": "actual new game, build, blocked confirm, W, successful confirm; read-only QA snapshot"
+  },
+  {
+    "viewport": [
+      844,
+      346
+    ],
+    "before": {
+      "gold": 150,
+      "count": 3,
+      "text": "✖ 城门通道要留空：前后移动换位置"
+    },
+    "after": {
+      "gold": 50,
+      "count": 4,
+      "text": "✖ 金币不足（需要 100）"
+    },
+    "errors": [],
+    "method": "actual new game, build, blocked confirm, W, successful confirm; read-only QA snapshot"
+  }
+]

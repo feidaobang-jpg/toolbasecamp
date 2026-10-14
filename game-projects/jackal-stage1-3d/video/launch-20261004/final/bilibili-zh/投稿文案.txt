@@ -17,7 +17,7 @@ https://www.bilibili.com/v/topic/detail?topic_id=1346285
 【简介】
 驾驶小吉普炸营房、救俘虏、升级火箭，再把人送上直升机。海滩登陆与废墟城两关现已上线：本期录了两关实战，第二关翻车一次后重新整备，最终完成救援与关底挑战。
 
-本作使用 Claude 辅助开发，是《赤色要塞》的粉丝向非官方重置。方向键/WASD移动，J机枪，K手雷或火箭，C切换视角；默认3格护甲、无限命，机枪跟随车头。
+是《赤色要塞》的粉丝向非官方重置。方向键/WASD移动，J机枪，K手雷或火箭，C切换视角
 
 哔哩哔哩 Toy 试玩：
 https://www.bilibili.com/toy/feidao-jackal-3d/index.html

@@ -1,0 +1,65 @@
+[
+  {
+    "game": "starship-defense",
+    "file": "index.html",
+    "match_except_deploy_cache_query": true,
+    "sha256": "61fba094f82c89c4c16e87cc5ac945d9e60ebb3ac96b879ea3a114eaae511d53",
+    "at": "2026-10-14T11:49:21.265465+00:00"
+  },
+  {
+    "game": "starship-defense",
+    "file": "game.compat.js",
+    "match_except_deploy_cache_query": true,
+    "sha256": "5c5562af6d9d36879cb1597847e14603689a845a1c7b9ea14eb5d8f222de552c",
+    "at": "2026-10-14T11:49:24.587298+00:00"
+  },
+  {
+    "game": "starship-defense",
+    "file": "menu-shell.js",
+    "match_except_deploy_cache_query": true,
+    "sha256": "dca16071f4ce25e09a9390b1b037d3014e8e630850370330092f573a9945b45b",
+    "at": "2026-10-14T11:49:25.247846+00:00"
+  },
+  {
+    "game": "starship-defense",
+    "file": "menu.css",
+    "match_except_deploy_cache_query": true,
+    "sha256": "3e45b137bfa345439e3a6f625b4487155cff27e44c3bb555be5b0491880aaeda",
+    "at": "2026-10-14T11:49:25.339561+00:00"
+  },
+  {
+    "game": "gunfire-assembly",
+    "file": "index.html",
+    "match_except_deploy_cache_query": true,
+    "sha256": "1bce5897321ac3424332512065f5e5764e22300cc2b43b8b1742a3c8c7ba64b4",
+    "at": "2026-10-14T11:49:25.531445+00:00"
+  },
+  {
+    "game": "gunfire-assembly",
+    "file": "game.compat.js",
+    "match_except_deploy_cache_query": true,
+    "sha256": "f57089d8e3f8bdba8f456a39c318ea1fedba47e7ea5da31bd5987272eb69c828",
+    "at": "2026-10-14T11:49:29.913684+00:00"
+  },
+  {
+    "game": "gunfire-assembly",
+    "file": "liangjian/index.html",
+    "match_except_deploy_cache_query": true,
+    "sha256": "adf054a9486bab75b3eeb940d4078ef60f4b8f8588ed0e0b62cd12382d570992",
+    "at": "2026-10-14T11:49:30.972252+00:00"
+  },
+  {
+    "game": "gunfire-assembly",
+    "file": "liangjian/game.compat.js",
+    "match_except_deploy_cache_query": true,
+    "sha256": "f5a259ef98153b785215c9cca630ed5697450198a2dcf785fd2d3596fa0f14f3",
+    "at": "2026-10-14T11:49:32.328335+00:00"
+  },
+  {
+    "game": "gunfire-assembly",
+    "file": "resistance-ui.js",
+    "match_except_deploy_cache_query": true,
+    "sha256": "21b54ff70a7d32c00832863a4d3b2d87b0b8d6f52096f88b6af0de81560356e6",
+    "at": "2026-10-14T11:49:33.676011+00:00"
+  }
+]

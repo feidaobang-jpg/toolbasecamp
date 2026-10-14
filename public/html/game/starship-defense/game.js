@@ -3029,6 +3029,18 @@ function tacticalPreview(){
     info:[...groups].map(([name,count])=>name+' '+count+'只').join(' · ')+'\n入口：'+mouths+(extra?'\n另有 '+extra+' 只场上野怪加入进攻':''),
     hint:plan.hint,supply:openingSupply(Game.chapter,Game.level,Game.loop)};
 }
+/* 本章完整说明：战场中间只留一行短提示，细则收进「战术部署」面板，免得面板糊住战场（用户2026-10-14） */
+function chapterBriefing(){
+  if(Game.testMode)return '自由测试：玩家、小队、载具与基地无敌，资源无限；在测试台可暂停刷怪、召唤首领、领取装备。战役虫潮预告不用于自由测试。';
+  if(operations.active)return '副本使用独立目标与敌人配置；战役虫潮在返回基地后继续。副本内全员暂时跟随，返回后恢复各人的留守与出击任务。';
+  const hive=Game.hive.killed
+    ?'母皇已击杀：后续虫潮减弱约 35%，本章每次通关补给 +'+queenSupply()+' 金币。'
+    :'早杀母皇：本章通关领补给；晚杀：完整虫潮掉落更多，也更难防守。';
+  return (Game.level===1?'本章（'+chapterCfg().name+'）：'+chapterCfg().tip+'\n':'')
+    +'守住基地，耐久归零即失败；玩家阵亡会在基地复活，基地损伤保留。\n'
+    +'整备：'+keyBindings.label('O')+' 商店买枪强化 · '+keyBindings.label('L')+' 建造炮塔与城墙 · '+keyBindings.label('R')+' 准备完毕开战。\n'
+    +hive;
+}
 function startPrep(){
   setBattlefieldEnvironment(environmentForChapter(Game.chapter));
   Game.state='prep';
@@ -3052,8 +3064,9 @@ function startPrep(){
   if(!Game.testMode)spawnHive();
   $('readyBtn').classList.remove('hidden');
   showMsg(levelName(),3);
-  const tip=Game.level===1?'本章提示：'+chapterCfg().tip+' · ':'';
-  showHint(tip+'守住基地，耐久归零即失败；玩家阵亡会复活。O 商店，L 建造，整备后点「准备完毕」或 R 开战。'+(Game.hive.killed?' 本章每次通关补给 +'+queenSupply()+' 金币。':' 早杀母皇：本章通关领补给；晚杀：多打虫赚掉落。'));
+  const tip=Game.level===1?'本章：'+chapterCfg().tip+' · ':'';
+  const opening=currentWavePlan();
+  showHint(!Game.testMode&&opening.opening?opening.hint+' · '+keyBindings.label('O')+' 商店 · '+keyBindings.label('L')+' 建造 · '+keyBindings.label('R')+' 开战':tip+keyBindings.label('O')+' 商店 · '+keyBindings.label('L')+' 建造 · '+keyBindings.label('R')+' 开战 · 守住基地');
   if(collected)setTimeout(()=>showMsg('💰 战场金币已自动回收 +'+collected,2),900);
   autoSave();
 }
@@ -3063,7 +3076,7 @@ function startBattle(){
   if(Game.testMode){openSandbox();return;}
   Game.state='battle';
   $('readyBtn').classList.add('hidden');
-  showHint('守住基地！耐久归零即失败；清完本关进入下一关准备。'+(Game.hive.killed?' 母皇已死，后续虫潮减弱；本关通关补给 +'+queenSupply()+' 金币。':' 母皇存活，完整虫潮掉落更多，也更难防守。'));
+  showHint('守住基地，耐久归零即失败 · 清完本关进下一关 · '+(Game.hive.killed?'母皇已死，虫潮减弱':'母皇存活，掉落更多也更难守'));
   // 剩余野怪加入进攻；老巢护卫与母皇留守
   for(const mo of monsters){if(!mo.home)mo.wild=false;}
   const w=Game.wave,current=waveMonsters().length;
@@ -3372,7 +3385,7 @@ function placementCheck(kind,x,z,yaw){
   const gold=vsOn()?(versus.seatOf(player)?.gold||0):Game.gold;
   if(!place.free&&!Game.testMode&&gold<cfg.price)return '金币不足（需要 '+cfg.price+'）';
   if(x<WORLD.minX+3||x>WORLD.maxX-3||z<WORLD.minZ+3||z>WORLD.maxZ-3)return '超出地图边界';
-  if(Math.abs(x-gate.pos.x)<7.5&&Math.abs(z-gate.pos.z)<2.4)return '不能堵住城门';
+  if(Math.abs(x-gate.pos.x)<7.5&&Math.abs(z-gate.pos.z)<2.4)return '城门通道要留空：前后移动换位置';
   const pts=kind==='wall'?[-2.4,0,2.4].map(o=>[x+Math.cos(yaw)*o,z-Math.sin(yaw)*o]):[[x,z]];
   const r=kind==='wall'?.75:kind==='bunker'?2.4:1.3;
   for(const [px,pz] of pts){
@@ -3687,7 +3700,7 @@ function newGame(test){
     Object.keys(SQUAD_ROLES).forEach((role,i)=>squadGear(i).role=role);
     for(let i=0;i<4;i++)spawnSquad();Game.squadCount=squad.length;
     Game.state='battle';$('readyBtn').classList.add('hidden');
-    sandboxSpawn('showcase');showHint('自由测试：持续虫潮 / 无敌 / 无限弹药 · T 测试台：暂停刷怪、召唤首领、领取装备');
+    sandboxSpawn('showcase');showHint('自由测试：持续虫潮 · 无敌 · 无限弹药 · T 开测试台');
     showMsg('🧪 自由测试 · 玩家、小队、载具与基地无敌',3);
   }
 }
@@ -3754,7 +3767,10 @@ function updHUD(dt){
   $('baseTxt').textContent=Game.testMode?'∞ 无敌':Math.ceil(base.hp)+'/'+base.maxHp;
   $('baseBar').style.width=clamp(base.hp/base.maxHp*100,0,100)+'%';
   $('baseBarWrap').classList.toggle('low',!Game.testMode&&(base.hp<base.maxHp*.3||Game.baseAlarm>0));
-  $('baseAlert').textContent=Game.testMode?'自由测试：基地无敌':Game.baseAlarm>0?'⚠ 基地受袭，立即回防！':base.hp<base.maxHp*.3?'⚠ 基地危急，耐久归零即失败':'基地耐久归零即失败';
+  const alertTxt=Game.testMode?'自由测试：基地无敌':Game.baseAlarm>0?'⚠ 基地受袭，立即回防！':base.hp<base.maxHp*.3?'⚠ 基地危急，耐久归零即失败':'基地耐久归零即失败';
+  $('baseAlert').textContent=alertTxt;
+  // 手机左栏要让开摇杆：一切正常时这句安抚话不占位，受袭或危急才显示（用户2026-10-14）
+  $('baseAlert').classList.toggle('calm',!Game.baseAlarm&&base.hp>=base.maxHp*.3);
   const dx=base.pos.x-player.pos.x,dz=base.pos.z-player.pos.z;
   const sx=-Math.cos(camYaw)*dx+Math.sin(camYaw)*dz,sy=-Math.sin(camYaw)*dx-Math.cos(camYaw)*dz;
   const arrows=['→','↘','↓','↙','←','↖','↑','↗'];
@@ -4227,7 +4243,7 @@ function loop(){
 }
 const operations=createOperations({Game,player,monsters,squad,THREE,scene,showMsg,showHint,findFreeSpot,groundY,exitVehicle,clearEntities,autoSave,closePanels,collectAllGold,startPrep,showHUD,spawnMonster,playerDamage,getYaw:()=>camYaw,canWalk:(x,z,r)=>!collideWalls(x,z,r)&&!tooSteep(x,z),
   resetCamera(){camState.init=false;},openPanel(){closePanels();Input.reset();panelOpen=true;$('operationsPanel').classList.remove('hidden');if(document.pointerLockElement)document.exitPointerLock();}});
-const tacticalPanel=mountTacticalPanel({Game,squad,vehicles,squadGear,squadRole,squadBehavior,setSquadTask,setSquadMemberTask,setSquadAutoDefense,openingSupply,preview:tacticalPreview,closePanels,resetInput:()=>Input.reset(),autoSave,
+const tacticalPanel=mountTacticalPanel({Game,squad,vehicles,squadGear,squadRole,squadBehavior,setSquadTask,setSquadMemberTask,setSquadAutoDefense,openingSupply,preview:tacticalPreview,chapterTip:chapterBriefing,closePanels,resetInput:()=>Input.reset(),autoSave,
   operationActive:()=>operations.active,cancelPlacement:()=>cancelPlacement(true),setPanelOpen:v=>{markPanelOpen();panelOpen=v;AudioSys.pause(v||Game.state==='paused');},releasePointer:()=>{if(document.pointerLockElement)document.exitPointerLock();}});
 function actionLabel(a){return (bankOn()?{R:'出兵',O:'买枪',L:'建造',Z:'换路线',N0:'升级银行',T:'队伍'}[a]:null)||(battleOn()?{R:'换弹',O:'装备',L:'部署',Z:'举枪',H:'兵种支援',T:'战况',C:'载具视角'}[a]:null)||KEY_ACTIONS[a][0];}
 function syncKeyLabels(){

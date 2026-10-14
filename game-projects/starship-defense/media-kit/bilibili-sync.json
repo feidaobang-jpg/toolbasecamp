@@ -7,21 +7,21 @@
     {
       "bvid": "BV1WbHq6eEBt",
       "url": "https://www.bilibili.com/video/BV1WbHq6eEBt/",
-      "last_public_verified_version": "web-acid-arena-v0.38.0",
+      "last_public_verified_version": "web-mode-focus-v0.38.3",
       "status": "public_verified",
       "submit_toast": "稿件投递成功",
       "description_revision": "web-acid-arena-v0.38.0",
-      "description_public_verified_at": "2026-10-13T12:06:35.561Z",
-      "description_sha256": "1e9fbbb415718b039d8bf31e56f52114a29d0a192b1e3f6ec4546f1f166e626f",
+      "description_public_verified_at": "2026-10-14T11:39:30.227Z",
+      "description_sha256": "456d55f33fe607483f458758197879187e9b8c040d3bd0b64f7a0118bee0d1af",
       "submitted_version": "web-acid-arena-v0.38.0",
       "submitted_at": "2026-10-12T12:25:02.395Z",
       "lastPublicVerifiedVersion": "web-acid-arena-v0.38.0",
       "publicVerifiedAt": "2026-10-13T12:06:35.561Z",
       "descriptionHash": "1e9fbbb415718b039d8bf31e56f52114a29d0a192b1e3f6ec4546f1f166e626f",
       "public_verified_at": "2026-10-13T12:06:35.561Z",
-      "last_public_verified_at": "2026-10-13T12:06:35.561Z",
+      "last_public_verified_at": "2026-10-14T11:39:30.227Z",
       "new_episode_guide_record": "../video/wish-versus-20261008/work/publication-result.json",
-      "record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
+      "record": "../../site-games/releases/mode-focus-20261014/bilibili-entrances.json",
       "description_hash_note": "UTF-8 normalized paragraph text without trailing newline; exact match to public text",
       "last_sync_record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
       "release_record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
@@ -52,25 +52,36 @@
         "web-menu-v0.37.0"
       ],
       "pending_updates": [],
-      "pending_stable_versions": []
+      "pending_stable_versions": [],
+      "sync_history": [
+        {
+          "last_public_verified_version": "web-acid-arena-v0.38.0",
+          "last_public_verified_at": "2026-10-13T12:06:35.561Z",
+          "description_sha256": "1e9fbbb415718b039d8bf31e56f52114a29d0a192b1e3f6ec4546f1f166e626f",
+          "desc_sha256": null,
+          "record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json"
+        }
+      ],
+      "desc_sha256": "456d55f33fe607483f458758197879187e9b8c040d3bd0b64f7a0118bee0d1af",
+      "sync_scope": "menu entry correction; preserves latest editable description"
     },
     {
       "bvid": "BV1Ujad6DEuf",
       "url": "https://www.bilibili.com/video/BV1Ujad6DEuf/",
-      "last_public_verified_version": "web-acid-arena-v0.38.0",
-      "last_public_verified_at": "2026-10-13T12:06:36.569Z",
+      "last_public_verified_version": "web-mode-focus-v0.38.3",
+      "last_public_verified_at": "2026-10-14T11:39:29.157Z",
       "status": "public_verified",
       "submit_toast": "稿件投递成功",
       "description_revision": "web-acid-arena-v0.38.0",
-      "description_public_verified_at": "2026-10-13T12:06:36.569Z",
-      "description_sha256": "cfb7be5369e756e07129d5f7910b25fb53addc1203cebed7be678f129ab8ba71",
+      "description_public_verified_at": "2026-10-14T11:39:29.157Z",
+      "description_sha256": "422975a34a76c6c19fa096504287424f962099a5633cfbf08166b0121959124c",
       "submitted_version": "web-acid-arena-v0.38.0",
       "submitted_at": "2026-10-12T12:25:08.871Z",
       "lastPublicVerifiedVersion": "web-acid-arena-v0.38.0",
       "publicVerifiedAt": "2026-10-13T12:06:36.569Z",
       "descriptionHash": "cfb7be5369e756e07129d5f7910b25fb53addc1203cebed7be678f129ab8ba71",
       "public_verified_at": "2026-10-13T12:06:36.569Z",
-      "record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
+      "record": "../../site-games/releases/mode-focus-20261014/bilibili-entrances.json",
       "description_hash_note": "UTF-8 normalized paragraph text without trailing newline; exact match to public text",
       "last_sync_record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
       "release_record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
@@ -101,25 +112,36 @@
         "web-menu-v0.37.0"
       ],
       "pending_updates": [],
-      "pending_stable_versions": []
+      "pending_stable_versions": [],
+      "sync_history": [
+        {
+          "last_public_verified_version": "web-acid-arena-v0.38.0",
+          "last_public_verified_at": "2026-10-13T12:06:36.569Z",
+          "description_sha256": "cfb7be5369e756e07129d5f7910b25fb53addc1203cebed7be678f129ab8ba71",
+          "desc_sha256": null,
+          "record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json"
+        }
+      ],
+      "desc_sha256": "422975a34a76c6c19fa096504287424f962099a5633cfbf08166b0121959124c",
+      "sync_scope": "menu entry correction; preserves latest editable description"
     },
     {
       "bvid": "BV1C5HQ6gEvD",
       "url": "https://www.bilibili.com/video/BV1C5HQ6gEvD/",
       "recorded_game_version": "web-versus-teams-v0.27.0",
-      "last_public_verified_version": "web-acid-arena-v0.38.0",
+      "last_public_verified_version": "web-mode-focus-v0.38.3",
       "status": "public_verified",
-      "last_public_verified_at": "2026-10-13T12:06:34.761Z",
+      "last_public_verified_at": "2026-10-14T11:39:27.949Z",
       "publication_record": "../video/wish-versus-20261008/work/publication-result.json",
       "development_model": "Claude Opus 5.5",
       "note": "本期演示虫潮对战，1v1和4v4为两场独立电脑对局，非8真人实测。",
       "submitted_version": "web-acid-arena-v0.38.0",
       "description_revision": "web-acid-arena-v0.38.0",
-      "description_sha256": "c826b3dce52b02187edaa9393540bf2d7f7ae11ffb20417563e47e0e66da25c7",
-      "description_public_verified_at": "2026-10-13T12:06:34.761Z",
+      "description_sha256": "f446075ed0b276cbdacd266637ee615a4306a2c5144fd99d31360c9f76b6706d",
+      "description_public_verified_at": "2026-10-14T11:39:27.949Z",
       "submit_toast": "稿件投递成功",
       "submitted_at": "2026-10-12T12:24:51.125Z",
-      "record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
+      "record": "../../site-games/releases/mode-focus-20261014/bilibili-entrances.json",
       "description_hash_note": "UTF-8 normalized paragraph text without trailing newline; exact match to public text",
       "lastPublicVerifiedVersion": "web-acid-arena-v0.38.0",
       "descriptionHash": "c826b3dce52b02187edaa9393540bf2d7f7ae11ffb20417563e47e0e66da25c7",
@@ -154,28 +176,39 @@
         "web-menu-v0.37.0"
       ],
       "pending_updates": [],
-      "pending_stable_versions": []
+      "pending_stable_versions": [],
+      "sync_history": [
+        {
+          "last_public_verified_version": "web-acid-arena-v0.38.0",
+          "last_public_verified_at": "2026-10-13T12:06:34.761Z",
+          "description_sha256": "c826b3dce52b02187edaa9393540bf2d7f7ae11ffb20417563e47e0e66da25c7",
+          "desc_sha256": null,
+          "record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json"
+        }
+      ],
+      "desc_sha256": "f446075ed0b276cbdacd266637ee615a4306a2c5144fd99d31360c9f76b6706d",
+      "sync_scope": "menu entry correction; preserves latest editable description"
     },
     {
       "bvid": "BV1xdpx63ETu",
       "url": "https://www.bilibili.com/video/BV1xdpx63ETu/",
       "recorded_game_version": "web-three-lanes-v0.31.0",
-      "last_public_verified_version": "web-acid-arena-v0.38.0",
+      "last_public_verified_version": "web-mode-focus-v0.38.3",
       "status": "public_verified",
-      "last_public_verified_at": "2026-10-13T12:06:34.051Z",
+      "last_public_verified_at": "2026-10-14T11:39:26.948Z",
       "publication_record": "../video/rv-town-20261009/work/publication-result.json",
       "development_model": "Codex辅助开发；具体RV模型未完整核对",
       "note": "正常规则房车城镇实战；搜2/6区、击退12只、带回314零件；新片发布不推进其他旧稿说明基线。",
       "lastPublicVerifiedVersion": "web-acid-arena-v0.38.0",
       "submitted_version": "web-acid-arena-v0.38.0",
       "description_revision": "web-acid-arena-v0.38.0",
-      "description_sha256": "97c1f9a800fb84b5e3bb8418531b0cb75ed1e355ec689af462f89914806ee7f6",
+      "description_sha256": "03c9186dcb8d463ae0e3af71255f9e1e2c86fb1523238fb5bc46e49dccf71dca",
       "descriptionHash": "97c1f9a800fb84b5e3bb8418531b0cb75ed1e355ec689af462f89914806ee7f6",
       "public_verified_at": "2026-10-13T12:06:34.051Z",
       "publicVerifiedAt": "2026-10-13T12:06:34.051Z",
-      "description_public_verified_at": "2026-10-13T12:06:34.051Z",
+      "description_public_verified_at": "2026-10-14T11:39:26.948Z",
       "last_sync_record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
-      "record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
+      "record": "../../site-games/releases/mode-focus-20261014/bilibili-entrances.json",
       "release_record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
       "release": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
       "submitted_at": "2026-10-12T12:24:46.022Z",
@@ -206,7 +239,18 @@
         "web-menu-v0.37.0"
       ],
       "pending_updates": [],
-      "pending_stable_versions": []
+      "pending_stable_versions": [],
+      "sync_history": [
+        {
+          "last_public_verified_version": "web-acid-arena-v0.38.0",
+          "last_public_verified_at": "2026-10-13T12:06:34.051Z",
+          "description_sha256": "97c1f9a800fb84b5e3bb8418531b0cb75ed1e355ec689af462f89914806ee7f6",
+          "desc_sha256": null,
+          "record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json"
+        }
+      ],
+      "desc_sha256": "03c9186dcb8d463ae0e3af71255f9e1e2c86fb1523238fb5bc46e49dccf71dca",
+      "sync_scope": "menu entry correction; preserves latest editable description"
     },
     {
       "bvid": "BV14hpL62EZ5",
@@ -215,16 +259,16 @@
         {}
       ],
       "status": "public_verified",
-      "last_public_verified_version": "web-acid-arena-v0.38.0",
+      "last_public_verified_version": "web-mode-focus-v0.38.3",
       "lastPublicVerifiedVersion": "web-acid-arena-v0.38.0",
       "submitted_version": "web-acid-arena-v0.38.0",
       "description_revision": "web-acid-arena-v0.38.0",
-      "description_sha256": "929d7bc675c689c9af946464149532428104134b018cbe5a3e6a0f7945934b1f",
+      "description_sha256": "6cf122ca2ece7ddd367b972afeed1dadb9c7b6a9a07cb5bc81485418c8b6c7de",
       "descriptionHash": "929d7bc675c689c9af946464149532428104134b018cbe5a3e6a0f7945934b1f",
-      "description_public_verified_at": "2026-10-13T12:06:33.316Z",
+      "description_public_verified_at": "2026-10-14T11:39:24.401Z",
       "public_verified_at": "2026-10-13T12:06:33.316Z",
       "publicVerifiedAt": "2026-10-13T12:06:33.316Z",
-      "last_public_verified_at": "2026-10-13T12:06:33.316Z",
+      "last_public_verified_at": "2026-10-14T11:39:24.401Z",
       "exact_text_record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
       "last_sync_record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
       "release_record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
@@ -247,7 +291,19 @@
         "web-menu-v0.37.0"
       ],
       "pending_updates": [],
-      "pending_stable_versions": []
+      "pending_stable_versions": [],
+      "sync_history": [
+        {
+          "last_public_verified_version": "web-acid-arena-v0.38.0",
+          "last_public_verified_at": "2026-10-13T12:06:33.316Z",
+          "description_sha256": "929d7bc675c689c9af946464149532428104134b018cbe5a3e6a0f7945934b1f",
+          "desc_sha256": null,
+          "record": null
+        }
+      ],
+      "desc_sha256": "6cf122ca2ece7ddd367b972afeed1dadb9c7b6a9a07cb5bc81485418c8b6c7de",
+      "record": "../../site-games/releases/mode-focus-20261014/bilibili-entrances.json",
+      "sync_scope": "menu entry correction; preserves latest editable description"
     },
     {
       "bvid": "BV1KFpJ6sEEK",
@@ -291,10 +347,10 @@
       "url": "https://www.bilibili.com/video/BV1Grpq6JEW5/",
       "mapping_evidence": "toy video list 38678478981120 + 本人稿件编辑页",
       "status": "public_verified",
-      "last_public_verified_version": "web-acid-arena-v0.38.0",
-      "last_public_verified_at": "2026-10-13T12:06:32.470Z",
-      "description_public_verified_at": "2026-10-13T12:06:32.470Z",
-      "description_sha256": "1bb7fe9b2544e444ff736d9c663a9f2472d6df2170ceec064c0526069b55f5b5",
+      "last_public_verified_version": "web-mode-focus-v0.38.3",
+      "last_public_verified_at": "2026-10-14T11:39:25.572Z",
+      "description_public_verified_at": "2026-10-14T11:39:25.572Z",
+      "description_sha256": "8a216d66f8a4c11273f9ce3ea11aeb6fedce476eac1ca197f06dff1bffe33d5c",
       "last_sync_record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
       "covered_versions": [
         "web-acid-arena-v0.38.0",
@@ -308,7 +364,19 @@
       "pending_updates": [],
       "pending_stable_versions": [],
       "submitted_version": "web-acid-arena-v0.38.0",
-      "description_revision": "web-acid-arena-v0.38.0"
+      "description_revision": "web-acid-arena-v0.38.0",
+      "sync_history": [
+        {
+          "last_public_verified_version": "web-acid-arena-v0.38.0",
+          "last_public_verified_at": "2026-10-13T12:06:32.470Z",
+          "description_sha256": "1bb7fe9b2544e444ff736d9c663a9f2472d6df2170ceec064c0526069b55f5b5",
+          "desc_sha256": null,
+          "record": null
+        }
+      ],
+      "desc_sha256": "8a216d66f8a4c11273f9ce3ea11aeb6fedce476eac1ca197f06dff1bffe33d5c",
+      "record": "../../site-games/releases/mode-focus-20261014/bilibili-entrances.json",
+      "sync_scope": "menu entry correction; preserves latest editable description"
     }
   ],
   "latest_record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
@@ -692,6 +760,29 @@
       "public_verified_at": "2026-10-14T09:32:42+08:00",
       "user_confirmation": "用户 2026-10-14 在对话里回复“都做吧”",
       "public_verification_record": "releases/web-look-keys-v0.38.1/bilibili-sync.json"
+    },
+    {
+      "version": "web-mode-focus-v0.38.3",
+      "decision": "updated_for_inaccurate_entry_guidance",
+      "status": "public_verified",
+      "targets": [
+        "BV1Grpq6JEW5",
+        "BV14hpL62EZ5",
+        "BV1xdpx63ETu",
+        "BV1C5HQ6gEvD",
+        "BV1Ujad6DEuf",
+        "BV1WbHq6eEBt"
+      ],
+      "summary": "折叠入口与成熟度标记说明，原视频与当前试玩分开描述",
+      "record": "game-projects/site-games/releases/mode-focus-20261014/bilibili-entrances.json"
+    },
+    {
+      "version": "web-opening-hints-v0.38.5",
+      "status": "pending_merge",
+      "decision": "deferred_accumulating",
+      "summary": "前五波准备阶段布防建议直接可见，建造位置提示更清楚；数值不变",
+      "record": "releases/web-opening-hints-v0.38.5/handoff.json",
+      "website_verified_at": "2026-10-14T12:08:10.901968+00:00"
     }
   ],
   "comment_corrections": [
@@ -1321,17 +1412,8 @@
     ]
   },
   "last_decision": {
-    "at": "2026-10-13T20:08:24.969238+08:00",
-    "decision": "sync_major_feature",
-    "reason": "新增独立酸液围场，合并已有有意义更新",
-    "version": "web-acid-arena-v0.38.0",
-    "public_verified_targets": [
-      "BV1Grpq6JEW5",
-      "BV14hpL62EZ5",
-      "BV1xdpx63ETu",
-      "BV1C5HQ6gEvD",
-      "BV1WbHq6eEBt",
-      "BV1Ujad6DEuf"
-    ]
+    "decision": "updated_for_inaccurate_entry_guidance",
+    "version": "web-mode-focus-v0.38.3",
+    "reason": "银行、房车、虫族、酸液入口折叠，原简介直接找按钮的指引需补充；同时合并尚未同步的键位和母皇/触屏/矮台阶变化。0.38.4 HUD仍独立累计，不将入口更新冒充它的同步。"
   }
 }

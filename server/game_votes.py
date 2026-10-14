@@ -80,7 +80,10 @@ VOTE_FAVORITE = "favorite"
 VOTE_WISHLIST = "wishlist"
 
 # 固定模式 ID 不随展示文案变化；与原游戏/愿望选票分表，互不占用额度。
-STARSHIP_MODES = ("defense", "zerg", "rv", "battlefield", "resistance")
+# 选项须与虫潮围城主菜单（starship-defense/menu-shell.js 的 MODES）一致：defense 即菜单里的
+# campaign「基地防守」，沿用旧键以保留已有选票；自由测试是调试用不列入。
+# 战地模式与抗战战役已拆到独立游戏《枪火集结》，不再计入本投票；银行塔防对战与酸液围场补入。
+STARSHIP_MODES = ("defense", "bank", "rv", "zerg", "acid")
 
 # 自研游戏候选项的唯一来源是游戏页 public/js/config.js 的 gamesConfig：上了游戏页就自动可投票、
 # 可统计点击，从游戏页撤下即退出榜单（历史票保留在库里），后端不再手工维护名单。

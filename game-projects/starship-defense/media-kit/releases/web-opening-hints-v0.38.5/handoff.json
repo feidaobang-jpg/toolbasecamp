@@ -1,0 +1,38 @@
+{
+  "version": "web-opening-hints-v0.38.5",
+  "task_id": "01a13802-a02f-7001-b8dc-d20160dfb4ac-work01",
+  "at": "2026-10-14T12:06:20.436146+00:00",
+  "status": "website_and_toy_public_verified",
+  "qa": "qa.json",
+  "package": {
+    "zip_sha256": "919f6ebdb4df14f732411e4cef2eda17bd02d92a852c12eab3ae614f91653dc6",
+    "zip_bytes": 448013,
+    "entry_html_bytes": 68409
+  },
+  "website": {
+    "status": "deployed_verified",
+    "version": "web-opening-hints-v0.38.5",
+    "source_commit": "c3942f2d",
+    "verified_at": "2026-10-14T12:10:22.668489+00:00",
+    "evidence": "hints-website.json"
+  },
+  "toy": {
+    "id": 38678478981120,
+    "status": "published",
+    "submitted_version": "web-opening-hints-v0.38.5",
+    "submitted_at": "2026-10-14T12:15:35.198695+00:00",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_nObJMC9b/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_h630MSiH/index.html",
+    "package_sha256": "919f6ebdb4df14f732411e4cef2eda17bd02d92a852c12eab3ae614f91653dc6",
+    "published_version": "web-opening-hints-v0.38.5",
+    "lock_resolution": "old-toy-lock-resolved.json",
+    "published_at": "2026-10-14T12:19:09+00:00",
+    "public_verified_at": "2026-10-14T12:41:14.487816+00:00",
+    "public_evidence": "qa-toy-public.json"
+  },
+  "bilibili": {
+    "decision": "deferred_accumulating",
+    "reason": "普通开局提示小改，不使现有入口指引或介绍失实；距入口说明本日公开核验不足7天，本轮只累计一次提示更新"
+  },
+  "taptap": "not_requested"
+}
