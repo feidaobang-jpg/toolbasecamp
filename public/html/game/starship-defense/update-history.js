@@ -1,6 +1,9 @@
 // Player-facing notes travel with the same game package; no network or account required.
-export const GAME_VERSION='0.38.5';
+export const GAME_VERSION='0.38.6';
 export const UPDATE_HISTORY=[
+  {version:'0.38.6',date:'2026-10-14',title:'自动存档不再反复弹提示',changes:[
+    '每 30 秒的后台自动存档改为静默写盘，屏幕上的「本地已保存」提示不会再隔一会儿顶出来挡画面。',
+    '买兵建塔、过关、手动存档和保存失败、云档待选择等需要你看到的情况仍会立即提示，约 5 秒后淡出；点提示可以打开存档面板，自动存档和云备份的时机没有改变。']},
   {version:'0.38.5',date:'2026-10-14',title:'开局布防提示更清楚',changes:[
     '前五波准备阶段直接提示本波布防方向，例如首次雇佣队友、西侧增援、酸液虫与防空；详细虫潮仍可点战术部署查看。',
     '城门通道不能建造时提示前后移动换位置；保留防堵门规则、战斗数值和原有进度。']},

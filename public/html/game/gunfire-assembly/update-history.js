@@ -1,6 +1,9 @@
 // Player-facing notes travel with the same game package; no network or account required.
-export const GAME_VERSION='0.3.0';
+export const GAME_VERSION='0.3.1';
 export const UPDATE_HISTORY=[
+  {version:'0.3.1',date:'2026-10-14',title:'自动存档不再反复弹提示',changes:[
+    '基地防守战役里每 30 秒的后台自动存档改为静默写盘，屏幕上的「本地已保存」提示不会再隔一会儿顶出来挡画面。',
+    '买兵建塔、过关、手动存档和保存失败、云档待选择等需要你看到的情况仍会立即提示，约 5 秒后淡出；自动存档和云备份的时机没有改变。']},
   {version:'0.3.0',date:'2026-10-14',title:'抗战战役：苍云岭重做',changes:[
     '抗战战役第一章换成重做版「苍云岭 · 突围」：坚守山头掩护师部转移，用枪打倒军曹抓个舌头，护送柱子的迫击炮前出五百米——只有两发炮弹，打中坂田的指挥部按原作突围，两发都偏就得冲上去对付坂田。喊话用电视剧《亮剑》原声。',
     '章节按原作顺序排成第一章苍云岭、第二章李家坡、第三章平安县城；苍云岭和平安县城共用「亮剑战役」页面，可以在它的菜单里直接换章。',
