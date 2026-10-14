@@ -1,0 +1,14 @@
+{
+  "id": 38678478981120,
+  "version": "web-look-keys-v0.38.1",
+  "zip_sha256": "22fe69d2c153381252ae9edb3fb8152295b3ea8920fce9fcdd6da922425b75f1",
+  "zip_bytes": 445318,
+  "entry_index_html_bytes": 65468,
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_dnjzefbX/index.html",
+  "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_hgn7SJ2K/index.html",
+  "submitted_at": "2026-10-14T09:25:24+08:00",
+  "platform_status_after_submit": "auditing",
+  "doctor": "ok，1 条 WARN（文件名无内容指纹，仅建议）",
+  "task_id": "bbe2cc31-liangjian-pingan-remake-4",
+  "source": "Claude Code"
+}
