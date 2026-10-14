@@ -1,0 +1,85 @@
+{
+  "pass": true,
+  "fail": [],
+  "results": {
+    "版本为 0.38.2": {
+      "ok": true,
+      "detail": "0.38.2"
+    },
+    "触屏右侧栏与右下动作键不重叠": {
+      "ok": true,
+      "detail": {
+        "gap": 18,
+        "overlap": false,
+        "rightCss": "279.498px",
+        "padLeft": 616,
+        "rightRight": 598
+      }
+    },
+    "母皇生成且有出生保护秒数": {
+      "ok": true,
+      "detail": {
+        "protect": 4,
+        "maxHp": 2700
+      }
+    },
+    "保护期内伤害无效": {
+      "ok": true,
+      "detail": {
+        "ok": true,
+        "maxHp": 2700,
+        "mobHp": 30,
+        "ratio": 90,
+        "protect": 4,
+        "before": 2700,
+        "midHp": 2700,
+        "midDead": false,
+        "after1": 2699,
+        "dead": false
+      }
+    },
+    "母皇血量约 90× 同章小怪（旧约 36×）": {
+      "ok": true,
+      "detail": {
+        "ok": true,
+        "maxHp": 2700,
+        "mobHp": 30,
+        "ratio": 90,
+        "protect": 4,
+        "before": 2700,
+        "midHp": 2700,
+        "midDead": false,
+        "after1": 2699,
+        "dead": false
+      }
+    },
+    "保护结束后可受伤": {
+      "ok": true,
+      "detail": {
+        "ok": true,
+        "maxHp": 2700,
+        "mobHp": 30,
+        "ratio": 90,
+        "protect": 4,
+        "before": 2700,
+        "midHp": 2700,
+        "midDead": false,
+        "after1": 2699,
+        "dead": false
+      }
+    },
+    "母巢深度仍为浅坡 4 米": {
+      "ok": true,
+      "detail": {
+        "y0": -4,
+        "y1": -4,
+        "depth": 4,
+        "stepOk": true
+      }
+    },
+    "无页面脚本错误": {
+      "ok": true,
+      "detail": []
+    }
+  }
+}
