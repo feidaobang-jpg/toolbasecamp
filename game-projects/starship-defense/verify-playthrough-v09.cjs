@@ -40,7 +40,7 @@ const scenarios=[
     if(st.nd<60&&Math.abs(diff)>.25)await p.keyboard.down(diff>0?'KeyQ':'KeyE');
     if(st.nd<6)await p.keyboard.down('KeyS');else if(st.nd>26&&st.nd<60&&st.pz<10)await p.keyboard.down('KeyW');
     if(st.pz>12)await p.keyboard.down('KeyS');
-    if(st.hp>0&&st.hp<45&&st.medkit>0)await p.keyboard.press('KeyH');
+    if(st.hp>0&&st.hp<45&&st.medkit>0)await p.keyboard.press('KeyN');
     if(st.nd<12&&Math.random()<.15)await p.keyboard.press('KeyU');
   }
   for(const k of ['KeyJ','KeyQ','KeyE','KeyW','KeyS','KeyA','KeyD'])await p.keyboard.up(k);

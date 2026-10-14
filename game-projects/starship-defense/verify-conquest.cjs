@@ -57,7 +57,7 @@ try{
    await p.evaluate(kind=>{const q=__gameQA;q.startVersusAI('normal',1);q.vehicles.forEach(v=>v.bfAIStart=Infinity);const v=q.vehicles.find(v=>v.team==='blue'&&v.kind===kind);q.player.pos.copy(v.mesh.position).add({x:0,y:0,z:-3});q.player.mesh.position.copy(q.player.pos);q.player.invulnerable=100;},kind);
    await p.keyboard.press('KeyI');await p.waitForTimeout(100);assert.equal(await p.evaluate(()=>__gameQA.player.inVehicle?.kind),kind);
    await p.keyboard.down('KeyW');await p.waitForTimeout(200);await p.keyboard.up('KeyW');
-   if(kind==='heli'){await p.keyboard.down('KeyK');await p.waitForTimeout(300);await p.keyboard.up('KeyK');assert.ok(await p.evaluate(()=>__gameQA.player.inVehicle.alt>1));await p.keyboard.down('KeyH');await p.waitForTimeout(400);await p.keyboard.up('KeyH');}
+   if(kind==='heli'){await p.keyboard.down('KeyK');await p.waitForTimeout(300);await p.keyboard.up('KeyK');assert.ok(await p.evaluate(()=>__gameQA.player.inVehicle.alt>1));await p.keyboard.down('KeyN');await p.waitForTimeout(400);await p.keyboard.up('KeyH');}
    await p.keyboard.press('KeyI');await p.waitForTimeout(100);assert.equal(await p.evaluate(()=>__gameQA.player.inVehicle),null);
  }
  pass('Keyboard boarding, driving, dismounting all four vehicles; helicopter climb/descent');

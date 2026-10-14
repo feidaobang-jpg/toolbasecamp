@@ -1,6 +1,9 @@
 // Player-facing notes travel with the same game package; no network or account required.
-export const GAME_VERSION='0.38.0';
+export const GAME_VERSION='0.38.1';
 export const UPDATE_HISTORY=[
+  {version:'0.38.1',date:'2026-10-14',title:'Y / H 抬头低头，医疗改到 N',changes:[
+    '电脑键盘新增 Y 抬头 / H 低头，和拖动画面上下看是同一个范围；Q / E 仍是左右转。',
+    '医疗包 / 兵种支援 / 虫族号令 / 直升机降低的默认键从 H 改为 N，直升机升高只用 K（空格）。自己在「操作设置」里改过的键位保持不变，提示文字跟随当前键位。']},
   {version:'0.38.0',date:'2026-10-13',title:'酸液围场 · 三轮躲避挑战',changes:[
     '新增可选单人挑战：封闭围场内躲避固定朝向、交错喷射的酸液，金线预警，喷后蓝色弱点可集中反击。',
     '三次命中容错，受伤短暂无敌；闪避与穿甲、贯穿、护盾升级帮助突破三轮。独立本机通关纪录，原有模式存档保留。']},

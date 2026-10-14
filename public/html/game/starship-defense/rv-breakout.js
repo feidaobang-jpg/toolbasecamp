@@ -79,7 +79,7 @@ export function createRVBreakout(a){
     s.rv=a.spawnVehicle('rv');s.rv.cfg={...RV_CFG};s.rv.mesh.position.set(pos.x,0,pos.z);configure();s.rv.hp=clamp(d?.hp||s.rv.maxHp,1,s.rv.maxHp);a.updHPBar(s.rv.bar,s.rv.hp/s.rv.maxHp);a.enterVehicle(s.rv);player.pos.copy(s.rv.mesh.position);spawnResidents();
     s.art=createRVAtmosphere(T,{scene,...a.artContext,skyObjects:s.sky});renderFrame(0);
     a.faceForward();a.stage.classList.add('rv-mode');['menuMain','menuPause','menuOver','rvMenu','rvResult'].forEach(id=>$(id).classList.add('hidden'));$('rvHUD').classList.remove('hidden');$('rvMap').classList.remove('hidden');a.showHUD();a.showHint(null);
-    $('btnRestartLv').textContent='🔄 重开城镇探索';s.keyHint=$('keysHint').textContent;$('keysHint').textContent='WASD 驾驶/移动 · J 射击 · I 上下车/搜索 · O 地图与设施 · H 医疗 · U 手雷 · K 跳跃 · C 视角 · Q/E 转头 · Esc 暂停';
+    $('btnRestartLv').textContent='🔄 重开城镇探索';s.keyHint=$('keysHint').textContent;$('keysHint').textContent='WASD 驾驶/移动 · J 射击 · I 上下车/搜索 · O 地图与设施 · '+(a.keyLabel?a.keyLabel('H'):'N')+' 医疗 · U 手雷 · K 跳跃 · C 视角 · Q/E 转头 · Esc 暂停';
     save();a.showMsg(a.isTouch()?'街道自由通行；点设施查看地图和服务':'街道自由通行；O 查看地图和设施服务',5);hud();
   }
   function configure(){s.rv.maxHp=RV_CFG.hp+s.armor*200;s.rv.cfg.dmg=RV_CFG.dmg*(1+s.gun*.35);s.rv.cfg.speed=s.fuel>0?RV_CFG.speed:3;Game.weaponLv.lmg=s.gear;Game.weaponLv.shotgun=s.gear;}

@@ -200,7 +200,7 @@ Toy 自动同步的既有操作授权保留，改为**实时**节奏（用户202
 
 - 位置：`public/html/game/gunfire-assembly/pingan/`，同包内的独立页面，自带菜单、设置与进度（存档前缀 `lj_pingan_v1_`）。`resistance-campaign.js` 的 `start()` 在选第三章、继续旧的第三章进度或第二章点“下一章”时跳到 `./pingan/index.html`；旧的第三章代码暂留在文件里但已不可达，清理须单独安排。重做版主菜单有“返回大厅”回到 `../index.html`。
 - 操作按 game-maker `references/shooter-controls.md`：越肩第三人称 + 第一人称两个视角、手动瞄准带轻度吸附、可跳跃；键位与枪火集结其余模式对齐——J 开火、K 跳、U 手榴弹、I 互动（上炮 / 接管机枪 / 离开，F 为别名）、O / Z 开镜、R / L 换弹、Q/E 与 Y/H 转视角。电脑端默认鼠标接管（锁定），被浏览器或外壳拒绝时自动退回按住拖动。用户已去掉亮剑、骑兵连两个技能；打掉机枪手后阵地机枪可以接管。
-- 枪火集结的“医疗 / 直升机降低”默认键从 H 改为 N，直升机升高只留 K，Y / H 改为抬头 / 低头（`key-bindings.js`，玩家自己改过的键保留）。虫潮围城的同名键位尚未迁移，改到它时再做，迁移前两款默认键不同属已知状态。
+- 枪火集结与虫潮围城的“医疗 / 兵种支援 / 直升机降低”默认键都已从 H 改为 N，直升机升高只留 K，Y / H 为抬头 / 低头（两款的 `key-bindings.js` 是同一份；枪火集结 0.2.0、虫潮围城 0.38.1，用户 2026-10-14 点名）。玩家自己改过的键保留，新默认键与玩家自定义键冲突时只挪新键。提示文字一律用 `keyBindings.label()` 跟随当前键位，不要再写死字母；回归用 `game-projects/starship-defense/verify-look-keys.cjs`。枪火集结的动态操作提示还没列出 Y/H（不影响使用），下次改到它时照虫潮的写法补上。
 - 构建：`node game-projects/gunfire-assembly/build-compat.mjs` 同时生成大厅与重做版两个兼容包；`build-toy.mjs` 把 `pingan/` 的入口、样式、兼容包与语音打进同一个 Toy 包。验收脚本在 `game-projects/liangjian-pingan/qa/`，记录见 `game-projects/gunfire-assembly/media-kit/releases/web-pingan-remake-v0.2.0/`。
 
 ## 2026-10-06 右上按钮布局补充

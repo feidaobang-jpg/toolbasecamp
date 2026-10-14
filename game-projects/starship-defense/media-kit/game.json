@@ -10,7 +10,7 @@
   },
   "name": "虫潮围城",
   "engine": "Three.js r152",
-  "current_version": "web-acid-arena-v0.38.0",
+  "current_version": "web-look-keys-v0.38.1",
   "entrypoint": "public/html/game/starship-defense/index.html",
   "build_command": "cd game-projects/starship-defense && npm ci && npm run build; python build-toy.py",
   "release_intent": "web_demo",
@@ -48,7 +48,7 @@
     "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
     "visibility": "PUBLIC",
     "review_status": "published",
-    "verified_at": "2026-10-13T20:08:24.969238+08:00",
+    "verified_at": "2026-10-14T09:28:24+08:00",
     "video_bindings": [
       "BV1Grpq6JEW5",
       "BV14hpL62EZ5",
@@ -58,15 +58,15 @@
       "BV1Ujad6DEuf"
     ],
     "linked_game_video": "https://www.bilibili.com/video/BV1Ujad6DEuf",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_nsBzT0j2/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_hgn7SJ2K/index.html",
     "title": "虫潮围城",
-    "zip_sha256": "4e56f4d4a037b2f3bab76a3a3b315865d9530ccd956aac178e278b24caeec8cb",
-    "submitted_date": "2026-10-13",
-    "release_record": "releases/web-acid-arena-v0.38.0/handoff.json",
-    "submitted_version": "web-acid-arena-v0.38.0",
-    "published_version": "web-acid-arena-v0.38.0",
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_BEbUAQjC/index.html",
-    "note": "酸液围场0.38.0同一稳定包已published；游客正式入口电脑/竖屏操作和存档隔离已实测。保留并行基地美术0.37.5。",
+    "zip_sha256": "22fe69d2c153381252ae9edb3fb8152295b3ea8920fce9fcdd6da922425b75f1",
+    "submitted_date": "2026-10-14",
+    "release_record": "releases/web-look-keys-v0.38.1/handoff.json",
+    "submitted_version": "web-look-keys-v0.38.1",
+    "published_version": "web-look-keys-v0.38.1",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_dnjzefbX/index.html",
+    "note": "0.38.1（H/Y 键位迁移）于 2026-10-14T09:25:24+08:00 提交审核，已过审并于 2026-10-14T09:28:24+08:00 未登录核验正式入口。",
     "package_sha256": "4e56f4d4a037b2f3bab76a3a3b315865d9530ccd956aac178e278b24caeec8cb",
     "pending_updates": [
       {
@@ -218,7 +218,7 @@
     "platform_readback_at": "2026-10-13T20:08:24.969238+08:00"
   },
   "website_url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
-  "published_toy_version": "web-acid-arena-v0.38.0",
+  "published_toy_version": "web-look-keys-v0.38.1",
   "web_toy_versions_match": true,
   "migration": {
     "source": "D:/project/gpt/worlds/breachline",
@@ -230,14 +230,14 @@
   "steam_status": "Optional possibility only; Toy/video response determines any future decision",
   "extension_review_status": "published",
   "preview_version": "web-acid-arena-v0.38.0",
-  "submitted_toy_version": "web-acid-arena-v0.38.0",
-  "website_version": "web-acid-arena-v0.38.0",
-  "website_verified_at": "2026-10-13T19:50:29.335950+08:00",
+  "submitted_toy_version": "web-look-keys-v0.38.1",
+  "website_version": "web-look-keys-v0.38.1",
+  "website_verified_at": "2026-10-14T09:23:54+08:00",
   "site_list_name": "虫潮围城",
   "controls": "原有多动作按键和Shift按住冲刺保留；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。",
   "default_theme": "dark",
   "feedback_ledger": "feedback-ledger.json",
-  "handoff": "releases/web-acid-arena-v0.38.0/handoff.json",
+  "handoff": "releases/web-look-keys-v0.38.1/handoff.json",
   "squad_controls": "商店雇佣机枪/突击/医疗/工程队友；准备阶段免费转职，强化保留；队友卡片分配四种已购载具，玩家I接管；暂停菜单跟随/守基地。",
   "environments": {
     "desert": "第1–3章：荒漠，可选白天/夜晚",
@@ -285,7 +285,7 @@
     "keyboard_modes": "Tab/菜单上下进入模式组，左右或A/D选项，Enter/空格/J确认，有aria-pressed选中状态"
   },
   "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
-  "website_commit": "778b8611d52d1aaac02b61ee131ae5e82ee468c2",
+  "website_commit": "8e21b906824401afc8eb813f12352e71bb241038",
   "campaign_difficulty": {
     "default": "normal",
     "choices": [
@@ -971,10 +971,10 @@
   },
   "website": {
     "status": "deployed_verified",
-    "version": "web-acid-arena-v0.38.0",
-    "source_commit": "778b8611d52d1aaac02b61ee131ae5e82ee468c2",
-    "verified_at": "2026-10-13T20:08:24.969238+08:00",
-    "record": "releases/web-acid-arena-v0.38.0/website-hashes.json"
+    "version": "web-look-keys-v0.38.1",
+    "source_commit": "8e21b906824401afc8eb813f12352e71bb241038",
+    "verified_at": "2026-10-14T09:23:54+08:00",
+    "record": "releases/web-look-keys-v0.38.1/website-hashes.json"
   },
   "current_development_tool": "Codex",
   "rv_town": {
@@ -1377,8 +1377,8 @@
     ],
     "new_video_authorized": false
   },
-  "website_status": "public_verified",
-  "website_runtime_sha256": "9e0a7b5fd5fae463a0b8397764205b226976c14400ba7c0437430d823d820753",
+  "website_status": "deployed_verified",
+  "website_runtime_sha256": "057e699a6e1ad563cdef7687aab89cd5c969aece5140c1aa5a35404f5200f977",
   "feedback_oct11": {
     "version": "web-feedback-v0.34.1",
     "status": "website_verified_toy_auditing",

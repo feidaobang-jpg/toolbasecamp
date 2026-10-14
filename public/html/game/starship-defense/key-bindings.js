@@ -1,5 +1,5 @@
 // Persist actions, never executable code. Touch controls keep their action identities.
-export const KEY_ACTIONS={U:['投掷手雷','KeyU'],SPRINT:['按住跑步','ShiftLeft'],up:['前进','KeyW'],down:['后退','KeyS'],left:['左移','KeyA'],right:['右移','KeyD'],J:['射击 / 放置','KeyJ'],K:['跳跃 / 直升机升高','KeyK'],I:['互动 / 上下载具','KeyI'],H:['医疗 / 直升机降低','KeyH'],Y:['直升机升高','KeyY'],O:['商店','KeyO'],L:['建造','KeyL'],X:['下一把武器','KeyX'],C:['切换视角预设','KeyC'],Q:['左转视角','KeyQ'],E:['右转视角','KeyE'],P:['暂停','KeyP'],R:['开始虫潮 / 战地换弹','KeyR'],T:['自由测试 / 战地战况','KeyT'],M:['声音','KeyM'],F:['全屏','KeyF']};
+export const KEY_ACTIONS={U:['投掷手雷','KeyU'],SPRINT:['按住跑步','ShiftLeft'],up:['前进','KeyW'],down:['后退','KeyS'],left:['左移','KeyA'],right:['右移','KeyD'],J:['射击 / 放置','KeyJ'],K:['跳跃 / 直升机升高','KeyK'],I:['互动 / 上下载具','KeyI'],H:['医疗 / 直升机降低','KeyN'],LOOKUP:['抬头（上转视角）','KeyY'],LOOKDOWN:['低头（下转视角）','KeyH'],O:['商店','KeyO'],L:['建造','KeyL'],X:['下一把武器','KeyX'],C:['切换视角预设','KeyC'],Q:['左转视角','KeyQ'],E:['右转视角','KeyE'],P:['暂停','KeyP'],R:['开始虫潮 / 战地换弹','KeyR'],T:['自由测试 / 战地战况','KeyT'],M:['声音','KeyM'],F:['全屏','KeyF']};
 for(let i=1;i<=9;i++)KEY_ACTIONS['N'+i]=['武器栏 '+i,'Digit'+i];
 // 各对战规则共用按键存档，银行升级继续沿用 0。
 KEY_ACTIONS.N0=['银行塔防：升级银行','Digit0'];
@@ -14,7 +14,8 @@ export function createKeyBindings(){
   try{const saved=JSON.parse(localStorage.getItem(STORE)||'{}');const candidate={...keys};
     for(const a of Object.keys(KEY_ACTIONS))if(typeof saved[a]==='string'&&allowed(saved[a]))candidate[a]=saved[a];
     // New actions must not discard older custom controls using their default keys.
-    for(const added of ['SPRINT','U','Z','N0'])if(!saved[added]&&Object.keys(candidate).some(a=>a!==added&&candidate[a]===candidate[added])){
+    // 2026-10：医疗 / 直升机降低的默认键从 H 挪到 N，Y / H 改作抬头低头；玩家自己改过的键照旧保留。
+    for(const added of ['SPRINT','U','Z','N0','H','LOOKUP','LOOKDOWN'])if(!saved[added]&&Object.keys(candidate).some(a=>a!==added&&candidate[a]===candidate[added])){
       candidate[added]=['ShiftLeft','ShiftRight','ControlLeft','ControlRight','AltLeft','AltRight',...Array.from({length:26},(_,i)=>'Key'+String.fromCharCode(65+i)),...Array.from({length:10},(_,i)=>'Digit'+i)].find(code=>!Object.keys(candidate).some(a=>a!==added&&candidate[a]===code))||'Backquote';
     }
     if(new Set(Object.values(candidate)).size===Object.keys(candidate).length){keys=candidate;custom=saved;}

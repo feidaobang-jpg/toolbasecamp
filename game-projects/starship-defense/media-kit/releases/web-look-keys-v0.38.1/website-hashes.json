@@ -1,0 +1,12 @@
+{
+  "version": "web-look-keys-v0.38.1",
+  "source_commit": "8e21b906824401afc8eb813f12352e71bb241038",
+  "verified_at": "2026-10-14T09:23:54+08:00",
+  "runtime_sha256": {
+    "game.compat.js": "057e699a6e1ad563cdef7687aab89cd5c969aece5140c1aa5a35404f5200f977",
+    "key-bindings.js": "87ff77b5db8676deb88382730fb3ea38df0bf93f10377a50ca57f987cf62b6d9",
+    "index.html": "e2c0d698e857f3e90ab79d18677ee85e3914adfdb98a91ad189055c890812c02",
+    "update-history.js": "2acc5a85ec18a6d032ac4b3dd73fc46f44f8f204eb4c4a9980177d526f056d6d"
+  },
+  "note": "index.html 线上版本的资源查询参数会被部署改写为提交号，其余文件逐字节一致。"
+}

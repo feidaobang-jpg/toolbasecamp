@@ -662,6 +662,32 @@
       "recorded_at": "2026-10-13T19:54:20.141082+08:00",
       "included_version": "web-acid-arena-v0.38.0",
       "public_verification_record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json"
+    },
+    {
+      "version": "web-look-keys-v0.38.1",
+      "status": "ready_pending_user_confirmation",
+      "classification": "键位变更",
+      "recorded_at": "2026-10-14T09:30:00+08:00",
+      "summary": "Y/H 抬头低头；医疗 / 兵种支援 / 号令 / 直升机降低默认键 H→N，直升机升高只用 K。",
+      "reason": "六条绑定视频的简介逐条读过：只有 BV14hpL62EZ5（虫族模式）写着“新增H号令”，0.38.1 后默认键是 N，属于操作说明失实，需要把这一处改成 N；其余五条没有提到 H / Y 键，不用改。改公开简介前先在对话里向用户确认。",
+      "targets": [
+        {
+          "bvid": "BV14hpL62EZ5",
+          "change": "“新增H号令” → “新增N号令”",
+          "status": "pending_user_confirmation"
+        }
+      ],
+      "unaffected": [
+        "BV1Grpq6JEW5",
+        "BV1xdpx63ETu",
+        "BV1C5HQ6gEvD",
+        "BV1WbHq6eEBt",
+        "BV1Ujad6DEuf"
+      ],
+      "record": "releases/web-look-keys-v0.38.1/handoff.json",
+      "channels": [
+        "bilibili"
+      ]
     }
   ],
   "comment_corrections": [
