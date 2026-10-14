@@ -76,20 +76,22 @@
     "id": 43022175699968,
     "slug": "feidao-gunfire",
     "url": "https://www.bilibili.com/toy/feidao-gunfire/index.html",
-    "status": "auditing",
-    "review_status": "auditing",
+    "status": "published",
+    "review_status": "published",
     "submitted_version": "web-pingan-remake-v0.2.0",
     "submitted_at": "2026-10-14T00:23:57+08:00",
     "preview_url": "https://www.bilibili.com/toy/preview/preview_AxBIOky1/index.html",
     "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_b75qxPhn/index.html",
     "package_sha256": "90da20b61dc0ba4438a4c29463531e8bebf1927ebf783c01ebcd944e9c368964",
     "package_hash_kind": "zip_sha256",
-    "published_version": "web-pingan-art-v0.1.7",
-    "current_public_verification": "previous_version_until_review",
+    "published_version": "web-pingan-remake-v0.2.0",
+    "current_public_verification": "verified",
     "watermark_enabled": false,
     "status_checked_at": "2026-10-14T00:25:37+08:00",
     "source_commit": "2bfb2903ff1d03d3c8af48040fe8b6cfe99e12f4",
-    "note": "提交后 toy mylist 返回 auditing；过审前正式入口仍是 web-pingan-art-v0.1.7。"
+    "note": "提交约 3 分钟后 toy mylist 变为 published；未登录无头 Edge 打开正式入口，电脑 1280×720 与手机 844×390（触控模拟）下大厅显示 v0.2.0、第三章进入重做版并可开局，12/12，记录见 qa-toy-public.json。",
+    "public_verified_at": "2026-10-14T00:29:14+08:00",
+    "public_verified_without_login": true
   },
   "bilibili": {
     "decision": "pending_until_toy_published",
@@ -106,5 +108,9 @@
   "thumbnail_decision": {
     "decision": "keep",
     "reason": "网站列表封面是枪火集结大厅 / 战地画面，本次只换了抗战第三章，封面内容仍在游戏里"
+  },
+  "followup": {
+    "version": "web-pingan-remake-v0.2.1",
+    "reason": "0.2.0 上线后发现战地提示等处还有写死的“H 兵种支援 / 医疗”“Y 升 H 降”，与新默认键不一致，0.2.1 修正"
   }
 }

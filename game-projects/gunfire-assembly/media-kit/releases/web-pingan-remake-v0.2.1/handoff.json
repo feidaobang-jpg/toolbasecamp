@@ -1,0 +1,71 @@
+{
+  "version": "web-pingan-remake-v0.2.1",
+  "base_version": "web-pingan-remake-v0.2.0",
+  "scope": "只改文字：战地提示、互动提示、商店说明和大厅规则里写死的旧键位（H 医疗 / 兵种支援、直升机 Y 升 H 降）改为跟随当前键位",
+  "source_commit": "866de8620e8eb5885304f7ff82a263b9fab6849f",
+  "task_id": "bbe2cc31-liangjian-pingan-remake-3",
+  "source": "Claude Code",
+  "validation": {
+    "local": "interact.cjs 17/17；兼容包里不再有旧文字",
+    "website": "线上 update-history.js 为 0.2.1，game.compat.js 与本地哈希一致，大厅规则显示“支援：N / 抬头低头：Y H”",
+    "toy_preview": {
+      "url": "https://www.bilibili.com/toy/preview/preview_3n4PswEG/index.html",
+      "result": "12/12（电脑 1280×720、手机 844×390 触控模拟）",
+      "record": "releases/web-pingan-remake-v0.2.1/qa-toy-preview.json"
+    },
+    "toy_doctor": "ok，1 条 WARN（文件名无内容指纹，仅建议）",
+    "toy_public": {
+      "result": "12/12",
+      "record": "releases/web-pingan-remake-v0.2.1/qa-toy-public.json",
+      "at": "2026-10-14T08:59:09+08:00"
+    }
+  },
+  "package": {
+    "zip_sha256": "993915b85a9c5739af14b10f064ce8fdc7f5f9f9096229bb71988284a6492e48",
+    "zip_bytes": 729019,
+    "entry_index_html_bytes": 70003
+  },
+  "website": {
+    "status": "deployed_verified",
+    "at": "2026-10-14T00:32:16+08:00",
+    "source_commit": "866de8620e8eb5885304f7ff82a263b9fab6849f",
+    "version": "web-pingan-remake-v0.2.1",
+    "runtime_sha256": {
+      "game.compat.js": "f8edde67ea3b57d70529e140b1d56e7947acdfecaa7adef9435b9ca29ce2001a",
+      "pingan/game.compat.js": "ab29299d81d19414e5b88645e380de8fb74ef5084ab55f8292659d115c0b8d81",
+      "index.html": "bb41ad20618e7979f6b111847091868d2165cfc523e192ed31d33678b2f79ca3"
+    }
+  },
+  "toy": {
+    "id": 43022175699968,
+    "slug": "feidao-gunfire",
+    "url": "https://www.bilibili.com/toy/feidao-gunfire/index.html",
+    "status": "published",
+    "review_status": "published",
+    "submitted_version": "web-pingan-remake-v0.2.1",
+    "submitted_at": "2026-10-14T00:32:57+08:00",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_3n4PswEG/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_LJrftIH7/index.html",
+    "package_sha256": "993915b85a9c5739af14b10f064ce8fdc7f5f9f9096229bb71988284a6492e48",
+    "package_hash_kind": "zip_sha256",
+    "published_version": "web-pingan-remake-v0.2.1",
+    "current_public_verification": "verified",
+    "watermark_enabled": false,
+    "status_checked_at": "2026-10-14T08:59:37+08:00",
+    "source_commit": "866de8620e8eb5885304f7ff82a263b9fab6849f",
+    "published_at_platform": "2026-10-14T00:34:48+08:00",
+    "public_verified_at": "2026-10-14T08:59:09+08:00",
+    "public_verified_without_login": true,
+    "note": "平台 mtime 2026-10-14T00:34:48+08:00 变为 published；2026-10-14T08:59:09+08:00 用未登录无头 Edge 打开正式入口，电脑 1280×720 与手机 844×390（触控模拟）下大厅显示 v0.2.1、第三章进入重做版并可开局，12/12。"
+  },
+  "bilibili": {
+    "decision": "covered_by_0.2.0_update",
+    "reason": "简介按 0.2.0 的变化更新一次即可，0.2.1 只是游戏内提示文字"
+  },
+  "taptap": {
+    "decision": "not_published"
+  },
+  "thumbnail_decision": {
+    "decision": "keep"
+  }
+}
