@@ -4,11 +4,10 @@ import { clamp, fmtTime } from './util.js';
 const $ = (id) => document.getElementById(id);
 const el = (tag, cls, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html !== undefined) e.innerHTML = html; return e; };
 
-export const PHASE_NAMES = ['', '扫清城外', '拉炮上阵', '开炮！', '打进县城', '决战山本'];
 export const VIEW_NAMES = ['第三人称', '第一人称'];
 
 const OPTS = {
-  startPhase: { label: '起始阶段', where: 'm', fmt: (v) => v + ' ' + PHASE_NAMES[v] },
+  startPhase: { label: '起始阶段', where: 'm', fmt: (v, app) => v + ' ' + (app.chapter.phases[v] || '') },
   lives: { label: '命数', where: 'm', fmt: (v) => (v === 'inf' ? '无限命' : '经典 3 命') },
   armor: { label: '耐久', where: 'm', fmt: (v) => ({ std: '标准 5 格', easy: '宽松 8 格', one: '一发 1 格' }[v]) },
   demo: { label: '演示模式', where: 'mp', fmt: (v) => (v ? '开（无敌）' : '关') },
@@ -27,6 +26,7 @@ export class UI {
   constructor(app) {
     this.app = app;
     this.hud = $('hud'); this.touch = $('touch');
+    $('boss').firstElementChild.textContent = app.chapter.bossName;
     this.dlgQ = []; this.dlgT = 0; this.stampT = 0; this.stampD = 0; this.toastT = 0;
     this.labels = {};
     this.cache = {};
@@ -70,14 +70,26 @@ export class UI {
     p.setAttribute('role', 'dialog'); p.setAttribute('aria-label', '主菜单');
     const head = el('div', 'head');
     head.appendChild(el('div', 'logo', '亮剑'));
-    head.appendChild(el('div', 'sub', '<strong>攻打平安县城</strong><span>你是李云龙：带独立团扫清城外，把意大利炮拉上来，喊一声“开炮”轰开城楼，再打进县城会会山本一木。</span>'));
-    head.appendChild(el('div', 'seal', '独立团<br>重做版'));
+    const ch = this.app.chapter;
+    head.appendChild(el('div', 'sub', `<strong>第${'一二三'[ch.num - 1]}章 · ${ch.title}</strong><span>${ch.blurb}</span>`));
+    head.appendChild(el('div', 'seal', ch.seal));
     this.head = head;
     const start = el('div', 'row');
     this.btnStart = this._btn('开始战斗', 'primary', () => this.app.start(false));
     this.btnCont = this._btn('继续', 'center', () => this.app.start(true));
     start.appendChild(this.btnStart); start.appendChild(this.btnCont);
     this.startRow = start;
+    // 选章：三章同一个页面，换章重新载入（场景各不相同）
+    const chs = el('div', 'chapters');
+    for (const c of this.app.chapters) {
+      const b = this._btn(`<span class="cn">第${'一二三'[c.num - 1]}章</span><span class="ct">${c.name}</span>${c.soon ? '<span class="cs">' + (c.note || '制作中') + '</span>' : ''}`, 'chapter' + (c.id === ch.id ? ' cur' : ''), () => this.app.switchChapter(c.id));
+      b.dataset.ch = c.id;
+      if (c.soon) b.setAttribute('aria-disabled', 'true');
+      b.setAttribute('aria-pressed', String(c.id === ch.id));
+      b.setAttribute('aria-label', `第${'一二三'[c.num - 1]}章 ${c.name}` + (c.soon ? '（' + (c.note || '制作中') + '）' : c.id === ch.id ? '（当前）' : ''));
+      chs.appendChild(b);
+    }
+    this.chapterRow = chs;
     const opts = el('div', 'opts');
     for (const k of Object.keys(OPTS)) if (OPTS[k].where.includes('m')) opts.appendChild(this._optBtn(k));
     this.btnFullM = this._btn('<span class="ol">全屏</span><span class="ov">切换</span>', 'opt', () => this.app.fullscreen());
@@ -86,7 +98,8 @@ export class UI {
     opts.appendChild(this.btnBili);
     opts.appendChild(this._btn('<span class="ol">返回大厅</span><span class="ov">枪火集结</span>', 'opt', () => this.app.toLobby()));
     const foot = el('div', 'foot', '<span class="pc-only"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移动　鼠标瞄准（点一下画面接管，<kbd>Esc</kbd> 释放）、左键开火、右键开镜　<kbd>空格</kbd> 跳　<kbd>R</kbd> 换弹　<kbd>G</kbd> 手榴弹　<kbd>F</kbd> 互动　<kbd>V</kbd> 亮剑　<kbd>X</kbd> 骑兵连　<kbd>C</kbd> 切换人称<br>纯键盘：<kbd>Q</kbd><kbd>E</kbd> 左右转　<kbd>Y</kbd><kbd>H</kbd> 上下转　<kbd>J</kbd> 开火　<kbd>K</kbd> 跳　<kbd>U</kbd> 手榴弹　<kbd>I</kbd> 互动（上炮 / 上机枪）　<kbd>L</kbd> 亮剑　<kbd>N</kbd> 骑兵连　<kbd>O</kbd> 开镜　<kbd>Enter</kbd> 开始</span><span class="touch-only">左下摇杆移动，右半屏滑动瞄准，按住开火键也能拖着瞄；准星靠近敌人会自动吸一点。打掉机枪手后，阵地里的机枪可以接管。</span>');
-    p.append(head, start, opts, this._modes(), foot);
+    this.menuOpts = opts; this.menuModes = this._modes();
+    p.append(head, start, chs, opts, this.menuModes, foot);
     menu.appendChild(p);
     this.menuPanel = p;
 
@@ -101,7 +114,7 @@ export class UI {
     for (const k of Object.keys(OPTS)) if (OPTS[k].where.includes('p')) o2.appendChild(this._optBtn(k));
     o2.appendChild(this._btn('<span class="ol">全屏</span><span class="ov">切换</span>', 'opt', () => this.app.fullscreen()));
     c2.append(o2, this._modes());
-    c2.appendChild(el('div', 'foot', '<span class="pc-only">准星对着敌人开火，靠近目标会吸附，打头伤害加倍；<kbd>R</kbd> 换弹，打空自动换。<kbd>空格</kbd>/<kbd>K</kbd> 跳：能跳过铁丝网、跳上箱子和土台、跳进机枪阵地侧面，也能跳起躲山本的突进。<kbd>I</kbd>/<kbd>F</kbd> 互动：打掉机枪手后走进阵地接管机枪；炮位旁上炮，<kbd>A</kbd><kbd>D</kbd> 转炮口、<kbd>W</kbd><kbd>S</kbd> 调仰角、开火键开炮；再按一次离开。<kbd>U</kbd>/<kbd>G</kbd> 手榴弹，<kbd>L</kbd>/<kbd>V</kbd> 亮剑（能和山本拼刀），<kbd>N</kbd>/<kbd>X</kbd> 骑兵连，<kbd>Esc</kbd> 继续。</span><span class="touch-only">准星对着敌人开火，靠近目标会吸附，打头伤害加倍。跳：能跳过铁丝网、跳上箱子和土台、跳进机枪阵地侧面，也能跳起躲山本的突进。打掉机枪手后走进阵地点“机枪”接管；炮位旁点“操炮”，摇杆转炮口、调仰角，开火键开炮。亮剑能和山本拼刀。</span>'));
+    c2.appendChild(el('div', 'foot', '<span class="pc-only">准星对着敌人开火，靠近目标会吸附，打头伤害加倍；<kbd>R</kbd> 换弹，打空自动换。<kbd>空格</kbd>/<kbd>K</kbd> 跳：能跳过铁丝网、跳上箱子和土台、跳进机枪阵地侧面，也能跳起躲 Boss 的突进。<kbd>I</kbd>/<kbd>F</kbd> 互动：打掉机枪手后走进阵地接管机枪；炮位旁上炮，<kbd>A</kbd><kbd>D</kbd> 转炮口、<kbd>W</kbd><kbd>S</kbd> 调仰角、开火键开炮；再按一次离开。<kbd>U</kbd>/<kbd>G</kbd> 手榴弹，<kbd>L</kbd>/<kbd>V</kbd> 亮剑（撞上 Boss 的拔刀突进就是拼刀），<kbd>N</kbd>/<kbd>X</kbd> 骑兵连，<kbd>Esc</kbd> 继续。</span><span class="touch-only">准星对着敌人开火，靠近目标会吸附，打头伤害加倍。跳：能跳过铁丝网、跳上箱子和土台、跳进机枪阵地侧面，也能跳起躲 Boss 的突进。打掉机枪手后走进阵地点“机枪”接管；炮位旁点“操炮”，摇杆转炮口、调仰角，开火键开炮。亮剑撞上 Boss 的拔刀突进就是拼刀。</span>'));
     cols.append(c1, c2); pp.appendChild(cols); pause.appendChild(pp);
 
     // 结算
@@ -123,6 +136,9 @@ export class UI {
     // 紧凑横屏：开始按钮并到标题同一行，省出高度
     if (compact) this.head.appendChild(this.startRow);
     else this.menuPanel.insertBefore(this.startRow, this.menuPanel.children[1]);
+    // 紧凑横屏：选章三键并进“操作模式”那一行，省出一行高度
+    if (compact) this.menuModes.insertBefore(this.chapterRow, this.menuModes.firstChild);
+    else this.menuPanel.insertBefore(this.chapterRow, this.menuOpts);
     this.compact = compact;
   }
 
@@ -360,7 +376,7 @@ export class UI {
   }
 
   result(d) {
-    this.resTitle.textContent = d.win ? (d.title || '平安县城，拿下了！') : '攻城受挫';
+    this.resTitle.textContent = d.win ? (d.title || this.app.chapter.winTitle) : (this.app.chapter.loseTitle || '战斗受挫');
     this.resRank.textContent = d.win ? '评价：' + d.rank : '命数用尽';
     this.resQuote.innerHTML = d.quote;
     this.resStats.innerHTML = d.rows.map(([k, v]) => `<div><span>${k}</span><b>${v}</b></div>`).join('');

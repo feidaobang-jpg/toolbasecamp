@@ -1,5 +1,5 @@
 {
- "at": "2026-10-14T02:40:11.602Z",
+ "at": "2026-10-14T04:00:41.952Z",
  "note": "触屏为 Edge 无头浏览器的触控模拟，不是手机真机",
  "results": [
   {
@@ -21,6 +21,15 @@
     "rot": false,
     "compact": false
    }
+  },
+  {
+   "name": "键盘 ↓ 能依次选到三章的选章按钮",
+   "ok": true,
+   "detail": [
+    "cangyunling",
+    "lijiapo",
+    "pingan"
+   ]
   },
   {
    "name": "键盘 ↓ 选到“命数”、→ 调整",

@@ -52,7 +52,7 @@ const check = (name, ok, detail) => { out.push({ name, ok: !!ok, detail }); cons
   check('上炮后瞄准城楼：落点标成红色并注明“秀芹在上面”', elev.manned && elev.hit === 'tower' && aimCol.col === 'ff6a55' && /秀芹在上面/.test(aimCol.aim), { elev, aimCol });
   const shells0 = await page.evaluate(() => __lj.game.stats.shells);
   await press('KeyJ');
-  const of = await page.evaluate(() => { const g = __lj.game; return { ending: g.flags.ending, scn: !!g.scn, shells: g.stats.shells, saved: localStorage.getItem('lj_pingan_v1_ending') }; });
+  const of = await page.evaluate(() => { const g = __lj.game; return { ending: g.flags.ending, scn: !!g.scn, shells: g.stats.shells, saved: localStorage.getItem('lj_campaign_v1_ending_pingan') }; });
   check('朝城楼按 J：先进“开炮”过场（李云龙“不会拿士兵的生命去换自己的老婆”），炮还没出膛，结局记为原作', of.ending === 'classic' && of.scn && of.shells === shells0 && /classic/.test(of.saved || '') && (await vlog()).includes('li_bushi'), of);
   // 过场里乱拖视角，炮口也不能被带偏
   await page.evaluate(() => { const inp = __lj.app.input; for (let i = 0; i < 20; i++) inp._look(40, 10, 'mouse'); });
@@ -91,7 +91,7 @@ const check = (name, ok, detail) => { out.push({ name, ok: !!ok, detail }); cons
   const score0 = await page.evaluate(() => __lj.game.score);
   await page.evaluate(() => { __lj.game.cam.yaw = 0; });
   await page.keyboard.down('KeyW'); await step(1.6); await page.keyboard.up('KeyW'); await step(0.1);
-  const rs = await page.evaluate(() => { const g = __lj.game; return { ending: g.flags.ending, cast: g.cast.length, onWall: g.enemies.filter((e) => e.alive && e.y > 2).length, saved: localStorage.getItem('lj_pingan_v1_ending'), dScore: g.score }; });
+  const rs = await page.evaluate(() => { const g = __lj.game; return { ending: g.flags.ending, cast: g.cast.length, onWall: g.enemies.filter((e) => e.alive && e.y > 2).length, saved: localStorage.getItem('lj_campaign_v1_ending_pingan'), dScore: g.score }; });
   check('抉择时按 W 冲进城门：走改写结局，城楼上的人撤走，城墙上不再有敌人，结局记为改写，加 2500 分', rs.ending === 'rescue' && rs.cast === 0 && rs.onWall === 0 && /rescue/.test(rs.saved || '') && rs.dScore - score0 >= 2500, Object.assign(rs, { score0 }));
   await step(1.8);
   const r4 = await page.evaluate(() => ({ phase: __lj.game.phase, tower: __lj.game.world.tower.alive, cur: document.getElementById('dialog').textContent, q: __lj.app.ui.dlgQ.map((x) => x.text).join('') }));
@@ -115,10 +115,10 @@ const check = (name, ok, detail) => { out.push({ name, ok: !!ok, detail }); cons
     const a = __lj.app, out = {};
     a.toMenu(); a.s.startPhase = 4; a.start(false); __lj.step(5, false);
     out.rescue = { ending: a.game.flags.ending, tower: a.game.world.tower.alive };
-    localStorage.setItem('lj_pingan_v1_ending', JSON.stringify('classic'));
+    localStorage.setItem('lj_campaign_v1_ending_pingan', JSON.stringify('classic'));
     a.toMenu(); a.start(false); __lj.step(5, false);
-    out.classic = { ending: a.game.flags.ending, tower: a.game.world.tower.alive, raw: localStorage.getItem('lj_pingan_v1_ending') };
-    localStorage.removeItem('lj_pingan_v1_ending');
+    out.classic = { ending: a.game.flags.ending, tower: a.game.world.tower.alive, raw: localStorage.getItem('lj_campaign_v1_ending_pingan') };
+    localStorage.removeItem('lj_campaign_v1_ending_pingan');
     a.toMenu(); a.start(false); __lj.step(5, false);
     out.none = { ending: a.game.flags.ending, tower: a.game.world.tower.alive };
     a.toMenu(); a.s.startPhase = 1; a.start(false); __lj.step(5, false);

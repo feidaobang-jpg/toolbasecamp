@@ -30,7 +30,7 @@ http.createServer((req, res) => {
   });
 }).listen(port, host, () => {
   console.log(`serving ${root}`);
-  console.log(`重做版： http://localhost:${port}/html/game/gunfire-assembly/pingan/`);
+  console.log(`亮剑战役： http://localhost:${port}/html/game/gunfire-assembly/liangjian/?ch=pingan`);
   console.log(`原版：   http://localhost:${port}/html/game/gunfire-assembly/`);
   if (host === '0.0.0.0') for (const list of Object.values(os.networkInterfaces())) for (const n of list || []) if (n.family === 'IPv4' && !n.internal) console.log(`手机：   http://${n.address}:${port}/html/game/gunfire-assembly/pingan/`);
 });

@@ -59,8 +59,10 @@ const layoutScript = (ids) => {
     if (h === 580) await shot(page, 'menu-1280x580.png');
     if (h === 720) {
       await shot(page, 'menu-1280x720.png');
-      // 键盘走一遍菜单：↓ 到选项、→ 改值、能进入操作模式三键
-      await page.keyboard.press('ArrowDown'); await page.keyboard.press('ArrowDown');
+      // 键盘走一遍菜单：↓ 经过选章三键到选项、→ 改值、能进入操作模式三键
+      const seen = [];
+      for (let i = 0; i < 20; i++) { await page.keyboard.press('ArrowDown'); const a = await page.evaluate(() => ({ opt: document.activeElement.dataset.opt, ch: document.activeElement.dataset.ch })); if (a.ch) seen.push(a.ch); if (a.opt === 'lives') break; }
+      check('键盘 ↓ 能依次选到三章的选章按钮', seen.join(',') === 'cangyunling,lijiapo,pingan', seen);
       const before = await page.evaluate(() => __lj.app.s.lives);
       const focused = await page.evaluate(() => document.activeElement.dataset.opt);
       await page.keyboard.press('ArrowRight');

@@ -60,7 +60,7 @@ const { open, shot, start, BASE } = require('./lib.cjs');
   const p2 = await ctx.newPage();
   await p2.setContent(`<html><body style="margin:0;background:#000"><iframe id="f" src="${BASE}?qa=1" style="border:0;width:0;height:0" allow="fullscreen"></iframe></body></html>`);
   await p2.waitForTimeout(2500);
-  const fr = p2.frames().find((f) => f.url().includes('gunfire-assembly/pingan'));
+  const fr = p2.frames().find((f) => f.url().includes('gunfire-assembly/liangjian'));
   const z0 = await fr.evaluate(() => ({ ok: !!window.__lj, size: window.__lj && __lj.app.size(), loading: document.getElementById('loading').hidden }));
   await p2.evaluate(() => { const f = document.getElementById('f'); f.style.width = '844px'; f.style.height = '390px'; });
   await p2.waitForTimeout(1200);

@@ -1,5 +1,5 @@
 {
- "at": "2026-10-14T02:39:11.996Z",
+ "at": "2026-10-14T03:58:34.882Z",
  "results": [
   {
    "name": "入口用的是兼容包（经典脚本），没有模块脚本",
@@ -127,7 +127,7 @@
     "ads": true,
     "ads2": false,
     "y0": 0,
-    "y1": -0.281239978928293
+    "y1": -0.28124199160756064
    }
   },
   {
@@ -150,7 +150,7 @@
    "detail": null
   },
   {
-   "name": "枪火集结 0.2.x 大厅正常；抗战战役第三章点进去是重做版主菜单",
+   "name": "枪火集结大厅正常；抗战战役第三章点进去是亮剑战役页面的平安县城",
    "ok": true,
    "detail": {
     "ver": "v0.2.3",
@@ -160,9 +160,10 @@
      "平安县城 · 开炮｜第 3 章 · 重做版 / 越肩射击 / 操炮 / 双结局"
     ],
     "landed": {
-     "url": "/html/game/gunfire-assembly/pingan/index.html",
+     "url": "/html/game/gunfire-assembly/liangjian/index.html",
+     "ch": "pingan",
      "menu": true,
-     "title": "亮剑：攻打平安县城"
+     "title": "亮剑 · 攻打平安县城"
     }
    }
   },

@@ -1,5 +1,5 @@
 {
- "at": "2026-10-14T02:39:41.428Z",
+ "at": "2026-10-14T03:58:31.394Z",
  "results": [
   {
    "name": "第三人称：W 朝镜头前方走",
@@ -669,7 +669,7 @@
    "detail": {
     "tgtAlive": true,
     "heads": 0,
-    "heroLost": 104,
+    "heroLost": 3,
     "enemyShots": 9,
     "used": 0
    }
@@ -680,8 +680,8 @@
    "detail": {
     "tgtAlive": true,
     "heads": 0,
-    "heroLost": 3,
-    "enemyShots": 9,
+    "heroLost": 4,
+    "enemyShots": 10,
     "used": 0
    }
   },
@@ -690,7 +690,7 @@
    "ok": true,
    "detail": {
     "y0": 0,
-    "y1": -0.28123431503999974
+    "y1": -0.2812343150399998
    }
   },
   {

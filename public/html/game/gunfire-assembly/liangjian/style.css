@@ -146,6 +146,15 @@ body.touch-on #aim-info { top: calc(var(--sat) + 100px); }
 .modes .btn { justify-content: center; }
 .modes .btn[aria-pressed="true"] { background: var(--ink); color: #ffe9a8; border-color: var(--gold); box-shadow: inset 0 0 0 2px var(--gold); }
 .modes .btn[aria-pressed="true"]::before { content: '✔ '; }
+/* 选章：三章一排，当前章节深底金字，没做好的章节变淡 */
+.chapters { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.chapters .btn { min-height: 44px; justify-content: center; gap: 6px; }
+.chapters .cn { font-size: 12px; color: var(--ink2); }
+.chapters .ct { font-family: var(--kai); font-size: 18px; letter-spacing: 2px; }
+.chapters .cs { font-size: 11px; color: var(--ink2); font-weight: 700; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.chapters .btn.cur { background: var(--ink); color: #ffe9a8; border-color: var(--gold); box-shadow: inset 0 0 0 2px var(--gold); }
+.chapters .btn.cur .cn { color: #e8d49a; }
+.chapters .btn[aria-disabled="true"] { opacity: .62; box-shadow: none; border-style: dashed; }
 .foot { font-size: 12px; color: var(--ink2); font-weight: 700; line-height: 1.6; }
 .foot kbd { display: inline-block; min-width: 18px; padding: 0 4px; margin: 0 1px; border-radius: 4px; background: var(--ink); color: var(--paper); font: 800 11px ui-monospace, Consolas, monospace; text-align: center; }
 body.touch-on .pc-only { display: none; }
@@ -206,3 +215,7 @@ body:not(.touch-on) .touch-only { display: none; }
 .ld-title { font-family: var(--kai); font-size: 34px; font-weight: 900; letter-spacing: 4px; color: #ffe9a8; }
 #ld-text { font-size: 15px; font-weight: 700; }
 #ld-retry { padding: 9px 20px; border: 2px solid #efe3c4; border-radius: 10px; color: #efe3c4; font-weight: 800; }
+#stage.compact .chapters { gap: 6px; flex: 1.15; display: flex; margin-right: 6px; }
+#stage.compact .chapters .cn { display: none; }
+#stage.compact .chapters .ct { font-size: 15px; letter-spacing: 1px; }
+#stage.compact .chapters .cs { display: none; }

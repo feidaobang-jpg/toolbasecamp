@@ -92,27 +92,27 @@ const check = (name, ok, detail) => { out.push({ name, ok: !!ok, detail }); cons
   }
 
   // ---- 旧设置换算：sv=2 且存着“按住拖动”的，换到鼠标接管一次；视角不再被重算 ----
-  await page.evaluate(() => { localStorage.setItem('lj_pingan_v1_settings', JSON.stringify({ sv: 2, view: 1, mouseAim: 'drag', volume: 30 })); });
+  await page.evaluate(() => { localStorage.setItem('lj_campaign_v1_settings', JSON.stringify({ sv: 2, view: 1, mouseAim: 'drag', volume: 30 })); });
   await page.reload({ waitUntil: 'load' }); await page.waitForFunction(() => window.__lj && document.getElementById('loading').hidden);
   const mig = await page.evaluate(() => ({ mouseAim: __lj.app.s.mouseAim, view: __lj.app.s.view, volume: __lj.app.s.volume }));
   check('旧设置换算：鼠标瞄准改为接管，视角与音量保留', mig.mouseAim === 'lock' && mig.view === 1 && mig.volume === 30, mig);
   const lobbyBtn = await page.evaluate(() => [...document.querySelectorAll('#menu button')].some((b) => /返回大厅/.test(b.textContent)));
   check('主菜单有“返回大厅”', lobbyBtn, null);
-  await page.evaluate(() => localStorage.removeItem('lj_pingan_v1_settings'));
+  await page.evaluate(() => localStorage.removeItem('lj_campaign_v1_settings'));
 
   // ---- 枪火集结：大厅能开，抗战战役第三章进入重做版 ----
   const p2 = await ctx.newPage(); const e2 = [];
   p2.on('pageerror', (e) => e2.push(e.message));
-  await p2.goto(BASE.replace(/pingan\/$/, ''), { waitUntil: 'load' });
+  await p2.goto(BASE.replace(/liangjian\/$/, ''), { waitUntil: 'load' });
   await p2.waitForFunction(() => window.__ccReady, null, { timeout: 30000 });
   const ver = await p2.evaluate(() => document.getElementById('gameVersion').textContent);
   await p2.click('#btnResistance'); await p2.waitForTimeout(400);
   const chap = await p2.evaluate(() => [...document.querySelectorAll('.warChapter')].map((b) => b.querySelector('strong').textContent + '｜' + b.querySelector('small').textContent));
   await p2.click('.warChapter[data-chapter="2"]');
-  await p2.waitForURL(/gunfire-assembly\/pingan\/index\.html/, { timeout: 8000 }).catch(() => {});
+  await p2.waitForURL(/gunfire-assembly\/liangjian\/index\.html/, { timeout: 8000 }).catch(() => {});
   await p2.waitForTimeout(1500);
-  const landed = await p2.evaluate(() => ({ url: location.pathname, menu: !!document.getElementById('menu') && !document.getElementById('menu').hidden, title: document.title }));
-  check('枪火集结 0.2.x 大厅正常；抗战战役第三章点进去是重做版主菜单', /^v0\.2\.\d+$/.test(ver) && /pingan\/index\.html$/.test(landed.url) && landed.menu, { ver, chap, landed });
+  const landed = await p2.evaluate(() => ({ url: location.pathname, ch: new URLSearchParams(location.search).get('ch'), menu: !!document.getElementById('menu') && !document.getElementById('menu').hidden, title: document.title }));
+  check('枪火集结大厅正常；抗战战役第三章点进去是亮剑战役页面的平安县城', /^v0\.\d+\.\d+$/.test(ver) && /liangjian\/index\.html$/.test(landed.url) && landed.ch === 'pingan' && landed.menu, { ver, chap, landed });
   await p2.evaluate(() => [...document.querySelectorAll('#menu button')].find((b) => /返回大厅/.test(b.textContent)).click());
   await p2.waitForURL(/gunfire-assembly\/index\.html/, { timeout: 8000 }).catch(() => {});
   await p2.waitForTimeout(800);

@@ -1,11 +1,12 @@
 // 入口：设置、布局（含手机竖屏旋转为横屏）、主循环、暂停与菜单路由
 import * as THREE from '../vendor/three.module.js';
-import { Game } from './game.js';
+import { CHAPTERS } from './chapters/index.js';
 import { UI, VIEW_NAMES } from './ui.js';
 import { Input } from './input.js';
 import { GameAudio } from './audio.js';
 
-const NS = 'lj_pingan_v1_';
+const NS = 'lj_campaign_v1_';
+const OLD_NS = 'lj_pingan_v1_';   // v0.5.0 以前只有平安县城一章时的存档前缀
 const DEFAULTS = { startPhase: 1, lives: 'inf', armor: 'std', view: 0, quality: 'auto', volume: 80, touchKeys: 'auto', fps: false, mode: 'auto', aimSens: 'mid', mouseAim: 'lock', leftFire: false };
 const SETTINGS_VERSION = 3;   // 2：视角从四个精简为 第三人称 / 第一人称；3：电脑端默认鼠标接管
 const CYCLE = {
@@ -20,10 +21,30 @@ const store = {
   del(k) { try { localStorage.removeItem(NS + k); } catch (e) { /* 忽略 */ } },
 };
 
+// 一次性把旧的平安县城存档搬到新前缀：设置共用，进度 / 最高分 / 结局归到平安县城名下；旧键不删，方便回退
+function migrate() {
+  try {
+    if (localStorage.getItem(NS + 'migrated')) return;
+    const old = (k) => localStorage.getItem(OLD_NS + k);
+    if (old('settings') && !localStorage.getItem(NS + 'settings')) localStorage.setItem(NS + 'settings', old('settings'));
+    for (const k of ['cp', 'best', 'ending']) if (old(k) !== null && localStorage.getItem(NS + k + '_pingan') === null) localStorage.setItem(NS + k + '_pingan', old(k));
+    localStorage.setItem(NS + 'migrated', '1');
+  } catch (e) { /* 存不了就算了 */ }
+}
+
 class App {
   constructor() {
     this.stage = $('stage');
     this.canvas = $('gl');
+    migrate();
+    // 当前章节：网址里的 ?ch= 优先，其次上次玩的，再次第一个做好的章节
+    const q0 = new URLSearchParams(location.search);
+    const playable = CHAPTERS.filter((c) => c.Game);
+    this.chapters = CHAPTERS;
+    this.chapter = playable.find((c) => c.id === q0.get('ch')) || playable.find((c) => c.id === store.get('lastCh')) || playable[0];
+    store.set('lastCh', this.chapter.id);
+    document.title = '亮剑 · ' + this.chapter.title;
+    const lt = document.querySelector('#loading .ld-title'); if (lt) lt.textContent = this.chapter.loading;
     const saved = store.get('settings') || {};
     // 旧存档的视角只换算一次：斜俯视 / 战术俯视 / 正视 → 第三人称，第一人称保持
     const sv = saved.sv || 0;
@@ -59,7 +80,7 @@ class App {
       onLockLost: () => { if (this.state === 'play') this.pause(); },
       onLockFail: (silent) => { if (!silent && this.state === 'play') this.ui.toast('鼠标没接管上：再点一下画面试试，不行就按住拖动瞄准', 3); },
     });
-    this.game = new Game(this);
+    this.game = new this.chapter.Game(this);
     this.applyQuality();
     this.applyMode();
     this.layout(true);
@@ -94,6 +115,15 @@ class App {
   // 电脑端默认鼠标接管：开局、继续时自动试一次；浏览器或外壳不允许时保持按住拖动，点一下画面会再试
   engageLock() { if (!this.manual && !this.isTouch() && this.s.mouseAim === 'lock') this.input.requestLock(true); }
   toLobby() { this.input.exitLock(); location.href = '../index.html'; }
+  // 换章：重新载入页面（每章场景不同，整页重建最干净），保留 qa 等其余参数
+  switchChapter(id) {
+    const c = this.chapters.find((x) => x.id === id);
+    if (!c || id === this.chapter.id) return;
+    if (!c.Game) { this.ui.toast(c.note ? '第' + '一二三'[c.num - 1] + '章' + c.name + '：' + c.note : '这一章还在制作中', 2.6); return; }
+    const q = new URLSearchParams(location.search); q.set('ch', id);
+    store.set('lastCh', id);
+    location.href = location.pathname + '?' + q.toString();
+  }
   onDevice(kind) { if (this.device === kind) return; this.device = kind; if (this.s.mode === 'auto') this.applyMode(); }
   applyMode() {
     const touch = this.isTouch();
@@ -115,11 +145,11 @@ class App {
     this.game.scene.traverse((o) => { if (o.material) { const ms = Array.isArray(o.material) ? o.material : [o.material]; for (const m of ms) m.needsUpdate = true; } });
     this.ui.refresh();
   }
-  checkpoint() { const c = store.get('cp'); return c >= 2 && c <= 5 ? c : 0; }
-  saveCheckpoint(n) { if (n >= 2) store.set('cp', n); }
+  checkpoint() { const c = store.get('cp_' + this.chapter.id); return c >= 2 && c <= 5 ? c : 0; }
+  saveCheckpoint(n) { if (n >= 2) store.set('cp_' + this.chapter.id, n); }
   // 上次在城楼前选的路：原作（朝城楼开炮）或改写（冲进去救秀芹）。从第四、五阶段直接开局时沿用
-  ending() { return store.get('ending') === 'rescue' ? 'rescue' : 'classic'; }
-  saveEnding(e) { store.set('ending', e); }
+  ending() { return store.get('ending_' + this.chapter.id) || ''; }
+  saveEnding(e) { store.set('ending_' + this.chapter.id, e); }
   size() { return [this.w, this.h]; }
   sfx(n) { this.audio.play(n, 0.8); }
 
@@ -232,8 +262,9 @@ class App {
     this.input.clear();
   }
   onResult(d) {
-    let best = store.get('best') || 0;
-    if (d.win && !d.demo) { if (d.score > best) { best = d.score; store.set('best', best); } store.del('cp'); }
+    const id = this.chapter.id;
+    let best = store.get('best_' + id) || 0;
+    if (d.win && !d.demo) { if (d.score > best) { best = d.score; store.set('best_' + id, best); } store.del('cp_' + id); }
     d.best = best;
     this.input.exitLock();
     this.state = 'result';

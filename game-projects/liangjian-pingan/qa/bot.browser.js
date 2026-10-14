@@ -1,6 +1,6 @@
 // 浏览器里运行的自动操作脚本（验收用）：走键盘输入层按键，用“鼠标拖动”的输入通道转准星，自己瞄、自己打
 // 它不躲子弹、不找掩体，只用来检查流程不软锁、估计压力，不能代替真人试玩。
-// 使用：先 window.__W = await import('./js/world.js')，再 window.__bot = window.__installBot()，每帧调用 __bot(dt)
+// 使用：先 window.__W = await import('./js/world-kit.js')，再 window.__bot = window.__installBot()，每帧调用 __bot(dt)
 window.__installBot = function () {
   const g = __lj.game, app = __lj.app, inp = app.input, W = window.__W;
   const K = {};

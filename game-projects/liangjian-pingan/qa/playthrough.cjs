@@ -16,7 +16,7 @@ const BOT = require('fs').readFileSync(require('path').join(__dirname, 'bot.brow
   // 先切到手动步进再开局，保证每次运行的时间线完全一致
   await page.evaluate(() => __lj.manual(true));
   await start(page);
-  await page.evaluate(async () => { window.__W = await import('./js/world.js'); });
+  await page.evaluate(async () => { window.__W = await import('./js/world-kit.js'); });
   await page.evaluate((r) => { window.__route = r; }, ROUTE);
   await page.addScriptTag({ content: BOT });
   await page.evaluate(() => { window.__bot = window.__installBot(); __lj.manual(true); });

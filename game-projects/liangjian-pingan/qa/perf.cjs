@@ -36,7 +36,7 @@ async function sample(page, seconds) {
     const env = await page.evaluate(() => { const gl = __lj.app.renderer.getContext(); const e = gl.getExtension('WEBGL_debug_renderer_info'); const cv = document.getElementById('gl'); return { renderer: e ? gl.getParameter(e.UNMASKED_RENDERER_WEBGL) : 'unknown', dpr: devicePixelRatio, canvas: [cv.width, cv.height], ua: navigator.userAgent.replace(/^.*(Edg\/[\d.]+).*$/, '$1') }; });
     await page.evaluate((q) => { const a = __lj.app; a.s.quality = q; a.applyQuality(); a.layout(true); a.s.lives = 'inf'; }, c.quality);
     const run = { name: c.name, env, samples: [] };
-    await page.evaluate(async () => { window.__W = await import('./js/world.js'); });
+    await page.evaluate(async () => { window.__W = await import('./js/world-kit.js'); });
     await page.addScriptTag({ content: BOT });
     for (const [phase, view, secs] of [[1, 0, 12], [1, 1, 10], [2, 0, 12], [4, 0, 14], [4, 1, 10], [5, 0, 10]]) {
       await page.evaluate(([v, ph]) => { const a = __lj.app; a.s.view = v; a.s.startPhase = ph; if (a.state !== 'menu') a.toMenu(); a.start(false); window.__bot = window.__installBot(); }, [view, phase]);

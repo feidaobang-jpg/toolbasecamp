@@ -28,7 +28,7 @@ const clean = (page, phase = 1) => page.evaluate((p) => { const g = __lj.game; g
   // 旧版本存下的视角只换算一次：斜俯视 / 战术俯视 / 正视 → 第三人称，旧的第一人称（3）→ 第一人称（1）
   const mig = {};
   for (const [label, saved] of [['old3', { view: 3 }], ['old1', { view: 1 }], ['old2', { view: 2 }], ['new1', { view: 1, sv: 2 }]]) {
-    await page.evaluate((v) => localStorage.setItem('lj_pingan_v1_settings', JSON.stringify(v)), saved);
+    await page.evaluate((v) => localStorage.setItem('lj_campaign_v1_settings', JSON.stringify(v)), saved);
     await page.reload({ waitUntil: 'load' });
     await page.waitForFunction(() => window.__lj && document.getElementById('loading').hidden);
     mig[label] = await page.evaluate(() => ({ view: __lj.app.s.view, name: document.querySelector('#menu .btn[data-opt="view"] .ov').textContent }));
@@ -132,9 +132,9 @@ const clean = (page, phase = 1) => page.evaluate((p) => { const g = __lj.game; g
   await step(page, 80);
   const demo = await page.evaluate(() => { const g = __lj.game, h = g.hero; g.fireBullet(1, h.x + 3, 1.2, h.z, h.x, 1.2, h.z, 1, 34, null); __lj.step(12, true); return { hp: h.hp, badge: !document.getElementById('demo-badge').hidden, ring: g.demoRing.visible, flag: g.stats.demo }; });
   check('演示模式：无敌、右上有标识、主角脚下有护罩', demo.hp === 5 && demo.badge && demo.ring && demo.flag, demo);
-  const best0 = await page.evaluate(() => { localStorage.setItem('lj_pingan_v1_best', '1'); const g = __lj.game; g.score = 99999; g.finish(true); return { best: localStorage.getItem('lj_pingan_v1_best'), total: document.querySelector('#result .total').textContent }; });
+  const best0 = await page.evaluate(() => { localStorage.setItem('lj_campaign_v1_best_pingan', '1'); const g = __lj.game; g.score = 99999; g.finish(true); return { best: localStorage.getItem('lj_campaign_v1_best_pingan'), total: document.querySelector('#result .total').textContent }; });
   check('演示局不计最高分并在结算注明', best0.best === '1' && /演示局/.test(best0.total), best0);
-  await page.evaluate(() => { __lj.app.demo = false; localStorage.removeItem('lj_pingan_v1_best'); __lj.app.toMenu(); });
+  await page.evaluate(() => { __lj.app.demo = false; localStorage.removeItem('lj_campaign_v1_best_pingan'); __lj.app.toMenu(); });
 
   // ---------- 画质 / 帧率；弹幕已去掉 ----------
   await page.evaluate(() => { __lj.app.start(false); });
@@ -163,7 +163,7 @@ const clean = (page, phase = 1) => page.evaluate((p) => { const g = __lj.game; g
   check('无限命下核心失败条件仍有效：意大利炮被打坏后本阶段重来', fail.broke && fail.phase === 2 && fail.alive && fail.hp === 30 && fail.retries === 1 && fail.z > 95 && fail.state === 'play', fail);
 
   // ---------- 隐私：没有作者网站链接、没有账号表单 ----------
-  const priv = await page.evaluate(async () => { const texts = [document.documentElement.outerHTML]; for (const f of ['js/main.js', 'js/ui.js', 'js/game.js', 'js/ai.js', 'js/audio.js', 'js/input.js', 'js/world.js', 'js/models.js', 'js/fx.js', 'js/geo.js', 'js/util.js', 'style.css']) texts.push(await (await fetch(f)).text()); const all = texts.join('\n'); return { site: /zhengxiaohui/i.test(all), form: !!document.querySelector('form, input[type=password], input[type=tel], input[type=email]'), links: [...document.querySelectorAll('a[href]')].map((a) => a.href), urls: [...new Set(all.match(/https?:\/\/[^\s'"`)<]+/g) || [])].filter((u) => !/w3\.org/.test(u)) }; });
+  const priv = await page.evaluate(async () => { const texts = [document.documentElement.outerHTML]; for (const f of ['js/main.js', 'js/ui.js', 'js/game.js', 'js/ai.js', 'js/audio.js', 'js/input.js', 'js/world-kit.js', 'js/chapters/index.js', 'js/chapters/pingan.js', 'js/chapters/pingan-world.js', 'js/chapters/pingan-ai.js', 'js/models.js', 'js/fx.js', 'js/geo.js', 'js/util.js', 'style.css']) texts.push(await (await fetch(f)).text()); const all = texts.join('\n'); return { site: /zhengxiaohui/i.test(all), form: !!document.querySelector('form, input[type=password], input[type=tel], input[type=email]'), links: [...document.querySelectorAll('a[href]')].map((a) => a.href), urls: [...new Set(all.match(/https?:\/\/[^\s'"`)<]+/g) || [])].filter((u) => !/w3\.org/.test(u)) }; });
   check('隐私：包内没有作者网站地址、账号表单或跳出链接（只允许主动打开作者B站主页）', !priv.site && !priv.form && priv.links.length === 0 && priv.urls.every((u) => /space\.bilibili\.com\/16214353/.test(u)), priv);
 
   const bad = results.filter((r) => !r.ok);
