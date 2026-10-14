@@ -44,10 +44,14 @@
   "toy": {
    "id": 38678478981120,
    "slug": "chongchao-qianshao",
-   "status": "auditing",
+   "status": "published",
    "submitted_at": "2026-10-15T07:42:50+08:00",
    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_6nP6sgwy/index.html",
-   "note": "同一稳定包只提交一次审核；提交前预览 https://www.bilibili.com/toy/preview/preview_fenpWdm0/index.html 用 toy-package-check.cjs 10/10 与键位抽查通过。"
+   "note": "同一稳定包只提交一次审核；提交前预览 https://www.bilibili.com/toy/preview/preview_fenpWdm0/index.html 用 toy-package-check.cjs 10/10 与键位抽查通过。 平台 mtime 07:45:02 回执 published。",
+   "published_at": "2026-10-15T07:45:02+08:00",
+   "public_verified_at": "2026-10-15T07:46:08+08:00",
+   "public_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+   "public_check": "正式入口复跑 toy-package-check.cjs 10/10（releases/web-keys-v2/toy-public.json）与键位抽查（releases/web-keys-v2/toy-public-keys.json）"
   },
   "taptap": {
    "status": "not_published_by_default"

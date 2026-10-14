@@ -46,4 +46,7 @@
 
 ## 发布
 
-见同目录 `handoff.json`（网站部署核验、Toy 预览与提审记录）。
+- 网站：提交 cb8c1a96 部署成功，线上包与主线逐字节一致；线上 `verify-keys-v2.cjs` 虫潮 21/21（`qa-keys-starship-prod.json`）、枪火 10/10（`qa-keys-gunfire-prod.json`），线上亮剑 `interact.cjs` 19/19。
+- Toy：预览（虫潮 preview_fenpWdm0、枪火 preview_eKpwX3ij）跑 `toy-package-check.cjs` 10/10 与键位抽查后，2026-10-15 07:42 同包各提交一次，07:45 两款 published；正式入口复跑同一套检查通过（本目录 `toy-public*.json`，枪火的在 `gunfire-assembly/media-kit/releases/web-keys-v2-v0.5.0/`）。
+- B站简介：亮剑两条视频（BV1Lfp76KEDd、BV1KFpJ6sEEK）里的“C 切换视角”“Q E Y H 转视角”因本版失实；同一时间主目录有别的会话在改这两条简介，本任务未改，交给用户决定一起改。虫潮旧视频里提到的 J / I / O 旧键仍能用，不算失实。
+- 详细记录见同目录 `handoff.json`。
