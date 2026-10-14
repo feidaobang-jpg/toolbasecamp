@@ -1,0 +1,87 @@
+{
+  "version": "web-pingan-story-v0.2.3",
+  "base_version": "web-pingan-skills-v0.2.2",
+  "scope": "抗战第三章平安县城（重做版 v0.5.0）：城楼上的秀芹过场与双结局、17 句喊话换成《亮剑》原声、去掉弹幕；删除枪火集结里不可达的旧第三章实现",
+  "source_commit": "73d6cca82207832522c83f29b8ac3d3c372a3972",
+  "task_id": "bbe2cc31-liangjian-pingan-remake-6",
+  "source": "Claude Code",
+  "user_instruction": "用户 2026-10-14：“旧第三章代码删掉。里面说话的声音能不能改成原版声音……城楼上要不要有秀芹和敌人等？……这些经典名场面如果能做出来就做吧。弹幕要不要去掉？”并在会话里选定：下载 5 个 B站片段用原声、双结局、去掉弹幕。旧账号会话额度用完中断，用户换账号后要求接着做。",
+  "validation": {
+    "local": {
+      "story.cjs": "19/19",
+      "interact.cjs": "19/19",
+      "views.cjs": "73/73（另 1 条环境记录）",
+      "mobile.cjs": "106/106（触控模拟）",
+      "options.cjs": "43/43",
+      "gunfire-chapters.cjs": "9/9",
+      "playthrough": "原作路线 标准 331.4 秒、宽松 330.5 秒、一发 209.8 秒；改写路线（ROUTE=rescue）标准 214.2 秒；四局都打到结算"
+    },
+    "website": {
+      "story.cjs_against_production": "19/19",
+      "gunfire-chapters.cjs_against_production": "9/9",
+      "records": [
+        "releases/web-pingan-story-v0.2.3/qa-website-story.json",
+        "releases/web-pingan-story-v0.2.3/qa-website-gunfire-chapters.json"
+      ]
+    },
+    "toy_preview": {
+      "url": "https://www.bilibili.com/toy/preview/preview_c1ymum1v/index.html",
+      "result": "18/18（电脑 1280×720、手机 844×390 触控模拟；版本 v0.2.3、第三章卡片、20 条语音、无弹幕；另记 Toy 外壳里鼠标接管可用）",
+      "record": "releases/web-pingan-story-v0.2.3/qa-toy-preview.json"
+    },
+    "toy_doctor": "ok，1 条 WARN（文件名无内容指纹，仅建议）",
+    "not_done": "真人试玩、手机真机、原声听感（截取点与音量）、整局录像"
+  },
+  "package": {
+    "zip_sha256": "9726f47ad43aee0f1de18b0ecb3a70c4b22f6394bbd58c9dde489391b00e4575",
+    "zip_bytes": 1408833,
+    "entry_index_html_bytes": 70002
+  },
+  "website": {
+    "status": "deployed_verified",
+    "at": "2026-10-14T10:50:38+08:00",
+    "source_commit": "73d6cca82207832522c83f29b8ac3d3c372a3972",
+    "version": "web-pingan-story-v0.2.3",
+    "runtime_sha256": {
+      "game.compat.js": "9c1b6de9558c63f7f11678c32cbf045c487afcf19761e275eb03a7286ee0e0fd",
+      "pingan/game.compat.js": "f14859392dc6290b44753395f8e4814c7bda99e676ee4fa4f6beb94cc530b128",
+      "pingan/style.css": "6ce4bbf85de9fceb3b5cae11abedd9479569b02cb95e8d9349b001b01bb44845",
+      "index.html": "8072c828c2782f09f227e6f62328578e52524692f317b73719db760872c6480f"
+    }
+  },
+  "toy": {
+    "id": 43022175699968,
+    "slug": "feidao-gunfire",
+    "url": "https://www.bilibili.com/toy/feidao-gunfire/index.html",
+    "status": "published",
+    "review_status": "published",
+    "submitted_version": "web-pingan-story-v0.2.3",
+    "submitted_at": "2026-10-14T10:52:07+08:00",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_c1ymum1v/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_ClNIYxlH/index.html",
+    "package_sha256": "9726f47ad43aee0f1de18b0ecb3a70c4b22f6394bbd58c9dde489391b00e4575",
+    "package_hash_kind": "zip_sha256",
+    "published_version": "web-pingan-story-v0.2.3",
+    "current_public_verification": "verified",
+    "watermark_enabled": false,
+    "status_checked_at": "2026-10-14T10:55:41+08:00",
+    "source_commit": "73d6cca82207832522c83f29b8ac3d3c372a3972",
+    "public_verified_at": "2026-10-14T10:55:34+08:00",
+    "public_verified_without_login": true,
+    "note": "2026-10-14T10:55:34+08:00 用未登录无头 Edge 核验正式入口为 v0.2.3：第三章卡片写秀芹与双结局、进入重做版、20 条语音都在包里、没有弹幕（qa-toy-public.json）。"
+  },
+  "bilibili": {
+    "decision": "deferred_accumulating",
+    "reason": "两条关联简介（BV1Lfp76KEDd、BV1KFpJ6sEEK，10-14 09:08 公开核验）写的“护送意大利炮、开炮轰塌城楼”仍然准确，没有提弹幕或合成语音；秀芹过场与双结局是已有章节里新增的一场戏，不属于新关卡、核心玩法、联机或存档的明显变化。自上次核验累计 0.2.2、0.2.3 两次稳定更新，未满 3 次、未满 7 天，记待合并；用户要求时可立即补写。"
+  },
+  "taptap": {
+    "decision": "not_published"
+  },
+  "thumbnail_decision": {
+    "decision": "keep"
+  },
+  "related": {
+    "pending_video_review": "另一会话的平安县城视频录自 v0.3.0，没有秀芹这场戏、喊话是合成音；与本版不一致，由用户审片时决定。",
+    "voice_license": "原声未取得授权，用户知情后选择使用；来源见 game-projects/liangjian-pingan/media-kit/assets/voice.json"
+  }
+}
