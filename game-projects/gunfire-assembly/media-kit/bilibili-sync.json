@@ -92,6 +92,21 @@
       "channels": [
         "bilibili"
       ]
+    },
+    {
+      "version": "web-cangyunling-v0.3.0",
+      "record": "releases/web-cangyunling-v0.3.0/handoff.json",
+      "website_verified_at": "2026-10-14T16:11:39+08:00",
+      "status": "pending_user_review",
+      "decision": "immediate_after_user_approval",
+      "reason": "现有简介写的“共三章：李家坡、骑兵连、平安县城”“先玩骑兵冲锋还是先开那门炮”已和线上不符（骑兵连章节删了、第一章换成苍云岭重做版），属于说明失实；但用户在本任务里要求每章发布后先把 BV1Lfp76KEDd 的改法给他看，同意后再改。草稿已在 2026-10-14 会话里给出。",
+      "summary": "抗战战役第一章换成重做版苍云岭（抓舌头、两发炮弹、坂田），章节顺序苍云岭 / 李家坡 / 平安县城，删骑兵连，大厅推荐入口改亮剑战役。",
+      "channels": [
+        "bilibili"
+      ],
+      "targets": [
+        "BV1Lfp76KEDd"
+      ]
     }
   ]
 }
