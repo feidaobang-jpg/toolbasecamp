@@ -2,15 +2,20 @@
   "version": "web-mode-focus-v0.38.3",
   "task_id": "01a13802-a02f-7001-b8dc-d20160dfb4ac-work01",
   "at": "2026-10-14T06:35:09.187368+00:00",
-  "status": "validated_pending_release",
+  "status": "released",
   "scope": "mode entry organization; gameplay and save keys preserved",
   "notes": "game-projects/site-games/releases/mode-focus-20261014/notes.md",
   "qa": "game-projects/site-games/releases/mode-focus-20261014/qa.json",
   "website": {
-    "status": "pending"
+    "status": "published_verified",
+    "verified_at": "2026-10-14T18:15:00+08:00"
   },
   "toy": {
-    "status": "pending"
+    "status": "included_in_other_package",
+    "included_in": "web-hud-layout-v0.38.4",
+    "submitted_at": "2026-10-14T18:31:51+08:00",
+    "published_at": "2026-10-14T18:32:25+08:00",
+    "note": "与 0.38.4 同包送审，未单独提审。"
   },
   "taptap": "not_requested"
 }

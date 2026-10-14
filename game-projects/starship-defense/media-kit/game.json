@@ -10,17 +10,17 @@
   },
   "name": "虫潮围城",
   "engine": "Three.js r152",
-  "current_version": "web-mode-focus-v0.38.3",
+  "current_version": "web-hud-layout-v0.38.4",
   "entrypoint": "public/html/game/starship-defense/index.html",
   "build_command": "cd game-projects/starship-defense && npm ci && npm run build; python build-toy.py",
   "release_intent": "web_demo",
   "development_model": "Codex（抗战战役、战地据点模式）；历史版本工具见各 release",
   "toy_id": "38678478981120",
-  "publication_status": "website_pending_toy_pending",
+  "publication_status": "website_published_toy_published",
   "preview_url": "https://www.bilibili.com/toy/preview/preview_BEbUAQjC/index.html",
   "public_play_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
   "media_readiness": "酸液围场开发阶段与操作证据已留存，原片无音轨；正式视频须另行取材审片",
-  "qa": "releases/web-acid-arena-v0.38.0/handoff.json",
+  "qa": "releases/web-hud-layout-20261014/handoff.json",
   "pending_toy_merge": [
     {
       "version": "web-zerg-corpse-spinfix-v0.33.3-combined",
@@ -33,13 +33,15 @@
     },
     {
       "version": "web-fps-rules-v0.34.0",
-      "status": "blocked_needs_user",
+      "status": "superseded",
       "package_sha256": "c59dd29758b2d4bd41ea52cc8b709f82213214b8bf35bcfd4b492213ad41f3ca",
       "source_commit": "3767ef0bdc27b8ebdee31402d76eb867c027ab47",
       "preview_url": "https://www.bilibili.com/toy/preview/preview_6GeeraCn/index.html",
       "reason": "预览电脑+手机视口实测通过，--yes 提审第 9 次返回 307008 无权限操作；mylist 仍为 published 且 mtime 未推进，登录正常",
       "action": "本人确认 Toy 后台后，从主线最新提交重新构建并补提；此前待补提的包均已被本包包含",
-      "record": "releases/web-fps-rules-v0.34.0/handoff.json"
+      "record": "releases/web-fps-rules-v0.34.0/handoff.json",
+      "superseded_by": "web-hud-layout-v0.38.4",
+      "resolution": "0.38.4 合并包（主线 98583053）已含该内容，2026-10-14T18:31:51+08:00 提审成功并于 18:32:25 published，未再出现 307008。"
     }
   ],
   "toy": {
@@ -48,7 +50,7 @@
     "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
     "visibility": "PUBLIC",
     "review_status": "published",
-    "verified_at": "2026-10-14T09:28:24+08:00",
+    "verified_at": "2026-10-14T18:34:00+08:00",
     "video_bindings": [
       "BV1Grpq6JEW5",
       "BV14hpL62EZ5",
@@ -60,14 +62,14 @@
     "linked_game_video": "https://www.bilibili.com/video/BV1Ujad6DEuf",
     "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_hgn7SJ2K/index.html",
     "title": "虫潮围城",
-    "zip_sha256": "22fe69d2c153381252ae9edb3fb8152295b3ea8920fce9fcdd6da922425b75f1",
+    "zip_sha256": "0dcf451d3ae7765c6fe048bf6c4c4774f22061d2d1c5d264165ec10885ecdea3",
     "submitted_date": "2026-10-14",
-    "release_record": "releases/web-look-keys-v0.38.1/handoff.json",
-    "submitted_version": "web-look-keys-v0.38.1",
-    "published_version": "web-look-keys-v0.38.1",
+    "release_record": "releases/web-hud-layout-20261014/notes.md",
+    "submitted_version": "web-hud-layout-v0.38.4",
+    "published_version": "web-hud-layout-v0.38.4",
     "preview_url": "https://www.bilibili.com/toy/preview/preview_dnjzefbX/index.html",
-    "note": "0.38.1（H/Y 键位迁移）于 2026-10-14T09:25:24+08:00 提交审核，已过审并于 2026-10-14T09:28:24+08:00 未登录核验正式入口。",
-    "package_sha256": "4e56f4d4a037b2f3bab76a3a3b315865d9530ccd956aac178e278b24caeec8cb",
+    "note": "0.38.4（主战役 HUD 重排）于 2026-10-14T18:31:51+08:00 提审、18:32:25 过审，18:34 未登录在正式入口内层 frame 实测到备战态 HUD 生效。",
+    "package_sha256": "0dcf451d3ae7765c6fe048bf6c4c4774f22061d2d1c5d264165ec10885ecdea3",
     "pending_updates": [
       {
         "version": "web-controls-v0.18.2",
@@ -117,6 +119,16 @@
         "status": "pending_22_batch",
         "summary": "抗战默认第一人称与举枪瞄准；橙金曳光和简化弹道；拖炮/高低调节/预计落点；手机按钮层级修复。",
         "record": "releases/web-resistance-aim-v0.33.1/handoff.json"
+      },
+      {
+        "version": "web-hud-layout-v0.38.4",
+        "classification": "普通补丁",
+        "summary": "主战役 HUD 重排：本章提示与保存状态胶囊移入左栏、开战与战术/指挥合成底部备战条，六个视口面板零重叠，手机上战术部署与队友指令恢复可点。",
+        "status": "published",
+        "submitted_at": "2026-10-14T18:31:51+08:00",
+        "published_verified_at": "2026-10-14T18:34:00+08:00",
+        "package_sha256": "0dcf451d3ae7765c6fe048bf6c4c4774f22061d2d1c5d264165ec10885ecdea3",
+        "record": "releases/web-hud-layout-20261014/handoff.json"
       }
     ],
     "published_entry": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
@@ -124,7 +136,7 @@
     "status": "published",
     "package_hash": "4e56f4d4a037b2f3bab76a3a3b315865d9530ccd956aac178e278b24caeec8cb",
     "submission_time_note": "本次提交回执见 toy-submit.json；published 时间来自平台mtime，公开实测时间单独记录。",
-    "public_verified_at": "2026-10-13T20:08:24.969238+08:00",
+    "public_verified_at": "2026-10-14T18:34:00+08:00",
     "public_runtime_evidence": {
       "status": "public_verified",
       "at": "2026-10-13T20:08:24.969238+08:00",
@@ -146,11 +158,11 @@
       "physical_phone_tested": false
     },
     "version": "web-acid-arena-v0.38.0",
-    "published_at": "2026-10-13T19:59:09+08:00",
+    "published_at": "2026-10-14T18:32:25+08:00",
     "publication_time_note": "平台mtime记录为本次published状态时间；公开实测时间另记。",
-    "last_published_version": "web-acid-arena-v0.38.0",
-    "last_submitted_version": "web-acid-arena-v0.38.0",
-    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_nsBzT0j2/index.html",
+    "last_published_version": "web-hud-layout-v0.38.4",
+    "last_submitted_version": "web-hud-layout-v0.38.4",
+    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_8jQvlF89/index.html",
     "current_public_verification": "verified",
     "channel_authorization": {
       "instruction": "昨天没发布的都做一下",
@@ -158,21 +170,21 @@
       "recorded_at": "2026-10-10T03:02:52.978211+00:00",
       "scope": "2026-10-09 已完成并已发布网站的冻结版本补发；替代昨日其他渠道暂缓指令，不包含新视频或其他未完成开发"
     },
-    "last_successful_sync_version": "web-acid-arena-v0.38.0",
-    "last_successful_sync_at": "2026-10-13T20:08:24.969238+08:00",
-    "public_verified_version": "web-acid-arena-v0.38.0",
+    "last_successful_sync_version": "web-hud-layout-v0.38.4",
+    "last_successful_sync_at": "2026-10-14T18:34:00+08:00",
+    "public_verified_version": "web-hud-layout-v0.38.4",
     "video_binding_verified_at": "2026-10-09T17:53:41.810316+08:00",
-    "source_commit": "778b8611d52d1aaac02b61ee131ae5e82ee468c2",
+    "source_commit": "985830534f1861d69575832774f26a923aca84e5",
     "package": {
-      "path": "C:/Users/37818/.claude/state/game-releases/artifacts/acid-arena-20261013/chongchao-qianshao-v0.38.0.zip",
-      "sha256": "4e56f4d4a037b2f3bab76a3a3b315865d9530ccd956aac178e278b24caeec8cb",
-      "bytes": 444902,
+      "path": "C:/Users/37818/.claude/state/game-releases/artifacts/hud-layout-20261014/chongchao-qianshao-v0.38.4.zip",
+      "sha256": "0dcf451d3ae7765c6fe048bf6c4c4774f22061d2d1c5d264165ec10885ecdea3",
+      "bytes": 447800,
       "submitted": true
     },
-    "submitted_package_sha256": "4e56f4d4a037b2f3bab76a3a3b315865d9530ccd956aac178e278b24caeec8cb",
+    "submitted_package_sha256": "0dcf451d3ae7765c6fe048bf6c4c4774f22061d2d1c5d264165ec10885ecdea3",
     "watermark_enabled": false,
-    "last_zip_sha256": "4e56f4d4a037b2f3bab76a3a3b315865d9530ccd956aac178e278b24caeec8cb",
-    "last_preview_url": "https://www.bilibili.com/toy/preview/preview_BEbUAQjC/index.html",
+    "last_zip_sha256": "0dcf451d3ae7765c6fe048bf6c4c4774f22061d2d1c5d264165ec10885ecdea3",
+    "last_preview_url": "https://www.bilibili.com/toy/preview/preview_8jQvlF89/index.html",
     "public_verified_without_login": true,
     "public_runtime_history": [
       {
@@ -211,11 +223,42 @@
           ]
         ],
         "record": "releases/web-fire-v0.37.3/toy-public-qa.json"
+      },
+      {
+        "status": "public_verified",
+        "at": "2026-10-14T18:34:00+08:00",
+        "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+        "version": "web-hud-layout-v0.38.4",
+        "source_commit": "985830534f1861d69575832774f26a923aca84e5",
+        "package_sha256": "0dcf451d3ae7765c6fe048bf6c4c4774f22061d2d1c5d264165ec10885ecdea3",
+        "authenticated": false,
+        "sdk_mocked": false,
+        "viewports": [
+          [
+            1280,
+            720
+          ],
+          [
+            844,
+            390
+          ]
+        ],
+        "checks": [
+          "inner frame loaded",
+          "new hudLeft/prepDock present",
+          "clicked 开始新游戏 into prep",
+          "HUD zero overlap",
+          "no page errors"
+        ],
+        "record": "releases/web-hud-layout-20261014/handoff.json",
+        "physical_phone_tested": false
       }
     ],
     "package_hash_kind": "zip_sha256",
     "previous_public_runtime_revision": "v25804",
-    "platform_readback_at": "2026-10-13T20:08:24.969238+08:00"
+    "platform_readback_at": "2026-10-13T20:08:24.969238+08:00",
+    "submitted_at": "2026-10-14T18:31:51+08:00",
+    "entry_html_bytes": 68409
   },
   "website_url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
   "published_toy_version": "web-look-keys-v0.38.1",

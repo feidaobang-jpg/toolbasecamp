@@ -1,6 +1,7 @@
 // 虫潮围城主战役 HUD 布局体检：同视口截图 + 中心区遮挡测量
 // 用法: node qa/hud-layout.cjs                 打印体检 JSON
 //       SAVE_SHOTS=1 PREFIX=after- node qa/hud-layout.cjs   同时输出截图（改动前后对照）
+//       GAME_URL=<Toy 预览地址> FRAME_HOST=bilibilitoy 时在内层游戏 frame 里量（Toy 预览是 iframe 壳）
 const {chromium}=require('C:/Users/37818/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const fs=require('node:fs'),path=require('node:path');
 const URL_BASE=process.env.GAME_URL||'http://127.0.0.1:8931/html/game/starship-defense/index.html';
@@ -32,21 +33,28 @@ function overlap(a,b){
     await ctx.addInitScript(m=>{try{localStorage.setItem('chongchao-device-mode',m);}catch(e){}},view.device==='touch'?'touch':'desktop');
     const page=await ctx.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
     await page.goto(URL_BASE+'?qa=1');
-    await page.waitForFunction(()=>window.__gameQA&&window.__ccReady,null,{timeout:60000});
+    // Toy 预览外层只是 iframe 壳，游戏真身在内层 frame，量坐标得进到内层去
+    let scope=page;
+    if(process.env.FRAME_HOST){
+      await page.waitForTimeout(5000);
+      scope=page.frames().find(fr=>fr.url().includes(process.env.FRAME_HOST));
+      if(!scope)throw new Error('未找到内层游戏 frame：'+process.env.FRAME_HOST);
+    }
+    await scope.waitForFunction(()=>window.__gameQA&&window.__ccReady,null,{timeout:60000});
     // 正常主战役备战态：第 1 章第 1 关，金币 150，有本章提示与战术入口
-    await page.evaluate(()=>{const q=__gameQA;q.newGame();q.sandboxWave.enabled=false;});
+    await scope.evaluate(()=>{const q=__gameQA;q.newGame();q.sandboxWave.enabled=false;});
     await page.waitForTimeout(900);
     // 把最容易叠在一起的三类瞬时提示同时摆出来
-    await page.evaluate(()=>{
+    await scope.evaluate(()=>{
       const ih=document.getElementById('interactHint');
       ih.textContent='↕ 关闭城门 · 走向城门会自动开门';ih.classList.remove('hidden');
       const sh=document.getElementById('saveHealth');sh.textContent='本地已保存 · 可选Toy云备份';sh.classList.remove('hidden','faded');
       __gameQA.Game.squadCount=1;   // 有队友时指挥按钮才出现，一并验证可点
     });
-    await page.evaluate(c=>{const s=document.getElementById('stage');for(const k of c)s.classList.add(k);},FORCE);
+    await scope.evaluate(c=>{const s=document.getElementById('stage');for(const k of c)s.classList.add(k);},FORCE);
     await page.waitForTimeout(200);
     // 用舞台的「逻辑像素」坐标（960×BASE_H，竖屏旋转时换轴），不用被 letterbox 拉变的包围盒
-    const geo=await page.evaluate((ids)=>{
+    const geo=await scope.evaluate((ids)=>{
       const stage=document.getElementById('stage');const sr=stage.getBoundingClientRect();
       const sw=stage.offsetWidth,sh=stage.offsetHeight;
       const m=new DOMMatrix(getComputedStyle(stage).transform);
@@ -83,32 +91,32 @@ function overlap(a,b){
       box:[v.x,v.y,v.width,v.height]}));
     centerBlocks.sort((a,b)=>b.blockedPct-a.blockedPct);
     report[name]={viewport:`${view.width}x${view.height}`,device:view.device,stage:geo.stage,
-      touchModeClass:await page.evaluate(()=>document.getElementById('stage').classList.contains('touch-mode')),
-      state:await page.evaluate(()=>__gameQA.Game.state),
+      touchModeClass:await scope.evaluate(()=>document.getElementById('stage').classList.contains('touch-mode')),
+      state:await scope.evaluate(()=>__gameQA.Game.state),
       boxes:Object.fromEntries(visible),overlaps,centerBlocks,errors};
     if(process.env.SAVE_SHOTS)await page.screenshot({path:path.join(OUT,PREFIX+name+'.png')});
     // 触屏可点性：HUD 里的命令按钮必须真的能点（历史上被 #lookZone 吞掉过）
     const taps=[];
     for(const id of FORCE.length?[]:['tacticsButton','squadOrderBtn','readyBtn']){
-      const el=await page.$('#'+id);
+      const el=await scope.$('#'+id);
       if(!el){taps.push({id,tapped:false,why:'元素不存在'});continue;}
       if(!(await el.isVisible())){
-        taps.push({id,tapped:false,why:await page.evaluate(i=>{const e=document.getElementById(i);const cs=getComputedStyle(e);return `隐藏(display=${cs.display},class=${e.className})`;},id)});
+        taps.push({id,tapped:false,why:await scope.evaluate(i=>{const e=document.getElementById(i);const cs=getComputedStyle(e);return `隐藏(display=${cs.display},class=${e.className})`;},id)});
         continue;
       }
       const box=await el.boundingBox();
-      const before=await page.evaluate(i=>document.getElementById(i).textContent,'squadOrderBtn');
-      await page.evaluate(t=>{window.__squadBefore=t;},before);
-      const hit=await page.evaluate(({x,y})=>{const e=document.elementFromPoint(x,y);return e?{tag:e.tagName,id:e.id,cls:e.className}:null;},{x:box.x+box.width/2,y:box.y+box.height/2});
+      const before=await scope.evaluate(i=>document.getElementById(i).textContent,'squadOrderBtn');
+      await scope.evaluate(t=>{window.__squadBefore=t;},before);
+      const hit=await scope.evaluate(({x,y})=>{const e=document.elementFromPoint(x,y);return e?{tag:e.tagName,id:e.id,cls:e.className}:null;},{x:box.x+box.width/2,y:box.y+box.height/2});
       let ok=null;
       try{await el.click({timeout:2500});}catch(e){ok='click 超时';}
-      if(ok===null)ok=await page.evaluate(i=>{
+      if(ok===null)ok=await scope.evaluate(i=>{
         if(i==='readyBtn')return __gameQA.Game.state==='battle';
         if(i==='squadOrderBtn')return document.getElementById(i).textContent!==window.__squadBefore;
         return !document.getElementById('tacticsPanel').classList.contains('hidden');
       },id);
       taps.push({id,hit:hit&&(hit.id||hit.cls),tapped:ok});
-      await page.evaluate(()=>{const p=document.getElementById('tacticsPanel');if(p&&!p.classList.contains('hidden'))document.getElementById('tacticsClose').click();});
+      await scope.evaluate(()=>{const p=document.getElementById('tacticsPanel');if(p&&!p.classList.contains('hidden'))document.getElementById('tacticsClose').click();});
       await page.waitForTimeout(150);
     }
     report[name].taps=taps;

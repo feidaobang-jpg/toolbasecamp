@@ -44,5 +44,17 @@
     "result": "qa-feedback-0382.json",
     "pass": true
   },
-  "notes": "notes.md"
+  "notes": "notes.md",
+  "website": {
+    "status": "published_verified",
+    "verified_at": "2026-10-14T18:15:00+08:00"
+  },
+  "toy": {
+    "status": "included_in_other_package",
+    "included_in": "web-hud-layout-v0.38.4",
+    "submitted_at": "2026-10-14T18:31:51+08:00",
+    "published_at": "2026-10-14T18:32:25+08:00",
+    "note": "与 0.38.4 同包送审，未单独提审。"
+  },
+  "status": "released"
 }

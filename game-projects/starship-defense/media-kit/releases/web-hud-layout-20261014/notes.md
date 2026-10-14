@@ -57,3 +57,14 @@
 ## 尚未覆盖
 
 桌面浏览器模拟只验证布局与点击，真机的多点触控、曲面屏安全区实际值、低端机帧率仍需手机实测；本次未改动玩法与存档结构。
+
+## 各渠道落地（2026-10-14）
+
+- 主线提交：`b5032f7d`（改动）＋ `98583053`（整合 origin/master），推送后线上 `https://www.zhengxiaohui.cn/html/game/starship-defense/index.html` 已含 `hudLeft` / `prepDock`（部署管道把 `?v=` 改写为 `?v=98583053`，按内容核验）。
+- Toy 包：`node build-toy.mjs` → `dist/toy/chongchao-qianshao/chongchao-qianshao.zip`，SHA256 `0dcf451d3ae7765c6fe048bf6c4c4774f22061d2d1c5d264165ec10885ecdea3`，447,800 字节；入口 `index.html` 未压缩 68,409 字节，低于 2026-10-13 通知的 100KB 建议值。存档命名空间已按 Toy 包改写为 `toy-chongchao-v1-sst_save_`。副本留档 `C:/Users/37818/.claude/state/game-releases/artifacts/hud-layout-20261014/chongchao-qianshao-v0.38.4.zip`。
+- 包体本身（本地静态服务 + 同一套体检）：六个视口重叠 0、无脚本报错、`tacticsButton`/`squadOrderBtn`/`readyBtn` 均可点 → `qa/toy-report.json`、`qa/toy-*.png`。
+- 预览实测：`toy update 38678478981120 <zip> --json` → `preview_VB54BdGe`；体检脚本加了 `FRAME_HOST=bilibilitoy` 以进入预览的 iframe 壳内层，六个视口同样重叠 0、按钮可点、无报错 → `qa/toyPreview-report.json`。
+- 提审：`--yes` 一次成功（回执 `status: auditing`，提交时间 2026-10-14T18:31:51+08:00，提交预览 `preview_8jQvlF89`）；34 秒后 `toy mylist` 已是 `published`（mtime 1791973945）。本次没有再遇到 307008。
+- 正式入口未登录复测：`https://www.bilibili.com/toy/chongchao-qianshao/index.html` 内层 frame 已带 `#hudLeft`/`#prepDock`，点「开始新游戏」进到备战态后 HUD 正常，手机视口左栏底部 217 < 摇杆顶部 245，无脚本报错 → `qa/onlinePhone-battle.png`、`qa/onlineDesktop-battle.png`。
+- 本包同时带上此前只进网站、尚未送审的 0.38.2（网友反馈修正）与 0.38.3（模式入口整理），以及更早被 307008 挡住的 `web-fps-rules-v0.34.0` 内容；`game.json` 的 `pending_toy_merge` 相应标记为已被 0.38.4 取代。
+- TapTap：用户未要求，按「默认不发布」未推送。B站视频简介：本次属普通体验改动，未达「≥3 次有意义稳定更新且距上次公开核验 ≥7 天」的合并条件，只记待合并项。
