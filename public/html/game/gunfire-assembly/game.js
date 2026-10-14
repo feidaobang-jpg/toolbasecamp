@@ -50,8 +50,15 @@ import {createCombatControls,mountCombatSettings} from './combat-controls.js';
 import {mountTouchLayout} from './touch-layout.js';
 import {MAX_BUILDINGS,buildingLimit,turretDamageMul} from './defense-progression.js';
 import {CAMPAIGN_DIFFICULTIES,campaignDifficultyId,campaignDifficulty,campaignEliteChance,campaignWaveCount,campaignSpawnInterval} from './campaign-difficulty.js';
+/* 存档命名空间：枪火集结与虫潮围城在同域名下曾共用 chongchao-* / sst_save_ 键，
+   会互相读写（两款镜头预设数量不同，视角偏好串档最明显）。本游戏的玩家状态一律用
+   gunfire-* / gfs_save_；通用输入类键（键位、射击辅助、触控布局、设备模式）继续共用，
+   让玩家在两款里用同一套操作。下面把确实属于本游戏的旧值一次性搬过来，旧键保留不动，
+   这样虫潮的存档完全不受影响。 */
+const MIGRATE_KEYS={'chongchao-person':'gunfire-person','chongchao-daylight':'gunfire-daylight','chongchao-conquest-record-v1':'gunfire-conquest-record-v1'};
+try{for(const oldKey in MIGRATE_KEYS){const newKey=MIGRATE_KEYS[oldKey];if(localStorage.getItem(newKey)===null&&localStorage.getItem(oldKey)!==null)localStorage.setItem(newKey,localStorage.getItem(oldKey));}}catch(_e){}
 let selectedDifficulty='normal';
-try{selectedDifficulty=campaignDifficultyId(localStorage.getItem('chongchao-campaign-difficulty'));}catch(_e){}
+try{selectedDifficulty=campaignDifficultyId(localStorage.getItem('gunfire-campaign-difficulty'));}catch(_e){}
 let combatStorage;try{combatStorage=localStorage;}catch(_e){}
 const CombatControls=createCombatControls(combatStorage);
 let combatSection=null;
@@ -424,7 +431,7 @@ function setCameraView(index,notify=true){
 }
 function setCamMode(mode,notify=true){
   camMode=mode==='first'?'first':'third';camPitch=0;camYaw=behindYaw();camState.init=false;delete player.lookHeading;Input.resetLook();
-  try{localStorage.setItem('chongchao-person',camMode);}catch(_e){}
+  try{localStorage.setItem('gunfire-person',camMode);}catch(_e){}
   if(camMode==='third')Input.releaseMouseLook();
   if(notify)showMsg(camMode==='first'?'第一人称（C 切回第三人称）':'第三人称 · '+CAMERA_VIEWS[camView].name,1.4);
   syncViewLabels();
@@ -3485,7 +3492,7 @@ function closePanels(){
 let panelOpen=false;
 
 /* ================= 存档系统 ================= */
-const SAVE_PREFIX='sst_save_';
+const SAVE_PREFIX='gfs_save_';   /* 2026-10-14：与虫潮的 sst_save_ 分开，两款不再共用同一个战役档槽与云档标记 */
 let platformSave=null;
 const validateStoredSave=d=>validateNormalSave(d,{weapons:{...WEAPONS,...LEGACY_WEAPONS},buildings:BUILDINGS,vehicles:VEHICLES});
 const saveStore=new LocalSaveStore({storage:combatStorage,prefix:SAVE_PREFIX,validate:validateStoredSave,onStatus:()=>platformSave?.localStatus()});
@@ -3619,7 +3626,7 @@ function renderSlots(){if(coopDriver?.config){showMsg('联机进度独立于单�
 }
 function restoreView(){
   // 先读偏好再复位：当前若是第一人称（例如刚退出战地），setCameraView 会把保存值写成第三人称。
-  let pref='third';try{pref=localStorage.getItem('chongchao-person')||'third';}catch(_e){}
+  let pref='third';try{pref=localStorage.getItem('gunfire-person')||'third';}catch(_e){}
   setCameraView(0,false);
   setCamMode(pref==='first'?'first':'third',false);
 }
@@ -3892,7 +3899,7 @@ function syncDifficultySelection(){
 }
 for(const el of document.querySelectorAll('[data-campaign-difficulty]'))el.onclick=()=>{
   selectedDifficulty=campaignDifficultyId(el.dataset.campaignDifficulty);
-  try{localStorage.setItem('chongchao-campaign-difficulty',selectedDifficulty);}catch(_e){}
+  try{localStorage.setItem('gunfire-campaign-difficulty',selectedDifficulty);}catch(_e){}
   syncDifficultySelection();
 };
 syncDifficultySelection();
@@ -4260,7 +4267,7 @@ function bootGame(){
 if(visualAssets)$('assetLoad').remove();
 visuals.environment(terrainH);
 battlefield=new BattlefieldEnvironment(scene,groundMesh,visuals.environmentObjects);
-try{battlefield.setTimeOfDay(localStorage.getItem('chongchao-daylight'));}catch(_e){}
+try{battlefield.setTimeOfDay(localStorage.getItem('gunfire-daylight'));}catch(_e){}
 setBattlefieldEnvironment(environmentForChapter(Game.chapter));
 setupVersus();
 rvBreakout=createRVBreakout({THREE,scene,Game,player,WORLD,AudioSys,stage,camera,Input,visuals,monsters,CHAPTERS,spawnMonster,spawnVehicle,enterVehicle,clearEntities,closePanels,hideConfirm,askConfirm,showMsg,showHint,showHUD,updHPBar,vehicleAim,vehicleMuzzle,fireBullet,damageVehicle,playerDamage,
@@ -4278,12 +4285,12 @@ zergMode=createZergMode({THREE,Game,Input,AudioSys,stage,scene,camera,player,bas
   keyLabel:action=>keyBindings.label(action),cycleView:()=>cycleCamView(),
   setLook(yaw,pitch=0){camYaw=yaw;camPitch=pitch;camState.init=false;lookControl.clear();pitchControl.clear();Input.resetLook();},
   // 虫族开局用高位跟随看清战场；只改本局镜头，不写入玩家保存的人称偏好，退出时还原。
-  enterView(){zergView={camMode,camView,saved:null};try{zergView.saved=localStorage.getItem('chongchao-person');}catch(_e){}camMode='third';camView=1;camPitch=0;camState.init=false;syncViewLabels();},
+  enterView(){zergView={camMode,camView,saved:null};try{zergView.saved=localStorage.getItem('gunfire-person');}catch(_e){}camMode='third';camView=1;camPitch=0;camState.init=false;syncViewLabels();},
   leaveView(){
     if(!zergView)return;
     camMode=zergView.camMode;camView=zergView.camView;camPitch=0;camState.init=false;
     // 局内按 C 切人称会写入偏好；退出时把战役原来的偏好原样放回去。
-    try{if(zergView.saved===null)localStorage.removeItem('chongchao-person');else localStorage.setItem('chongchao-person',zergView.saved);}catch(_e){}
+    try{if(zergView.saved===null)localStorage.removeItem('gunfire-person');else localStorage.setItem('gunfire-person',zergView.saved);}catch(_e){}
     zergView=null;syncViewLabels();
   }});
 const _origNewGame=newGame;
@@ -4309,7 +4316,7 @@ function setupWebControls(){
   setupSandbox();setupFeaturePanels();
   $('daylightMain').onclick=$('daylightPause').onclick=()=>{
     battlefield.setTimeOfDay(battlefield.timeOfDay==='day'?'night':'day');
-    try{localStorage.setItem('chongchao-daylight',battlefield.timeOfDay);}catch(_e){}
+    try{localStorage.setItem('gunfire-daylight',battlefield.timeOfDay);}catch(_e){}
     syncLightingLabels();
   };
   combatSection=mountCombatSettings($('keyPanel'),CombatControls,()=>{Input.reset();if(!CombatControls.mouseEnabled&&document.pointerLockElement)document.exitPointerLock();syncKeyLabels();});
@@ -4499,7 +4506,7 @@ function handleCoopCommand(slot,c){
    每队 size 个座位、每个座位一名英雄：本机玩家、联机真人（slot=房间槽位）或电脑（slot=100+座位序号）。
    对战期间不读写单机存档，退出时把战役状态原样恢复。 */
 const vsUI={open:false,tab:'units',t:0,built:'',size:1,rosterSig:''};
-const versusRecordStore=()=>bankMode?'chongchao-versus-record-v1':'chongchao-conquest-record-v1';
+const versusRecordStore=()=>bankMode?'gunfire-versus-record-v1':'gunfire-conquest-record-v1';
 const VS_CLASSES=['gunner','rifle','medic'];
 function versusRecord(){try{return JSON.parse(localStorage.getItem(versusRecordStore())||'{}')||{};}catch(_e){return {};}}
 const versusRecordKey=(k,n)=>n>1?k+'-'+n:k; // 1 对 1 沿用原来的键，多人对战按规模分开记

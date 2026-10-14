@@ -58,4 +58,4 @@ export class CloudSaveSync {
   accept(record){this.base=this.current?.revision;this.store.mark(this.provider.id,this.current);this.paused=record.revision!==this.current?.revision;this.pending=null;}
   destroy(){clearTimeout(this.timer);this.timer=null;this.enabled=false;}
 }
-export const cloudRecord=(save)=>({schema:2,game:'starship-defense',revision:newSaveId(),save:JSON.parse(JSON.stringify(save))});
+export const cloudRecord=(save)=>({schema:2,game:'gunfire-assembly',revision:newSaveId(),save:JSON.parse(JSON.stringify(save))});
