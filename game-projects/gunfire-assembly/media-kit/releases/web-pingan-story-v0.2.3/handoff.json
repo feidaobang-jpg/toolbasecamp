@@ -112,7 +112,7 @@
    },
    {
     "item": "关联视频简介与置顶引导（原 deferred_accumulating 已被本期发布提前触发）",
-    "result": "BV1Lfp76KEDd 简介补到 v0.5.0 双结局并加本期视频链接（729 字，编辑请求体已核验）；置顶引导改为新评论 rpid 317018397809 并置顶、匿名可见",
+    "result": "BV1Lfp76KEDd 简介补到 v0.5.0 双结局并加本期视频链接（729 字，编辑请求体已核验）；置顶引导改为新评论 rpid 317018397809 并置顶、匿名可见；14:08 游客态匿名读回确认该简介修改已复审公开生效（607→729 字，含 BV12ypy68EZz），置顶导览评论 317018397809 亦公开可见。",
     "evidence": "game-projects/liangjian-pingan/video/story-20261014/work/publish/bilibili-zh/previous-video-BV1Lfp76KEDd-snapshot.json",
     "still_open": "该稿件简介修改公开仍是 607 字旧文本，复审生效后需匿名读回确认变 729 字；未生效前不要重复提交"
    },
