@@ -1,68 +1,287 @@
 {
- "engine": "IndexTTS-2.5（本地，D:/sd/index-tts）",
- "reference": "yunxi-ref-8s.wav",
- "note": "机器合成的喊话，不是演员原声，未使用电视剧音轨",
+ "updated": "2026-10-14（v0.5.0）",
+ "runtime": "public/html/game/gunfire-assembly/pingan/assets/voice/*.mp3 + index.json",
  "subjective_listening": "not-run",
- "lines": [
-  {
-   "id": "kaipao",
-   "text": "开炮！",
-   "seconds": 0.59,
-   "bytes": 5516
-  },
-  {
-   "id": "yidalipao",
-   "text": "二营长！你他娘的意大利炮呢？",
-   "seconds": 2.13,
-   "bytes": 17900
-  },
-  {
-   "id": "lashanglai",
-   "text": "给我拉上来！",
-   "seconds": 0.89,
-   "bytes": 7820
-  },
-  {
-   "id": "qibinglian",
-   "text": "骑兵连！进攻！",
-   "seconds": 1.02,
-   "bytes": 8972
-  },
-  {
-   "id": "liangjian",
-   "text": "亮剑！",
-   "seconds": 0.55,
-   "bytes": 5228
-  },
-  {
-   "id": "jingrui",
-   "text": "什么他娘的精锐！老子打的就是精锐！",
-   "seconds": 2.97,
-   "bytes": 24524
-  },
-  {
-   "id": "fuyu",
-   "text": "发财了！老子这辈子，没打过这么富裕的仗！",
-   "seconds": 3.28,
-   "bytes": 27116
-  },
-  {
-   "id": "tiancai",
-   "text": "你他娘的，还真是个天才！",
-   "seconds": 2.18,
-   "bytes": 18188
-  },
-  {
-   "id": "yongzhesheng",
-   "text": "狭路相逢，勇者胜！",
-   "seconds": 1.78,
-   "bytes": 15020
-  },
-  {
-   "id": "chong",
-   "text": "同志们，冲啊！",
-   "seconds": 1.24,
-   "bytes": 10700
-  }
- ]
+ "original": {
+  "what": "电视剧《亮剑》原声片段，截自 B站用户上传的 5 个视频（2026-10-14 经用户在会话里同意下载并用进游戏）",
+  "license": "未取得授权；用户选择时已提示 Toy 审核可能退回、日后可能被下架",
+  "sources": [
+   {
+    "bv": "BV159B7Y5Ewt",
+    "used_for": "拉炮、给我打 / 轰、给我开炮、城楼过场（山本、李云龙、秀芹、张大彪）、开炮！开炮！开炮！"
+   },
+   {
+    "bv": "BV1Dh411z7zX",
+    "used_for": "狭路相逢勇者胜、冲啊"
+   },
+   {
+    "bv": "BV1nmeGzBETJ",
+    "used_for": "骑兵连，进攻"
+   },
+   {
+    "bv": "BV1J1496xEqg",
+    "used_for": "老子打的就是精锐"
+   },
+   {
+    "bv": "BV1yQrcYHEV4",
+    "used_for": "没用上：是解说版，“富裕的仗”原声截不到"
+   }
+  ],
+  "method": "按片源自带字幕（1 帧/秒联系表 + 10 帧/秒字幕变化）和音量包络定起止点；ffmpeg 截取、首尾淡入淡出、按均值响度补偿增益并限幅，单声道 44.1kHz 64kbps mp3。截取脚本与片源只留旧会话临时目录，不入库。",
+  "caveats": [
+   "没人试听过，截取点可能带进前后半个字或背景声",
+   "kaipao3（开炮！开炮！开炮！）里混着原片的炮响和爆炸声，游戏里炮弹出膛时间按它排"
+  ],
+  "lines": [
+   {
+    "id": "yidalipao",
+    "kind": "original",
+    "speaker": "李云龙 / 二营长",
+    "text": "二营长！——到！——你他娘的意大利炮呢？给我拉来！——团长……——拉来！",
+    "source": "https://www.bilibili.com/video/BV159B7Y5Ewt",
+    "in": 216.3,
+    "out": 224.9,
+    "seconds": 8.6,
+    "bytes": 69424,
+    "mean_db": -14.5,
+    "peak_db": -0.0
+   },
+   {
+    "id": "hong",
+    "kind": "original",
+    "speaker": "李云龙",
+    "text": "给我打！直接瞄准了，轰他娘的！",
+    "source": "https://www.bilibili.com/video/BV159B7Y5Ewt",
+    "in": 242.75,
+    "out": 245.7,
+    "seconds": 2.95,
+    "bytes": 24075,
+    "mean_db": -14.5,
+    "peak_db": -0.4
+   },
+   {
+    "id": "geiwohong",
+    "kind": "original",
+    "speaker": "李云龙",
+    "text": "给我轰！",
+    "source": "https://www.bilibili.com/video/BV159B7Y5Ewt",
+    "in": 261.6,
+    "out": 263.2,
+    "seconds": 1.6,
+    "bytes": 13417,
+    "mean_db": -14.9,
+    "peak_db": -0.8
+   },
+   {
+    "id": "kaipao",
+    "kind": "original",
+    "speaker": "李云龙",
+    "text": "给我开炮！",
+    "source": "https://www.bilibili.com/video/BV159B7Y5Ewt",
+    "in": 377.3,
+    "out": 378.5,
+    "seconds": 1.2,
+    "bytes": 10074,
+    "mean_db": -14.5,
+    "peak_db": -1.6
+   },
+   {
+    "id": "shanben_bieda",
+    "kind": "original",
+    "speaker": "山本一木",
+    "text": "楼下的八路，别打啦！你们往楼上看，这个女人你们认识吗？",
+    "source": "https://www.bilibili.com/video/BV159B7Y5Ewt",
+    "in": 264.2,
+    "out": 273.3,
+    "seconds": 9.1,
+    "bytes": 73394,
+    "mean_db": -14.7,
+    "peak_db": -0.0
+   },
+   {
+    "id": "suansha",
+    "kind": "original",
+    "speaker": "李云龙",
+    "text": "山本！你他娘的算什么军人，拿一个女人做什么文章！",
+    "source": "https://www.bilibili.com/video/BV159B7Y5Ewt",
+    "in": 292.55,
+    "out": 298.6,
+    "seconds": 6.05,
+    "bytes": 48944,
+    "mean_db": -14.4,
+    "peak_db": 0.0
+   },
+   {
+    "id": "li_bushi",
+    "kind": "original",
+    "speaker": "李云龙",
+    "text": "我李云龙不会拿自己士兵的生命，去换自己的老婆！",
+    "source": "https://www.bilibili.com/video/BV159B7Y5Ewt",
+    "in": 472.05,
+    "out": 476.5,
+    "seconds": 4.45,
+    "bytes": 36196,
+    "mean_db": -14.5,
+    "peak_db": -0.2
+   },
+   {
+    "id": "xq_zhi",
+    "kind": "original",
+    "speaker": "秀芹",
+    "text": "我秀芹一个，换这么多小日本鬼子，值！团长，开炮！",
+    "source": "https://www.bilibili.com/video/BV159B7Y5Ewt",
+    "in": 479.55,
+    "out": 487.1,
+    "seconds": 7.55,
+    "bytes": 61065,
+    "mean_db": -14.4,
+    "peak_db": 0.0
+   },
+   {
+    "id": "xq_kaipao",
+    "kind": "original",
+    "speaker": "秀芹",
+    "text": "李云龙，你开炮啊！",
+    "source": "https://www.bilibili.com/video/BV159B7Y5Ewt",
+    "in": 499.8,
+    "out": 501.9,
+    "seconds": 2.1,
+    "bytes": 17388,
+    "mean_db": -14.5,
+    "peak_db": -3.3
+   },
+   {
+    "id": "bie_kaipao",
+    "kind": "original",
+    "speaker": "张大彪",
+    "text": "别开炮！团长，别开炮！让我带兄弟们再冲一次吧！",
+    "source": "https://www.bilibili.com/video/BV159B7Y5Ewt",
+    "in": 505.15,
+    "out": 509.4,
+    "seconds": 4.25,
+    "bytes": 34524,
+    "mean_db": -14.5,
+    "peak_db": 0.0
+   },
+   {
+    "id": "xq_xiabeizi",
+    "kind": "original",
+    "speaker": "秀芹",
+    "text": "我生是你的人，死是你的鬼。你记住，我秀芹下辈子还嫁给你！",
+    "source": "https://www.bilibili.com/video/BV159B7Y5Ewt",
+    "in": 511.6,
+    "out": 521.2,
+    "seconds": 9.6,
+    "bytes": 77365,
+    "mean_db": -14.5,
+    "peak_db": 0.0
+   },
+   {
+    "id": "xq_qiaobuqi",
+    "kind": "original",
+    "speaker": "秀芹",
+    "text": "你开炮啊！别让我瞧不起你！",
+    "source": "https://www.bilibili.com/video/BV159B7Y5Ewt",
+    "in": 522.7,
+    "out": 527.2,
+    "seconds": 4.5,
+    "bytes": 36614,
+    "mean_db": -14.4,
+    "peak_db": -0.0
+   },
+   {
+    "id": "kaipao3",
+    "kind": "original",
+    "speaker": "李云龙",
+    "text": "开炮！开炮！开炮！（接原片炮响）",
+    "source": "https://www.bilibili.com/video/BV159B7Y5Ewt",
+    "in": 531.3,
+    "out": 547.3,
+    "seconds": 16.0,
+    "bytes": 128565,
+    "mean_db": -14.4,
+    "peak_db": -0.9
+   },
+   {
+    "id": "yongzhesheng",
+    "kind": "original",
+    "speaker": "李云龙",
+    "text": "狭路相逢，勇者胜！",
+    "source": "https://www.bilibili.com/video/BV1Dh411z7zX",
+    "in": 20.6,
+    "out": 24.0,
+    "seconds": 3.4,
+    "bytes": 27837,
+    "mean_db": -14.8,
+    "peak_db": -1.7
+   },
+   {
+    "id": "chong",
+    "kind": "original",
+    "speaker": "李云龙与战士们",
+    "text": "弟兄们，冲啊！冲啊！",
+    "source": "https://www.bilibili.com/video/BV1Dh411z7zX",
+    "in": 24.1,
+    "out": 29.6,
+    "seconds": 5.5,
+    "bytes": 44555,
+    "mean_db": -15.2,
+    "peak_db": -2.7
+   },
+   {
+    "id": "qibinglian",
+    "kind": "original",
+    "speaker": "孙德胜",
+    "text": "骑兵连，进攻！",
+    "source": "https://www.bilibili.com/video/BV1nmeGzBETJ",
+    "in": 212.1,
+    "out": 216.4,
+    "seconds": 4.3,
+    "bytes": 34942,
+    "mean_db": -15.3,
+    "peak_db": -3.9
+   },
+   {
+    "id": "jingrui",
+    "kind": "original",
+    "speaker": "李云龙",
+    "text": "什么他娘的精锐啊，我就不信那个邪，老子打的就是精锐！",
+    "source": "https://www.bilibili.com/video/BV1J1496xEqg",
+    "in": 33.35,
+    "out": 37.15,
+    "seconds": 3.8,
+    "bytes": 30972,
+    "mean_db": -14.6,
+    "peak_db": -1.6
+   }
+  ]
+ },
+ "synthesized": {
+  "engine": "IndexTTS-2.5（本地，D:/sd/index-tts）",
+  "reference": "yunxi-ref-8s.wav",
+  "note": "片源里没有对应原声的 3 句，沿用 v0.2.0 起的本机合成",
+  "lines": [
+   {
+    "id": "liangjian",
+    "text": "亮剑！",
+    "seconds": 0.55,
+    "bytes": 5228,
+    "kind": "synthesized"
+   },
+   {
+    "id": "fuyu",
+    "text": "发财了！老子这辈子，没打过这么富裕的仗！",
+    "seconds": 3.28,
+    "bytes": 27116,
+    "kind": "synthesized"
+   },
+   {
+    "id": "tiancai",
+    "text": "你他娘的，还真是个天才！",
+    "seconds": 2.18,
+    "bytes": 18188,
+    "kind": "synthesized"
+   }
+  ]
+ }
 }

@@ -90,7 +90,7 @@
     "website": "public_verified",
     "toy": "published_public_verified",
     "taptap": "not_requested",
-    "bilibili": "see bilibili-sync.json",
+    "bilibili": "BV14hpL62EZ5 一处键位更正已公开核验；其余五条无需改动",
     "package_sha256": "22fe69d2c153381252ae9edb3fb8152295b3ea8920fce9fcdd6da922425b75f1",
     "website_verified_at": "2026-10-14T09:23:54+08:00",
     "website_note": "线上 update-history.js 为 0.38.1；game.compat.js、key-bindings.js 与本地 SHA-256 一致；对线上地址跑 verify-look-keys.cjs 17/17。",

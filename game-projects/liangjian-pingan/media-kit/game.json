@@ -2,19 +2,19 @@
   "game_id": "liangjian-pingan",
   "name": "亮剑：攻打平安县城（重做版）",
   "engine": "Three.js r152（源码为 ES 模块，发布用 esbuild 打成经典脚本兼容包 game.compat.js）",
-  "current_version": "v0.3.0",
+  "current_version": "v0.5.0",
   "entrypoint": "public/html/game/gunfire-assembly/pingan/index.html",
   "launch": "node game-projects/liangjian-pingan/qa/serve.mjs  → http://localhost:8795/html/game/gunfire-assembly/pingan/（大厅在 /html/game/gunfire-assembly/）",
   "release_intent": "web_demo",
   "development_model": "Claude Opus 5.5（Claude Code）",
   "publication_status": "published_as_part_of_gunfire_assembly",
   "notes": "用户 2026-10-13 要求在本地完全重做《枪火集结》抗战战役里的「平安县城」一章，不参考原实现代码；2026-10-14 用户决定用它替换线上枪火集结的这一章并直接发布。自 v0.3.0 起它是枪火集结包内的独立页面，随枪火集结（Toy feidao-gunfire）发布，自身不单独上架、不单独进网站游戏列表。",
-  "compare_with": "原实现仍留在 public/html/game/gunfire-assembly/resistance-campaign.js（chapter 2），但已不可达",
+  "compare_with": "枪火集结里的旧第三章实现已于 v0.5.0（枪火集结 0.2.3）删除；要对照旧版，看提交 ed0e2543 及更早的 public/html/game/gunfire-assembly/resistance-campaign.js（chapter 2）",
   "controls_spec": "C:/Users/37818/.claude/skills/game-maker/references/shooter-controls.md（枪战类游戏操作规范，用户 2026-10-13）",
   "controls": {
-    "keyboard": "WASD 移动；J 开火；K 跳；U 手榴弹；I 互动（上炮 / 接管机枪 / 离开）；O 或 Z 开镜；R 或 L 换弹；Q/E 左右转视角、Y/H 上下转视角；C 切换人称；Esc/P 暂停",
-    "mouse": "默认鼠标接管（锁定，Esc 释放并暂停；被拒绝时按住拖动）；左键开火；右键开镜；空格 跳、G 手榴弹、F 互动、Shift 开镜",
-    "touch": "左半屏浮动摇杆；右半屏滑动瞄准；开火键（可拖动瞄准，可另开左手开火键）、跳、开镜、换弹、手榴弹；靠近炮位或可接管的机枪时出现互动键；右上 切换人称 / 暂停 / 全屏",
+    "keyboard": "WASD 移动；J 开火；K 跳；U 手榴弹；I 互动（上炮 / 接管机枪 / 离开）；L 亮剑；N 骑兵连；O 或 Z 开镜；R 换弹；Q/E 左右转视角、Y/H 上下转视角；C 切换人称；Esc/P 暂停",
+    "mouse": "默认鼠标接管（锁定，Esc 释放并暂停；被拒绝时按住拖动）；左键开火；右键开镜；空格 跳、G 手榴弹、F 互动、V 亮剑、X 骑兵连、Shift 开镜",
+    "touch": "左半屏浮动摇杆；右半屏滑动瞄准；开火键（可拖动瞄准，可另开左手开火键）、跳、开镜、换弹、手榴弹、亮剑、骑兵连；靠近炮位或可接管的机枪时出现互动键；右上 切换人称 / 暂停 / 全屏",
     "views": [
       "越肩第三人称（默认）",
       "第一人称"
@@ -25,11 +25,13 @@
       "手机触屏"
     ]
   },
-  "storage_namespace": "lj_pingan_v1_（settings / cp / best；settings 内 sv=3）",
-  "handoff": "releases/v0.3.0/handoff.json",
+  "storage_namespace": "lj_pingan_v1_（settings / cp / best / ending；settings 内 sv=3）",
+  "handoff": "releases/v0.5.0/handoff.json",
   "previous_versions": [
     "v0.1.0",
-    "v0.2.0"
+    "v0.2.0",
+    "v0.3.0",
+    "v0.4.0"
   ],
   "toy": {
     "id": null,
@@ -42,7 +44,8 @@
   },
   "published_with": {
     "game_id": "gunfire-assembly",
-    "release": "game-projects/gunfire-assembly/media-kit/releases/web-pingan-remake-v0.2.0/",
+    "release": "game-projects/gunfire-assembly/media-kit/releases/web-pingan-story-v0.2.3/",
     "build": "node game-projects/gunfire-assembly/build-compat.mjs（生成 pingan/game.compat.js）"
-  }
+  },
+  "story": "城门轰开后城楼过场（可跳过）→ 原作结局（朝城楼开炮）或改写结局（冲进城门救秀芹）；结局记在 ending，从第四、五阶段直接开局时沿用"
 }

@@ -1,13 +1,13 @@
 // 输入（枪战类布局）：键盘、鼠标瞄准、触屏浮动摇杆 / 滑屏瞄准 / 功能键，统一映射成动作状态
-// 纯键盘：WASD 移动，Q/E 左右转、Y/H 上下转，J 开火，K 跳，U 手榴弹，I 互动（上炮 / 上机枪 / 离开），O 或 Z 开镜，R 或 L 换弹
-// 鼠标：电脑端默认鼠标接管（锁定），被拒绝时按住拖动；左键开火，右键开镜；空格跳，G 手榴弹，F 互动
+// 纯键盘：WASD 移动，Q/E 左右转、Y/H 上下转，J 开火，K 跳，U 手榴弹，I 互动（上炮 / 上机枪 / 离开），L 亮剑，N 骑兵连，O 或 Z 开镜，R 换弹
+// 鼠标：电脑端默认鼠标接管（锁定），被拒绝时按住拖动；左键开火，右键开镜；空格跳，G 手榴弹，F 互动，V 亮剑，X 骑兵连
 // 键位与《枪火集结》其余模式对齐：J 射击、K 跳、U 手雷、I 互动
 import { clamp } from './util.js';
 
 const HOLD_KEYS = { KeyJ: 'fire', KeyO: 'ads', KeyZ: 'ads', ShiftLeft: 'ads', ShiftRight: 'ads' };
-const EDGE_KEYS = { KeyK: 'jump', Space: 'jump', KeyR: 'reload', KeyL: 'reload', KeyU: 'nade', KeyG: 'nade', KeyI: 'use', KeyF: 'use' };
+const EDGE_KEYS = { KeyK: 'jump', Space: 'jump', KeyR: 'reload', KeyU: 'nade', KeyG: 'nade', KeyI: 'use', KeyF: 'use', KeyL: 'dash', KeyV: 'dash', KeyN: 'cav', KeyX: 'cav' };
 const OTHER_KEYS = ['KeyW', 'KeyA', 'KeyS', 'KeyD', 'ArrowUp', 'ArrowLeft', 'ArrowDown', 'ArrowRight', 'KeyQ', 'KeyE', 'KeyY', 'KeyH', 'KeyC'];
-const EDGES = ['jump', 'reload', 'nade', 'use', 'fire'];
+const EDGES = ['jump', 'reload', 'nade', 'dash', 'cav', 'use', 'fire'];
 
 export class Input {
   constructor(stage, hooks) {

@@ -24,6 +24,9 @@ const LOOKS = {
   officer: { coat: 0xa89250, pants: 0x9a8648, wrap: 0x3a2c22, hat: 'flap', hatC: 0xa89250, weapon: 'katana', belt: 0x4b3521, tab: 0xc23b2b, scale: 1.04 },
   elite: { coat: 0x565c3c, pants: 0x4d5336, wrap: 0x2f2a22, hat: 'helmet', hatC: 0x3d4230, weapon: 'smg', belt: 0x2a2018, tab: 0xd8d2b8, goggles: true, scale: 1.05 },
   boss: { coat: 0x5d6240, pants: 0x545a3a, wrap: 0x231c16, hat: 'cap', hatC: 0x5d6240, weapon: 'katana', left: 'pistol', belt: 0x3a2618, tab: 0xd0a030, cape: 0x2b3024, gloves: 0xf2efe6, scale: 1.2 },
+  // 秀芹：花棉袄、黑裤、辫子；被绑着的版本身上有绳子
+  xiuqin: { coat: 0xa3523f, pants: 0x38424f, wrap: 0x38424f, hat: 'none', weapon: 'none', belt: 0x8f4636, hair: 0x1d1814, rope: 0xcdb98a, scale: 0.98 },
+  xiuqinFree: { coat: 0xa3523f, pants: 0x38424f, wrap: 0x38424f, hat: 'none', weapon: 'none', belt: 0x8f4636, hair: 0x1d1814, scale: 0.98 },
 };
 
 const geoCache = {};
@@ -58,6 +61,13 @@ function soldierGeos(key) {
     g.box(0.04, 0.3, 0.2, -0.2, 0.82, 0.1, 0xc8b47a, 0, 0, 0, 0.1);
     g.box(0.04, 0.3, 0.2, 0.2, 0.82, 0.1, 0xc8b47a, 0, 0, 0, 0.1);
   }
+  if (L.hair) {
+    g.box(0.4, 0.13, 0.4, 0, 1.0, 0.01, L.hair, 0, 0, 0, 0.1);
+    g.box(0.4, 0.34, 0.1, 0, 0.84, 0.2, L.hair, 0, 0, 0, 0.1);
+    g.box(0.13, 0.44, 0.11, 0.1, 0.5, 0.25, L.hair, 0, 0, 0.12, 0.1);
+    g.box(0.1, 0.06, 0.12, 0.13, 0.3, 0.25, 0xc23b2b, 0, 0, 0, 0);
+  }
+  if (L.rope) for (const y of [0.2, 0.4]) g.box(0.56, 0.05, 0.36, 0, y, 0, L.rope, 0, 0, 0, 0);
   if (L.pack) g.box(0.38, 0.36, 0.17, 0, 0.34, 0.245, L.pack);
   if (L.cape) {
     g.box(0.66, 0.2, 0.36, 0, 0.56, 0.04, L.cape, 0, 0, 0, 0.1);

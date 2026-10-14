@@ -19,11 +19,6 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 #look { position: absolute; inset: 0; z-index: 5; touch-action: none; }
 #vignette { position: absolute; inset: 0; z-index: 6; pointer-events: none; opacity: 0; background: radial-gradient(ellipse at center, rgba(180, 20, 10, 0) 52%, rgba(190, 24, 12, .78) 100%); }
 
-/* ---------- 弹幕 ---------- */
-#danmaku { position: absolute; left: 0; right: 0; top: calc(var(--sat) + 60px); height: 24%; z-index: 7; pointer-events: none; overflow: hidden; }
-#danmaku span { position: absolute; left: 0; top: 0; white-space: nowrap; font-size: 20px; font-weight: 800; color: #fff; text-shadow: 0 0 3px #000, 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000; will-change: transform; }
-#danmaku span.hot { color: #ffd84a; font-size: 24px; }
-#danmaku span.red { color: #ff6a55; }
 #labels { position: absolute; inset: 0; z-index: 7; pointer-events: none; }
 #labels span { position: absolute; left: 0; top: 0; transform: translate(-50%, -100%); font-size: 12px; font-weight: 800; color: #fff8e0; padding: 1px 6px; border-radius: 6px; background: rgba(30, 24, 18, .55); white-space: nowrap; }
 #labels span.foe { background: rgba(140, 20, 14, .7); }
@@ -79,6 +74,7 @@ body.touch-on .kb { display: none; }
 #skills div.off { border-color: rgba(255, 110, 90, .7); }
 #skills div.off em { color: #ff9a88; }
 #keyhint { position: absolute; left: calc(var(--sal) + 12px); bottom: calc(var(--sab) + 12px); max-width: 52%; font-size: 12px; font-weight: 700; color: #fff3d6; background: rgba(30, 24, 18, .55); border-radius: 10px; padding: 6px 10px; line-height: 1.6; }
+#keyhint .kh { display: inline-block; white-space: nowrap; margin-right: .7em; }
 #keyhint kbd { display: inline-block; min-width: 18px; padding: 0 4px; margin: 0 2px; border-radius: 4px; background: #efe3c4; color: var(--ink); font: 800 11px ui-monospace, Consolas, monospace; text-align: center; }
 body.touch-on #skills, body.touch-on #keyhint { display: none; }
 
@@ -117,6 +113,8 @@ body.touch-on #fps { bottom: auto; top: calc(var(--sat) + 100px); }
 #act-ads.on { background: linear-gradient(180deg, #f0d277, #b98a2a); color: #2a231b; border-color: #fff3d6; }
 #act-reload { --s: 54; --r: 196; --b: 22; }
 #act-nade { --s: 54; --r: 104; --b: 160; background: linear-gradient(180deg, #6f7a44, #4a5230); }
+#act-dash { --s: 54; --r: 196; --b: 96; background: linear-gradient(180deg, #d8ac42, #986b25); }
+#act-cav { --s: 54; --r: 26; --b: 174; background: linear-gradient(180deg, #4f8fc9, #2f5f96); }
 #act-use { --s: 60; --r: 194; --b: 164; background: linear-gradient(180deg, #c83a2c, #7f1712); border-color: #ffd84a; }
 #stage.compact #touch { --u: 1px; }
 body.touch-on #boss { bottom: auto; top: calc(var(--sat) + 62px); }
@@ -199,9 +197,6 @@ body:not(.touch-on) .touch-only { display: none; }
 #stage.compact #objective { font-size: 12px; padding: 4px 8px; }
 #stage.compact #hp-pips i { width: 12px; height: 14px; }
 #stage.compact #stamp { font-size: 64px; letter-spacing: 4px; }
-#stage.compact #danmaku { top: calc(var(--sat) + 86px); height: 22%; }
-#stage.compact #danmaku span { font-size: 15px; }
-#stage.compact #danmaku span.hot { font-size: 18px; }
 #stage.compact #dialog { font-size: 13px; }
 #stage.compact #toast { font-size: 12px; top: auto; bottom: calc(var(--sab) + 64px); max-width: 40%; }
 #stage.compact #prompt { font-size: 14px; top: 58%; }

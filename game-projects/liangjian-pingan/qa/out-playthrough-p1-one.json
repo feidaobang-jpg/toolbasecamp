@@ -1,18 +1,75 @@
 {
- "at": "2026-10-13T16:10:43.324Z",
+ "at": "2026-10-14T02:40:33.082Z",
  "startPhase": 1,
  "armor": "one",
- "finished": false,
- "gameSeconds": null,
- "wallSeconds": 9,
- "phases": [],
- "final": null,
+ "route": "classic",
+ "ending": "classic",
+ "finished": true,
+ "gameSeconds": 209.8,
+ "wallSeconds": 6,
+ "phases": [
+  {
+   "phase": 1,
+   "seconds": 28.7,
+   "deaths": 2,
+   "hurt": 2
+  },
+  {
+   "phase": 2,
+   "seconds": 29.2,
+   "deaths": 0,
+   "hurt": 0
+  },
+  {
+   "phase": 3,
+   "seconds": 56.2,
+   "deaths": 0,
+   "hurt": 0
+  },
+  {
+   "phase": 4,
+   "seconds": 50.5,
+   "deaths": 5,
+   "hurt": 5
+  },
+  {
+   "phase": 5,
+   "seconds": 45.1,
+   "deaths": 5,
+   "hurt": 5
+  }
+ ],
+ "final": {
+  "state": "result",
+  "phase": 5,
+  "t": 209.8000000000591,
+  "deaths": 12,
+  "hurt": 12,
+  "shells": 7,
+  "cav": 3,
+  "loot": 1,
+  "clash": 1,
+  "tower": 1,
+  "won": 1,
+  "genius": 1,
+  "kills": 86,
+  "hp": 1,
+  "hx": 2.3,
+  "hz": -90.4,
+  "boss": -8,
+  "heads": 72,
+  "jumps": 6,
+  "cannon": 12,
+  "retries": 0,
+  "score": 26040,
+  "enemies": 0
+ },
  "result": {
-  "title": "",
-  "rank": "",
-  "total": "",
-  "stats": "",
-  "hidden": true
+  "title": "平安县城，拿下了！",
+  "rank": "评价：晋西北一霸",
+  "total": "战功合计 22440　最高 22440",
+  "stats": "结局城楼开炮（原作）用时3:29歼敌86干掉精锐8开炮7 发“天才”炮击1拼刀成功1骑兵连出击3缴获军火库是阵亡12受击12爆头72规则无限命 · 一发",
+  "hidden": false
  },
  "errors": []
 }

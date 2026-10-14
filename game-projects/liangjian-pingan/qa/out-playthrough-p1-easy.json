@@ -1,70 +1,74 @@
 {
- "at": "2026-10-13T16:10:49.276Z",
+ "at": "2026-10-14T02:40:35.105Z",
  "startPhase": 1,
  "armor": "easy",
+ "route": "classic",
+ "ending": "classic",
  "finished": true,
- "gameSeconds": 208.7,
- "wallSeconds": 4,
+ "gameSeconds": 330.5,
+ "wallSeconds": 8,
  "phases": [
   {
    "phase": 1,
-   "seconds": 24.5,
+   "seconds": 28,
    "deaths": 0,
-   "hurt": 3
+   "hurt": 5
   },
   {
    "phase": 2,
-   "seconds": 32.7,
+   "seconds": 30.7,
+   "deaths": 0,
+   "hurt": 2
+  },
+  {
+   "phase": 3,
+   "seconds": 56.5,
    "deaths": 0,
    "hurt": 1
   },
   {
-   "phase": 3,
-   "seconds": 18.7,
-   "deaths": 0,
-   "hurt": 0
-  },
-  {
    "phase": 4,
-   "seconds": 80.3,
-   "deaths": 1,
-   "hurt": 15
+   "seconds": 179.3,
+   "deaths": 4,
+   "hurt": 34
   },
   {
    "phase": 5,
-   "seconds": 52.5,
+   "seconds": 36,
    "deaths": 0,
-   "hurt": 8
+   "hurt": 6
   }
  ],
  "final": {
   "state": "result",
   "phase": 5,
-  "t": 208.73333333339158,
-  "deaths": 1,
-  "hurt": 27,
-  "shells": 6,
+  "t": 330.4666666666948,
+  "deaths": 4,
+  "hurt": 48,
+  "shells": 7,
+  "cav": 4,
   "loot": 1,
+  "clash": 2,
   "tower": 1,
   "won": 1,
   "genius": 1,
-  "kills": 74,
+  "kills": 82,
   "hp": 1,
-  "hx": 5.2,
-  "hz": -85.1,
-  "boss": -1,
-  "heads": 69,
-  "jumps": 54,
-  "cannon": 20,
+  "hx": 8.8,
+  "hz": -93,
+  "boss": 0,
+  "heads": 57,
+  "jumps": 144,
+  "cannon": 19,
   "retries": 0,
-  "score": 23855,
+  "score": 24660,
   "enemies": 0
  },
  "result": {
   "title": "平安县城，拿下了！",
   "rank": "评价：晋西北一霸",
-  "total": "战功合计 23555　最高 23555",
-  "stats": "用时3:28歼敌74干掉精锐6开炮6 发“天才”炮击1缴获军火库是阵亡1受击27爆头69规则无限命 · 宽松",
+  "total": "战功合计 23460　最高 23460",
+  "stats": "结局城楼开炮（原作）用时5:30歼敌82干掉精锐6开炮7 发“天才”炮击1拼刀成功2骑兵连出击4缴获军火库是阵亡4受击48爆头57规则无限命 · 宽松",
   "hidden": false
  },
  "errors": []

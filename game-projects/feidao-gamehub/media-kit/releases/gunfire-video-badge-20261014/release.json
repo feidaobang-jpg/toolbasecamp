@@ -1,0 +1,96 @@
+{
+ "task_id": "pingan-story-video-20261014",
+ "version": "gunfire-video-badge-20261014",
+ "created_at": "2026-10-14T13:56:00+08:00",
+ "executed_by": "Qoder",
+ "source_commit": "05e91fc6",
+ "why": "平安县城 v0.5.0 视频（BV12ypy68EZz）已发布并核实绑定到枪火集结 Toy 43022175699968，合集里的枪火集结卡片此前没有实机视频角标，玩法说明还写着「步行第一人称作战、载具第三人称跟随」，与第三章平安县城重做版（越肩第三人称／操炮／双结局）不符，属于现有说明失实，按发布节奏随本次视频收尾立即更正。",
+ "collection": {
+  "toy_id": 40495283951616,
+  "slug": "feidao-games",
+  "url": "https://www.bilibili.com/toy/feidao-games/index.html",
+  "status": "published",
+  "game_count": 14,
+  "preview_url_before_submit": "https://www.bilibili.com/toy/preview/preview_qhAGZYB5/index.html",
+  "submitted_at": "2026-10-14T13:51:22+08:00",
+  "auditing_observed_at": "2026-10-14T13:51:22+08:00（toy mylist 连续两次读到 auditing）",
+  "public_verified_at": "2026-10-14T13:53:51+08:00（toy mylist status=published，mtime 同步更新）",
+  "published_version": "gunfire-video-badge-20261014",
+  "last_successful_sync_version": "gunfire-video-badge-20261014",
+  "watermark_enabled": false,
+  "cli": "toy v0.6.1，toy update 40495283951616 package --json --yes",
+  "write_lock": "C:/Users/37818/.claude/state/toy/40495283951616-write.lock（提交那一小段持有，写完立即释放）"
+ },
+ "changes": [
+  "枪火集结卡片补上本期已核实绑定的实机视频角标 BV12ypy68EZz（点角标新开视频页）",
+  "枪火集结玩法说明改成与重做版一致的：战地模式争夺据点，抗战战役三章打到平安县城，操炮轰城门，城楼秀芹有开炮与冲进城门两种结局",
+  "其余 13 张卡片、分类、封面与跳转均未改动；西游降魔仍按既定排除项不在合集内"
+ ],
+ "build": {
+  "package_dir": "D:/project/worktrees/pingan-story-video-20261014/toolbasecamp/game-projects/feidao-gamehub/package",
+  "index_sha256": "da5321c5d8e811801403adc21733bdb3c32dbe45c6b69f48d5f2c960ed8be991",
+  "index_bytes": 11078,
+  "index_size_rule": "Toy 入口 index.html 11,078 字节，低于 2026-10-13 通知建议的 100KB，也远低于 1MB 上限",
+  "zip": "由 toy CLI v0.6.1 在 update 时按 package 目录现场打包（history 记录 path 为该目录）",
+  "files": {
+   "author-home.js": "5b4b8fc50b73dec1d8f70182453c35f3d07101336345ccad6b689de7e2eb19f7",
+   "index.html": "da5321c5d8e811801403adc21733bdb3c32dbe45c6b69f48d5f2c960ed8be991",
+   "assets/chongchao-qianshao.jpg": "7823309320ebef2cbc389e88b4c2b538ce4074a086349261fe31c3cf01f93518",
+   "assets/feidao-brick-breaker.png": "79c6007d26144a3dc081034b245ef0d87615a3c38c5200927db3cb04f3e74764",
+   "assets/feidao-bubble-dragon.png": "72dbde0c572142227c609113aabee9a24699926e7ed62242b3b15f1149d62712",
+   "assets/feidao-cadillacs-3d.png": "23b187fdba0747a4e0a9217cefd0db46dad15410752d94ed613c7c852b8c5b62",
+   "assets/feidao-fly-bird.png": "96397dcd1b03e74cd0ff837bccf13251fe806289c9650a5f8f7896ec2c1a5b57",
+   "assets/feidao-frog-zuma.png": "e1690daf37a000e0d730818270ced3731e49db4a2201be34cc11f99e3890b885",
+   "assets/feidao-gemswap.png": "f7b3781529ef5ede388123502f1de37bbbac411dd7444ba0c7e662a61f5aa2b4",
+   "assets/feidao-gunfire.jpg": "26ac542bfe86e6b530eff461e8034e79c7e5ac715ae85da911da733841cb088d",
+   "assets/feidao-jackal-3d.png": "d66115a17536485ee7c7ac32f6985623ceda2a95f6eaac3e8d5c3bd447327c34",
+   "assets/feidao-journey-west.png": "323cba2587bbaf9f9874e90823ab495c1a418379f9c3c78c532a360ca635a88c",
+   "assets/feidao-lianliankan.png": "3bf141b49f60fafa0aebd5a9aee57adff5ca97f76a41558c2bc065aceee047a6",
+   "assets/feidao-mario-3d.png": "0c08b7387182a62f11551520ba4f40e99e2741f3b4c679a9b822f4292946cbad",
+   "assets/feidao-sheepstack.png": "9f30dcbda1ba5aff1d575cbe95a90f025f8cf8b94e5547588fca9a045ffd5520",
+   "assets/feidao-tank-3d.png": "2c7fc4057e46e587bf366ab32e3fdfedbf2061931a5983303795c101fe615b44",
+   "assets/feidao-worms.png": "a839fdbb755f2e5661586215e99b67cd84abfb7db604660a72d322047275f7a4"
+  }
+ },
+ "qa": {
+  "method": "本机无头 Edge（Playwright）打开预览与线上合集，外壳页取内层 bilibilitoy.com frame 实测",
+  "cases": 6,
+  "passed": true,
+  "preview_checks": [
+   "14 张卡片全部渲染，分类 chips 为 全部／3D 重制／动作射击／经典休闲／策略塔防",
+   "枪火集结卡片 hasBadge=true、封面 assets/feidao-gunfire.jpg 加载成功（naturalWidth>0）",
+   "卡片说明与 tags 与重做版一致（含双结局）",
+   "点▶实机视频角标新开 https://www.bilibili.com/video/BV12ypy68EZz/",
+   "页内 toy SDK 在场（hasToySdk=true），无 console／pageerror"
+  ],
+  "public_checks": [
+   "线上 https://www.bilibili.com/toy/feidao-games/index.html 内层 frame 读到同一张新卡片与角标",
+   "线上点角标新开 BV12ypy68EZz；点卡片经官方 SDK 跳出 feidao-gunfire Toy（带 from=feidao-gamehub）",
+   "线上 14 张卡片齐全，无 console／pageerror"
+  ],
+  "evidence": [
+   "D:/project/task-artifacts/liangjian-pingan-story-video-20261014/qa-hub-preview.cjs",
+   "D:/project/task-artifacts/liangjian-pingan-story-video-20261014/probe-card.cjs",
+   "D:/project/task-artifacts/liangjian-pingan-story-video-20261014/hub-live-20261014.png"
+  ]
+ },
+ "video_binding_check": {
+  "command": "toy video list 43022175699968 --json",
+  "result": "BV12ypy68EZz（aid 117437542438809）在绑定列表内，与本期视频一致，角标填的就是这个已核实 BV",
+  "other_bound_videos": [
+   "BV1Lfp76KEDd",
+   "BV1KFpJ6sEEK"
+  ]
+ },
+ "toy_gunfire_status": {
+  "toy_id": 43022175699968,
+  "slug": "feidao-gunfire",
+  "status": "published",
+  "mtime": "2026-10-14T10:54:52+08:00",
+  "note": "0.2.3（平安县城 v0.5.0）已在 10:52 提交并于 10:54 过审 published，10:55 公开核验见枪火集结 0.2.3 handoff 的 qa-toy-public.json；自那次提审之后 public/** 无新增改动（git diff 73d6cca8..05e91fc6 -- public/ 为空），本稳定版本不再重复送审。"
+ },
+ "not_verified": [
+  "手机真机在 Toy 外壳内打开合集卡片与角标的触控表现（本机为桌面模拟）",
+  "Toy SDK 在低版本外壳上的跳转兜底只做过代码走查，未真机验证"
+ ]
+}

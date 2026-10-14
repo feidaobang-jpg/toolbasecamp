@@ -62,6 +62,8 @@ window.__installBot = function () {
     set('KeyJ', err < 0.035 || g.aim.target === t);
     const d = dist(h.x, h.z, t.x, t.z);
     if (S.nadeT <= 0 && h.nades > 0 && t.y < 2 && d < 20 && d > 7 && err < 0.2) { tap('KeyU'); S.nadeT = 2.4; }
+    if (h.dashCd <= 0 && t.y < 2 && t.type !== 'boss' && d < 5 && err < 0.4) tap('KeyL');
+    if (h.cavCd <= 0 && g.phase !== 5 && g.phase !== 3 && err < 0.5 && alive((e) => e.active && e.y < 2 && dist(e.x, e.z, h.x, h.z) < 42).length >= 3) tap('KeyN');
     return t;
   }
   function solve(type, ref) {
@@ -100,6 +102,7 @@ window.__installBot = function () {
       const threat = nearest(alive((e) => e.y < 2 && e.active && dist(e.x, e.z, c.x, c.z) < 28));
       if (threat) { goTo(threat.x, threat.z, t ? 11 : 4, dt); if (!t) lookAlong(threat.x, threat.z); } else { goTo(c.x + 3, c.z + 2.5, 1.5, dt); if (!t) lookAlong(c.x, c.z - 30); }
     } else if (p === 3) {
+      if (window.__route === 'rescue' && g.flags.choice && !g.flags.ending && !c.manned) { set('KeyJ', false); goTo(0, -21, 0.3, dt); lookAlong(0, -40); return; }
       if (!c.manned) {
         set('KeyJ', false);
         const d = goTo(c.x + 0.4, c.z + 2.2, 0.8, dt);
@@ -109,6 +112,8 @@ window.__installBot = function () {
       }
       steer(0, 0, false);
       const w = g.world;
+      // 城楼抉择：走改写结局时离开炮位，从轰开的城门冲进去
+      if (window.__route === 'rescue' && g.flags.choice && !g.flags.ending) { set('KeyJ', false); if (c.manned) tap('KeyI'); return; }
       let type = null, ref = null;
       const b = w.bunkers.find((k) => k.alive);
       if (b) { type = 'bunker'; ref = b; } else if (w.gate.alive) type = 'gate'; else if (w.tower.alive) type = 'tower';
@@ -148,11 +153,11 @@ window.__installBot = function () {
       S.circT -= dt; if (S.circT <= 0) { S.circT = 2.5 + Math.random() * 2; S.circ = -S.circ; }
       let mx = (-dz / d) * S.circ, mz = (dx / d) * S.circ;
       if (d > 12) { mx += dx / d; mz += dz / d; } else if (d < 7) { mx -= dx / d; mz -= dz / d; }
-      // 红线预警：侧移；临出刀时多半起跳
+      // 红线预警：侧移；临出刀时有时亮剑拼刀、有时起跳
       if (b.state === 'dashTele') {
         const side = (h.x - b.x) * (-b.dz) + (h.z - b.z) * b.dx > 0 ? 1 : -1;
         mx = -b.dz * side; mz = b.dx * side;
-        if (b.stT < 0.16 && d < 9 && Math.random() < 0.7) tap('KeyK');
+        if (b.stT < 0.16 && d < 9) { const r = Math.random(); if (r < 0.4 && h.dashCd <= 0) { mx = dx / d; mz = dz / d; steer(mx, mz, true); tap('KeyL'); return; } else if (r < 0.7) tap('KeyK'); }
       }
       const cx = 0 - h.x, cz = -92 - h.z;
       if (Math.abs(h.x) > 13 || h.z > -84.5 || h.z < -100.5) { mx += cx * 0.2; mz += cz * 0.2; }

@@ -79,6 +79,19 @@
       "public_verified_at": "2026-10-14T09:08:34+08:00",
       "user_confirmation": "用户 2026-10-14 在对话里回复“改两条 B站简介”",
       "public_verification_record": "releases/web-pingan-remake-v0.2.0/bilibili-sync.json"
+    },
+    {
+      "version": "web-pingan-story-v0.2.3",
+      "record": "releases/web-pingan-story-v0.2.3/handoff.json",
+      "website_verified_at": "2026-10-14T10:50:38+08:00",
+      "toy_published_verified_at": "2026-10-14T10:55:34+08:00",
+      "status": "pending_merge",
+      "decision": "deferred_accumulating",
+      "reason": "两条简介写的“护送意大利炮、开炮轰塌城楼”仍然准确，没有提弹幕或合成语音；秀芹过场与双结局是已有章节新增的一场戏，不是新关卡、核心玩法、联机或存档的明显变化。自 10-14 09:08 公开核验后累计 0.2.2（亮剑骑兵连回归，当时判定无需改）与本版两次稳定更新，未满 3 次、未满 7 天。用户要求时可立即补写。",
+      "summary": "平安县城城门轰开后加入秀芹被押上城楼的过场与双结局（朝城楼开炮＝原作，冲进城门救人＝改写）；17 句喊话换成《亮剑》原声；去掉飘屏弹幕。",
+      "channels": [
+        "bilibili"
+      ]
     }
   ]
 }

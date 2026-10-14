@@ -1,0 +1,213 @@
+{
+ "at": "2026-10-14T01:43:04.004Z",
+ "url": "https://www.bilibili.com/toy/preview/preview_BMoALfAo/index.html",
+ "results": [
+  {
+   "name": "desktop-1280x720：外壳页里有游戏 iframe",
+   "ok": true,
+   "detail": {
+    "frames": [
+     "https://www.bilibili.com/toy/preview/preview_BMoALfAo/index.html",
+     "https://www.bilibilitoy.com/toy/preview/preview_BMoALfAo/index.html"
+    ],
+    "title": ""
+   }
+  },
+  {
+   "name": "desktop-1280x720：大厅启动，版本 v0.2.2",
+   "ok": true,
+   "detail": {
+    "ready": true,
+    "ver": "v0.2.2",
+    "card": true
+   }
+  },
+  {
+   "name": "desktop-1280x720：抗战第三章进入重做版，主菜单出现",
+   "ok": true,
+   "detail": {
+    "url": "/toy/preview/preview_BMoALfAo/pingan/index.html",
+    "loading": true,
+    "ldText": "正在集结队伍…",
+    "btns": [
+     "开始战斗",
+     "继续",
+     "起始阶段◂ 1 扫清城外",
+     "命数◂ 无限命 ▸",
+     "耐久◂ 标准 5 格 ▸",
+     "演示模式◂ 关 ▸",
+     "视角◂ 第三人称 ▸",
+     "画质◂ 自动（高） ▸",
+     "音量◂ 80% ▸",
+     "弹幕◂ 开 ▸",
+     "触屏按键◂ 自动 ▸",
+     "帧率显示◂ 关 ▸",
+     "瞄准灵敏度◂ 中 ▸",
+     "鼠标瞄准◂ 鼠标接管 ▸",
+     "左手开火键◂ 关 ▸",
+     "全屏切换",
+     "作者B站主页飞刀班长",
+     "返回大厅枪火集结",
+     "自动识别",
+     "电脑键鼠"
+    ]
+   }
+  },
+  {
+   "name": "desktop-1280x720：点“开始战斗”后进入第一阶段",
+   "ok": true,
+   "detail": {
+    "menuHidden": true,
+    "obj": "第一阶段 · 端掉城外两处机枪阵地 0/2",
+    "canvas": [
+     1280,
+     720
+    ],
+    "touchShown": false,
+    "fire": true,
+    "lock": true,
+    "toast": "",
+    "stageRot": false
+   }
+  },
+  {
+   "name": "desktop-1280x720：亮剑、骑兵连在（状态条四项，触屏有两个键）",
+   "ok": true,
+   "detail": {
+    "chips": [
+     "J驳壳枪20/20",
+     "U手榴弹×3",
+     "L亮剑就绪",
+     "N骑兵连就绪"
+    ],
+    "dash": true,
+    "cav": true
+   }
+  },
+  {
+   "name": "（记录）desktop-1280x720：Toy 外壳里鼠标接管是否可用：可用",
+   "ok": true,
+   "detail": {
+    "lock": true,
+    "toast": "",
+    "menuHidden": true,
+    "paused": false
+   }
+  },
+  {
+   "name": "desktop-1280x720：没有脚本报错和资源加载失败",
+   "ok": true,
+   "detail": {
+    "errors": [],
+    "failed": []
+   }
+  },
+  {
+   "name": "mobile-844x390：外壳页里有游戏 iframe",
+   "ok": true,
+   "detail": {
+    "frames": [
+     "https://www.bilibili.com/toy/preview/preview_BMoALfAo/index.html",
+     "https://www.bilibilitoy.com/toy/preview/preview_BMoALfAo/index.html"
+    ],
+    "title": ""
+   }
+  },
+  {
+   "name": "mobile-844x390：大厅启动，版本 v0.2.2",
+   "ok": true,
+   "detail": {
+    "ready": true,
+    "ver": "v0.2.2",
+    "card": true
+   }
+  },
+  {
+   "name": "mobile-844x390：抗战第三章进入重做版，主菜单出现",
+   "ok": true,
+   "detail": {
+    "url": "/toy/preview/preview_BMoALfAo/pingan/index.html",
+    "loading": true,
+    "ldText": "正在集结队伍…",
+    "btns": [
+     "开始战斗",
+     "继续",
+     "起始阶段◂ 1 扫清城外",
+     "命数◂ 无限命 ▸",
+     "耐久◂ 标准 5 格 ▸",
+     "演示模式◂ 关 ▸",
+     "视角◂ 第三人称 ▸",
+     "画质◂ 自动（流畅） ▸",
+     "音量◂ 80% ▸",
+     "弹幕◂ 开 ▸",
+     "触屏按键◂ 自动 ▸",
+     "帧率显示◂ 关 ▸",
+     "瞄准灵敏度◂ 中 ▸",
+     "鼠标瞄准◂ 鼠标接管 ▸",
+     "左手开火键◂ 关 ▸",
+     "全屏切换",
+     "作者B站主页飞刀班长",
+     "返回大厅枪火集结",
+     "自动识别",
+     "电脑键鼠"
+    ]
+   }
+  },
+  {
+   "name": "mobile-844x390：点“开始战斗”后进入第一阶段",
+   "ok": true,
+   "detail": {
+    "menuHidden": true,
+    "obj": "第一阶段 · 端掉城外两处机枪阵地 0/2",
+    "canvas": [
+     844,
+     346
+    ],
+    "touchShown": true,
+    "fire": true,
+    "lock": false,
+    "toast": "",
+    "stageRot": false
+   }
+  },
+  {
+   "name": "mobile-844x390：亮剑、骑兵连在（状态条四项，触屏有两个键）",
+   "ok": true,
+   "detail": {
+    "chips": [
+     "J开火20/20",
+     "U手榴弹×3",
+     "L亮剑就绪",
+     "N骑兵连就绪"
+    ],
+    "dash": true,
+    "cav": true
+   }
+  },
+  {
+   "name": "mobile-844x390：触屏按键显示",
+   "ok": true,
+   "detail": {
+    "menuHidden": true,
+    "obj": "第一阶段 · 端掉城外两处机枪阵地 0/2",
+    "canvas": [
+     844,
+     346
+    ],
+    "touchShown": true,
+    "fire": true,
+    "lock": false,
+    "toast": "",
+    "stageRot": false
+   }
+  },
+  {
+   "name": "mobile-844x390：没有脚本报错和资源加载失败",
+   "ok": true,
+   "detail": {
+    "errors": [],
+    "failed": []
+   }
+  }
+ ]
+}

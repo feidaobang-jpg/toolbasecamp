@@ -43,8 +43,17 @@ const check = (name, ok, detail) => { out.push({ name, ok: !!ok, detail }); cons
   await page.keyboard.press('KeyU'); await step(3);
   const n1 = await page.evaluate(() => __lj.game.hero.nades);
   check('U 扔手榴弹', n1 === n0 - 1, { n0, n1 });
-  const skills = await page.evaluate(() => ({ chips: document.querySelectorAll('#skills div').length, dash: !!document.getElementById('act-dash'), cav: !!document.getElementById('act-cav') }));
-  check('亮剑、骑兵连已去掉（状态条只剩开火与手榴弹，触屏没有这两个键）', skills.chips === 2 && !skills.dash && !skills.cav, skills);
+  // 亮剑 L、骑兵连 N（v0.4.0 加回）
+  await page.evaluate(() => { const g = __lj.game; g.reset(1, false); g.cut = 0; g.timers.length = 0; for (const e of g.enemies) { e.alive = false; e.deadT = 9; } g.place(g.hero, 0, 70); g.cam.yaw = 0; __lj.step(4, true); });
+  const z0 = await page.evaluate(() => __lj.game.hero.z);
+  await page.keyboard.press('KeyL'); await step(20);
+  const d1 = await page.evaluate(() => ({ z: __lj.game.hero.z, cd: __lj.game.hero.dashCd }));
+  await page.keyboard.press('KeyN'); await step(6);
+  const cv = await page.evaluate(() => ({ riders: __lj.game.riders.length, cd: __lj.game.hero.cavCd, cav: __lj.game.stats.cav }));
+  const skills = await page.evaluate(() => ({ chips: [...document.querySelectorAll('#skills div')].map((d) => d.textContent), dash: !!document.getElementById('act-dash'), cav: !!document.getElementById('act-cav') }));
+  check('L 亮剑向前突进并进入冷却', z0 - d1.z > 3 && d1.cd > 0, { z0, d1 });
+  check('N 叫骑兵连：五骑出场并进入冷却', cv.riders === 5 && cv.cd > 0 && cv.cav === 1, cv);
+  check('状态条四项：开火 J、手榴弹 U、亮剑 L、骑兵连 N；触屏有对应按键', skills.chips.length === 4 && /^L亮剑/.test(skills.chips[2]) && /^N骑兵连/.test(skills.chips[3]) && skills.dash && skills.cav, skills);
 
   // ---- 上炮改用 I（F 也行）----
   await page.evaluate(() => { const g = __lj.game; g.reset(3, false); g.cut = 0; g.timers.length = 0; for (const b of g.world.bunkers) b.cd = 999; g.place(g.hero, g.cannon.x + 0.5, g.cannon.z + 2.4); __lj.step(6, true); });

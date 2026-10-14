@@ -1,0 +1,75 @@
+{
+ "at": "2026-10-14T02:36:36.688Z",
+ "startPhase": 1,
+ "armor": "std",
+ "route": "rescue",
+ "ending": "rescue",
+ "finished": true,
+ "gameSeconds": 214.2,
+ "wallSeconds": 4,
+ "phases": [
+  {
+   "phase": 1,
+   "seconds": 25,
+   "deaths": 0,
+   "hurt": 3
+  },
+  {
+   "phase": 2,
+   "seconds": 29.2,
+   "deaths": 0,
+   "hurt": 2
+  },
+  {
+   "phase": 3,
+   "seconds": 45,
+   "deaths": 0,
+   "hurt": 1
+  },
+  {
+   "phase": 4,
+   "seconds": 60.8,
+   "deaths": 1,
+   "hurt": 7
+  },
+  {
+   "phase": 5,
+   "seconds": 54.2,
+   "deaths": 1,
+   "hurt": 8
+  }
+ ],
+ "final": {
+  "state": "result",
+  "phase": 5,
+  "t": 214.21666666672928,
+  "deaths": 2,
+  "hurt": 21,
+  "shells": 6,
+  "cav": 4,
+  "loot": 1,
+  "clash": 2,
+  "tower": 0,
+  "won": 1,
+  "genius": 1,
+  "kills": 84,
+  "hp": 2,
+  "hx": 7.7,
+  "hz": -91.3,
+  "boss": -9,
+  "heads": 81,
+  "jumps": 34,
+  "cannon": 29,
+  "retries": 0,
+  "score": 26920,
+  "enemies": 0
+ },
+ "result": {
+  "title": "平安县城拿下了，秀芹也救回来了！",
+  "rank": "评价：晋西北一霸",
+  "total": "战功合计 26320　最高 26320",
+  "stats": "结局救下秀芹（改写）用时3:34歼敌84干掉精锐8开炮6 发“天才”炮击1拼刀成功2骑兵连出击4缴获军火库是阵亡2受击21爆头81规则无限命 · 标准",
+  "hidden": false
+ },
+ "errors": []
+}

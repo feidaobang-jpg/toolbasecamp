@@ -1239,7 +1239,7 @@ function explode(pos,radius,dmg,friendly,team=null,src=null,pid=null){
   spawnParticles(pos,0xff5511,10,6,.8,2,4);
   if(team&&vsOn()){versus.explodeAt(pos,radius,dmg,team,{src:src||'unit',by:pid});return;}
   if(friendly){
-    for(const mo of monsters){if(!mo.dead&&mo.mesh.position.distanceTo(pos)<radius+mo.radius)damageMonster(mo,dmg);}
+    for(const mo of monsters){if(!mo.dead&&!(mo.emerge>0)&&!(mo.spawnProtect>0)&&mo.mesh.position.distanceTo(pos)<radius+mo.radius)damageMonster(mo,dmg);}
   }else{
     // 驾驶时玩家模型停留在上车点；按实际载具位置结算，避免远处爆炸误伤。
     if(player.inVehicle){if(player.inVehicle.mesh.position.distanceTo(pos)<radius+2)damageVehicle(player.inVehicle,dmg);}
@@ -1282,7 +1282,8 @@ function firstWallHit(a,b,friendly=false,origin=null){
   return hit;
 }
 function targetHits(a,b,hitSet){
-  return monsters.filter(m=>!m.dead&&!(hitSet&&hitSet.has(m))).map(m=>({m,t:segmentHit(a,b,m.mesh.position.clone().add(new THREE.Vector3(0,m.hitH,0)),m.radius+.4)})).filter(h=>h.t!==null).sort((a,b)=>a.t-b.t);
+  // 出洞中的虫子与刚刷新的母皇不受伤，避免卡在洞口/老巢门口秒杀。
+  return monsters.filter(m=>!m.dead&&!(m.emerge>0)&&!(m.spawnProtect>0)&&!(hitSet&&hitSet.has(m))).map(m=>({m,t:segmentHit(a,b,m.mesh.position.clone().add(new THREE.Vector3(0,m.hitH,0)),m.radius+.4)})).filter(h=>h.t!==null).sort((a,b)=>a.t-b.t);
 }
 const beamPool=[];
 function fireBeam(from,dir,cfg){
@@ -1381,8 +1382,8 @@ function spawnMonster(kind,x,z,opts={}){
     hp=ch.mob.hp*mul;dmg=ch.mob.dmg*mul;speed=ch.mob.speed*(1+(Game.loop-1)*.08);scale=rand(.85,1.15);gold=Math.round(ch.mob.gold*(1+(Game.loop-1)*.3));
   }else if(kind==='miniboss'){
     hp=ch.mob.hp*mul*9;dmg=ch.mob.dmg*mul*1.8;speed=ch.mob.speed*.85;scale=2.2;gold=Math.round(ch.mob.gold*mul*8);ranged=true;
-  }else if(kind==='queen'){ // 虫巢母皇：只守老巢
-    hp=ch.mob.hp*mul*36;dmg=ch.mob.dmg*mul*2.2;speed=ch.mob.speed*.6;scale=4.4;gold=Math.round((400+200*Game.chapter)*(1+(Game.loop-1)*.3));ranged=true;fly=false;
+  }else if(kind==='queen'){ // 虫巢母皇：只守老巢（血量抬高 + 出生保护，避免门口几秒秒杀）
+    hp=ch.mob.hp*mul*90;dmg=ch.mob.dmg*mul*2.2;speed=ch.mob.speed*.6;scale=4.4;gold=Math.round((400+200*Game.chapter)*(1+(Game.loop-1)*.3));ranged=true;fly=false;
   }else{ // boss
     hp=ch.mob.hp*mul*24;dmg=ch.mob.dmg*mul*2.4;speed=ch.mob.speed*.7;scale=3.6;gold=Math.round(ch.mob.gold*mul*25);ranged=true;
   }
@@ -1408,6 +1409,7 @@ function spawnMonster(kind,x,z,opts={}){
     atkCd:0,ranged,fly,route:opts.route||null,routeIndex:0,flightAfterExit:winged,anim:rand(0,10),wild:opts.wild||false,guard:!!opts.home,home:opts.home||null,
     explodeOnDie:ch.explodeOnDie,split:ch.split&&kind==='mob'&&!opts.isSplit,stealth:ch.stealth,
     target:null,spitCd:rand(1,3),chargeCd:5,emerge:opts.emerge?.9:0,
+    spawnProtect:kind==='queen'?(opts.spawnProtect??4):0,
     bs:kind==='boss'?(ch.bs||['summon']):kind==='queen'?['barrage','summon']:(kind==='miniboss'?(ch.bs||[]).slice(0,1):null),
     chargeT:0,elite:null,
   };
@@ -1453,6 +1455,7 @@ function spawnMonster(kind,x,z,opts={}){
 function affixNames(list){return list.map(k=>ELITES[k].name).join('·');}
 function damageMonster(mo,d){
   if(mo.dead)return;
+  if(mo.emerge>0||mo.spawnProtect>0)return;
   if(mo.zergPlayer){if(zergMode)zergMode.hurt(d);return;}
   mo.hp-=d;updHPBar(mo.bar,mo.hp/mo.maxHp);
   mo.dmgAcc=(mo.dmgAcc||0)+d;if(!(mo.dmgT>0))mo.dmgT=.14;
@@ -1612,6 +1615,7 @@ function updMonsters(dt){
     if(mo.operationStatic)continue;
     mo.anim+=dt*8;
     visuals.animate(mo.mesh,dt,mo.emerge>0?'Walk':mo.atkCd>.75?'Attack':'Walk',camera);
+    if(mo.spawnProtect>0)mo.spawnProtect=Math.max(0,mo.spawnProtect-dt);
     if(mo.emerge>0){ // 从虫洞口钻出：先升出地面再行动
       mo.emerge=Math.max(0,mo.emerge-dt);
       const base=mo.fly?flyHeight(mo.mesh.position.x,mo.mesh.position.z):groundY(mo.mesh.position.x,mo.mesh.position.z);
@@ -2684,8 +2688,9 @@ function playerCanMove(x,z){
   if(x<WORLD.minX||x>WORLD.maxX||z<WORLD.minZ||z>WORLD.maxZ)return !collideWalls(x,z,.5,player.pos.y);
   const p=player.pos,next=groundY(x,z),current=groundY(p.x,p.z);
   const distance=Math.hypot(x-p.x,z-p.z);
-  if(next>p.y+.5)return false;
-  if(player.onGround&&next>current+.001&&(next-current)/Math.max(distance,.001)>.75)return false;
+  // 约 0.85m 内的台阶可直接走上（洞口沿、矮台），更高仍靠跳跃；避免「看着只差一点却上不去」。
+  if(next>p.y+.85)return false;
+  if(player.onGround&&next>current+.001&&(next-current)/Math.max(distance,.001)>.9)return false;
   return !collideWalls(x,z,.5,Math.max(p.y,next));
 }
 function updPlayer(dt){

@@ -1,0 +1,106 @@
+{
+ "at": "2026-10-14T02:50:46.918Z",
+ "passed": 9,
+ "total": 9,
+ "checks": [
+  {
+   "name": "战役菜单三章都在；第三章卡片写明重做版、秀芹与双结局；旧的拉炮 / 炮位控件已删除",
+   "ok": true,
+   "detail": {
+    "shown": true,
+    "cards": [
+     "第 1 章 · 步兵 / 手榴弹 / 阵地突破李家坡 · 交通壕突击扮演李云龙带领突击班，从交通壕逼近山崎部队。利用掩体接近机枪火力点，用手榴弹打开突破口，再夺取坡顶阵地。",
+     "第 2 章 · 骑乘 / 军刀 / 掩护撤离骑兵连 · 冲锋突围跟随孙德胜的骑兵连冲开封锁。上马后用冲刺拉近距离，挥刀冲击敌骑和步兵，掩护后方运输车撤离。以骑兵连冲锋名场面改编为可重玩的突围任务。",
+     "第 3 章 · 重做版 / 越肩射击 / 操炮 / 双结局平安县城 · 开炮重做版：扮演李云龙扫清城外机枪阵地，护送意大利炮上阵、轰开城门；山本把秀芹押上城楼——按原作朝城楼开炮，或者冲进城门救人，两种结局；再打进县城决战山本。越肩第三人称与第一人称可切换，能跳跃，有亮剑突进和骑兵连两个技能，打掉机枪手后阵地机枪可以接管。喊话用《亮剑》原声。本章有自己的菜单和进度。"
+    ],
+    "oldUi": []
+   }
+  },
+  {
+   "name": "第一章：点卡片开局",
+   "ok": true,
+   "detail": {
+    "active": true,
+    "chapter": 0,
+    "z": -18,
+    "ammo": "{\"rifle\":5,\"mauser\":10,\"zb26\":20,\"arisaka\":5}",
+    "grenades": 4
+   }
+  },
+  {
+   "name": "第一章：W 前进、J 开枪耗弹、U 扔手榴弹",
+   "ok": true,
+   "detail": {
+    "z0": -18,
+    "z1": -13.909680000033978,
+    "before": {
+     "active": true,
+     "chapter": 0,
+     "z": -18,
+     "ammo": "{\"rifle\":5,\"mauser\":10,\"zb26\":20,\"arisaka\":5}",
+     "grenades": 4
+    },
+    "after": {
+     "ammo": "{\"rifle\":3,\"mauser\":10,\"zb26\":20,\"arisaka\":5}",
+     "grenades": 3
+    }
+   }
+  },
+  {
+   "name": "第一章：推进到结算，结算页正常显示",
+   "ok": true,
+   "detail": {
+    "over": true,
+    "finished": true,
+    "result": true,
+    "title": "本章任务完成",
+    "next": true
+   }
+  },
+  {
+   "name": "第二章：从第一章结算“下一章”进入，I 上马、W 骑行",
+   "ok": true,
+   "detail": {
+    "st": {
+     "active": true,
+     "chapter": 1,
+     "mounted": false
+    },
+    "m": true,
+    "zb": -20,
+    "za": -12.801200000107341
+   }
+  },
+  {
+   "name": "第二章：推进到结算，结算页正常显示",
+   "ok": true,
+   "detail": {
+    "over": true,
+    "finished": true,
+    "result": true
+   }
+  },
+  {
+   "name": "第二章结算点“下一章”跳到平安县城重做版",
+   "ok": true,
+   "detail": "https://www.zhengxiaohui.cn/html/game/gunfire-assembly/pingan/index.html"
+  },
+  {
+   "name": "旧版第三章存档：菜单注明“重做版”，点“继续检查点”跳到重做版",
+   "ok": true,
+   "detail": {
+    "cont": {
+     "disabled": false,
+     "info": "检查点：平安县城 · 开炮 · 重做版，进度在该章自己的菜单里"
+    },
+    "url": "https://www.zhengxiaohui.cn/html/game/gunfire-assembly/pingan/index.html"
+   }
+  },
+  {
+   "name": "全程没有报错",
+   "ok": true,
+   "detail": []
+  }
+ ],
+ "errors": []
+}

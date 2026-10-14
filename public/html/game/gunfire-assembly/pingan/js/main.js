@@ -6,12 +6,12 @@ import { Input } from './input.js';
 import { GameAudio } from './audio.js';
 
 const NS = 'lj_pingan_v1_';
-const DEFAULTS = { startPhase: 1, lives: 'inf', armor: 'std', view: 0, quality: 'auto', volume: 80, danmaku: true, touchKeys: 'auto', fps: false, mode: 'auto', aimSens: 'mid', mouseAim: 'lock', leftFire: false };
+const DEFAULTS = { startPhase: 1, lives: 'inf', armor: 'std', view: 0, quality: 'auto', volume: 80, touchKeys: 'auto', fps: false, mode: 'auto', aimSens: 'mid', mouseAim: 'lock', leftFire: false };
 const SETTINGS_VERSION = 3;   // 2：视角从四个精简为 第三人称 / 第一人称；3：电脑端默认鼠标接管
 const CYCLE = {
   startPhase: [1, 2, 3, 4, 5], lives: ['inf', '3'], armor: ['std', 'easy', 'one'], demo: [false, true], view: [0, 1],
   aimSens: ['low', 'mid', 'high'], mouseAim: ['drag', 'lock'], leftFire: [false, true],
-  quality: ['auto', 'high', 'low'], volume: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100], danmaku: [true, false], touchKeys: ['auto', 'show', 'hide'], fps: [false, true],
+  quality: ['auto', 'high', 'low'], volume: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100], touchKeys: ['auto', 'show', 'hide'], fps: [false, true],
 };
 const $ = (id) => document.getElementById(id);
 const store = {
@@ -86,7 +86,6 @@ class App {
     if (k === 'touchKeys' || k === 'leftFire') this.applyMode();
     if (k === 'mouseAim' && v === 'drag') this.input.exitLock();
     if (k === 'fps' && !v) this.ui.setFps(null);
-    if (k === 'danmaku' && !v) for (const d of this.ui.dm.splice(0)) d.el.remove();
     this.audio.unlock();
   }
   setMode(v) { this.s.mode = v; this.save(); this.applyMode(); this.audio.unlock(); this.sfx('uiok'); }
@@ -118,6 +117,9 @@ class App {
   }
   checkpoint() { const c = store.get('cp'); return c >= 2 && c <= 5 ? c : 0; }
   saveCheckpoint(n) { if (n >= 2) store.set('cp', n); }
+  // 上次在城楼前选的路：原作（朝城楼开炮）或改写（冲进去救秀芹）。从第四、五阶段直接开局时沿用
+  ending() { return store.get('ending') === 'rescue' ? 'rescue' : 'classic'; }
+  saveEnding(e) { store.set('ending', e); }
   size() { return [this.w, this.h]; }
   sfx(n) { this.audio.play(n, 0.8); }
 
