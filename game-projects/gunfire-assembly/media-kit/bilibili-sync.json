@@ -37,10 +37,10 @@
     {
       "bvid": "BV1KFpJ6sEEK",
       "mapping": "toy video list 43022175699968",
-      "last_public_verified_at": "2026-10-14T11:46:07.447Z",
-      "last_public_verified_version": "web-mode-focus-v0.2.4",
-      "desc_sha256": "ea3b01eb073c331230aae7804d67dad04eed316b517911c31ca56f8f8a818701",
-      "record": "../../site-games/releases/mode-focus-20261014/bilibili-entrances.json",
+      "last_public_verified_at": "2026-10-14T12:46:21.402Z",
+      "last_public_verified_version": "web-cangyunling-v0.3.0",
+      "desc_sha256": "bd4f203bcc7d1d74bf0fcf2c2fa3a32d8735be4d4640493f95b66c76a5b8eac3",
+      "record": "../../site-games/releases/mode-focus-20261014/bilibili-final-entrances.json",
       "sync_history": [
         {
           "last_public_verified_version": "web-pingan-remake-v0.2.1",
@@ -48,12 +48,19 @@
           "description_sha256": null,
           "desc_sha256": "c1652b358069c2ed147becaeb5f6233ade1f1743054bfbc957fa288da7c35242",
           "record": "releases/web-pingan-remake-v0.2.0/bilibili-sync.json"
+        },
+        {
+          "last_public_verified_version": "web-mode-focus-v0.2.4",
+          "last_public_verified_at": "2026-10-14T11:46:07.447Z",
+          "description_sha256": "ea3b01eb073c331230aae7804d67dad04eed316b517911c31ca56f8f8a818701",
+          "desc_sha256": "ea3b01eb073c331230aae7804d67dad04eed316b517911c31ca56f8f8a818701",
+          "record": "../../site-games/releases/mode-focus-20261014/bilibili-entrances.json"
         }
       ],
-      "description_public_verified_at": "2026-10-14T11:46:07.447Z",
-      "description_sha256": "ea3b01eb073c331230aae7804d67dad04eed316b517911c31ca56f8f8a818701",
-      "status": "submitted_pending_public",
-      "sync_scope": "menu entry correction; preserves latest editable description",
+      "description_public_verified_at": "2026-10-14T12:46:21.402Z",
+      "description_sha256": "bd4f203bcc7d1d74bf0fcf2c2fa3a32d8735be4d4640493f95b66c76a5b8eac3",
+      "status": "public_verified",
+      "sync_scope": "current campaign recommendation; preserve latest title, cover and compact description",
       "last_submitted_at": "2026-10-14T12:43:41.989Z",
       "last_submitted_version": "web-cangyunling-v0.3.0",
       "last_submitted_description_sha256": "bd4f203bcc7d1d74bf0fcf2c2fa3a32d8735be4d4640493f95b66c76a5b8eac3",
@@ -169,11 +176,12 @@
       "targets": [
         "BV1KFpJ6sEEK"
       ],
-      "status": "submitted_pending_public",
+      "status": "public_verified",
       "decision": "necessary_entry_correction",
       "record": "../../site-games/releases/mode-focus-20261014/bilibili-final-entrances.json",
       "submitted_at": "2026-10-14T12:43:41.989Z",
-      "note": "已提交成功；公开简介仍是旧入口行，未推进该目标成功基线，不重复提交。"
+      "note": "公开全文与实际提交文案一致；只提交一次，已推进此目标基线。",
+      "public_verified_at": "2026-10-14T12:46:21.402Z"
     }
   ]
 }
