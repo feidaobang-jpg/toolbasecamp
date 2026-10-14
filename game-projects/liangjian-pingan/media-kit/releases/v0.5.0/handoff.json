@@ -448,6 +448,23 @@
   "整局录像重录",
   "帧时间重测"
  ],
+ "next_action": {
+  "updated_at": "2026-10-14T13:45:00+08:00",
+  "updated_by": "Qoder",
+  "why": "另一会话接手网站/Toy 上线核验与视频发布这类长流程时，按已做/未做继续，不重复提交；完整过程与证据见 video/story-20261014/work/publication-result.json",
+  "done": [
+   "本版代码已上线：网站线上产物核验通过，Toy 43022175699968（feidao-gunfire）同稳定版本一次提审并已 published，未登录公开核验通过——证据见 game-projects/gunfire-assembly/media-kit/releases/web-pingan-story-v0.2.3/handoff.json 的 website / toy 段",
+   "本期视频已发布：BV12ypy68EZz（160.567 秒、1920×1080、含城楼秀芹过场与双结局实机），已绑同一 Toy，置顶试玩评论 rpid 317017937249 已匿名核验；证据见 video/story-20261014/work/publication-result.json",
+   "旧宣传视频 BV1Lfp76KEDd 已补 v0.5.0 说明与本期链接，置顶引导已换成含新链接的一条并核验"
+  ],
+  "not_done": [
+   "腾讯文档日常推流申请表本期行：游客态不可写，材料在 video/story-20261014/work/publish/bilibili-zh/Toy推流申请.txt，需用户登录后补填并回读云端保存",
+   "BV1Lfp76KEDd 的简介修改公开仍是旧文本（607 字），复审生效后匿名读回应为 729 字并含 BV12ypy68EZz；未生效前不重复提交",
+   "枪火集结没有正式合集，本期与 BV1Lfp76KEDd 的归入待用户确认，不新建、不混入虫潮合集",
+   "真人试玩、手机真机、原声听感仍未做（见 untested）"
+  ],
+  "conflict_watch": "另一 Codex 会话仍持有 B站账号写锁并等待其 181.9 秒平安县城视频审片（uploaded=false）；本期已发布，恢复前需用户决定是否作废以免重复投稿。"
+ },
  "readiness": {
   "overview": "partial",
   "update": "partial",

@@ -80,6 +80,72 @@
   "thumbnail_decision": {
     "decision": "keep"
   },
+  "next_action": {
+    "updated_at": "2026-10-14T13:45:00+08:00",
+    "updated_by": "Qoder",
+    "why": "另一会话接手本期发布闭环时按此清单继续，不重复已完成动作；完整执行过程与证据见 game-projects/liangjian-pingan/video/story-20261014/work/publication-result.json",
+    "done": [
+      {
+        "item": "网站上线核验",
+        "result": "已核验 v0.2.3 线上产物（本文件 website 段）",
+        "evidence": "releases/web-pingan-story-v0.2.3/qa-website-story.json、qa-website-gunfire-chapters.json"
+      },
+      {
+        "item": "Toy 提审与公开核验",
+        "result": "已 published 并做未登录公开核验（本文件 toy 段）",
+        "evidence": "releases/web-pingan-story-v0.2.3/qa-toy-public.json"
+      },
+      {
+        "item": "本期视频发布",
+        "result": "已投稿并公开可见 BV12ypy68EZz（160.567 秒、1920×1080、v0.5.0 双结局实机），标题/分区/标签/话题/AI声明/双封面按 publish.json 落地",
+        "evidence": "game-projects/liangjian-pingan/video/story-20261014/work/publication-result.json"
+      },
+      {
+        "item": "视频绑定 Toy",
+        "result": "toy video bind 已生效，toy video list 回含本期 BV",
+        "evidence": "publication-result.json 的 toy_binding 段"
+      },
+      {
+        "item": "置顶试玩评论",
+        "result": "rpid 317017937249 已发布并置顶，匿名读回 upper.top 一致",
+        "evidence": "publication-result.json 的 pinned_comment 段"
+      },
+      {
+        "item": "关联视频简介与置顶引导（原 deferred_accumulating 已被本期发布提前触发）",
+        "result": "BV1Lfp76KEDd 简介补到 v0.5.0 双结局并加本期视频链接（729 字，编辑请求体已核验）；置顶引导改为新评论 rpid 317018397809 并置顶、匿名可见",
+        "evidence": "game-projects/liangjian-pingan/video/story-20261014/work/publish/bilibili-zh/previous-video-BV1Lfp76KEDd-snapshot.json",
+        "still_open": "该稿件简介修改公开仍是 607 字旧文本，复审生效后需匿名读回确认变 729 字；未生效前不要重复提交"
+      }
+    ],
+    "not_done": [
+      {
+        "item": "腾讯文档【进行中】日常推流申请表本期行",
+        "reason": "游客态只能查看，粘贴与键入进不了单元格编辑",
+        "resume": "用户登录腾讯文档后按 work/publish/bilibili-zh/Toy推流申请.txt 的 A:E 只填本期一行，先表内查找 BV12ypy68EZz 查重、重新定位末行，F 列留空，看到云端保存成功才算已申请"
+      },
+      {
+        "item": "正式合集归入",
+        "reason": "创作中心只有「虫潮围城开发实录」9248439，没有枪火集结合集；按规则不新建、不混入",
+        "resume": "等用户确认是否给枪火集结建正式合集及名称，再把 BV12ypy68EZz 与 BV1Lfp76KEDd 归入"
+      },
+      {
+        "item": "流量奖励用券",
+        "reason": "官方页显示可用流量奖励 0，本轮无券可跳过；下次发片再按快速判断复查",
+        "resume": "出现新券或可领奖提示时才进入用券流程"
+      },
+      {
+        "item": "发布后 24 小时／72 小时／7 天数据复盘",
+        "reason": "按规则在后续任务里做，不建定时任务",
+        "resume": "复盘时读 publication-result.json 的 open_items，并记录播放、留存、转粉、Toy 反馈"
+      },
+      {
+        "item": "真人试玩、手机真机、原声听感",
+        "reason": "本版与本期视频都未做，仍是未验证项",
+        "resume": "见本文件 validation.not_done 与 v0.5.0 handoff 的 untested"
+      }
+    ],
+    "conflict_watch": "另一 Codex 会话（工作区 C:/Users/37818/.codex/worktrees/pingan-video-20261014）仍持有 B站账号写锁，其 181.9 秒平安县城视频停在等待人工审片、uploaded=false；本期已发布，若该会话恢复会重复投稿，需用户先决定是否作废。"
+  },
   "related": {
     "pending_video_review": "另一会话的平安县城视频录自 v0.3.0，没有秀芹这场戏、喊话是合成音；与本版不一致，由用户审片时决定。",
     "voice_license": "原声未取得授权，用户知情后选择使用；来源见 game-projects/liangjian-pingan/media-kit/assets/voice.json"

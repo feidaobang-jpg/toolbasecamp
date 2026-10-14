@@ -1,7 +1,7 @@
 {
   "task_id": "pingan-story-video-20261014",
   "title": "枪火集结 · 平安县城 v0.5.0 双结局（秀芹城楼）B站实机视频",
-  "phase": "awaiting_user_review",
+  "phase": "published_bilibili",
   "platform_scope": "bilibili-zh only",
   "game_version": "liangjian-pingan v0.5.0 / 枪火集结 0.2.3",
   "source_commit": "0eb2ba8d",
@@ -16,7 +16,11 @@
     "cover-space-16x9.jpg": "4be7b8716b59716b91f4cc065f793ae7250e31fdcbe5129cebfe097585aa9dcf"
   },
   "approval_event_id": "pingan-story-20261014-review-ae713d10342f",
-  "uploaded": false,
+  "uploaded": true,
+  "bvid": "BV12ypy68EZz",
+  "aid": 117437542438809,
+  "published_at": "2026-10-14T13:14:15+08:00",
+  "publication_result": "work/publication-result.json",
   "predecessor": {
     "note": "沿用同一 worktree 里前序 Cursor 会话已完成的脚本、解说文本、IndexTTS 音频与四路实机采集；本会话核对覆盖后重写时间线、补拍缺口镜头、重渲染成片、做封面与投稿文案。remake-20261014（v0.3.0 旧片）已被本期取代，未复用其成片。",
     "superseded_run_state": "game-projects/liangjian-pingan/video/remake-20261014/work/run-state.json"
@@ -32,5 +36,5 @@
   ],
   "account_write_locks_held": false,
   "own_capture_processes_closed": true,
-  "next_action": "等本人对哈希 ae713d10342f 明确“人工审核通过”后：投稿 B站 → 绑定 Toy 43022175699968（feidao-gunfire）→ 发布并置顶试玩评论 → 核对合集与活动 → 填写 Toy 推流申请。在此之前不上传。"
+  "next_action": "本期已发布并公开可见：BV12ypy68EZz 已绑 Toy 43022175699968、置顶试玩评论已匿名核验、旧视频 BV1Lfp76KEDd 已补引导。剩余待办见 work/publication-result.json 的 open_items：①腾讯文档推流表因游客态未填（材料在 work/publish/bilibili-zh/Toy推流申请.txt，需用户登录后填本期一行）；②BV1Lfp76KEDd 简介修改待复审公开生效后读回；③枪火集结无正式合集，归入待用户确认；④另一会话的 181.9 秒平安县城视频仍未发布且持有 B站账号写锁，需用户决定是否作废以免重复投稿。"
 }
