@@ -1,0 +1,36 @@
+{
+  "task_id": "pingan-story-video-20261014",
+  "title": "枪火集结 · 平安县城 v0.5.0 双结局（秀芹城楼）B站实机视频",
+  "phase": "awaiting_user_review",
+  "platform_scope": "bilibili-zh only",
+  "game_version": "liangjian-pingan v0.5.0 / 枪火集结 0.2.3",
+  "source_commit": "0eb2ba8d",
+  "worktree": "D:/project/worktrees/pingan-story-video-20261014/toolbasecamp",
+  "branch": "cursor/pingan-story-video-20261014",
+  "artifact_directory": "D:/project/task-artifacts/liangjian-pingan-story-video-20261014",
+  "video_sha256": "ae713d10342f541d01a4b693f41ad542688a4e29cb52a108eeafe4a97d597fa8",
+  "video_bytes": 209714879,
+  "duration_seconds": 160.567,
+  "covers_sha256": {
+    "cover-home-4x3.jpg": "c9cdbac1834e4de544da65f5844e81f65add829ac0a6a34fa5ae7e18652f77c8",
+    "cover-space-16x9.jpg": "4be7b8716b59716b91f4cc065f793ae7250e31fdcbe5129cebfe097585aa9dcf"
+  },
+  "approval_event_id": "pingan-story-20261014-review-ae713d10342f",
+  "uploaded": false,
+  "predecessor": {
+    "note": "沿用同一 worktree 里前序 Cursor 会话已完成的脚本、解说文本、IndexTTS 音频与四路实机采集；本会话核对覆盖后重写时间线、补拍缺口镜头、重渲染成片、做封面与投稿文案。remake-20261014（v0.3.0 旧片）已被本期取代，未复用其成片。",
+    "superseded_run_state": "game-projects/liangjian-pingan/video/remake-20261014/work/run-state.json"
+  },
+  "technical_qa": "pass",
+  "technical_qa_warnings": [
+    "151.867–158.667s 结算面板与尾卡静帧，属设计内容"
+  ],
+  "not_verified": [
+    "真人听审（电视剧原声片段的响度与可懂度）",
+    "手机真机试玩与触屏表现",
+    "真人试玩（全部实机为输入层自动化 bot）"
+  ],
+  "account_write_locks_held": false,
+  "own_capture_processes_closed": true,
+  "next_action": "等本人对哈希 ae713d10342f 明确“人工审核通过”后：投稿 B站 → 绑定 Toy 43022175699968（feidao-gunfire）→ 发布并置顶试玩评论 → 核对合集与活动 → 填写 Toy 推流申请。在此之前不上传。"
+}

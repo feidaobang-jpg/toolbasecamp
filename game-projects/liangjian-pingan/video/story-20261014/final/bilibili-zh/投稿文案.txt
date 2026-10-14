@@ -1,0 +1,30 @@
+【标题】
+开炮，还是冲进去救秀芹？平安县城做成了双结局｜枪火集结
+
+【标签】
+bilibilitoy
+亮剑
+平安县城
+枪火集结
+自制游戏
+游戏开发
+Claude
+单机游戏
+AI
+
+【话题】
+哔哩哔哩Toy创意挑战 https://www.bilibili.com/v/topic/detail?topic_id=1346285
+
+【简介】
+平安县城重做版加了城楼过场和两条结局：朝城楼开炮是原作，离开炮位冲进城门能把秀芹救下来。
+Toy直接试玩：https://www.bilibili.com/toy/feidao-gunfire/index.html （枪火集结 → 抗战战役 → 平安县城）
+电脑：WASD移动、鼠标或Q/E/Y/H转视角、J或左键开火、K跳、U手榴弹、I互动（上炮／接管机枪）、O或右键开镜、R换弹、C切越肩和第一人称、L亮剑、N骑兵连；手机左侧摇杆、右侧滑动瞄准，动作键在右下。
+本期为v0.5.0（枪火集结0.2.3）实机剪辑，含分段补拍；标准耐久、无限命，非一命通关。
+喊话20句里17句是电视剧《亮剑》原声片段，城楼那两段建议戴耳机听。
+平安县城重做版由Claude Opus 5.5辅助开发，视频解说用本机IndexTTS合成（非真人配音）；封面为实机画面的重新构图。
+投票／愿望单（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html （游戏 → 自研游戏投票榜）
+
+【置顶评论】
+试玩入口：https://www.bilibili.com/toy/feidao-gunfire/index.html
+进入枪火集结 → 抗战战役 → 第三章平安县城。你更想先打原作开炮，还是先冲进去救人？
+愿望单（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html （游戏 → 自研游戏投票榜）

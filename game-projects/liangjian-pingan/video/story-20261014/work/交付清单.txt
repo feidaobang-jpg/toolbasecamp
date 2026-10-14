@@ -1,0 +1,13 @@
+B站单版，中文本地IndexTTS配音与烧录中文字幕。
+2分41秒，1080p横屏30fps。
+final/bilibili-zh/gameplay-zh-final.mp4
+final/bilibili-zh/cover-home-4x3.jpg（首页推荐）
+final/bilibili-zh/cover-space-16x9.jpg（个人空间）
+final/bilibili-zh/投稿文案.txt
+独立字幕备查：work/edit/captions.srt；同源ASS与干声、游戏声、混音在work/edit。
+验收：work/qa.md（客观检查 + 录制计划覆盖 + 人工抽看 + 未完成项），机器可读结果 work/qa/video-check.json。
+投稿元数据：work/publish.json 与 work/publish/bilibili-zh/（含Toy推流申请草稿）。
+渲染：在work目录执行 python render.py（字幕滤镜用相对路径，必须在work下运行）；shot-/game-缓存按“源+起点+时长”命名，改时间线会自动重算，必要时清work/tmp。
+复录：work/capture.cjs（full/rescue/mg/street/lobby 五种模式），原始JPEG合成帧与真实游戏音轨保留在work/capture。
+状态：待本人审片；未上传。真人听审、手机真机、真人试玩未做。
+SHA-256：ae713d10342f541d01a4b693f41ad542688a4e29cb52a108eeafe4a97d597fa8
