@@ -1,6 +1,9 @@
 // Player-facing notes travel with the same game package; no network or account required.
-export const GAME_VERSION='0.2.1';
+export const GAME_VERSION='0.2.2';
 export const UPDATE_HISTORY=[
+  {version:'0.2.2',date:'2026-10-14',title:'平安县城：亮剑与骑兵连回归',changes:[
+    '抗战第三章「平安县城」加回两个技能：亮剑突进（L，鼠标手 V）和骑兵连冲锋（N，鼠标手 X）；亮剑撞上山本的拔刀突进可以拼刀。阵地机枪、I 互动、U 手榴弹不变。',
+    '战地等模式底部的操作提示补上 Q/E 转视角、Y/H 抬头低头。']},
   {version:'0.2.1',date:'2026-10-14',title:'修正提示里的旧键位',changes:[
     '战地模式和互动提示里还写着“H 兵种支援 / 医疗”“直升机 Y 升 H 降”，实际默认键在 0.2.0 已改成 N 和 K；提示文字改为跟随当前键位。']},
   {version:'0.2.0',date:'2026-10-14',title:'平安县城整章重做',changes:[

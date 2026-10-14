@@ -1132,7 +1132,7 @@ function dist2(a,b){const dx=a.x-b.x,dz=a.z-b.z;return dx*dx+dz*dz;}
 function showMsg(t,dur=2.2){if(panelOpen){showAlert(t);return;}$('msg').textContent=t;$('msg').classList.remove('hidden');Game.msgTimer=dur;}
 function showHint(t){if(t){$('hint').textContent=t;$('hint').classList.remove('hidden');}else $('hint').classList.add('hidden');}
 function updHUDItem(){
-  $('itemTxt').textContent=`🧰 医疗包×${Game.testMode?'∞':Game.items.medkit}(H)`
+  $('itemTxt').textContent=`🧰 医疗包×${Game.testMode?'∞':Game.items.medkit}(${keyBindings.label('H')})`
     +` · 手雷∞(${keyBindings.label('U')})${player.grenadeCd>0?' '+Math.ceil(player.grenadeCd)+'s':' 就绪'}`
     +(player.shield>0?` 🛡${Math.ceil(player.shield)}`:'')
     +(player.buffT>0?` ⚡${Math.ceil(player.buffT)}s`:'');
@@ -4221,7 +4221,7 @@ function syncKeyLabels(){
   $('weaponBar').dataset.key='';renderWeaponBar();
   const combat=CombatControls.settings;
   const combatLabel=(combat.input==='keyboard'?'纯键盘':'键鼠')+' · '+(battleOn()?'手动瞄准 · 按住射击'+(combat.input==='keyboard'?'':' · 右键拖动转视角'):(combat.aim==='auto'?'自动瞄准':'手动瞄准')+' · '+({auto:'自动攻击',hold:'按住射击',toggle:'切换射击'})[combat.fire]);
-  $('keysHint').textContent=combatLabel+' · 移动 '+['up','left','down','right'].map(a=>keyBindings.label(a)).join('/')+' · '+(vsOn()?['J','R','Z','K','U','I','H','O','L','T','C','Q','E','P']:['SPRINT','J','K','U','I','H','O','L','C','Q','E','P']).map(a=>keyBindings.label(a)+' '+actionLabel(a)).join(' · ');
+  $('keysHint').textContent=combatLabel+' · 移动 '+['up','left','down','right'].map(a=>keyBindings.label(a)).join('/')+' · '+(vsOn()?['J','R','Z','K','U','I','H','O','L','T','C','LOOK','P']:['SPRINT','J','K','U','I','H','O','L','C','LOOK','P']).map(a=>a==='LOOK'?keyBindings.label('Q')+'/'+keyBindings.label('E')+' 转视角 · '+keyBindings.label('LOOKUP')+'/'+keyBindings.label('LOOKDOWN')+' 抬头低头':keyBindings.label(a)+' '+actionLabel(a)).join(' · ');
 }
 function renderKeys(){
   const grid=$('keyGrid');grid.replaceChildren();

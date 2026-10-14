@@ -79,6 +79,7 @@ body.touch-on .kb { display: none; }
 #skills div.off { border-color: rgba(255, 110, 90, .7); }
 #skills div.off em { color: #ff9a88; }
 #keyhint { position: absolute; left: calc(var(--sal) + 12px); bottom: calc(var(--sab) + 12px); max-width: 52%; font-size: 12px; font-weight: 700; color: #fff3d6; background: rgba(30, 24, 18, .55); border-radius: 10px; padding: 6px 10px; line-height: 1.6; }
+#keyhint .kh { display: inline-block; white-space: nowrap; margin-right: .7em; }
 #keyhint kbd { display: inline-block; min-width: 18px; padding: 0 4px; margin: 0 2px; border-radius: 4px; background: #efe3c4; color: var(--ink); font: 800 11px ui-monospace, Consolas, monospace; text-align: center; }
 body.touch-on #skills, body.touch-on #keyhint { display: none; }
 
@@ -117,6 +118,8 @@ body.touch-on #fps { bottom: auto; top: calc(var(--sat) + 100px); }
 #act-ads.on { background: linear-gradient(180deg, #f0d277, #b98a2a); color: #2a231b; border-color: #fff3d6; }
 #act-reload { --s: 54; --r: 196; --b: 22; }
 #act-nade { --s: 54; --r: 104; --b: 160; background: linear-gradient(180deg, #6f7a44, #4a5230); }
+#act-dash { --s: 54; --r: 196; --b: 96; background: linear-gradient(180deg, #d8ac42, #986b25); }
+#act-cav { --s: 54; --r: 26; --b: 174; background: linear-gradient(180deg, #4f8fc9, #2f5f96); }
 #act-use { --s: 60; --r: 194; --b: 164; background: linear-gradient(180deg, #c83a2c, #7f1712); border-color: #ffd84a; }
 #stage.compact #touch { --u: 1px; }
 body.touch-on #boss { bottom: auto; top: calc(var(--sat) + 62px); }

@@ -5,7 +5,7 @@ const PW = process.env.PLAYWRIGHT_DIR || 'D:/project/godot/absurd-3d-daily/node_
 const { chromium } = require(PW);
 const EDGE = process.env.EDGE_PATH || 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe';
 const BASE = process.env.LJ_URL || 'http://localhost:8795/html/game/gunfire-assembly/pingan/';
-const OUT = process.env.QA_OUTPUT || path.join(__dirname, '../media-kit/releases/v0.3.0/captures/qa');
+const OUT = process.env.QA_OUTPUT || path.join(__dirname, '../media-kit/releases/v0.4.0/captures/qa');
 fs.mkdirSync(OUT, { recursive: true });
 
 async function open(opts = {}) {

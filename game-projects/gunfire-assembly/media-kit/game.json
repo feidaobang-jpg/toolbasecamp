@@ -2,7 +2,7 @@
   "game_id": "gunfire-assembly",
   "name": "枪火集结",
   "engine": "Three.js r152",
-  "current_version": "web-pingan-remake-v0.2.1",
+  "current_version": "web-pingan-skills-v0.2.2",
   "entrypoint": "public/html/game/gunfire-assembly/index.html",
   "release_intent": "web_demo",
   "development_model": "Composer",

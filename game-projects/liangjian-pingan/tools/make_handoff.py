@@ -20,6 +20,39 @@ QA = GAME / 'qa'
 AUTO = '（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）'
 
 SPECS = {
+    'v0.4.0': {
+        'base': 'v0.3.0',
+        'shots': [
+            ('view-tp', 'qa/scene-field-tp.png', '越肩第三人称；右下状态条四项：J 开火、U 手榴弹、L 亮剑、N 骑兵连'),
+            ('view-fp', 'qa/scene-field-fp.png', '第一人称'),
+            ('mg-tp', 'qa/scene-mg-tp.png', '接管阵地机枪（沿用 v0.3.0）'),
+            ('touch-play', 'qa/play-844x390.png', '手机横屏布局：亮剑、骑兵连两个键回来了（触控模拟）'),
+            ('touch-play-toy', 'qa/play-844x346.png', 'Toy 外壳高度 844×346 下的布局（触控模拟）'),
+            ('touch-portrait', 'qa/play-390x844.png', '手机竖屏旋转后的布局（触控模拟）'),
+            ('menu', 'qa/menu-1280x720.png', '主菜单与按键说明'),
+        ],
+        'video_desc': '实时运行的脚本录像（{view}，无声音，不是真人操作）',
+        'features': [
+            {'id': 'skills', 'desc': '亮剑突进（L / V）、骑兵连冲锋（N / X）、亮剑撞上山本突进可拼刀', 'status': 'implemented', 'evidence_ids': ['view-tp', 'touch-play']},
+            {'id': 'mg', 'desc': '阵地机枪可接管（沿用 v0.3.0）；在机枪上不能亮剑、可以叫骑兵连', 'status': 'implemented', 'evidence_ids': ['mg-tp']},
+            {'id': 'keys', 'desc': 'J 开火、K 跳、U 手榴弹、I 互动、L 亮剑、N 骑兵连、O/Z 开镜、R 换弹；鼠标手 G / F / V / X', 'status': 'implemented', 'evidence_ids': ['menu', 'view-tp']},
+        ],
+        'changes': [
+            {'id': 'skills-back', 'feature_ids': ['skills', 'keys'], 'before': 'v0.3.0 去掉了亮剑、骑兵连和拼刀', 'after': '三样都加回来：亮剑 L（鼠标手 V）、骑兵连 N（鼠标手 X）；L 不再是换弹的别名', 'user_visible': '右下多了两个技能，手机多两个键，战报多两行', 'evidence_ids': ['view-tp', 'touch-play'], 'verification': 'automated-pass; human-play not-run'},
+            {'id': 'hint-wrap', 'feature_ids': ['keys'], 'before': '底部按键提示在一行放不下时会把“切换人称”拆成两行', 'after': '按项换行，不拆词；状态条已有的 U / L / N 不在提示里重复', 'user_visible': '提示更整齐', 'evidence_ids': ['view-tp'], 'verification': '截图复查'},
+        ],
+        'bugs': [],
+        'bugs_gap': '',
+        'qa': lambda r: [
+            {'what': '机枪接管、U 手榴弹、L 亮剑突进、N 骑兵连、状态条四项与触屏按键、I/F 上炮、默认鼠标接管、旧设置换算、枪火集结第三章跳转与键位', 'method': 'qa/interact.cjs，Edge 无头', 'result': r['interact'], 'evidence': 'qa/out-interact.json'},
+            {'what': '两视角、射击、跳跃、街垒、操炮', 'method': 'qa/views.cjs', 'result': r['views'], 'evidence': 'qa/out-views.json'},
+            {'what': '双端布局（含加回的两个键）', 'method': 'qa/mobile.cjs，CDP 触控模拟，不是真机', 'result': r['mobile'], 'evidence': 'qa/out-mobile.json'},
+            {'what': '选项、命数耐久、暂停与声音、隐私', 'method': 'qa/options.cjs', 'result': r['options'], 'evidence': 'qa/out-options.json'},
+            {'what': '自动通关（脚本会用亮剑、骑兵连和拼刀）', 'method': 'qa/playthrough.cjs，确定性步进', 'result': r['plays'], 'evidence': 'qa/out-playthrough-p1-*.json', 'note': '三档耐久都打到结算；v0.3.0 时一发档过不去，技能回来后又能通关'},
+        ],
+        'untested': ['真人试玩（技能的手感、冷却、键位顺不顺手）', '手机真机', '帧时间重测（上次测量在 v0.2.0）', '整局录像重录', '语音听感'],
+        'readiness': {'overview': 'partial', 'update': 'partial', 'gaps': ['没有这一版的整局录像；另一会话待审的视频录自没有技能的 v0.3.0，解说里还说技能已去掉', '没有真人、带声音的实机素材', '手机真机未测']},
+    },
     'v0.3.0': {
         'base': 'v0.2.0',
         'shots': [
