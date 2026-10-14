@@ -449,7 +449,7 @@
   "帧时间重测"
  ],
  "next_action": {
-  "updated_at": "2026-10-14T13:45:00+08:00",
+  "updated_at": "2026-10-14T14:45:00+08:00",
   "updated_by": "Qoder",
   "why": "另一会话接手网站/Toy 上线核验与视频发布这类长流程时，按已做/未做继续，不重复提交；完整过程与证据见 video/story-20261014/work/publication-result.json",
   "done": [
@@ -460,14 +460,18 @@
     "item": "旧视频 BV1Lfp76KEDd 简介修改公开生效",
     "result": "13:33 提交的编辑已复审生效：游客态匿名读回 desc 729 字并含本期 BV12ypy68EZz 链接，state=0 公开可见；置顶导览评论此前已核验",
     "evidence": "game-projects/liangjian-pingan/video/story-20261014/work/publication-result.json 的 previous_video_maintenance 节"
+   },
+   {
+    "item": "枪火集结正式 B站视频合集已建并归入本期",
+    "result": "用户选定「只收本期这一条」后新建「合集·枪火集结」season_id 9322434，BV12ypy68EZz 为第 1 集；14:41 游客态读回 meta.name=合集·枪火集结、total=1、稿件 is_season_display=true，旧合集「虫潮围城开发实录」9248439 仍 8 条未动",
+    "evidence": "game-projects/liangjian-pingan/video/story-20261014/work/publication-result.json 的 bilibili_video_collection 节"
    }
   ],
   "not_done": [
    "腾讯文档日常推流申请表本期行：游客态不可写，材料在 video/story-20261014/work/publish/bilibili-zh/Toy推流申请.txt，需用户登录后补填并回读云端保存",
-   "枪火集结没有正式合集，本期与 BV1Lfp76KEDd 的归入待用户确认，不新建、不混入虫潮合集",
    "真人试玩、手机真机、原声听感仍未做（见 untested）"
   ],
-  "conflict_watch": "另一 Codex 会话仍持有 B站账号写锁并等待其 181.9 秒平安县城视频审片（uploaded=false）；本期已发布，恢复前需用户决定是否作废以免重复投稿。"
+  "conflict_watch": "原 Codex 会话的平安县城视频任务经用户 2026-10-14 确认取消，其 B站账号写锁已按授权释放并由 Qoder 完成本期收尾；那条 181.9 秒片 uploaded=false 未投稿，不存在重复投稿。恢复该会话时不要重做本期发布。"
  },
  "readiness": {
   "overview": "partial",

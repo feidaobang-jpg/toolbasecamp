@@ -93,11 +93,52 @@
   }
  },
  "collection_membership": {
-  "status": "not_applicable_pending_mapping",
+  "status": "resolved_new_collection",
   "reason": "创作中心「合集管理」当前只有 1 个合集「虫潮围城开发实录」（season/collection 9248439，共 8 集），没有枪火集结/平安县城的正式合集；投稿表单的「加入合集」下拉也只有该合集。",
-  "action_taken": "未加入任何合集，未新建合集，未把本期混入虫潮合集（按 bilibili-publishing.md：没有正式合集或目标不明确时记录待关联并告知用户）。",
-  "next_action": "等用户确认是否为枪火集结建正式合集并给出名称；确认后把本期与 BV1Lfp76KEDd 归入。",
-  "verified_at": "2026-10-14T13:24:00+08:00"
+  "action_taken": "投稿当时未加入任何合集，未把本期混入虫潮合集（按 bilibili-publishing.md：没有正式合集或目标不明确时记录待关联并告知用户）。2026-10-14 用户确认后新建「合集·枪火集结」并把本期归入，见 bilibili_video_collection。",
+  "next_action": "已完成，无待办；后续枪火集结正式视频发布时加入合集 9322434 并核验顺序。",
+  "verified_at": "2026-10-14T13:24:00+08:00",
+  "resolved_at": "2026-10-14T14:40:00+08:00"
+ },
+ "bilibili_video_collection": {
+  "user_decision": "AskUserQuestion 选择「只收本期这一条（推荐）」：仅把 BV12ypy68EZz 放进新合集，BV1Lfp76KEDd 与 BV1KFpJ6sEEK 留在「合集·虫潮围城开发实录」不动（B站一个视频只能属于一个合集，迁出会打断虫潮开发实录的连播）。",
+  "season_id": 9322434,
+  "title": "枪火集结",
+  "public_name": "合集·枪火集结",
+  "desc": "枪火集结系列实机与开发记录：战地模式争夺据点，抗战战役三章，第三章平安县城重做版有开炮与冲进城门两种结局。游戏已在 B站 Toy 上线，可直接试玩。",
+  "cover": "https://archive.biliimg.com/bfs/archive/31a3a36da26769e17e6a0bc61856b86d65eff427.jpg",
+  "cover_source": "game-projects/liangjian-pingan/video/story-20261014/final/bilibili-zh/cover-space-16x9.jpg（1920x1080，200844 字节，B站裁剪后 1728x972）",
+  "section": {
+   "id": 10429619,
+   "title": "正片"
+  },
+  "episodes": [
+   {
+    "sort": 1,
+    "id": 227638467,
+    "bvid": "BV12ypy68EZz",
+    "aid": 117437542438809,
+    "cid": 42728361690,
+    "ep_title": "开炮，还是冲进去救秀芹？平安县城做成了双结局｜枪火集结"
+   }
+  ],
+  "space_url": "https://space.bilibili.com/16214353/lists/9322434?type=season",
+  "api_calls": [
+   "POST /x2/creative/web/season/add（建合集，返回 season_id 9322434，先「正在审核」后转「正常显示」）",
+   "POST /x2/creative/web/season/section/episodes/add（加入本期稿件）",
+   "POST /x2/creative/web/season/section/edit + POST /x2/creative/web/season/edit（点「立即提交」保存排序与合集信息）"
+  ],
+  "created_at": "2026-10-14T14:30:00+08:00",
+  "submitted_at": "2026-10-14T14:38:00+08:00",
+  "public_verified": true,
+  "public_verified_at": "2026-10-14T14:41:00+08:00",
+  "public_evidence": "游客态 seasons_archives_list?season_id=9322434 返回 meta.name=合集·枪火集结、total=1、封面与简介一致；x/web-interface/view?bvid=BV12ypy68EZz 返回 season_id=9322434、is_season_display=true、ugc_season.title=枪火集结、单集标题正确；同接口读回 BV1Lfp76KEDd 仍是 season_id=9248439「虫潮围城开发实录」，旧合集 8 条 bvid 未变。",
+  "evidence": [
+   "D:/project/task-artifacts/liangjian-pingan-story-video-20261014/verify-season2.json",
+   "D:/project/task-artifacts/liangjian-pingan-story-video-20261014/verify-season3.json"
+  ],
+  "write_lock": "C:/Users/37818/.claude/state/bili-activities/account-write.lock（原为已取消的 Codex 会话持有，用户当次授权释放后由 Qoder 取得，收尾释放）",
+  "note": "合集与空间「系列/列表」是两套容器；本次建的是需权益中心 Lv2 的正式合集，账号粉丝 150 已满足。"
  },
  "toy_binding": {
   "toy_id": 43022175699968,
@@ -227,9 +268,7 @@
   "toy_collection_qa_script": "D:/project/task-artifacts/liangjian-pingan-story-video-20261014/qa-hub-preview.cjs"
  },
  "open_items": [
-  "腾讯文档【进行中】日常推流申请行仍未填：游客态不能写入，需本人登录腾讯文档填写（材料已备好）。",
-  "枪火集结没有正式 B站视频合集，本期 BV12ypy68EZz 与旧 BV1Lfp76KEDd 的合集归入待用户确认（不新建、不混入虫潮合集）。",
-  "Codex 会话仍持有 B站账号写锁并挂着一条 181.9 秒平安县城视频（未过人工审片），需用户决定是否作废以避免重复投稿。",
+  "腾讯文档【进行中】日常推流申请行仍未填：游客态不能写入，需本人登录腾讯文档填写（材料已备好，微信登录二维码已打开待扫）。",
   "24 小时 / 72 小时 / 7 天数据复盘按观察窗口在后续任务里读回，记录进本文件与 Toy 后台。"
  ],
  "toy_collection_card": {
@@ -249,6 +288,8 @@
   ]
  },
  "resolved_items": [
-  "旧视频 BV1Lfp76KEDd 简介修改已于 14:08 游客态读回公开生效（607→729 字，含本期视频链接）。"
+  "旧视频 BV1Lfp76KEDd 简介修改已于 14:08 游客态读回公开生效（607→729 字，含本期视频链接）。",
+  "枪火集结正式 B站视频合集已按用户决定新建：「合集·枪火集结」season_id 9322434，只收本期 BV12ypy68EZz 一条，14:41 游客态公开核验通过；旧合集「虫潮围城开发实录」9248439 仍为 8 条未受影响。",
+  "B站账号写锁已按用户授权从被取消的 Codex 会话（task_id 01a137f4-…-publish01，01:40:48Z 起）释放，由 Qoder 取得并在本次收尾释放；「添加单集」稿件列表里只读到本期这一条平安县城双结局视频，未见那条 181.9 秒重复片投稿过。"
  ]
 }

@@ -114,12 +114,18 @@
     "item": "关联视频简介与置顶引导（原 deferred_accumulating 已被本期发布提前触发）",
     "result": "BV1Lfp76KEDd 简介补到 v0.5.0 双结局并加本期视频链接（729 字，编辑请求体已核验）；置顶引导改为新评论 rpid 317018397809 并置顶、匿名可见；14:08 游客态匿名读回确认该简介修改已复审公开生效（607→729 字，含 BV12ypy68EZz），置顶导览评论 317018397809 亦公开可见。",
     "evidence": "game-projects/liangjian-pingan/video/story-20261014/work/publish/bilibili-zh/previous-video-BV1Lfp76KEDd-snapshot.json",
-    "still_open": "该稿件简介修改公开仍是 607 字旧文本，复审生效后需匿名读回确认变 729 字；未生效前不要重复提交"
+    "still_open": "已于 14:08 游客态匿名读回确认复审生效（607→729 字），本项关闭；未再生效前不要重复提交"
    },
    {
     "item": "Toy 游戏合集卡片更正",
     "result": "枪火集结卡片补上本期实机视频角标 BV12ypy68EZz，玩法说明按平安县城重做版（操炮轰城门＋城楼双结局）更正；预览与线上均进内层 frame 实测，13:51 提审、13:53 复核 published",
     "evidence": "game-projects/feidao-gamehub/media-kit/releases/gunfire-video-badge-20261014/release.json"
+   },
+   {
+    "item": "正式合集归入",
+    "result": "用户 2026-10-14 确认「只收本期这一条」后新建「合集·枪火集结」season_id 9322434（小节「正片」10429619），BV12ypy68EZz 为第 1 集；14:41 游客态读回 meta.name=合集·枪火集结、total=1、稿件 season_id=9322434、is_season_display=true，旧合集 9248439 仍是 8 条未受影响",
+    "evidence": "game-projects/liangjian-pingan/video/story-20261014/work/publication-result.json 的 bilibili_video_collection 节",
+    "scope_note": "BV1Lfp76KEDd 与 BV1KFpJ6sEEK 按用户决定留在「合集·虫潮围城开发实录」，B站一个视频只能属于一个合集，不迁出"
    }
   ],
   "not_done": [
@@ -127,11 +133,6 @@
     "item": "腾讯文档【进行中】日常推流申请表本期行",
     "reason": "游客态只能查看，粘贴与键入进不了单元格编辑",
     "resume": "用户登录腾讯文档后按 work/publish/bilibili-zh/Toy推流申请.txt 的 A:E 只填本期一行，先表内查找 BV12ypy68EZz 查重、重新定位末行，F 列留空，看到云端保存成功才算已申请"
-   },
-   {
-    "item": "正式合集归入",
-    "reason": "创作中心只有「虫潮围城开发实录」9248439，没有枪火集结合集；按规则不新建、不混入",
-    "resume": "等用户确认是否给枪火集结建正式合集及名称，再把 BV12ypy68EZz 与 BV1Lfp76KEDd 归入"
    },
    {
     "item": "流量奖励用券",
@@ -149,7 +150,7 @@
     "resume": "见本文件 validation.not_done 与 v0.5.0 handoff 的 untested"
    }
   ],
-  "conflict_watch": "另一 Codex 会话（工作区 C:/Users/37818/.codex/worktrees/pingan-video-20261014）仍持有 B站账号写锁，其 181.9 秒平安县城视频停在等待人工审片、uploaded=false；本期已发布，若该会话恢复会重复投稿，需用户先决定是否作废。"
+  "conflict_watch": "原 Codex 会话（工作区 C:/Users/37818/.codex/worktrees/pingan-video-20261014）的平安县城视频任务经用户 2026-10-14 确认已取消，其 B站账号写锁已按授权释放，本期由 Qoder 收尾；该会话的 181.9 秒片停在 uploaded=false 未投稿，「添加单集」稿件列表里也只读到本期这一条，不存在重复投稿风险。若该会话日后恢复，不要重做本期发布。"
  },
  "related": {
   "pending_video_review": "另一会话的平安县城视频录自 v0.3.0，没有秀芹这场戏、喊话是合成音；与本版不一致，由用户审片时决定。",

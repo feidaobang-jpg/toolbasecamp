@@ -36,7 +36,13 @@
  ],
  "account_write_locks_held": false,
  "own_capture_processes_closed": true,
- "next_action": "本期已发布并公开可见：BV12ypy68EZz 已绑 Toy 43022175699968、置顶试玩评论、双封面、旧视频 BV1Lfp76KEDd 简介与置顶导览均已公开核验（旧片简介 607→729 字，14:08 游客态读回复审已生效）。Toy「飞刀班长游戏合集」枪火集结卡片也已补本期视频角标并按重做版更正玩法说明，13:53 复核 published。剩余待办见 work/publication-result.json 的 open_items：①腾讯文档【进行中】日常推流表因游客态不能写入，材料在 work/publish/bilibili-zh/Toy推流申请.txt，需本人登录后填本期一行；②枪火集结无正式 B站视频合集，本期与 BV1Lfp76KEDd 的归入待用户确认（不新建、不混入虫潮合集）；③另一会话的 181.9 秒平安县城视频仍未发布且持有 B站账号写锁，需用户决定是否作废以避免重复投稿；④24 小时 / 72 小时 / 7 天数据复盘按观察窗口在后续任务读回。",
+ "next_action": "本期已发布并公开可见：BV12ypy68EZz 已绑 Toy 43022175699968、置顶试玩评论、双封面、旧视频 BV1Lfp76KEDd 简介与置顶导览均已公开核验（旧片简介 607→729 字，14:08 游客态读回复审已生效）。Toy「飞刀班长游戏合集」枪火集结卡片也已补本期视频角标并按重做版更正玩法说明，13:53 复核 published。正式 B站视频合集「合集·枪火集结」season_id 9322434 已按用户决定新建并只收本期这一条，14:41 游客态公开核验通过，旧合集 9248439 仍 8 条未动；被取消的 Codex 会话持有的 B站账号写锁已释放并在本次收尾归还。剩余待办见 work/publication-result.json 的 open_items：①腾讯文档【进行中】日常推流表因游客态不能写入，材料在 work/publish/bilibili-zh/Toy推流申请.txt，微信登录二维码已打开，等本人扫码后填本期一行；②24 小时 / 72 小时 / 7 天数据复盘按观察窗口在后续任务读回。",
+ "bilibili_video_collection": {
+  "season_id": 9322434,
+  "name": "合集·枪火集结",
+  "episodes": 1,
+  "public_verified_at": "2026-10-14T14:41:00+08:00"
+ },
  "toy_collection_card_updated": true,
  "prev_desc_publicly_live_at": "2026-10-14T14:08:00+08:00"
 }
