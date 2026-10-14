@@ -257,7 +257,7 @@ export class Game {
     if (this.smokeT <= 0) {
       this.smokeT = 0.28;
       const s = pick(this.world.smokes);
-      this.fx.spawn({ soft: true, x: s[0] + rand(-1, 1), y: 5, z: s[1] + rand(-1, 1), vx: rand(0.6, 1.4), vy: rand(2.2, 3.4), vz: rand(-0.3, 0.3), life: rand(5, 8), s0: 2, s1: 7.5, c0: 0x2e2a28, c1: 0x77726c, spin: rand(-0.3, 0.3) });
+      this.fx.spawn({ soft: true, x: s[0] + rand(-1, 1), y: this.groundY(s[0], s[1]) + 5, z: s[1] + rand(-1, 1), vx: rand(0.6, 1.4), vy: rand(2.2, 3.4), vz: rand(-0.3, 0.3), life: rand(5, 8), s0: 2, s1: 7.5, c0: 0x2e2a28, c1: 0x77726c, spin: rand(-0.3, 0.3) });
       this.ambientChapter();
     }
   }
@@ -550,10 +550,11 @@ export class Game {
       const sp = 18;
       r.x += r.fx * sp * dt; r.z += r.fz * sp * dt; r.d += sp * dt; r.t += dt * 16;
       // 遇到矮障碍就跃过去
-      const blocked = pointBlocked(this.world, r.x + r.fx * 1.5, 0.5, r.z + r.fz * 1.5);
-      r.hop = damp(r.hop, blocked && blocked.h < 3 ? 1.5 : 0, 9, dt);
-      if (blocked && blocked.h >= 3) r.d = 999;
       const rg = this.groundY(r.x, r.z);
+      const blocked = pointBlocked(this.world, r.x + r.fx * 1.5, rg + 0.5, r.z + r.fz * 1.5);
+      const bh = blocked ? blocked.h - (blocked.base || 0) : 0;
+      r.hop = damp(r.hop, blocked && bh < 3 ? 1.5 : 0, 9, dt);
+      if (blocked && bh >= 3) r.d = 999;
       r.model.root.position.set(r.x, rg + r.hop + Math.abs(Math.sin(r.t)) * 0.16, r.z);
       r.model.root.rotation.x = Math.sin(r.t) * 0.05;
       r.model.legs.forEach((l, k) => { l.rotation.x = Math.sin(r.t + (k < 2 ? 0 : Math.PI) + (k % 2) * 0.6) * 0.9; });
@@ -1005,9 +1006,11 @@ export class Game {
         const dx = b.x - a.x, dz = b.z - a.z, d2 = dx * dx + dz * dz, rr = a.r + b.r;
         if (d2 >= rr * rr || d2 < 1e-6) continue;
         const d = Math.sqrt(d2), push = (rr - d) * 0.5, nx = dx / d, nz = dz / d;
-        const fa = a.hold || a.type === 'mg' || (a === this.hero && (this.cannon.manned || a.mg || a.dashT > 0)), fb = b.hold || b.type === 'mg';
-        if (!fa) { a.x -= nx * push; a.z -= nz * push; }
-        if (!fb) { b.x += nx * push; b.z += nz * push; }
+        // 战友给主角让路：主角不会被自己人挤开
+        const fa = a.hold || a.type === 'mg' || (a === this.hero && (this.cannon.manned || a.mg || a.dashT > 0 || b.kind === 'ally')), fb = b.hold || b.type === 'mg' || (b === this.hero && a.kind === 'ally');
+        const pa = fb ? push * 2 : push, pb = fa ? push * 2 : push;
+        if (!fa) { a.x -= nx * pa; a.z -= nz * pa; }
+        if (!fb) { b.x += nx * pb; b.z += nz * pb; }
       }
     }
   }

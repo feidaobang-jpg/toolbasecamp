@@ -213,7 +213,7 @@ export function updateAlly(g, u, dt) {
     const wallOk = g.allyEngageWall();
     let best = null, bd = u.def.range * (wallOk ? 1.5 : 1);
     for (const e of g.enemies) {
-      if (!e.alive || !e.active || e.downed) continue;
+      if (!e.alive || !e.active || e.downed || e.noAlly) continue;
       const up = g.elev(e) > 2;
       if (up && !wallOk) continue;
       const d = dist(u.x, u.z, e.x, e.z) + (up ? 6 : 0);

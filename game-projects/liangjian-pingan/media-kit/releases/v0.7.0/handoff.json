@@ -1,0 +1,644 @@
+{
+ "schema_version": 1,
+ "game_id": "liangjian-pingan",
+ "version": "v0.7.0",
+ "base_version": "v0.6.0",
+ "created_at": "2026-10-14T21:05:57+08:00",
+ "build": {
+  "id": "local-4b0809244d9f",
+  "commit": "5a6112ab",
+  "dirty": true,
+  "fingerprint": "sha256:4b0809244d9f56ae9e472c576fc17eb1c36d6b09d1b5a5da79d35a1da7b62aa8（public/html/game/gunfire-assembly/liangjian 下 91 个文件按路径排序连接）",
+  "entrypoint": "public/html/game/gunfire-assembly/liangjian/index.html"
+ },
+ "feature_inventory": [
+  {
+   "id": "terrain",
+   "desc": "引擎支持山坡地形与按阶段换光（只有李家坡用）；坡上的预警贴坡面",
+   "status": "implemented",
+   "evidence_ids": [
+    "ljp-charge",
+    "ljp-dig"
+   ]
+  },
+  {
+   "id": "ljp-assault",
+   "desc": "李家坡第一阶段：七七二团冲锋演出、坡上机枪封锁区、侧翼拔两个外围火力点",
+   "status": "implemented",
+   "evidence_ids": [
+    "ljp-charge",
+    "ljp-post"
+   ]
+  },
+  {
+   "id": "ljp-dig",
+   "desc": "挖交通壕：I 开挖 / 停手、战友帮挖、壕里挡子弹、土埂、照明弹、夜袭、掷弹筒、炮火覆盖",
+   "status": "implemented",
+   "evidence_ids": [
+    "ljp-dig",
+    "ljp-flare",
+    "ljp-trench",
+    "ljp-trench-fp"
+   ]
+  },
+  {
+   "id": "ljp-rain",
+   "desc": "手榴弹雨：信号弹、两分钟倒计时、落点圈、全营投弹、碉堡炸塌、超时张大彪补",
+   "status": "implemented",
+   "evidence_ids": [
+    "ljp-mark",
+    "ljp-rain",
+    "ljp-ruin"
+   ]
+  },
+  {
+   "id": "ljp-storm",
+   "desc": "突击队：三段战壕、北面反扑、歪把子",
+   "status": "implemented",
+   "evidence_ids": [
+    "ljp-storm"
+   ]
+  },
+  {
+   "id": "ljp-yamazaki",
+   "desc": "决战山崎：射击孔扇面与侧面炸哑、山崎格子弹 / 连砍 / 突刺 / 收刀、拼刀、战友不打他",
+   "status": "implemented",
+   "evidence_ids": [
+    "ljp-ports",
+    "ljp-yamazaki",
+    "ljp-boss"
+   ]
+  },
+  {
+   "id": "ljp-voice",
+   "desc": "李家坡 19 句《亮剑》原声 + 过场时掐掉排队的局内原声",
+   "status": "implemented",
+   "evidence_ids": [
+    "ljp-cut-dig",
+    "ljp-cut-dawn"
+   ]
+  },
+  {
+   "id": "gunfire-lobby",
+   "desc": "枪火集结 0.4.0：删旧抗战战役，大厅一个入口直达亮剑战役",
+   "status": "implemented",
+   "evidence_ids": []
+  }
+ ],
+ "changes": [
+  {
+   "id": "lijiapo",
+   "feature_ids": [
+    "terrain",
+    "ljp-assault",
+    "ljp-dig",
+    "ljp-rain",
+    "ljp-storm",
+    "ljp-yamazaki",
+    "ljp-voice"
+   ],
+   "before": "李家坡是枪火集结里的旧版（交通壕、两座机枪堡垒、坡顶指挥阵地三个小阶段）",
+   "after": "亮剑战役第二章重做版（五个阶段、真实山坡、按阶段换光、山崎 Boss）",
+   "user_visible": "抗战战役第二章换成新的李家坡",
+   "evidence_ids": [
+    "ljp-menu",
+    "ljp-charge",
+    "ljp-dig",
+    "ljp-mark",
+    "ljp-storm",
+    "ljp-boss"
+   ],
+   "verification": "ljp-story 40 条 + 标准 / 宽松自动通关；human-play not-run"
+  },
+  {
+   "id": "gunfire-lobby",
+   "feature_ids": [
+    "gunfire-lobby"
+   ],
+   "before": "枪火集结大厅：推荐入口 + 抗战战役章节选择（苍云岭重做 / 李家坡旧版 / 平安县城重做）",
+   "after": "只有「抗战战役 · 亮剑三章」一个入口，直达亮剑战役页面；旧抗战代码删除",
+   "user_visible": "大厅少了旧的章节选择",
+   "evidence_ids": [],
+   "verification": "gunfire-chapters.cjs 10 条、mode-focus.cjs"
+  },
+  {
+   "id": "ally-yield",
+   "feature_ids": [],
+   "before": "主角和战友挤在一起时各让一半，主角会被跑过的战友挤动",
+   "after": "只推开战友，主角不被自己人挤开（三章都适用）",
+   "user_visible": "站着不动时不会被队友挤歪",
+   "evidence_ids": [],
+   "verification": "mobile.cjs“松手后停止移动”三章都通过"
+  }
+ ],
+ "bugs": [
+  {
+   "id": "post-front",
+   "desc": "第一个外围火力点从正下方打不到机枪手，脚本拔不掉",
+   "repro": "node qa/ljp-playthrough.cjs 1 std（旧路线从正面接近）",
+   "fix": "铁丝网挡在正面、提示从侧面打，脚本改走侧翼",
+   "before_media_ids": [],
+   "after_media_ids": [
+    "ljp-post"
+   ],
+   "verification": "标准自动通关第一阶段约一分钟",
+   "gap": "都在发布前发现，修复前的截图被同名文件覆盖或没有截"
+  },
+  {
+   "id": "yamazaki-door",
+   "desc": "山崎出场时报错（门的坐标取错了对象）",
+   "repro": "node qa/ljp-playthrough.cjs 4 std 打到射击孔全哑",
+   "fix": "改从 world.cp.door 取",
+   "before_media_ids": [],
+   "after_media_ids": [
+    "ljp-yamazaki"
+   ],
+   "verification": "ljp-story 山崎出场断言",
+   "gap": "都在发布前发现，修复前的截图被同名文件覆盖或没有截"
+  },
+  {
+   "id": "port-double",
+   "desc": "一颗手榴弹落在拐角炸哑两个射击孔",
+   "repro": "ljp-story 侧面扔手榴弹那一步",
+   "fix": "一颗只炸最近的一个；半径 3.2 米",
+   "before_media_ids": [],
+   "after_media_ids": [],
+   "verification": "ljp-story 断言只哑一个",
+   "gap": "都在发布前发现，修复前的截图被同名文件覆盖或没有截"
+  },
+  {
+   "id": "voice-in-cutscene",
+   "desc": "局内排队的原声在过场中间放出来",
+   "repro": "node qa/ljp-scenes.cjs 看 cut-dig2 截图的字幕",
+   "fix": "过场开始时掐掉局内没说完和排着队的",
+   "before_media_ids": [],
+   "after_media_ids": [
+    "ljp-cut-dig"
+   ],
+   "verification": "截图复查",
+   "gap": "都在发布前发现，修复前的截图被同名文件覆盖或没有截"
+  },
+  {
+   "id": "night-mortar",
+   "desc": "夜里掷弹筒太密，挖壕挖不下去",
+   "repro": "自动通关第二阶段统计受伤来源",
+   "fix": "摸黑时四成不打",
+   "before_media_ids": [],
+   "after_media_ids": [],
+   "verification": "同脚本受伤来源复查",
+   "gap": "都在发布前发现，修复前的截图被同名文件覆盖或没有截"
+  },
+  {
+   "id": "ally-push",
+   "desc": "手机测试里主角松手后还会被跑过的战友挤动一点",
+   "repro": "LJ_CH=lijiapo node qa/mobile.cjs",
+   "fix": "战友给主角让路",
+   "before_media_ids": [],
+   "after_media_ids": [],
+   "verification": "mobile.cjs 三章 107/107",
+   "gap": "都在发布前发现，修复前的截图被同名文件覆盖或没有截"
+  }
+ ],
+ "media": [
+  {
+   "id": "ljp-menu",
+   "file": "releases/v0.7.0/captures/qa/ljp-title.png",
+   "sha256": "53ec4af381797cdfd92f79b48075ec914125c1d568fbcda5d0ad3115b7b28242",
+   "kind": "screenshot",
+   "version": "v0.7.0",
+   "build_id": "local-4b0809244d9f",
+   "capture_mode": "realtime-automation",
+   "description": "亮剑战役主菜单：第二章李家坡当前，三章都能选（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "ljp-charge",
+   "file": "releases/v0.7.0/captures/qa/ljp-scene-p1-charge.png",
+   "sha256": "7249fa143215742a14ce841971bc9317bce692d2f555f4e905a50386926594bd",
+   "kind": "screenshot",
+   "version": "v0.7.0",
+   "build_id": "local-4b0809244d9f",
+   "capture_mode": "realtime-automation",
+   "description": "强攻受挫：七七二团冲坡，坡顶三个碉堡（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "ljp-post",
+   "file": "releases/v0.7.0/captures/qa/ljp-scene-p1-post.png",
+   "sha256": "007941486dfa6d9dbce99030c58889aea8fc7dbe2801bf6767f4f3a9d189abfd",
+   "kind": "screenshot",
+   "version": "v0.7.0",
+   "build_id": "local-4b0809244d9f",
+   "capture_mode": "realtime-automation",
+   "description": "山脚的外围火力点（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "ljp-cut-dig",
+   "file": "releases/v0.7.0/captures/qa/ljp-scene-cut-dig1.png",
+   "sha256": "bd23374f0ef68fa5317c187f28742d8978dbe3c290702030017772705ba34c35",
+   "kind": "screenshot",
+   "version": "v0.7.0",
+   "build_id": "local-4b0809244d9f",
+   "capture_mode": "realtime-automation",
+   "description": "过场：土工掘进（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "ljp-dig",
+   "file": "releases/v0.7.0/captures/qa/ljp-scene-p2-dig-dark.png",
+   "sha256": "99482c1c10c69beb74aa3160e9b0179d8f6a58f0d37d0ad58ef65e2079124c71",
+   "kind": "screenshot",
+   "version": "v0.7.0",
+   "build_id": "local-4b0809244d9f",
+   "capture_mode": "realtime-automation",
+   "description": "夜里在壕头挖交通壕（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "ljp-flare",
+   "file": "releases/v0.7.0/captures/qa/ljp-scene-p2-flare.png",
+   "sha256": "71fac5169e1e60e0ee44064f22fd8b21761fb43bcf9269a076dda15ce91813ec",
+   "kind": "screenshot",
+   "version": "v0.7.0",
+   "build_id": "local-4b0809244d9f",
+   "capture_mode": "realtime-automation",
+   "description": "照明弹照亮山坡（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "ljp-trench",
+   "file": "releases/v0.7.0/captures/qa/ljp-scene-p2-trench.png",
+   "sha256": "7642f1c99c4cf4c263139ab52f6e29c99b9f9060b24206fcb9824d18f61e3a86",
+   "kind": "screenshot",
+   "version": "v0.7.0",
+   "build_id": "local-4b0809244d9f",
+   "capture_mode": "realtime-automation",
+   "description": "之字形交通壕里的战友（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "ljp-trench-fp",
+   "file": "releases/v0.7.0/captures/qa/ljp-scene-p2-trench-fp.png",
+   "sha256": "b54da1445bd5ce6169f2de92ebafece1e7b1e5cbd2b9d6fb81d0140bb6f26623",
+   "kind": "screenshot",
+   "version": "v0.7.0",
+   "build_id": "local-4b0809244d9f",
+   "capture_mode": "realtime-automation",
+   "description": "第一人称看交通壕（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "ljp-cut-dawn",
+   "file": "releases/v0.7.0/captures/qa/ljp-scene-cut-dawn2.png",
+   "sha256": "a1d7f853d8ce933594753b4733d5555844aecf34e965fa06a77a8e9cd9856cb6",
+   "kind": "screenshot",
+   "version": "v0.7.0",
+   "build_id": "local-4b0809244d9f",
+   "capture_mode": "realtime-automation",
+   "description": "拂晓过场：望着坡顶的碉堡（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "ljp-mark",
+   "file": "releases/v0.7.0/captures/qa/ljp-scene-p3-mark.png",
+   "sha256": "e67ca6114b3d4691c80ef3cd5c07ec9b1862c2f6096310e24d60b0ac86d58337",
+   "kind": "screenshot",
+   "version": "v0.7.0",
+   "build_id": "local-4b0809244d9f",
+   "capture_mode": "realtime-automation",
+   "description": "手榴弹雨：信号弹、落点圈罩住碉堡（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "ljp-rain",
+   "file": "releases/v0.7.0/captures/qa/ljp-scene-p3-rain.png",
+   "sha256": "3016972102f5aea3a916c4d60c4f02870b2ee4edc2a65472521d584ce819101a",
+   "kind": "screenshot",
+   "version": "v0.7.0",
+   "build_id": "local-4b0809244d9f",
+   "capture_mode": "realtime-automation",
+   "description": "一轮手榴弹砸在碉堡上（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "ljp-ruin",
+   "file": "releases/v0.7.0/captures/qa/ljp-scene-p3-ruin.png",
+   "sha256": "74daad7f5b575d6d5214fc5c96fc965331e71174b8c670029f5bd325bd15ad3e",
+   "kind": "screenshot",
+   "version": "v0.7.0",
+   "build_id": "local-4b0809244d9f",
+   "capture_mode": "realtime-automation",
+   "description": "碉堡炸塌（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "ljp-storm",
+   "file": "releases/v0.7.0/captures/qa/ljp-scene-p4-charge.png",
+   "sha256": "5f2f0f13fa663ef69658baf25233aa77262505bf2afea087aa99d88a898b1c8d",
+   "kind": "screenshot",
+   "version": "v0.7.0",
+   "build_id": "local-4b0809244d9f",
+   "capture_mode": "realtime-automation",
+   "description": "突击队冲进环形工事（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "ljp-ports",
+   "file": "releases/v0.7.0/captures/qa/ljp-scene-p5-ports.png",
+   "sha256": "694b2b9c100d803521fd7b498a2b62d10b0020df951222a9589862acf9c0c328",
+   "kind": "screenshot",
+   "version": "v0.7.0",
+   "build_id": "local-4b0809244d9f",
+   "capture_mode": "realtime-automation",
+   "description": "山崎的指挥所和射击孔（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "ljp-yamazaki",
+   "file": "releases/v0.7.0/captures/qa/ljp-scene-cut-yamazaki.png",
+   "sha256": "5e6868e174fab689cf330f0c8184a4660de9564e9945785707219dd20722da85",
+   "kind": "screenshot",
+   "version": "v0.7.0",
+   "build_id": "local-4b0809244d9f",
+   "capture_mode": "realtime-automation",
+   "description": "山崎带卫兵冲出来（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "ljp-boss",
+   "file": "releases/v0.7.0/captures/qa/ljp-scene-p5-boss.png",
+   "sha256": "f717d689805c6d6ef3182c91386381669095cdc9de98c93efaf7665b1f2fc47b",
+   "kind": "screenshot",
+   "version": "v0.7.0",
+   "build_id": "local-4b0809244d9f",
+   "capture_mode": "realtime-automation",
+   "description": "和山崎拼刀（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  }
+ ],
+ "historical_media": [],
+ "qa": [
+  {
+   "what": "李家坡机制与剧情：五个阶段、原声、挖壕、挡子弹、照明弹、手榴弹雨、射击孔、山崎、结算",
+   "method": "qa/ljp-story.cjs（前置用状态捷径，开挖 / 投弹 / 扔手榴弹 / 亮剑用真实按键）",
+   "result": "40/40",
+   "evidence": "qa/out-ljp-story.json"
+  },
+  {
+   "what": "李家坡自动通关（标准 / 宽松）",
+   "method": "qa/ljp-playthrough.cjs + qa/ljp-bot.browser.js，确定性步进，不躲红圈",
+   "result": {
+    "std": {
+     "finished": true,
+     "game_seconds": 361.5,
+     "phases": [
+      {
+       "phase": 1,
+       "seconds": 64.2,
+       "deaths": 0,
+       "hurt": 2
+      },
+      {
+       "phase": 2,
+       "seconds": 168.5,
+       "deaths": 4,
+       "hurt": 16
+      },
+      {
+       "phase": 3,
+       "seconds": 45.2,
+       "deaths": 2,
+       "hurt": 8
+      },
+      {
+       "phase": 4,
+       "seconds": 18,
+       "deaths": 0,
+       "hurt": 2
+      },
+      {
+       "phase": 5,
+       "seconds": 65.5,
+       "deaths": 0,
+       "hurt": 2
+      }
+     ],
+     "hurt_by": {
+      "p1:bullet": 2,
+      "p2:bullet": 6,
+      "p2:blast": 19,
+      "p3:bullet": 2,
+      "p3:blast": 9,
+      "p3:hc (http://localhost:8795/h": 1,
+      "p4:bullet": 2,
+      "p5:bullet": 2
+     },
+     "rank": "评价：亮剑团长",
+     "errors": []
+    },
+    "easy": {
+     "finished": true,
+     "game_seconds": 369.7,
+     "phases": [
+      {
+       "phase": 1,
+       "seconds": 66,
+       "deaths": 0,
+       "hurt": 2
+      },
+      {
+       "phase": 2,
+       "seconds": 175.8,
+       "deaths": 4,
+       "hurt": 20
+      },
+      {
+       "phase": 3,
+       "seconds": 43.5,
+       "deaths": 1,
+       "hurt": 5
+      },
+      {
+       "phase": 4,
+       "seconds": 21.2,
+       "deaths": 0,
+       "hurt": 3
+      },
+      {
+       "phase": 5,
+       "seconds": 63.2,
+       "deaths": 0,
+       "hurt": 1
+      }
+     ],
+     "hurt_by": {
+      "p1:bullet": 2,
+      "p2:bullet": 5,
+      "p2:blast": 27,
+      "p3:hc (http://localhost:8795/h": 2,
+      "p3:blast": 6,
+      "p4:bullet": 3,
+      "p5:bullet": 1
+     },
+     "rank": "评价：亮剑团长",
+     "errors": []
+    }
+   },
+   "evidence": "qa/out-ljp-playthrough-p1-*.json"
+  },
+  {
+   "what": "苍云岭机制与剧情（引擎改动后回归）",
+   "method": "qa/cy-story.cjs",
+   "result": "26/26",
+   "evidence": "qa/out-cy-story.json"
+  },
+  {
+   "what": "平安县城剧情与双结局（引擎改动后回归）",
+   "method": "qa/story.cjs",
+   "result": "19/19",
+   "evidence": "qa/out-story.json"
+  },
+  {
+   "what": "机枪、手榴弹、亮剑、骑兵连、上炮、鼠标接管、键位、枪火集结入口",
+   "method": "qa/interact.cjs",
+   "result": "19/19",
+   "evidence": "qa/out-interact.json"
+  },
+  {
+   "what": "两视角、射击、跳跃、街垒、操炮",
+   "method": "qa/views.cjs",
+   "result": "73/73",
+   "evidence": "qa/out-views.json"
+  },
+  {
+   "what": "双端布局（三章各跑一遍；out-mobile.json 只留最后一次）",
+   "method": "qa/mobile.cjs（LJ_CH=lijiapo 测挖壕键），CDP 触控模拟，不是真机",
+   "result": "107/107",
+   "evidence": "qa/out-mobile.json"
+  },
+  {
+   "what": "选项、暂停与声音、隐私（扫描含李家坡文件）",
+   "method": "qa/options.cjs",
+   "result": "43/43",
+   "evidence": "qa/out-options.json"
+  },
+  {
+   "what": "枪火集结 0.4.0 大厅入口、旧抗战删除、旧地址跳转",
+   "method": "qa/gunfire-chapters.cjs",
+   "result": "10/10",
+   "evidence": "qa/out-gunfire-chapters.json"
+  }
+ ],
+ "untested": [
+  "真人试玩（挖壕节奏、照明弹 / 掷弹筒压力、手榴弹雨准度、山崎难度）",
+  "原声听感",
+  "手机真机",
+  "帧时间重测（坡地网格、交通壕实例）",
+  "整局录像"
+ ],
+ "readiness": {
+  "overview": "partial",
+  "update": "partial",
+  "gaps": [
+   "没有李家坡的整局录像与带声音的实机素材",
+   "原声未试听"
+  ]
+ }
+}

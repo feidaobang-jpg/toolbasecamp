@@ -100,19 +100,18 @@ const check = (name, ok, detail) => { out.push({ name, ok: !!ok, detail }); cons
   check('主菜单有“返回大厅”', lobbyBtn, null);
   await page.evaluate(() => localStorage.removeItem('lj_campaign_v1_settings'));
 
-  // ---- 枪火集结：大厅能开，抗战战役第三章进入重做版 ----
+  // ---- 枪火集结：大厅能开，抗战战役入口进亮剑战役页面（0.4.0 起三章都在那里，没有旧的章节选择） ----
   const p2 = await ctx.newPage(); const e2 = [];
   p2.on('pageerror', (e) => e2.push(e.message));
   await p2.goto(BASE.replace(/liangjian\/$/, ''), { waitUntil: 'load' });
   await p2.waitForFunction(() => window.__ccReady, null, { timeout: 30000 });
   const ver = await p2.evaluate(() => document.getElementById('gameVersion').textContent);
-  await p2.click('#btnResistance'); await p2.waitForTimeout(400);
-  const chap = await p2.evaluate(() => [...document.querySelectorAll('.warChapter')].map((b) => b.querySelector('strong').textContent + '｜' + b.querySelector('small').textContent));
-  await p2.click('.warChapter[data-chapter="2"]');
+  const chap = await p2.evaluate(() => document.getElementById('btnPingan').textContent.replace(/\s+/g, ' ').trim());
+  await p2.click('#btnPingan');
   await p2.waitForURL(/gunfire-assembly\/liangjian\/index\.html/, { timeout: 8000 }).catch(() => {});
   await p2.waitForTimeout(1500);
-  const landed = await p2.evaluate(() => ({ url: location.pathname, ch: new URLSearchParams(location.search).get('ch'), menu: !!document.getElementById('menu') && !document.getElementById('menu').hidden, title: document.title }));
-  check('枪火集结大厅正常；抗战战役第三章点进去是亮剑战役页面的平安县城', /^v0\.\d+\.\d+$/.test(ver) && /liangjian\/index\.html$/.test(landed.url) && landed.ch === 'pingan' && landed.menu, { ver, chap, landed });
+  const landed = await p2.evaluate(() => ({ url: location.pathname, cur: (document.querySelector('#menu .chapter.cur') || {}).dataset, menu: !!document.getElementById('menu') && !document.getElementById('menu').hidden, title: document.title }));
+  check('枪火集结大厅正常；「抗战战役 · 亮剑三章」点进去是亮剑战役页面，落在上次玩的平安县城', /^v0\.\d+\.\d+$/.test(ver) && /亮剑三章/.test(chap) && /liangjian\/index\.html$/.test(landed.url) && landed.cur && landed.cur.ch === 'pingan' && landed.menu, { ver, chap, landed });
   await p2.evaluate(() => [...document.querySelectorAll('#menu button')].find((b) => /返回大厅/.test(b.textContent)).click());
   await p2.waitForURL(/gunfire-assembly\/index\.html/, { timeout: 8000 }).catch(() => {});
   await p2.waitForTimeout(800);

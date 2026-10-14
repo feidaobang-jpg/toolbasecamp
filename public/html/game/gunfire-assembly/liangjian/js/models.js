@@ -32,6 +32,9 @@ const LOOKS = {
   chu: { coat: 0x6e6a4c, pants: 0x5f5b40, wrap: 0x2c241c, hat: 'cap', hatC: 0x6e6a4c, weapon: 'none', belt: 0x4a3020, tab: 0xc23b2b, cape: 0x4c4a36, gloves: 0xf2efe6, star: true, scale: 1.08 },
   guojun: { coat: 0x77724f, pants: 0x6a6546, wrap: 0x2c241c, hat: 'cap', hatC: 0x77724f, weapon: 'none', belt: 0x4a3020, tab: 0xc23b2b, star: true },
   bearer: { coat: 0x7b8b9a, pants: 0x71839a, wrap: 0xa3aaad, hat: 'cap', hatC: 0x7b8b9a, weapon: 'none', belt: 0x5a3d26, band: 0xe8e2d0 },
+  // 李家坡：山崎（大队长，黄呢军服、白手套、军刀、仁丹胡）、孔捷（副团长）
+  yamazaki: { coat: 0x8f7c46, pants: 0x82703f, wrap: 0x2a2018, hat: 'cap', hatC: 0x8f7c46, weapon: 'katana', belt: 0x3a2618, tab: 0xd0a030, gloves: 0xf2efe6, scale: 1.14 },
+  kongjie: { coat: 0x75869a, pants: 0x6a7c92, wrap: 0x9aa2a6, hat: 'cap', hatC: 0x75869a, weapon: 'pistol', belt: 0x4a3020, strap: true, scale: 1.03 },
   // 秀芹：花棉袄、黑裤、辫子；被绑着的版本身上有绳子
   xiuqin: { coat: 0xa3523f, pants: 0x38424f, wrap: 0x38424f, hat: 'none', weapon: 'none', belt: 0x8f4636, hair: 0x1d1814, rope: 0xcdb98a, scale: 0.98 },
   xiuqinFree: { coat: 0xa3523f, pants: 0x38424f, wrap: 0x38424f, hat: 'none', weapon: 'none', belt: 0x8f4636, hair: 0x1d1814, scale: 0.98 },
@@ -53,13 +56,14 @@ function soldierGeos(key) {
   g.box(0.06, 0.06, 0.03, 0.09, 0.84, -0.185, 0x2a2018, 0, 0, 0, 0);
   if (key === 'hero') { g.box(0.22, 0.04, 0.03, 0, 0.9, -0.185, 0x2a2018, 0, 0, 0, 0); g.box(0.2, 0.05, 0.03, 0, 0.7, -0.185, 0x3a2c22, 0, 0, 0, 0); }
   if (key === 'boss' || key === 'sakata') g.box(0.16, 0.035, 0.03, 0, 0.74, -0.185, 0x1c1612, 0, 0, 0, 0);
+  if (key === 'yamazaki') g.box(0.08, 0.05, 0.03, 0, 0.745, -0.185, 0x1c1612, 0, 0, 0, 0);
   if (L.glasses) { g.box(0.1, 0.07, 0.03, -0.09, 0.85, -0.195, 0x1a1a1a, 0, 0, 0, 0); g.box(0.1, 0.07, 0.03, 0.09, 0.85, -0.195, 0x1a1a1a, 0, 0, 0, 0); g.box(0.06, 0.02, 0.03, 0, 0.86, -0.195, 0x1a1a1a, 0, 0, 0, 0); }
   if (L.band) g.box(0.16, 0.1, 0.19, -0.335, 0.4, 0, L.band, 0, 0, 0, 0);
   if (L.hat === 'cap') {
     g.box(0.4, 0.15, 0.4, 0, 1.04, 0, L.hatC, 0, 0, 0, 0.1);
     g.box(0.3, 0.04, 0.16, 0, 0.99, -0.26, L.hatC, 0, 0, 0, 0.05);
     if (L.star) g.box(0.08, 0.08, 0.03, 0, 1.05, -0.205, 0xf2efe6, 0, 0, 0, 0);
-    else if (key !== 'boss' && key !== 'sakata') g.box(0.07, 0.07, 0.03, 0, 1.05, -0.205, 0xc23b2b, 0, 0, 0, 0);
+    else if (key !== 'boss' && key !== 'sakata' && key !== 'yamazaki') g.box(0.07, 0.07, 0.03, 0, 1.05, -0.205, 0xc23b2b, 0, 0, 0, 0);
     else g.box(0.07, 0.07, 0.03, 0, 1.05, -0.205, 0xd0a030, 0, 0, 0, 0);
   } else if (L.hat === 'helmet') {
     g.cyl(0.26, 0.2, 0, 1.04, 0, L.hatC, 8, 0.72, 0, 0, 0, 0.15);
@@ -201,6 +205,17 @@ export function poseSoldier(m, st) {
   if (st.cheer > 0) { rx = 3.0 + Math.sin(st.cheer * 9) * 0.25; lx = 3.0 + Math.cos(st.cheer * 9) * 0.25; rz = 0.3; lz = -0.3; }
   m.armR.rotation.set(rx, 0, rz);
   m.armL.rotation.set(lx, 0, lz);
+}
+
+// ---------- 铁锹（挖交通壕时拿在右手，原点在手腕，向下） ----------
+export function buildShovel() {
+  const g = new Geo();
+  g.box(0.05, 0.95, 0.05, 0, -0.9, -0.03, 0x6b4a2c, 0, 0, 0, 0.1);
+  g.box(0.24, 0.3, 0.035, 0, -1.48, -0.03, 0x55585a, 0, 0, 0, 0.1);
+  g.box(0.16, 0.05, 0.05, 0, -0.43, -0.03, 0x4a3420, 0, 0, 0, 0);
+  const s = g.build(MAT.vc);
+  s.castShadow = true;
+  return s;
 }
 
 // ---------- 意大利炮（山炮造型） ----------

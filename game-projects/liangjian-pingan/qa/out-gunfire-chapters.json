@@ -1,122 +1,77 @@
 {
- "at": "2026-10-14T08:04:14.187Z",
- "passed": 12,
- "total": 12,
+ "at": "2026-10-14T12:53:55.993Z",
+ "passed": 10,
+ "total": 10,
  "checks": [
   {
-   "name": "战役菜单三章按原作顺序：苍云岭（重做版）、李家坡、平安县城（重做版、秀芹、双结局）；骑兵连章节和上下马说明都已删除",
+   "name": "大厅 v0.4.0：只有一个「抗战战役 · 亮剑三章」入口（写着苍云岭、李家坡、平安县城三章重做），旧的章节选择入口和战役菜单都没了",
    "ok": true,
    "detail": {
-    "shown": true,
+    "ver": "v0.4.0",
     "cards": [
-     "第 1 章 · 推荐 · 重做版重做版 / 坚守山头 / 抓舌头 / 迫击炮苍云岭 · 突围重做版：新一团在苍云岭掩护师部转移，被坂田联队围在山头。顶住进攻等转移走完，用枪打倒军曹抓个舌头，再把柱子的迫击炮送到五百米外——只有两发炮弹，打掉坂田的指挥部就按原作冲出去，两发都偏就得冲上去对付坂田。操作和平安县城一样，喊话用《亮剑》原声。本章有自己的菜单和进度。",
-     "第 2 章 · 早期体验 · 待打磨步兵 / 手榴弹 / 阵地突破李家坡 · 交通壕突击扮演李云龙带领突击班，从交通壕逼近山崎部队。利用掩体接近机枪火力点，用手榴弹打开突破口，再夺取坡顶阵地。",
-     "第 3 章 · 推荐 · 重做版重做版 / 越肩射击 / 操炮 / 双结局平安县城 · 开炮重做版：扮演李云龙扫清城外机枪阵地，护送意大利炮上阵、轰开城门；山本把秀芹押上城楼——按原作朝城楼开炮，或者冲进城门救人，两种结局；再打进县城决战山本。越肩第三人称与第一人称可切换，能跳跃，有亮剑突进和骑兵连两个技能，打掉机枪手后阵地机枪可以接管。喊话用《亮剑》原声。本章有自己的菜单和进度。"
+     "btnPingan:抗战战役 · 亮剑三章 推荐体验 · 苍云岭、李家坡、平安县城三章全部重做，进去后在菜单里选章、继续进度"
     ],
-    "oldUi": [],
-    "keys": "WASD 移动 · J 射击 · U 手雷 · I 互动 · K 跳跃按住 J / 左键射击 · 右键拖动或 Q / E 转头 · Z / 右键点按 举枪瞄准 · O 切枪 · R / L 手动换弹（空仓不会自动装填） · N 医疗 · Y / H 抬头低头 · T 小队指令 · Esc 暂停第二章「李家坡」步行固定第一人称、手动瞄准；第一章「苍云岭」和第三章「平安县城」是重做版，操作在那一章自己的菜单里说明对照吃鸡手感：左摇杆移动，空白处拖视角；大红射击键按住开火并可拖枪；旁侧「举枪」「换弹」空仓必点换弹。手雷、跳跃、互动在右侧。第一章「苍云岭」和第三章「平安县城」是重做版，操作在那一章自己的菜单里说明。"
+    "oldCard": false,
+    "warMenu": false,
+    "lead": "推荐先玩抗战战役（亮剑三章）：苍云岭两发炮弹端指挥部，李家坡挖交通壕、三千六百颗手榴弹砸进环形工事，平安县城操炮攻城；越肩 / 第一人称射击、接管机枪。",
+    "qa": []
    }
   },
   {
-   "name": "第一章卡片跳到亮剑战役的苍云岭",
+   "name": "更新记录有 0.4.0「李家坡重做，三章全部换新」",
    "ok": true,
-   "detail": "http://localhost:8795/html/game/gunfire-assembly/liangjian/index.html?ch=cangyunling"
+   "detail": null
   },
   {
-   "name": "第二章李家坡：点卡片开局",
+   "name": "点入口进亮剑战役页面，菜单里三章都能选（没有“制作中”）",
    "ok": true,
    "detail": {
-    "active": true,
-    "chapter": 1,
-    "z": -18,
-    "ammo": "{\"rifle\":5,\"mauser\":10,\"zb26\":20,\"arisaka\":5}",
-    "grenades": 4,
-    "title": "李家坡 · 交通壕突击"
+    "url": "/html/game/gunfire-assembly/liangjian/index.html",
+    "head": "第一章 · 苍云岭突围",
+    "chapters": [
+     "cangyunling",
+     "lijiapo",
+     "pingan"
+    ]
    }
   },
   {
-   "name": "李家坡：W 前进、J 开枪耗弹、U 扔手榴弹",
+   "name": "菜单里换到第二章：标题“第二章 · 李家坡攻坚”",
    "ok": true,
    "detail": {
-    "z0": -18,
-    "z1": -13.940459999983023,
-    "before": {
-     "active": true,
-     "chapter": 1,
-     "z": -18,
-     "ammo": "{\"rifle\":5,\"mauser\":10,\"zb26\":20,\"arisaka\":5}",
-     "grenades": 4,
-     "title": "李家坡 · 交通壕突击"
-    },
-    "after": {
-     "ammo": "{\"rifle\":3,\"mauser\":10,\"zb26\":20,\"arisaka\":5}",
-     "grenades": 3
-    }
+    "url": "/html/game/gunfire-assembly/liangjian/index.html?ch=lijiapo",
+    "head": "第二章 · 李家坡攻坚",
+    "chapters": [
+     "cangyunling",
+     "lijiapo",
+     "pingan"
+    ]
    }
   },
   {
-   "name": "李家坡：推进到结算，结算页正常显示",
+   "name": "李家坡能开局，第一阶段目标是拔掉山脚的火力点",
    "ok": true,
    "detail": {
-    "over": true,
-    "finished": true,
-    "result": true
+    "menu": true,
+    "obj": "第一阶段 · 七七二团正面强攻受挫，独立团从左翼上：拔掉山脚左边的火力点"
    }
   },
   {
-   "name": "李家坡的检查点按新顺序存（schema 2，第二章）",
+   "name": "亮剑战役菜单的“返回大厅”回到枪火集结大厅",
    "ok": true,
-   "detail": {
-    "schema": 2,
-    "chapter": 1,
-    "phase": 2,
-    "elapsed": 2.395200000002976,
-    "kills": 16,
-    "finished": true,
-    "updated": "2026-10-14T08:04:08.791Z"
-   }
+   "detail": "http://localhost:8795/html/game/gunfire-assembly/index.html"
   },
   {
-   "name": "李家坡结算点“下一章”跳到亮剑战役的平安县城",
-   "ok": true,
-   "detail": "http://localhost:8795/html/game/gunfire-assembly/liangjian/index.html?ch=pingan"
-  },
-  {
-   "name": "旧版第三章存档：菜单注明“平安县城 · 重做版”，点“继续检查点”跳到重做版平安县城",
+   "name": "再从大厅进来，落在上次玩的李家坡",
    "ok": true,
    "detail": {
-    "cont": {
-     "disabled": false,
-     "info": "检查点：平安县城 · 开炮 · 重做版，进度在该章自己的菜单里"
-    },
-    "url": "http://localhost:8795/html/game/gunfire-assembly/liangjian/index.html?ch=pingan"
-   }
-  },
-  {
-   "name": "已删除的骑兵连章节的旧存档：转成第一章苍云岭（重做版），继续检查点跳过去",
-   "ok": true,
-   "detail": {
-    "cont": {
-     "disabled": false,
-     "info": "检查点：苍云岭 · 突围 · 重做版，进度在该章自己的菜单里"
-    },
-    "url": "http://localhost:8795/html/game/gunfire-assembly/liangjian/index.html?ch=cangyunling"
-   }
-  },
-  {
-   "name": "旧版李家坡存档（第二阶段）：继续检查点回到李家坡第二阶段",
-   "ok": true,
-   "detail": {
-    "cont": {
-     "disabled": false,
-     "info": "检查点：李家坡 · 交通壕突击 · 炸毁两座机枪堡垒"
-    },
-    "st": {
-     "active": true,
-     "chapter": 1,
-     "phase": 1,
-     "info": "李家坡 · 交通壕突击"
-    }
+    "url": "/html/game/gunfire-assembly/liangjian/index.html",
+    "head": "第二章 · 李家坡攻坚",
+    "chapters": [
+     "cangyunling",
+     "lijiapo",
+     "pingan"
+    ]
    }
   },
   {
@@ -125,10 +80,27 @@
    "detail": "http://localhost:8795/html/game/gunfire-assembly/liangjian/index.html?qa=1&ch=pingan"
   },
   {
+   "name": "旧抗战战役的脚本已删（resistance-*.js 取不到）",
+   "ok": true,
+   "detail": [
+    404,
+    404,
+    404
+   ]
+  },
+  {
    "name": "全程没有报错",
    "ok": true,
-   "detail": []
+   "detail": [
+    "console: Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "console: Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "console: Failed to load resource: the server responded with a status of 404 (Not Found)"
+   ]
   }
  ],
- "errors": []
+ "errors": [
+  "console: Failed to load resource: the server responded with a status of 404 (Not Found)",
+  "console: Failed to load resource: the server responded with a status of 404 (Not Found)",
+  "console: Failed to load resource: the server responded with a status of 404 (Not Found)"
+ ]
 }

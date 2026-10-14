@@ -13,7 +13,7 @@ async function snapshot(p){return p.evaluate(()=>{const q=window.__gameQA;return
   assert(!/大灾变|大逃杀|躲猫猫|即将开放/.test(await p.locator('#menuMain').innerText()));
   assert.equal(await p.locator('#btnVersus').isVisible(),false);
   await p.screenshot({path:path.join(out,`gunfire-${width}x${height}.png`)});
-  await p.locator('#btnPingan').focus();await p.keyboard.press('Enter');await p.waitForURL(/liangjian\/index\.html\?ch=cangyunling/);
+  await p.locator('#btnPingan').focus();await p.keyboard.press('Enter');await p.waitForURL(/liangjian\/index\.html/);
   await p.waitForFunction(()=>!!document.querySelector('#menu'));assert(await p.locator('#menu').isVisible());
   // Follow the actual return-to-lobby control of the packaged chapter.
   const back=p.getByRole('button',{name:/返回.*大厅/});
@@ -21,16 +21,16 @@ async function snapshot(p){return p.evaluate(()=>{const q=window.__gameQA;return
   await p.waitForURL('**/gunfire-assembly/index.html');await p.waitForFunction(()=>window.__ccReady);
   await p.locator('#earlyGunfire summary').focus();await p.keyboard.press('Enter');assert(await p.locator('#btnVersus').isVisible());assert(await p.locator('#menuMain').isVisible());
   await p.click('#btnVersus');assert(await p.locator('#vsMenu').isVisible());await p.click('#vsMenuBack');
-  await p.click('#btnResistance');assert.match(await p.locator('[data-chapter="0"]').innerText(),/推荐.*重做版/);assert.match(await p.locator('[data-chapter="1"]').innerText(),/早期体验/);assert.match(await p.locator('[data-chapter="2"]').innerText(),/推荐.*重做版/);
-  await p.click('#warBack');assert.deepEqual(errors,[]);results.push({game:'gunfire',viewport:[width,height],status:'passed',checks:['hidden future modes','direct campaign (Cangyunling) menu and actual return','keyboard fold without accidental start','battlefield menu','chapter maturity labels'],limitations:['browser simulation; physical phone not tested']});await c.close();
+  // 枪火集结 0.4.0：三章都重做完，大厅只留一个抗战战役入口（旧的章节选择已删）
+  assert.equal(await p.locator('#btnResistance').count(),0);assert.match(await p.locator('#btnPingan').innerText(),/苍云岭、李家坡、平安县城/);
+  assert.deepEqual(errors,[]);results.push({game:'gunfire',viewport:[width,height],status:'passed',checks:['hidden future modes','direct campaign menu and actual return','keyboard fold without accidental start','battlefield menu','single campaign entry with three remade chapters'],limitations:['browser simulation; physical phone not tested']});await c.close();
  }
  const modes=[
   ['starship-defense','bank',['#earlyModes summary','#btnBankVersus','#btnModeStart','[data-vs-ai="normal"]']],
   ['starship-defense','rv',['#earlyModes summary','#btnRV','#btnModeStart','#rvStart']],
   ['starship-defense','zerg',['#earlyModes summary','#btnZerg','#btnModeStart','#zergStart']],
   ['starship-defense','acid',['#earlyModes summary','#btnAcid','#btnModeStart','#acidStart']],
-  // 枪火集结 0.3.0：第一、三章是重做版（跳到亮剑战役页面），本包里只剩第二章李家坡；骑兵连章节已删除
-  ['gunfire-assembly','war2',['#btnResistance','[data-chapter="1"]']],
+  // 枪火集结 0.4.0：抗战三章都在亮剑战役页面里（有自己的验收脚本），本包里不再有旧的抗战关卡
   ['gunfire-assembly','battlefield',['#earlyGunfire summary','#btnVersus','[data-vs-ai="normal"]']]
  ];
  for(const [slug,mode,steps] of modes){
