@@ -1,0 +1,77 @@
+{
+ "at": "2026-10-14T07:57:15.659Z",
+ "startPhase": 1,
+ "armor": "std",
+ "route": "hit",
+ "line": "hit",
+ "finished": true,
+ "gameSeconds": 348.4,
+ "wallSeconds": 8,
+ "phases": [
+  {
+   "phase": 1,
+   "seconds": 155.5,
+   "deaths": 2,
+   "hurt": 7
+  },
+  {
+   "phase": 2,
+   "seconds": 32.5,
+   "deaths": 0,
+   "hurt": 1
+  },
+  {
+   "phase": 3,
+   "seconds": 87.5,
+   "deaths": 1,
+   "hurt": 6
+  },
+  {
+   "phase": 4,
+   "seconds": 15,
+   "deaths": 0,
+   "hurt": 0
+  },
+  {
+   "phase": 5,
+   "seconds": 57.9,
+   "deaths": 0,
+   "hurt": 0
+  }
+ ],
+ "final": {
+  "state": "result",
+  "phase": 5,
+  "sub": "out",
+  "t": 348.41666666667845,
+  "deaths": 3,
+  "hurt": 14,
+  "kills": 121,
+  "hp": 5,
+  "hx": 9.5,
+  "hz": -148,
+  "prog": 100,
+  "shots": 1,
+  "line": "hit",
+  "won": 1,
+  "retries": 0,
+  "tongueFail": 0,
+  "boss": null,
+  "cz": -52,
+  "enemies": 0,
+  "score": 27258
+ },
+ "result": {
+  "title": "苍云岭，突出去了！",
+  "rank": "评价：亮剑团长",
+  "total": "战功合计 26358　最高 26358",
+  "stats": "结局第一发炮弹打掉指挥部（原作）用时5:48歼敌121干掉精锐9抓舌头一次抓活炮组重整0拼刀成功0骑兵连出击5阵亡3受击14爆头81规则无限命 · 标准",
+  "hidden": false
+ },
+ "voices": [
+  "cy_dayu",
+  "cy_tuweiba",
+  "cy_piaoliang"
+ ],
+ "errors": []
+}

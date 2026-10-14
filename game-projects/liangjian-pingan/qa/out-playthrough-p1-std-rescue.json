@@ -1,74 +1,74 @@
 {
- "at": "2026-10-14T04:01:09.202Z",
+ "at": "2026-10-14T07:54:21.240Z",
  "startPhase": 1,
  "armor": "std",
  "route": "rescue",
  "ending": "rescue",
  "finished": true,
- "gameSeconds": 335.5,
- "wallSeconds": 7,
+ "gameSeconds": 206.4,
+ "wallSeconds": 10,
  "phases": [
   {
    "phase": 1,
-   "seconds": 34.7,
-   "deaths": 1,
-   "hurt": 5
+   "seconds": 25,
+   "deaths": 0,
+   "hurt": 3
   },
   {
    "phase": 2,
-   "seconds": 33.5,
-   "deaths": 1,
-   "hurt": 5
+   "seconds": 29.2,
+   "deaths": 0,
+   "hurt": 2
   },
   {
    "phase": 3,
-   "seconds": 47.2,
+   "seconds": 45,
    "deaths": 0,
    "hurt": 1
   },
   {
    "phase": 4,
-   "seconds": 162.5,
-   "deaths": 6,
-   "hurt": 33
+   "seconds": 60.8,
+   "deaths": 1,
+   "hurt": 7
   },
   {
    "phase": 5,
-   "seconds": 57.5,
-   "deaths": 2,
+   "seconds": 46.4,
+   "deaths": 1,
    "hurt": 8
   }
  ],
  "final": {
   "state": "result",
   "phase": 5,
-  "t": 335.46666666669023,
-  "deaths": 10,
-  "hurt": 52,
+  "t": 206.41666666672307,
+  "deaths": 2,
+  "hurt": 21,
   "shells": 6,
-  "cav": 3,
+  "cav": 4,
   "loot": 1,
-  "clash": 0,
+  "clash": 2,
   "tower": 0,
   "won": 1,
   "genius": 1,
-  "kills": 87,
-  "hp": 5,
-  "hx": -1.8,
-  "hz": -84.5,
-  "boss": -3,
-  "heads": 66,
-  "jumps": 126,
-  "cannon": 16,
+  "kills": 82,
+  "hp": 1,
+  "hx": -7.9,
+  "hz": -97.3,
+  "boss": -2,
+  "heads": 85,
+  "jumps": 32,
+  "cannon": 29,
   "retries": 0,
-  "score": 25815,
+  "score": 26360,
   "enemies": 0
  },
  "result": {
   "title": "平安县城拿下了，秀芹也救回来了！",
   "rank": "评价：晋西北一霸",
-  "total": "战功合计 22815　最高 22815",
-  "stats": "结局救下秀芹（改写）用时5:35歼敌87干掉精锐8开炮6 发“天才”炮击1拼刀成功0骑兵连出击3缴获军火库是阵亡10受击52爆头66规则无限命 · 标准",
+  "total": "战功合计 25760　最高 25760",
+  "stats": "结局救下秀芹（改写）用时3:26歼敌82干掉精锐6开炮6 发“天才”炮击1拼刀成功2骑兵连出击4缴获军火库是阵亡2受击21爆头85规则无限命 · 标准",
   "hidden": false
  },
  "errors": []

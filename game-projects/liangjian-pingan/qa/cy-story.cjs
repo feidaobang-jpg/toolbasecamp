@@ -146,6 +146,7 @@ const check = (name, ok, info) => { results.push({ name, ok: !!ok, info }); cons
   await begin(5); await step(0.5);
   const again = await page.evaluate(() => ({ sub: __lj.game.sub, tents: __lj.game.world.hqTents.alive }));
   check('从第五阶段直接开局沿用上次结局（打中＝没有坂田、帐篷已塌）', again.sub === 'charge' && !again.tents, again);
+  await step(4.5);   // 等“冲啊”放完（真人从开局跑到指挥部也要七八秒）
   await page.evaluate(() => { const g = __lj.game; for (const e of g.enemies) { e.alive = false; e.deadT = 9; } g.place(g.hero, -22, -116); });
   await step(1);
   const hold = await page.evaluate(() => ({ sub: __lj.game.sub, voice: __lj.app.audio.log.includes('voice:cy_dayu') }));

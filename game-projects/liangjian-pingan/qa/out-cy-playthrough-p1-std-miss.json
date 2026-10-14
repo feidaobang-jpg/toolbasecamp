@@ -1,0 +1,78 @@
+{
+ "at": "2026-10-14T08:01:51.537Z",
+ "startPhase": 1,
+ "armor": "std",
+ "route": "miss",
+ "line": "miss",
+ "finished": true,
+ "gameSeconds": 375.4,
+ "wallSeconds": 13,
+ "phases": [
+  {
+   "phase": 1,
+   "seconds": 155.5,
+   "deaths": 2,
+   "hurt": 7
+  },
+  {
+   "phase": 2,
+   "seconds": 32.5,
+   "deaths": 0,
+   "hurt": 1
+  },
+  {
+   "phase": 3,
+   "seconds": 87.5,
+   "deaths": 1,
+   "hurt": 6
+  },
+  {
+   "phase": 4,
+   "seconds": 36,
+   "deaths": 0,
+   "hurt": 0
+  },
+  {
+   "phase": 5,
+   "seconds": 63.9,
+   "deaths": 1,
+   "hurt": 7
+  }
+ ],
+ "final": {
+  "state": "result",
+  "phase": 5,
+  "sub": "out",
+  "t": 375.4166666666539,
+  "deaths": 4,
+  "hurt": 21,
+  "kills": 114,
+  "hp": 3,
+  "hx": 7,
+  "hz": -148.9,
+  "prog": 100,
+  "shots": 2,
+  "line": "miss",
+  "won": 1,
+  "retries": 0,
+  "tongueFail": 0,
+  "boss": -2,
+  "cz": -52,
+  "enemies": 0,
+  "score": 28500
+ },
+ "result": {
+  "title": "坂田完了，苍云岭突出去了！",
+  "rank": "评价：亮剑团长",
+  "total": "战功合计 27300　最高 27300",
+  "stats": "结局炮弹打偏，手刃坂田（改写）用时6:15歼敌114干掉精锐9抓舌头一次抓活炮组重整0拼刀成功0骑兵连出击5阵亡4受击21爆头121规则无限命 · 标准",
+  "hidden": false
+ },
+ "voices": [
+  "bt_zengbing",
+  "bt_yinmou",
+  "cy_tuweiba",
+  "cy_piaoliang"
+ ],
+ "errors": []
+}

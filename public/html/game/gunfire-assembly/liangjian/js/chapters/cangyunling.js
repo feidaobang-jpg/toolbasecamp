@@ -181,7 +181,7 @@ export class CangyunlingGame extends Game {
   mortarAim() {
     const c = this.cannon, h = this.hero;
     if (this.phase === 1) {
-      if (h.alive && h.z > 50 && rand() < 0.5) return [h.x + h.vx * 0.8, h.z + h.vz * 0.8];
+      if (h.alive && h.z > 50 && rand() < 0.4) return [h.x + h.vx * 0.8, h.z + h.vz * 0.8];
       const p = POSTS1[Math.floor(rand(6))]; return [p[0] + rand(-2, 2), p[1] + rand(-1.5, 1.5)];
     }
     if (this.phase === 3 && c.visible && !c.placed && rand() < 0.6) return [c.x + rand(-1.5, 1.5), c.z + rand(-1, 2)];
@@ -196,6 +196,13 @@ export class CangyunlingGame extends Game {
     return null;
   }
 
+  // 局内喊话（不在过场里）：上一句原声没放完就排到它后面，免得两句叠在一起；换了阶段就不放了
+  vo(id, dur, fn) {
+    const ph = this.phase, go = () => { if (this.over || this.phase !== ph) return; this.audio.voice(id); this.voBusy = this.t + dur; if (fn) fn(); };
+    const wait = (this.voBusy || 0) - this.t;
+    if (wait > 0.05) this.after(wait + 0.3, go); else go();
+  }
+  endScene(skipped) { if (skipped) this.voBusy = 0; super.endScene(skipped); }
   setHQ(alive) {
     const t = this.world.hqTents;
     t.alive = alive; t.mesh.visible = alive; t.ruin.visible = !alive;
@@ -226,6 +233,8 @@ export class CangyunlingGame extends Game {
   enterPhase(n, fresh) {
     const h = this.hero, c = this.cannon, ui = this.ui;
     this.phase = n; this.phaseT = 0; this.sub = '';
+    // 换阶段：上一阶段还没说完的局内喊话掐掉，新阶段的喊话马上能放
+    this.audio.stopVoices(); this.voBusy = 0;
     if (h) h.mg = null;
     this.app.saveCheckpoint(n);
     for (const e of this.enemies) if (e.alive && e.type !== 'boss') { e.alive = false; e.deadT = 9; }
@@ -247,8 +256,7 @@ export class CangyunlingGame extends Game {
     } else if (n === 2) {
       if (fresh) this.place(h, 0, 60);
       this.tongueIdx = 0; this.spawnTongue(0);
-      this.audio.voice('cy_zhuohuode');
-      ui.say('李云龙', '去，抓个活的问问，对面的鬼子是哪个部队的。', { now: true, dur: 4.6 });
+      this.vo('cy_zhuohuode', 4.5, () => ui.say('李云龙', '去，抓个活的问问，对面的鬼子是哪个部队的。', { now: true, dur: 4.6 }));
       this.spawnMed(0, 50);
       this.after(4.8, () => ui.toast('抓舌头：用枪把带臂章的军曹打倒（手榴弹、骑兵会把他弄死），再过去按 I 抓活的', 6));
     } else if (n === 3) {
@@ -263,11 +271,8 @@ export class CangyunlingGame extends Game {
       if (fresh) { this.place(h, L.firePos.x + 2.5, L.firePos.z + 4); this.allies.forEach((al) => this.place(al, POSTS4[al.slot][0], POSTS4[al.slot][1])); }
       this.p4T = 14;
       this.spawnMed(L.firePos.x - 4, L.firePos.z + 3);
-      this.audio.voice('cy_kuaifang');
-      ui.say('李云龙', '快，就放这！', { now: true, dur: 1.8 });
-      this.after(2.0, () => {
-        if (this.phase !== 4) return;
-        this.audio.voice('cy_diguashao');
+      this.vo('cy_kuaifang', 1.7, () => ui.say('李云龙', '快，就放这！', { now: true, dur: 1.8 }));
+      this.vo('cy_diguashao', 11.1, () => {
         ui.say('李云龙', '等仗打完了，我赏给你半斤地瓜烧。', { now: true, dur: 3.6 });
         ui.say('李云龙', '我丑话说在前面：你要是打不中，别说地瓜烧免了，我还得枪毙你！听见没有？', { dur: 6.4 });
         ui.say('柱子', '是！保证完成任务！', { dur: 1.4 });
@@ -283,15 +288,15 @@ export class CangyunlingGame extends Game {
       ui.toast('张大彪把刚缴的歪把子塞给你：射速更快，弹匣 40 发', 3.5);
       if (line === 'miss') {
         this.sub = 'boss';
-        this.audio.voice('cy_yongzhesheng');
-        ui.say('李云龙', '弟兄们！都说小鬼子拼刺刀有两下子，老子就不信这个邪！', { now: true, dur: 6.8 });
-        ui.say('李云龙', '我跟你们说过：狭路相逢，勇者胜！弟兄们，冲啊！', { dur: 7.9 });
+        this.vo('cy_yongzhesheng', 14.7, () => {
+          ui.say('李云龙', '弟兄们！都说小鬼子拼刺刀有两下子，老子就不信这个邪！', { now: true, dur: 6.8 });
+          ui.say('李云龙', '我跟你们说过：狭路相逢，勇者胜！弟兄们，冲啊！', { dur: 7.9 });
+        });
         this.after(9.6, () => { ui.stamp('狭路相逢勇者胜！', 1.6); this.audio.play('drum'); });
         this.after(15, () => this.sub === 'boss' && this.boss && this.boss.alive && ui.toast('坂田躲在指挥部门口的沙袋后面指挥：红圈是掷弹筒，躲开；先收拾冲上来的卫兵，再绕过去打他', 6));
       } else {
         this.sub = 'charge';
-        this.audio.voice('cy_chongle');
-        ui.say('李云龙', '柱子！弟兄们，冲啊！冲啊！', { now: true, dur: 4.1 });
+        this.vo('cy_chongle', 4.1, () => ui.say('李云龙', '柱子！弟兄们，冲啊！冲啊！', { now: true, dur: 4.1 }));
         ui.stamp('冲啊！', 1.4); this.audio.play('bugle', 0.7);
       }
     }
@@ -409,10 +414,11 @@ export class CangyunlingGame extends Game {
     if (this.prog >= 66 && !this.flags.m2) { this.flags.m2 = 1; this.spawnMed(9, 66); }
     if (this.prog >= 100 && !this.flags.p1done) {
       this.flags.p1done = 1; this.addScore(1000);
-      this.audio.voice('cy_zhuanyi');
-      ui.say('李云龙', '张大彪，师部和野战医院转移了没有？', { now: true, dur: 3.5 });
-      ui.say('张大彪', '报告团长，已经全部撤离。', { dur: 3.4 });
-      ui.say('李云龙', '这回咱们可以放开手脚，和鬼子干一场了！', { dur: 3.7 });
+      this.vo('cy_zhuanyi', 10.5, () => {
+        ui.say('李云龙', '张大彪，师部和野战医院转移了没有？', { now: true, dur: 3.5 });
+        ui.say('张大彪', '报告团长，已经全部撤离。', { dur: 3.4 });
+        ui.say('李云龙', '这回咱们可以放开手脚，和鬼子干一场了！', { dur: 3.7 });
+      });
       ui.stamp('转移完成！', 1.6);
       this.after(11, () => { if (this.phase === 1 && !this.over) this.enterPhase(2, false); });
     }
@@ -516,9 +522,10 @@ export class CangyunlingGame extends Game {
   }
   startEscort() {
     const ui = this.ui;
-    this.audio.voice('cy_qianfang');
-    ui.say('李云龙', '看，前方五百米。部队向前攻击五百米，守住它，为炮兵赢得时间！', { now: true, dur: 9.9 });
-    ui.say('李云龙', '只要一炮干掉坂田的指挥部，旅长就不会拿我怎么样的，闹不好还得请我喝酒！', { dur: 8.6 });
+    this.vo('cy_qianfang', 18.5, () => {
+      ui.say('李云龙', '看，前方五百米。部队向前攻击五百米，守住它，为炮兵赢得时间！', { now: true, dur: 9.9 });
+      ui.say('李云龙', '只要一炮干掉坂田的指挥部，旅长就不会拿我怎么样的，闹不好还得请我喝酒！', { dur: 8.6 });
+    });
     this.after(2.5, () => { if (this.phase === 3) ui.toast('炮组跟在你后面走：前头有鬼子就停下，先替他们把路打通；炮组被打散要从头送', 6); });
   }
   updateEscort(dt) {
@@ -538,9 +545,10 @@ export class CangyunlingGame extends Game {
     wave('w31', 44, () => { this.spawnWave(-44, 30, 4, 1, 'W', 14); ui.say('虎子', '左边山脚有鬼子摸过来了，冲着炮组去的！'); });
     wave('m31', 30, () => this.spawnMed(c.x + 3, c.z - 2));
     wave('tuwei', 20, () => {
-      this.audio.voice('cy_tuwei');
-      ui.say('通讯员', '报告团长，刚刚接到旅部的命令：旅长命令新一团交替掩护后撤，从俞家岭方向突围！', { now: true, dur: 7.3 });
-      ui.say('李云龙', '坂田联队的刺刀都顶到老子鼻子上了，这会儿后撤，亏他们想得出来！反正是突围，从哪儿出去不一样？', { dur: 7.6 });
+      this.vo('cy_tuwei', 14.9, () => {
+        ui.say('通讯员', '报告团长，刚刚接到旅部的命令：旅长命令新一团交替掩护后撤，从俞家岭方向突围！', { now: true, dur: 7.3 });
+        ui.say('李云龙', '坂田联队的刺刀都顶到老子鼻子上了，这会儿后撤，亏他们想得出来！反正是突围，从哪儿出去不一样？', { dur: 7.6 });
+      });
     });
     wave('w32', 12, () => { this.spawnWave(44, 4, 4, 1, 'W', 14); ui.say('张大彪', '右翼上来一股，护住炮组！'); });
     wave('w33', -22, () => { this.spawnWave(-44, -44, 3, 1, 'W', 14); this.spawnWave(44, -48, 3, 0, 'W', 14); ui.say('虎子', '两边又冲出来了！'); });
@@ -598,7 +606,7 @@ export class CangyunlingGame extends Game {
     if (Math.abs(dr) >= 1.5) parts.push((dr > 0 ? '偏右' : '偏左') + cn(Math.abs(dr)) + '米');
     if (!parts.length) parts.push('就差一点点');
     this.stats.miss1 = parts.join('，');
-    if (df > 3) { this.audio.voice('cy_dawai'); ui.say('李云龙', '柱子，你他娘的打歪了！指挥部在下边！', { now: true, dur: 3.3 }); }
+    if (df > 3) this.vo('cy_dawai', 3.3, () => ui.say('李云龙', '柱子，你他娘的打歪了！指挥部在下边！', { now: true, dur: 3.3 }));
     else ui.say('李云龙', '他娘的，打偏了！', { now: true, dur: 1.8 });
     ui.say('柱子', `团长，${parts.join('，')}！就剩最后一发了……`, { dur: 4.2 });
     const tip = [];
@@ -646,16 +654,17 @@ export class CangyunlingGame extends Game {
     const h = this.hero, ui = this.ui, b = this.boss;
     if (this.sub === 'charge' && h.alive && dist2(h.x, h.z, L.hq.x, L.hq.z) < 11 * 11) {
       this.sub = 'hold'; this.addScore(800);
-      this.audio.voice('cy_dayu');
-      ui.say('李云龙', '大彪，看看这一网捞了多少大鱼！', { now: true, dur: 5.0 });
-      ui.say('张大彪', '团长，还真捞着大鱼了：一个大佐，两个中佐，一个少佐——这肯定是坂田的指挥部！', { dur: 6.5 });
-      ui.say('李云龙', '太好了！一炮就干掉了一个联队的指挥部！', { dur: 4.6 });
+      this.vo('cy_dayu', 16.1, () => {
+        ui.say('李云龙', '大彪，看看这一网捞了多少大鱼！', { now: true, dur: 5.0 });
+        ui.say('张大彪', '团长，还真捞着大鱼了：一个大佐，两个中佐，一个少佐——这肯定是坂田的指挥部！', { dur: 6.5 });
+        ui.say('李云龙', '太好了！一炮就干掉了一个联队的指挥部！', { dur: 4.6 });
+      });
       this.spawnWave(-46, -104, 4, 1, 'B', 12); this.spawnWave(32, -100, 4, 1, 'B', 12);
       this.after(16.6, () => { if (this.phase === 5 && !this.over) this.beginBreakout(); });
     } else if (this.sub === 'boss') {
       if (b && b.alive && !this.flags.taunt && h.alive && dist2(h.x, h.z, b.x, b.z) < 36 * 36) {
-        this.flags.taunt = 1; this.audio.voice('bt_fantuji');
-        ui.say('坂田信哲', '我们的对手到底要干什么？凭他那点兵力，就敢实施反突击……', { foe: true, dur: 9.4 });
+        this.flags.taunt = 1;
+        this.vo('bt_fantuji', 9.4, () => ui.say('坂田信哲', '我们的对手到底要干什么？凭他那点兵力，就敢实施反突击……', { foe: true, now: true, dur: 9.4 }));
       }
       if (b && !b.alive && !this.flags.bossDown) {
         this.flags.bossDown = 1; this.addScore(3000);
@@ -679,9 +688,10 @@ export class CangyunlingGame extends Game {
   beginBreakout() {
     const ui = this.ui;
     this.sub = 'out'; this.outT = 3;
-    this.audio.voice('cy_tuweiba');
-    ui.say('张大彪', '团长，突围吧！', { now: true, dur: 1.4 });
-    ui.say('李云龙', '继续攻击，打出去！冲啊！', { dur: 3.6 });
+    this.vo('cy_tuweiba', 5.0, () => {
+      ui.say('张大彪', '团长，突围吧！', { now: true, dur: 1.4 });
+      ui.say('李云龙', '继续攻击，打出去！冲啊！', { dur: 3.6 });
+    });
     ui.stamp('打出去！', 1.4);
     this.spawnMed(8, -130);
   }

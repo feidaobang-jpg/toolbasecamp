@@ -11,7 +11,8 @@ export function spawnPhase(g, n, line) {
   const mortars = (active) => { for (const [m, st] of [[L.mortarL, 4], [L.mortarR, 8]]) { const e = E('mortar', m.x, m.z, { hold: true, group: 'M' }); e.active = active; e.stT = st; } };
   g.boss = null;
   if (n === 1) {
-    mortars(true);
+    // 坚守山头只放一门掷弹筒：阵地沙袋已经挡住步枪，红圈太密就只剩躲炮了
+    const m = E('mortar', L.mortarL.x, L.mortarL.z, { hold: true, group: 'M' }); m.active = true; m.stT = 8;
   } else if (n === 2) {
     E('mg', L.enemyNest.x, L.enemyNest.z + 0.3, { group: 'F', hold: true, nest: 'E', wake: 30 });
     E('rifle', -17, L.fwdZ - 1.2, { group: 'F', hold: true, wake: 30 }); E('rifle', 6, L.fwdZ - 1.2, { group: 'F', hold: true, wake: 30 });
@@ -96,15 +97,13 @@ export function updateBoss(g, u, dt) {
   const frac = u.hp / u.maxHp;
   if (u.stage === 1 && frac < 0.66) {
     u.stage = 2; u.cd = Math.min(u.cd, 2);
-    g.audio.voice('bt_zengbing');
-    g.ui.say('坂田信哲', '不，一个大队兵力不够。命令第五步兵大队，协同第三大队进行攻击！', { foe: true, now: true, dur: 8.5 });
+    g.vo('bt_zengbing', 8.5, () => g.ui.say('坂田信哲', '不，一个大队兵力不够。命令第五步兵大队，协同第三大队进行攻击！', { foe: true, now: true, dur: 8.5 }));
     for (const [x, z] of [[-45, -100], [6, -104]]) g.spawnWave(x, z, 3, 0, 'R5', 13);
     const e = g.addUnit('enemy', 'elite', -44, -104, { group: 'R5' }); e.active = true;
   }
   if (u.stage === 2 && frac < 0.33) {
     u.stage = 3; u.state = 'walk'; u.cd = 1.2;
-    g.audio.voice('bt_yinmou');
-    g.ui.say('坂田信哲', '不是他疯了，就是个阴谋。', { foe: true, now: true, dur: 3.5 });
+    g.vo('bt_yinmou', 3.5, () => g.ui.say('坂田信哲', '不是他疯了，就是个阴谋。', { foe: true, now: true, dur: 3.5 }));
     g.ui.stamp('坂田拔刀了！', 1.5, 'red');
     g.after(3.6, () => g.ui.toast('坂田突进时地上有红线：侧移、跳起来躲开，或者亮剑和他拼刀！', 5));
   }

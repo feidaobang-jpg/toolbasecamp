@@ -1,0 +1,753 @@
+{
+ "schema_version": 1,
+ "game_id": "liangjian-pingan",
+ "version": "v0.6.0",
+ "base_version": "v0.5.0",
+ "created_at": "2026-10-14T16:02:00+08:00",
+ "build": {
+  "id": "local-f3e5aa423b95",
+  "commit": "71735bb5",
+  "dirty": true,
+  "fingerprint": "sha256:f3e5aa423b95e58aac344813f9c394603a2c47d24177c5b5c54c9eb7ba4a527f（public/html/game/gunfire-assembly/liangjian 下 69 个文件按路径排序连接）",
+  "entrypoint": "public/html/game/gunfire-assembly/liangjian/index.html"
+ },
+ "feature_inventory": [
+  {
+   "id": "campaign-page",
+   "desc": "亮剑战役页面：引擎与章节拆分、菜单选章、按章节分开的进度与结局、语音按章节加载、旧 pingan 地址跳转",
+   "status": "implemented",
+   "evidence_ids": [
+    "cy-menu"
+   ]
+  },
+  {
+   "id": "cy-hold",
+   "desc": "苍云岭第一阶段：坚守山头、转移进度与停顿、七波进攻",
+   "status": "implemented",
+   "evidence_ids": [
+    "cy-hold"
+   ]
+  },
+  {
+   "id": "cy-tongue",
+   "desc": "抓舌头：枪打倒不死、炸死换人、按 I 抓活的、坂田联队 / 精锐过场",
+   "status": "implemented",
+   "evidence_ids": [
+    "cy-downed",
+    "cy-capture"
+   ]
+  },
+  {
+   "id": "cy-escort",
+   "desc": "送炮前出：望远镜过场、护送炮组、旅部命令、楚云飞观察所",
+   "status": "implemented",
+   "evidence_ids": [
+    "cy-binoc",
+    "cy-talk",
+    "cy-chu"
+   ]
+  },
+  {
+   "id": "cy-mortar",
+   "desc": "两发炮弹：手动瞄准、表尺、风偏、炮弹跟拍、柱子报偏差",
+   "status": "implemented",
+   "evidence_ids": [
+    "cy-aim-fp",
+    "cy-aim-tp",
+    "cy-shell",
+    "cy-report"
+   ]
+  },
+  {
+   "id": "cy-breakout",
+   "desc": "突围：打中＝冲进指挥部后突围；两发都偏＝坂田 Boss 后突围；楚云飞收尾",
+   "status": "implemented",
+   "evidence_ids": [
+    "cy-boss",
+    "cy-win"
+   ]
+  },
+  {
+   "id": "cy-voice",
+   "desc": "苍云岭 25 句《亮剑》原声 + 局内原声排队",
+   "status": "implemented",
+   "evidence_ids": []
+  },
+  {
+   "id": "lijiapo",
+   "desc": "第二章李家坡重做",
+   "status": "planned",
+   "evidence_ids": []
+  }
+ ],
+ "changes": [
+  {
+   "id": "campaign-page",
+   "feature_ids": [
+    "campaign-page"
+   ],
+   "before": "平安县城是单章页面 pingan/，存档前缀 lj_pingan_v1_",
+   "after": "亮剑战役页面 liangjian/，三章选章（李家坡显示重做中），存档 lj_campaign_v1_ 按章节分开并自动搬旧存档",
+   "user_visible": "菜单多一排选章；平安县城玩法不变",
+   "evidence_ids": [
+    "cy-menu"
+   ],
+   "verification": "平安县城全部回归通过"
+  },
+  {
+   "id": "cangyunling",
+   "feature_ids": [
+    "cy-hold",
+    "cy-tongue",
+    "cy-escort",
+    "cy-mortar",
+    "cy-breakout",
+    "cy-voice"
+   ],
+   "before": "枪火集结第一章是旧版李家坡、第二章旧版骑兵连",
+   "after": "新增重做版第一章苍云岭（五个阶段、两条结局线）",
+   "user_visible": "抗战战役多了苍云岭",
+   "evidence_ids": [
+    "cy-hold",
+    "cy-capture",
+    "cy-binoc",
+    "cy-aim-fp",
+    "cy-boss",
+    "cy-win"
+   ],
+   "verification": "cy-story 26 条 + 三条路线自动通关；human-play not-run"
+  },
+  {
+   "id": "gunfire-chapters",
+   "feature_ids": [],
+   "before": "枪火集结抗战战役：李家坡 / 骑兵连 / 平安县城",
+   "after": "苍云岭（重做版）/ 李家坡（旧版）/ 平安县城（重做版）；骑兵连章节删除，旧存档按新顺序迁移",
+   "user_visible": "章节顺序变了，骑兵连那章没了",
+   "evidence_ids": [],
+   "verification": "gunfire-chapters.cjs 12 条"
+  }
+ ],
+ "bugs": [
+  {
+   "id": "prompt-in-cutscene",
+   "desc": "过场里互动提示（按 I 抓活的）一直留在画面上",
+   "repro": "node qa/cy-scenes.cjs 看 cy-scene-capture1 / binoc 截图",
+   "fix": "引擎在过场里清掉提示和互动键",
+   "before_media_ids": [],
+   "after_media_ids": [
+    "cy-capture",
+    "cy-binoc"
+   ],
+   "verification": "cy-story 断言过场里不显示提示",
+   "gap": "都在发布前发现，修复前的截图被同名文件覆盖，没有留存"
+  },
+  {
+   "id": "mortar-camera",
+   "desc": "迫击炮沿用意大利炮镜头，第一人称朝天看不到指挥部",
+   "repro": "上迫击炮后按 C 切第一人称",
+   "fix": "章节覆盖操炮镜头：贴着炮身的瞄准镜和炮后高位",
+   "before_media_ids": [],
+   "after_media_ids": [
+    "cy-aim-fp",
+    "cy-aim-tp"
+   ],
+   "verification": "截图复查",
+   "gap": "都在发布前发现，修复前的截图被同名文件覆盖，没有留存"
+  },
+  {
+   "id": "voice-overlap",
+   "desc": "局内两句原声会叠着放（旅部命令触发时前一句还没完）",
+   "repro": "第三阶段快速推进",
+   "fix": "局内原声排队，换阶段掐掉上一阶段没说完的",
+   "before_media_ids": [],
+   "after_media_ids": [],
+   "verification": "cy-story 的原声断言",
+   "gap": "都在发布前发现，修复前的截图被同名文件覆盖，没有留存"
+  },
+  {
+   "id": "p1-mortar-pressure",
+   "desc": "坚守山头里两门掷弹筒太密，脚本阵亡 6 次全来自爆炸",
+   "repro": "自动通关第一阶段统计伤害来源",
+   "fix": "第一阶段只留一门、打主角的比例降到四成",
+   "before_media_ids": [],
+   "after_media_ids": [],
+   "verification": "同脚本阵亡降到 2 次",
+   "gap": "都在发布前发现，修复前的截图被同名文件覆盖，没有留存"
+  }
+ ],
+ "media": [
+  {
+   "id": "cy-menu",
+   "file": "releases/v0.6.0/captures/qa/cy-title.png",
+   "sha256": "7524ad7776bbbf5a610fbf2239cc16455fee8a54056898b0dff889dcde914195",
+   "kind": "screenshot",
+   "version": "v0.6.0",
+   "build_id": "local-f3e5aa423b95",
+   "capture_mode": "realtime-automation",
+   "description": "亮剑战役主菜单：第一章苍云岭当前，三章选章按钮（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "cy-hold",
+   "file": "releases/v0.6.0/captures/qa/cy-p1-7.png",
+   "sha256": "ebd88c0d477650c886e2b807878b4974f3fb511c16a2cfb301cfd0806e745055",
+   "kind": "screenshot",
+   "version": "v0.6.0",
+   "build_id": "local-f3e5aa423b95",
+   "capture_mode": "realtime-automation",
+   "description": "坚守山头：沙袋线、转移进度条、鬼子进攻（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "cy-downed",
+   "file": "releases/v0.6.0/captures/qa/cy-scene-downed.png",
+   "sha256": "ff791f3c7e63210dacb62423b45bc3d9c7fbd4afaed03ceb68ef3a212c7b9c2a",
+   "kind": "screenshot",
+   "version": "v0.6.0",
+   "build_id": "local-f3e5aa423b95",
+   "capture_mode": "realtime-automation",
+   "description": "抓舌头：军曹被打倒在地，提示“按 I 抓活的”（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "cy-capture",
+   "file": "releases/v0.6.0/captures/qa/cy-scene-capture1.png",
+   "sha256": "d7f8a1882e17f6a017254c5442c8dd99dcfab43027925c380ae80ff43f4c9233",
+   "kind": "screenshot",
+   "version": "v0.6.0",
+   "build_id": "local-f3e5aa423b95",
+   "capture_mode": "realtime-automation",
+   "description": "抓舌头过场：“日军第四旅团的坂田联队”（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "cy-binoc",
+   "file": "releases/v0.6.0/captures/qa/cy-scene-binoc.png",
+   "sha256": "ac0adbd0b804f7bb5a292ded7c831b63b75f94d83e282dfa63dca5952ddc6b86",
+   "kind": "screenshot",
+   "version": "v0.6.0",
+   "build_id": "local-f3e5aa423b95",
+   "capture_mode": "realtime-automation",
+   "description": "望远镜里看坂田的指挥部（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "cy-talk",
+   "file": "releases/v0.6.0/captures/qa/cy-scene-talk.png",
+   "sha256": "53af3454bef970e1c7adb74e035f007c9d9cf8b40863fdc50fce465b12605ecd",
+   "kind": "screenshot",
+   "version": "v0.6.0",
+   "build_id": "local-f3e5aa423b95",
+   "capture_mode": "realtime-automation",
+   "description": "柱子：“距离太远，已经超出射程了”（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "cy-chu",
+   "file": "releases/v0.6.0/captures/qa/cy-scene-chu2.png",
+   "sha256": "1afca313b8045683d6244fc8ddb6f9ae09a397846e48d7772198ed92658f06ce",
+   "kind": "screenshot",
+   "version": "v0.6.0",
+   "build_id": "local-f3e5aa423b95",
+   "capture_mode": "realtime-automation",
+   "description": "358 团观察所：楚云飞看新一团被围（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "cy-aim-fp",
+   "file": "releases/v0.6.0/captures/qa/cy-scene-aim-fp.png",
+   "sha256": "fd722bd441a8c25aa819cb63a336cb67b762799a289faeb2634cce1dc39599ca",
+   "kind": "screenshot",
+   "version": "v0.6.0",
+   "build_id": "local-f3e5aa423b95",
+   "capture_mode": "realtime-automation",
+   "description": "迫击炮瞄准镜：准星、仰角与表尺，没有落点预览（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "cy-aim-tp",
+   "file": "releases/v0.6.0/captures/qa/cy-scene-aim-tp.png",
+   "sha256": "acc865c9b7ca990a920cf4f3f83a92fb394204d4916525c0e3560e20301f41d8",
+   "kind": "screenshot",
+   "version": "v0.6.0",
+   "build_id": "local-f3e5aa423b95",
+   "capture_mode": "realtime-automation",
+   "description": "迫击炮炮后视角（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "cy-shell",
+   "file": "releases/v0.6.0/captures/qa/cy-scene-shell.png",
+   "sha256": "1b9c0bd653511a3a9d9c720e6f81990b644072c02cc5c5d685e99e77e784ce33",
+   "kind": "screenshot",
+   "version": "v0.6.0",
+   "build_id": "local-f3e5aa423b95",
+   "capture_mode": "realtime-automation",
+   "description": "炮弹出膛后镜头跟着飞（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "cy-report",
+   "file": "releases/v0.6.0/captures/qa/cy-scene-report.png",
+   "sha256": "464cb5ce88ccb8bfabe5925c0f37e5582b454027ce9cdd070c1dfea07818a4e0",
+   "kind": "screenshot",
+   "version": "v0.6.0",
+   "build_id": "local-f3e5aa423b95",
+   "capture_mode": "realtime-automation",
+   "description": "第一发没中：李云龙“打歪了！指挥部在下边”（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "cy-boss",
+   "file": "releases/v0.6.0/captures/qa/cy-scene-boss2.png",
+   "sha256": "ac2dccd7d317cf06c3a1f2e554a2a00bb68cf86e705c1ecb876b21a0954b2771",
+   "kind": "screenshot",
+   "version": "v0.6.0",
+   "build_id": "local-f3e5aa423b95",
+   "capture_mode": "realtime-automation",
+   "description": "两发都偏：指挥部门口打坂田（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "cy-win",
+   "file": "releases/v0.6.0/captures/qa/cy-scene-win1.png",
+   "sha256": "a46ad8bc20dd524342892655e6083d2416cf365331c312a04897390d4b41c339",
+   "kind": "screenshot",
+   "version": "v0.6.0",
+   "build_id": "local-f3e5aa423b95",
+   "capture_mode": "realtime-automation",
+   "description": "从山口突出去（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  }
+ ],
+ "historical_media": [],
+ "qa": [
+  {
+   "what": "苍云岭机制与剧情：默认章节、语音、转移进度、抓舌头、炮组、迫击炮两发（偏 / 中）、两条结局线、结算与存档",
+   "method": "qa/cy-story.cjs（前置用状态捷径，开火 / 互动 / 调炮用真实按键）",
+   "result": "26/26",
+   "evidence": "qa/out-cy-story.json"
+  },
+  {
+   "what": "苍云岭自动通关：第一发算准风偏、两发都偏、第一发不管风偏后修正",
+   "method": "qa/cy-playthrough.cjs + qa/cy-bot.browser.js，确定性步进",
+   "result": {
+    "std-hit": {
+     "finished": true,
+     "line": "hit",
+     "game_seconds": 348.4,
+     "phases": [
+      {
+       "phase": 1,
+       "seconds": 155.5,
+       "deaths": 2,
+       "hurt": 7
+      },
+      {
+       "phase": 2,
+       "seconds": 32.5,
+       "deaths": 0,
+       "hurt": 1
+      },
+      {
+       "phase": 3,
+       "seconds": 87.5,
+       "deaths": 1,
+       "hurt": 6
+      },
+      {
+       "phase": 4,
+       "seconds": 15,
+       "deaths": 0,
+       "hurt": 0
+      },
+      {
+       "phase": 5,
+       "seconds": 57.9,
+       "deaths": 0,
+       "hurt": 0
+      }
+     ],
+     "errors": []
+    },
+    "std-miss": {
+     "finished": true,
+     "line": "miss",
+     "game_seconds": 375.4,
+     "phases": [
+      {
+       "phase": 1,
+       "seconds": 155.5,
+       "deaths": 2,
+       "hurt": 7
+      },
+      {
+       "phase": 2,
+       "seconds": 32.5,
+       "deaths": 0,
+       "hurt": 1
+      },
+      {
+       "phase": 3,
+       "seconds": 87.5,
+       "deaths": 1,
+       "hurt": 6
+      },
+      {
+       "phase": 4,
+       "seconds": 36,
+       "deaths": 0,
+       "hurt": 0
+      },
+      {
+       "phase": 5,
+       "seconds": 63.9,
+       "deaths": 1,
+       "hurt": 7
+      }
+     ],
+     "errors": []
+    },
+    "easy-hit2": {
+     "finished": true,
+     "line": "hit",
+     "game_seconds": 364.4,
+     "phases": [
+      {
+       "phase": 1,
+       "seconds": 155.5,
+       "deaths": 1,
+       "hurt": 7
+      },
+      {
+       "phase": 2,
+       "seconds": 35,
+       "deaths": 0,
+       "hurt": 0
+      },
+      {
+       "phase": 3,
+       "seconds": 93,
+       "deaths": 1,
+       "hurt": 7
+      },
+      {
+       "phase": 4,
+       "seconds": 21.5,
+       "deaths": 0,
+       "hurt": 0
+      },
+      {
+       "phase": 5,
+       "seconds": 59.4,
+       "deaths": 0,
+       "hurt": 2
+      }
+     ],
+     "errors": []
+    }
+   },
+   "evidence": "qa/out-cy-playthrough-p1-*.json"
+  },
+  {
+   "what": "平安县城剧情与双结局（语音改按章节读）",
+   "method": "qa/story.cjs",
+   "result": "19/19",
+   "evidence": "qa/out-story.json"
+  },
+  {
+   "what": "平安县城自动通关（原作 / 改写）",
+   "method": "qa/playthrough.cjs",
+   "result": {
+    "classic": {
+     "std": {
+      "finished": true,
+      "game_seconds": 342.2,
+      "phases": [
+       {
+        "phase": 1,
+        "seconds": 25,
+        "deaths": 0,
+        "hurt": 3
+       },
+       {
+        "phase": 2,
+        "seconds": 29.2,
+        "deaths": 0,
+        "hurt": 2
+       },
+       {
+        "phase": 3,
+        "seconds": 54.5,
+        "deaths": 0,
+        "hurt": 1
+       },
+       {
+        "phase": 4,
+        "seconds": 183.5,
+        "deaths": 6,
+        "hurt": 35
+       },
+       {
+        "phase": 5,
+        "seconds": 49.9,
+        "deaths": 3,
+        "hurt": 13
+       }
+      ],
+      "deaths": 9,
+      "hurt": 54,
+      "kills": 84,
+      "score": 24380,
+      "errors": []
+     },
+     "easy": {
+      "finished": true,
+      "game_seconds": 330.5,
+      "phases": [
+       {
+        "phase": 1,
+        "seconds": 28,
+        "deaths": 0,
+        "hurt": 5
+       },
+       {
+        "phase": 2,
+        "seconds": 30.7,
+        "deaths": 0,
+        "hurt": 2
+       },
+       {
+        "phase": 3,
+        "seconds": 56.5,
+        "deaths": 0,
+        "hurt": 1
+       },
+       {
+        "phase": 4,
+        "seconds": 179.3,
+        "deaths": 4,
+        "hurt": 34
+       },
+       {
+        "phase": 5,
+        "seconds": 36,
+        "deaths": 0,
+        "hurt": 6
+       }
+      ],
+      "deaths": 4,
+      "hurt": 48,
+      "kills": 82,
+      "score": 24660,
+      "errors": []
+     },
+     "one": {
+      "finished": true,
+      "game_seconds": 209.8,
+      "phases": [
+       {
+        "phase": 1,
+        "seconds": 28.7,
+        "deaths": 2,
+        "hurt": 2
+       },
+       {
+        "phase": 2,
+        "seconds": 29.2,
+        "deaths": 0,
+        "hurt": 0
+       },
+       {
+        "phase": 3,
+        "seconds": 56.2,
+        "deaths": 0,
+        "hurt": 0
+       },
+       {
+        "phase": 4,
+        "seconds": 50.5,
+        "deaths": 5,
+        "hurt": 5
+       },
+       {
+        "phase": 5,
+        "seconds": 45.1,
+        "deaths": 5,
+        "hurt": 5
+       }
+      ],
+      "deaths": 12,
+      "hurt": 12,
+      "kills": 86,
+      "score": 26040,
+      "errors": []
+     }
+    },
+    "rescue": {
+     "finished": true,
+     "ending": "rescue",
+     "game_seconds": 206.4,
+     "phases": [
+      {
+       "phase": 1,
+       "seconds": 25,
+       "deaths": 0,
+       "hurt": 3
+      },
+      {
+       "phase": 2,
+       "seconds": 29.2,
+       "deaths": 0,
+       "hurt": 2
+      },
+      {
+       "phase": 3,
+       "seconds": 45,
+       "deaths": 0,
+       "hurt": 1
+      },
+      {
+       "phase": 4,
+       "seconds": 60.8,
+       "deaths": 1,
+       "hurt": 7
+      },
+      {
+       "phase": 5,
+       "seconds": 46.4,
+       "deaths": 1,
+       "hurt": 8
+      }
+     ],
+     "errors": []
+    }
+   },
+   "evidence": "qa/out-playthrough-p1-*.json"
+  },
+  {
+   "what": "机枪、手榴弹、亮剑、骑兵连、上炮、鼠标接管、键位",
+   "method": "qa/interact.cjs",
+   "result": "19/19",
+   "evidence": "qa/out-interact.json"
+  },
+  {
+   "what": "两视角、射击、跳跃、街垒、操炮",
+   "method": "qa/views.cjs",
+   "result": "73/73",
+   "evidence": "qa/out-views.json"
+  },
+  {
+   "what": "双端布局（两章各跑一遍；out-mobile.json 只留最后一次）",
+   "method": "qa/mobile.cjs（LJ_CH=cangyunling 测迫击炮），CDP 触控模拟，不是真机",
+   "result": "107/107",
+   "evidence": "qa/out-mobile.json"
+  },
+  {
+   "what": "选项、暂停与声音、隐私（扫描含苍云岭文件）",
+   "method": "qa/options.cjs",
+   "result": "43/43",
+   "evidence": "qa/out-options.json"
+  },
+  {
+   "what": "枪火集结三章顺序、跳转、李家坡、旧存档迁移、旧地址跳转",
+   "method": "qa/gunfire-chapters.cjs",
+   "result": "12/12",
+   "evidence": "qa/out-gunfire-chapters.json"
+  }
+ ],
+ "untested": [
+  "真人试玩（苍云岭难度、过场节奏、两发炮弹能不能瞄准）",
+  "原声听感",
+  "手机真机",
+  "帧时间重测",
+  "整局录像"
+ ],
+ "readiness": {
+  "overview": "partial",
+  "update": "partial",
+  "gaps": [
+   "没有苍云岭的整局录像与带声音的实机素材",
+   "原声未试听",
+   "李家坡还没重做（按约定三章做完再做视频）"
+  ]
+ }
+}

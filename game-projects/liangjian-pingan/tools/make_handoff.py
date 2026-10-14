@@ -13,13 +13,67 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
 GAME = ROOT / 'game-projects' / 'liangjian-pingan'
-PUB = ROOT / 'public' / 'html' / 'game' / 'gunfire-assembly' / 'pingan'
+PUB = ROOT / 'public' / 'html' / 'game' / 'gunfire-assembly' / 'liangjian'   # v0.6.0 起；以前是 pingan/
 KIT = GAME / 'media-kit'
 QA = GAME / 'qa'
 
 AUTO = '（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）'
 
 SPECS = {
+    'v0.6.0': {
+        'base': 'v0.5.0',
+        'shots': [
+            ('cy-menu', 'qa/cy-title.png', '亮剑战役主菜单：第一章苍云岭当前，三章选章按钮'),
+            ('cy-hold', 'qa/cy-p1-7.png', '坚守山头：沙袋线、转移进度条、鬼子进攻'),
+            ('cy-downed', 'qa/cy-scene-downed.png', '抓舌头：军曹被打倒在地，提示“按 I 抓活的”'),
+            ('cy-capture', 'qa/cy-scene-capture1.png', '抓舌头过场：“日军第四旅团的坂田联队”'),
+            ('cy-binoc', 'qa/cy-scene-binoc.png', '望远镜里看坂田的指挥部'),
+            ('cy-talk', 'qa/cy-scene-talk.png', '柱子：“距离太远，已经超出射程了”'),
+            ('cy-chu', 'qa/cy-scene-chu2.png', '358 团观察所：楚云飞看新一团被围'),
+            ('cy-aim-fp', 'qa/cy-scene-aim-fp.png', '迫击炮瞄准镜：准星、仰角与表尺，没有落点预览'),
+            ('cy-aim-tp', 'qa/cy-scene-aim-tp.png', '迫击炮炮后视角'),
+            ('cy-shell', 'qa/cy-scene-shell.png', '炮弹出膛后镜头跟着飞'),
+            ('cy-report', 'qa/cy-scene-report.png', '第一发没中：李云龙“打歪了！指挥部在下边”'),
+            ('cy-boss', 'qa/cy-scene-boss2.png', '两发都偏：指挥部门口打坂田'),
+            ('cy-win', 'qa/cy-scene-win1.png', '从山口突出去'),
+        ],
+        'video_desc': '实时运行的脚本录像（{view}，无声音，不是真人操作）',
+        'features': [
+            {'id': 'campaign-page', 'desc': '亮剑战役页面：引擎与章节拆分、菜单选章、按章节分开的进度与结局、语音按章节加载、旧 pingan 地址跳转', 'status': 'implemented', 'evidence_ids': ['cy-menu']},
+            {'id': 'cy-hold', 'desc': '苍云岭第一阶段：坚守山头、转移进度与停顿、七波进攻', 'status': 'implemented', 'evidence_ids': ['cy-hold']},
+            {'id': 'cy-tongue', 'desc': '抓舌头：枪打倒不死、炸死换人、按 I 抓活的、坂田联队 / 精锐过场', 'status': 'implemented', 'evidence_ids': ['cy-downed', 'cy-capture']},
+            {'id': 'cy-escort', 'desc': '送炮前出：望远镜过场、护送炮组、旅部命令、楚云飞观察所', 'status': 'implemented', 'evidence_ids': ['cy-binoc', 'cy-talk', 'cy-chu']},
+            {'id': 'cy-mortar', 'desc': '两发炮弹：手动瞄准、表尺、风偏、炮弹跟拍、柱子报偏差', 'status': 'implemented', 'evidence_ids': ['cy-aim-fp', 'cy-aim-tp', 'cy-shell', 'cy-report']},
+            {'id': 'cy-breakout', 'desc': '突围：打中＝冲进指挥部后突围；两发都偏＝坂田 Boss 后突围；楚云飞收尾', 'status': 'implemented', 'evidence_ids': ['cy-boss', 'cy-win']},
+            {'id': 'cy-voice', 'desc': '苍云岭 25 句《亮剑》原声 + 局内原声排队', 'status': 'implemented', 'evidence_ids': []},
+            {'id': 'lijiapo', 'desc': '第二章李家坡重做', 'status': 'planned', 'evidence_ids': []},
+        ],
+        'changes': [
+            {'id': 'campaign-page', 'feature_ids': ['campaign-page'], 'before': '平安县城是单章页面 pingan/，存档前缀 lj_pingan_v1_', 'after': '亮剑战役页面 liangjian/，三章选章（李家坡显示重做中），存档 lj_campaign_v1_ 按章节分开并自动搬旧存档', 'user_visible': '菜单多一排选章；平安县城玩法不变', 'evidence_ids': ['cy-menu'], 'verification': '平安县城全部回归通过'},
+            {'id': 'cangyunling', 'feature_ids': ['cy-hold', 'cy-tongue', 'cy-escort', 'cy-mortar', 'cy-breakout', 'cy-voice'], 'before': '枪火集结第一章是旧版李家坡、第二章旧版骑兵连', 'after': '新增重做版第一章苍云岭（五个阶段、两条结局线）', 'user_visible': '抗战战役多了苍云岭', 'evidence_ids': ['cy-hold', 'cy-capture', 'cy-binoc', 'cy-aim-fp', 'cy-boss', 'cy-win'], 'verification': 'cy-story 26 条 + 三条路线自动通关；human-play not-run'},
+            {'id': 'gunfire-chapters', 'feature_ids': [], 'before': '枪火集结抗战战役：李家坡 / 骑兵连 / 平安县城', 'after': '苍云岭（重做版）/ 李家坡（旧版）/ 平安县城（重做版）；骑兵连章节删除，旧存档按新顺序迁移', 'user_visible': '章节顺序变了，骑兵连那章没了', 'evidence_ids': [], 'verification': 'gunfire-chapters.cjs 12 条'},
+        ],
+        'bugs': [
+            {'id': 'prompt-in-cutscene', 'desc': '过场里互动提示（按 I 抓活的）一直留在画面上', 'repro': 'node qa/cy-scenes.cjs 看 cy-scene-capture1 / binoc 截图', 'fix': '引擎在过场里清掉提示和互动键', 'before_media_ids': [], 'after_media_ids': ['cy-capture', 'cy-binoc'], 'verification': 'cy-story 断言过场里不显示提示'},
+            {'id': 'mortar-camera', 'desc': '迫击炮沿用意大利炮镜头，第一人称朝天看不到指挥部', 'repro': '上迫击炮后按 C 切第一人称', 'fix': '章节覆盖操炮镜头：贴着炮身的瞄准镜和炮后高位', 'before_media_ids': [], 'after_media_ids': ['cy-aim-fp', 'cy-aim-tp'], 'verification': '截图复查'},
+            {'id': 'voice-overlap', 'desc': '局内两句原声会叠着放（旅部命令触发时前一句还没完）', 'repro': '第三阶段快速推进', 'fix': '局内原声排队，换阶段掐掉上一阶段没说完的', 'before_media_ids': [], 'after_media_ids': [], 'verification': 'cy-story 的原声断言'},
+            {'id': 'p1-mortar-pressure', 'desc': '坚守山头里两门掷弹筒太密，脚本阵亡 6 次全来自爆炸', 'repro': '自动通关第一阶段统计伤害来源', 'fix': '第一阶段只留一门、打主角的比例降到四成', 'before_media_ids': [], 'after_media_ids': [], 'verification': '同脚本阵亡降到 2 次'},
+        ],
+        'bugs_gap': '都在发布前发现，修复前的截图被同名文件覆盖，没有留存',
+        'qa': lambda r: [
+            {'what': '苍云岭机制与剧情：默认章节、语音、转移进度、抓舌头、炮组、迫击炮两发（偏 / 中）、两条结局线、结算与存档', 'method': 'qa/cy-story.cjs（前置用状态捷径，开火 / 互动 / 调炮用真实按键）', 'result': r['cy_story'], 'evidence': 'qa/out-cy-story.json'},
+            {'what': '苍云岭自动通关：第一发算准风偏、两发都偏、第一发不管风偏后修正', 'method': 'qa/cy-playthrough.cjs + qa/cy-bot.browser.js，确定性步进', 'result': r['cy_plays'], 'evidence': 'qa/out-cy-playthrough-p1-*.json'},
+            {'what': '平安县城剧情与双结局（语音改按章节读）', 'method': 'qa/story.cjs', 'result': r['story'], 'evidence': 'qa/out-story.json'},
+            {'what': '平安县城自动通关（原作 / 改写）', 'method': 'qa/playthrough.cjs', 'result': {'classic': r['plays'], 'rescue': r['rescue']}, 'evidence': 'qa/out-playthrough-p1-*.json'},
+            {'what': '机枪、手榴弹、亮剑、骑兵连、上炮、鼠标接管、键位', 'method': 'qa/interact.cjs', 'result': r['interact'], 'evidence': 'qa/out-interact.json'},
+            {'what': '两视角、射击、跳跃、街垒、操炮', 'method': 'qa/views.cjs', 'result': r['views'], 'evidence': 'qa/out-views.json'},
+            {'what': '双端布局（两章各跑一遍；out-mobile.json 只留最后一次）', 'method': 'qa/mobile.cjs（LJ_CH=cangyunling 测迫击炮），CDP 触控模拟，不是真机', 'result': r['mobile'], 'evidence': 'qa/out-mobile.json'},
+            {'what': '选项、暂停与声音、隐私（扫描含苍云岭文件）', 'method': 'qa/options.cjs', 'result': r['options'], 'evidence': 'qa/out-options.json'},
+            {'what': '枪火集结三章顺序、跳转、李家坡、旧存档迁移、旧地址跳转', 'method': 'qa/gunfire-chapters.cjs', 'result': r['gunfire'], 'evidence': 'qa/out-gunfire-chapters.json'},
+        ],
+        'untested': ['真人试玩（苍云岭难度、过场节奏、两发炮弹能不能瞄准）', '原声听感', '手机真机', '帧时间重测', '整局录像'],
+        'readiness': {'overview': 'partial', 'update': 'partial', 'gaps': ['没有苍云岭的整局录像与带声音的实机素材', '原声未试听', '李家坡还没重做（按约定三章做完再做视频）']},
+    },
     'v0.5.0': {
         'base': 'v0.4.0',
         'shots': [
@@ -315,7 +369,7 @@ def main():
     fp, nfiles = fingerprint()
     build_id = 'local-' + fp[:12]
     commit = subprocess.run(['git', '-C', str(ROOT), 'rev-parse', '--short', 'HEAD'], capture_output=True, text=True).stdout.strip() or None
-    dirty = bool(subprocess.run(['git', '-C', str(ROOT), 'status', '--porcelain', '--', 'public/html/game/gunfire-assembly/pingan'], capture_output=True, text=True).stdout.strip())
+    dirty = bool(subprocess.run(['git', '-C', str(ROOT), 'status', '--porcelain', '--', 'public/html/game/gunfire-assembly/liangjian'], capture_output=True, text=True).stdout.strip())
 
     media, missing = [], []
     for mid, r, desc in spec['shots']:
@@ -339,7 +393,8 @@ def main():
     results = {
         'views': passed(load('out-views.json')), 'mobile': passed(load('out-mobile.json')), 'options': passed(load('out-options.json')), 'interact': passed(load('out-interact.json')),
         'plays': {a: (None if not d else {'finished': d['finished'], 'game_seconds': d['gameSeconds'], 'phases': d['phases'], 'deaths': (d.get('final') or {}).get('deaths'), 'hurt': (d.get('final') or {}).get('hurt'), 'kills': (d.get('final') or {}).get('kills'), 'score': (d.get('final') or {}).get('score'), 'errors': d['errors']}) for a, d in plays.items()},
-        'story': passed(load('out-story.json')), 'gunfire': passed(load('out-gunfire-chapters.json')),
+        'story': passed(load('out-story.json')), 'gunfire': passed(load('out-gunfire-chapters.json')), 'cy_story': passed(load('out-cy-story.json')),
+        'cy_plays': {k: (None if not d else {'finished': d['finished'], 'line': d.get('line'), 'game_seconds': d['gameSeconds'], 'phases': d['phases'], 'errors': d['errors']}) for k, d in ((k, load(f'out-cy-playthrough-p1-{k}.json')) for k in ('std-hit', 'std-miss', 'easy-hit2'))},
         'rescue': (lambda d: None if not d else {'finished': d['finished'], 'ending': d.get('ending'), 'game_seconds': d['gameSeconds'], 'phases': d['phases'], 'errors': d['errors']})(load('out-playthrough-p1-std-rescue.json')),
         'perf': None if not perf else [{'name': r['name'], 'renderer': r['env']['renderer'], 'dpr': r['env']['dpr'], 'samples': [{k: s[k] for k in ('phase', 'view', 'avgFps', 'medianMs', 'p95Ms', 'maxMs', 'over50ms', 'avgCalls', 'avgTris', 'canvas', 'quality')} for s in r['samples']]} for r in perf['runs']],
     }
@@ -357,7 +412,7 @@ def main():
     handoff = {
         'schema_version': 1, 'game_id': 'liangjian-pingan', 'version': version, 'base_version': spec['base'],
         'created_at': datetime.now(timezone(timedelta(hours=8))).isoformat(timespec='seconds'),
-        'build': {'id': build_id, 'commit': commit, 'dirty': dirty, 'fingerprint': 'sha256:' + fp + f'（public/html/game/gunfire-assembly/pingan 下 {nfiles} 个文件按路径排序连接）', 'entrypoint': 'public/html/game/gunfire-assembly/pingan/index.html'},
+        'build': {'id': build_id, 'commit': commit, 'dirty': dirty, 'fingerprint': 'sha256:' + fp + f'（{PUB.relative_to(ROOT).as_posix()} 下 {nfiles} 个文件按路径排序连接）', 'entrypoint': PUB.relative_to(ROOT).as_posix() + '/index.html'},
         'feature_inventory': features, 'changes': changes, 'bugs': bugs,
         'media': media, 'historical_media': hist, 'qa': spec['qa'](results),
         'untested': spec['untested'], 'readiness': spec['readiness'],
