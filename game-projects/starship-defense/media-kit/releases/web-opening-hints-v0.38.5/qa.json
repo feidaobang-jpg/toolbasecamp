@@ -281,5 +281,6 @@
     "passed": true,
     "warning": "6 JS/CSS names without content fingerprint; cache suggestion only"
   },
-  "physical_phone_tested": false
+  "physical_phone_tested": false,
+  "actual_placement": "qa-placement.json: two viewports, blocked gate attempt spends nothing; actual W then place builds wall and spends100"
 }

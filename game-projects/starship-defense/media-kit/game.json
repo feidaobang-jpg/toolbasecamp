@@ -49,7 +49,7 @@
     "slug": "chongchao-qianshao",
     "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
     "visibility": "PUBLIC",
-    "review_status": "published",
+    "review_status": "auditing",
     "verified_at": "2026-10-14T18:34:00+08:00",
     "video_bindings": [
       "BV1Grpq6JEW5",
@@ -60,12 +60,12 @@
       "BV1Ujad6DEuf"
     ],
     "linked_game_video": "https://www.bilibili.com/video/BV1Ujad6DEuf",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_hgn7SJ2K/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_h630MSiH/index.html",
     "title": "虫潮围城",
     "zip_sha256": "0dcf451d3ae7765c6fe048bf6c4c4774f22061d2d1c5d264165ec10885ecdea3",
     "submitted_date": "2026-10-14",
-    "release_record": "releases/web-hud-layout-20261014/notes.md",
-    "submitted_version": "web-hud-layout-v0.38.4",
+    "release_record": "releases/web-opening-hints-v0.38.5/handoff.json",
+    "submitted_version": "web-opening-hints-v0.38.5",
     "published_version": "web-hud-layout-v0.38.4",
     "preview_url": "https://www.bilibili.com/toy/preview/preview_dnjzefbX/index.html",
     "note": "0.38.4（主战役 HUD 重排）于 2026-10-14T18:31:51+08:00 提审、18:32:25 过审，18:34 未登录在正式入口内层 frame 实测到备战态 HUD 生效。",
@@ -133,7 +133,7 @@
     ],
     "published_entry": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
     "published_verified_at": "2026-10-13T20:08:24.969238+08:00",
-    "status": "published",
+    "status": "auditing",
     "package_hash": "4e56f4d4a037b2f3bab76a3a3b315865d9530ccd956aac178e278b24caeec8cb",
     "submission_time_note": "本次提交回执见 toy-submit.json；published 时间来自平台mtime，公开实测时间单独记录。",
     "public_verified_at": "2026-10-14T18:34:00+08:00",
@@ -161,7 +161,7 @@
     "published_at": "2026-10-14T18:32:25+08:00",
     "publication_time_note": "平台mtime记录为本次published状态时间；公开实测时间另记。",
     "last_published_version": "web-hud-layout-v0.38.4",
-    "last_submitted_version": "web-hud-layout-v0.38.4",
+    "last_submitted_version": "web-opening-hints-v0.38.5",
     "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_8jQvlF89/index.html",
     "current_public_verification": "verified",
     "channel_authorization": {
@@ -181,7 +181,7 @@
       "bytes": 447800,
       "submitted": true
     },
-    "submitted_package_sha256": "0dcf451d3ae7765c6fe048bf6c4c4774f22061d2d1c5d264165ec10885ecdea3",
+    "submitted_package_sha256": "919f6ebdb4df14f732411e4cef2eda17bd02d92a852c12eab3ae614f91653dc6",
     "watermark_enabled": false,
     "last_zip_sha256": "0dcf451d3ae7765c6fe048bf6c4c4774f22061d2d1c5d264165ec10885ecdea3",
     "last_preview_url": "https://www.bilibili.com/toy/preview/preview_8jQvlF89/index.html",
@@ -257,12 +257,12 @@
     "package_hash_kind": "zip_sha256",
     "previous_public_runtime_revision": "v25804",
     "platform_readback_at": "2026-10-13T20:08:24.969238+08:00",
-    "submitted_at": "2026-10-14T18:31:51+08:00",
+    "submitted_at": "2026-10-14T12:15:35.198695+00:00",
     "entry_html_bytes": 68409
   },
   "website_url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
   "published_toy_version": "web-look-keys-v0.38.1",
-  "web_toy_versions_match": true,
+  "web_toy_versions_match": false,
   "migration": {
     "source": "D:/project/gpt/worlds/breachline",
     "mode": "asset-and-presentation-merge",
@@ -274,8 +274,8 @@
   "extension_review_status": "published",
   "preview_version": "web-acid-arena-v0.38.0",
   "submitted_toy_version": "web-look-keys-v0.38.1",
-  "website_version": "web-look-keys-v0.38.1",
-  "website_verified_at": "2026-10-14T09:23:54+08:00",
+  "website_version": "web-opening-hints-v0.38.5",
+  "website_verified_at": "2026-10-14T12:08:10.901968+00:00",
   "site_list_name": "虫潮围城",
   "controls": "原有多动作按键和Shift按住冲刺保留；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。",
   "default_theme": "dark",
@@ -328,7 +328,7 @@
     "keyboard_modes": "Tab/菜单上下进入模式组，左右或A/D选项，Enter/空格/J确认，有aria-pressed选中状态"
   },
   "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
-  "website_commit": "8e21b906824401afc8eb813f12352e71bb241038",
+  "website_commit": "c3942f2d",
   "campaign_difficulty": {
     "default": "normal",
     "choices": [
@@ -997,27 +997,18 @@
     "handoff": "releases/web-three-lanes-v0.31.0/handoff.json"
   },
   "pending_channel_release": {
-    "version": "web-resistance-v0.33.0",
-    "record": "releases/backfill-20261010/release-status.json",
-    "status": "partial_external_pending",
-    "pending": [
-      {
-        "channel": "xiaohongshu",
-        "platform_ids": [
-          "6ac79a4a000000001402cad8",
-          "6ac79a330000000001008c04"
-        ],
-        "status": "reviewing",
-        "next_action": "已有两条说明修改在审核，查回状态；未生效前不推进公开基线，不重复提交。"
-      }
-    ]
+    "version": "web-opening-hints-v0.38.5",
+    "channel": "Toy",
+    "status": "auditing",
+    "record": "releases/web-opening-hints-v0.38.5/handoff.json"
   },
   "website": {
     "status": "deployed_verified",
-    "version": "web-look-keys-v0.38.1",
-    "source_commit": "8e21b906824401afc8eb813f12352e71bb241038",
-    "verified_at": "2026-10-14T09:23:54+08:00",
-    "record": "releases/web-look-keys-v0.38.1/website-hashes.json"
+    "version": "web-opening-hints-v0.38.5",
+    "source_commit": "c3942f2d",
+    "runtime_sha256": "df8efd5edfe3812d99239ad149640f940edd2e1fb38484f9c6ee648c5c26e71e",
+    "verified_at": "2026-10-14T12:08:10.901968+00:00",
+    "record": "releases/web-opening-hints-v0.38.5/hints-website.json"
   },
   "current_development_tool": "Codex",
   "rv_town": {
@@ -1398,6 +1389,25 @@
       },
       "previous_pending_record": "releases/web-camera-response-v0.31.2/release-status.json",
       "source_commit": "a47bc064903f499c7bb3b2e14205a70dbe13cbda"
+    },
+    {
+      "reason": "保留历史外部状态；用户2026-10-12后只维护B站，本轮不接管其他平台",
+      "archived_record": {
+        "version": "web-resistance-v0.33.0",
+        "record": "releases/backfill-20261010/release-status.json",
+        "status": "partial_external_pending",
+        "pending": [
+          {
+            "channel": "xiaohongshu",
+            "platform_ids": [
+              "6ac79a4a000000001402cad8",
+              "6ac79a330000000001008c04"
+            ],
+            "status": "reviewing",
+            "next_action": "已有两条说明修改在审核，查回状态；未生效前不推进公开基线，不重复提交。"
+          }
+        ]
+      }
     }
   ],
   "last_backfill_record": "releases/backfill-20261010/release-status.json",

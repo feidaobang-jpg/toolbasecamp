@@ -778,10 +778,11 @@
     },
     {
       "version": "web-opening-hints-v0.38.5",
-      "status": "pending_release",
+      "status": "pending_merge",
       "decision": "deferred_accumulating",
       "summary": "前五波准备阶段布防建议直接可见，建造位置提示更清楚；数值不变",
-      "record": "releases/web-opening-hints-v0.38.5/handoff.json"
+      "record": "releases/web-opening-hints-v0.38.5/handoff.json",
+      "website_verified_at": "2026-10-14T12:08:10.901968+00:00"
     }
   ],
   "comment_corrections": [
