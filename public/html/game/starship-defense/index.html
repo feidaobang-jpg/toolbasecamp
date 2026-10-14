@@ -417,7 +417,7 @@ html,body{overscroll-behavior:none}
     <div id="hint" class="hidden"></div>
     <div id="interactHint" class="hidden"></div>
     <div id="weaponBar" aria-label="武器栏"></div>
-    <div id="keysHint">WASD移动 · 按住Shift跑步 · J/鼠标左键射击 · 点画面用鼠标转视角 · K/空格跳跃 · I互动(门/载具) · H医疗包 · U手雷 · 直升机Y升/H降 · 1-6/X/滚轮换枪 · C切换视角 · Q/E转视角 · O商店 · L建造 · R开战 · P/Esc暂停</div>
+    <div id="keysHint">WASD移动 · 按住Shift跑步 · J/鼠标左键射击 · 点画面用鼠标转视角 · K/空格跳跃 · I互动(门/载具) · N医疗包 · U手雷 · 直升机K升/N降 · Y/H抬头低头 · 1-6/X/滚轮换枪 · C切换视角 · Q/E转视角 · O商店 · L建造 · R开战 · P/Esc暂停</div>
   </div>
   <!-- 虫族战况面板必须在 #hud 之外：虫族开局会隐藏战役 HUD，面板要能独立显示。 -->
   <div id="zergHud" class="hidden" aria-label="虫族战况"></div>
@@ -545,7 +545,7 @@ html,body{overscroll-behavior:none}
     <div class="small helpText" tabindex="0" role="region" aria-label="玩法内容">
       <p>前哨守卫：机枪兵生命 120、机枪伤害 +25%、受到伤害 −15%；火枪兵生命 100、霰弹伤害 +30%、移动速度 10.5；医疗兵生命 90，自身与 12 米内队友每秒恢复 4 点生命。</p>
       <p>基地防守：打怪攒钱，买枪强化、造炮塔、雇最多12名队友，守住基地。基地耐久归零即失败；玩家阵亡会复活，基地损伤保留。难度只用于新游戏，继续和读档沿用存档难度。</p>
-      <p class="desktop-help">电脑：WASD / 方向键移动，Shift 跑步，鼠标拖动或 Q/E 转视角，C 切换视角，J 射击，K/空格跳跃，I 互动，H 医疗，U 手雷，O 商店，L 建造，R 开战，P/Esc 暂停。菜单可用方向键、Tab 和回车操作。</p>
+      <p class="desktop-help">电脑：WASD / 方向键移动，Shift 跑步，鼠标拖动或 Q/E 转视角，C 切换视角，J 射击，K/空格跳跃，I 互动，N 医疗，Y / H 抬头低头，U 手雷，O 商店，L 建造，R 开战，P/Esc 暂停。菜单可用方向键、Tab 和回车操作。</p>
       <p class="touch-help">手机：左下摇杆移动，右侧空白处拖动转视角；右侧按钮可跳跃、跑步、互动、用医疗包和投掷手雷，商店、建造、换枪也有独立按钮。右上「切换视角」和「菜单」随时可用。</p>
       <p>电脑和手机默认自动瞄准、自动射击；在设置的「射击、瞄准与按键」中可改为按住射击或点击开关连射，也可分别选择瞄准方式。手雷、医疗和技能仍需主动使用；房车自动射击只对已追击的敌人生效。</p>
       <p>基地防守、房车和自由测试可无限投掷手雷，每3秒一次。</p>
@@ -580,7 +580,7 @@ html,body{overscroll-behavior:none}
     <div class="btnRow"><button class="mbtn green" data-vs-ai="easy">对战电脑 · 简单</button><button class="mbtn green" data-vs-ai="normal">对战电脑 · 普通</button><button class="mbtn green" data-vs-ai="hard">对战电脑 · 困难</button></div>
     <div class="btnRow"><button class="mbtn" id="vsOnline">👥 好友对战（联机，最多 8 人，空位电脑补）</button><button class="mbtn" id="vsMenuBack">← 返回</button></div>
     <p class="small" id="vsRecordTxt" role="status"></p>
-    <div class="small vs-rules">射击：按住 J 或左键 / 转视角：第一人称鼠标接管 / 未接管时右键拖动或 Q E / 举枪：Z 或右键点按 / 装备：O / 部署：L / 战况：T / 换弹：R / 支援：H / 上下车：I。手机使用同名按钮，按住射击键可继续拖动瞄准。双方各有8名电脑步兵与越野车、坦克、装甲车、直升机；弹匣打空自动换弹，备用弹药无限。联机由房主计算战局，中途加入接手电脑座位。</div>
+    <div class="small vs-rules">射击：按住 J 或左键 / 转视角：第一人称鼠标接管 / 未接管时右键拖动或 Q E / 举枪：Z 或右键点按 / 装备：O / 部署：L / 战况：T / 换弹：R / 支援：N / 抬头低头：Y H / 上下车：I。手机使用同名按钮，按住射击键可继续拖动瞄准。双方各有8名电脑步兵与越野车、坦克、装甲车、直升机；弹匣打空自动换弹，备用弹药无限。联机由房主计算战局，中途加入接手电脑座位。</div>
   </div>
   <div id="vsResult" class="overlay menu hidden" role="dialog" aria-modal="true" aria-labelledby="vsResultTitle">
     <h2 id="vsResultTitle"></h2>
@@ -692,7 +692,7 @@ html,body{overscroll-behavior:none}
   </div>
 </div>
 <script src="./boot.js?v=mobile12"></script>
-<script defer src="./game.compat.js?v=acid0380" onerror="window.__ccBootError('游戏资源下载失败')"></script>
+<script defer src="./game.compat.js?v=keys0381" onerror="window.__ccBootError('游戏资源下载失败')"></script>
 <script src="../../../js/game/thumb-preview.js"></script>
 <script type="module">
 // 内联自 /js/game/landscape-typing.js：Toy/TapTap 包不含站点共享目录，外链模块会缺失

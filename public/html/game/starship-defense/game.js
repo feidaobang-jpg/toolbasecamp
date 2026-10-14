@@ -651,7 +651,7 @@ const BUILDINGS={
   mortarTurret:{name:'重型迫击炮',hp:450,price:1400,dmg:180,rate:2.4,range:64,explode:7,desc:'64米预判抛射，爆炸覆盖7米，专打地面虫群'},
 };
 const ITEMS={
-  medkit:{name:'医疗包',price:120,desc:'按H回复60生命(按最大生命比例增强)',heal:60},
+  medkit:{name:'医疗包',price:120,desc:'按N回复60生命(按最大生命比例增强)',heal:60},
   shield:{name:'护盾电池',price:300,desc:'获得60点能量护盾(上限150)',shield:60},
   adren:{name:'肾上腺素',price:250,desc:'20秒内移速+40%、射速+40%',buff:20},
   hpUp:{name:'强化装甲',price:500,desc:'最大生命+40',permanent:true},
@@ -1147,7 +1147,7 @@ function dist2(a,b){const dx=a.x-b.x,dz=a.z-b.z;return dx*dx+dz*dz;}
 function showMsg(t,dur=2.2){if(panelOpen){showAlert(t);return;}$('msg').textContent=t;$('msg').classList.remove('hidden');Game.msgTimer=dur;}
 function showHint(t){if(t){$('hint').textContent=t;$('hint').classList.remove('hidden');}else $('hint').classList.add('hidden');}
 function updHUDItem(){
-  $('itemTxt').textContent=`🧰 医疗包×${Game.testMode?'∞':Game.items.medkit}(H)`
+  $('itemTxt').textContent=`🧰 医疗包×${Game.testMode?'∞':Game.items.medkit}(${keyBindings.label('H')})`
     +` · 手雷∞(${keyBindings.label('U')})${player.grenadeCd>0?' '+Math.ceil(player.grenadeCd)+'s':' 就绪'}`
     +(player.shield>0?` 🛡${Math.ceil(player.shield)}`:'')
     +(player.buffT>0?` ⚡${Math.ceil(player.buffT)}s`:'');
@@ -2039,7 +2039,7 @@ function enterVehicle(v){
   player.inVehicle=v;player.mesh.visible=false;player.vy=0;player.onGround=false;
   if(reassigned)autoSave();
   AudioSys.sfx('vehicle');
-  showMsg(v.cfg.fly?'🚁 驾驶 '+v.cfg.name+(isTouch?'（升 / 降 按钮调高度，互动下车）':'（Y 升高 / H 降低，再按I下车）'):'🚗 驾驶 '+v.cfg.name+'（再按I下车）',v.cfg.fly?2.4:1.6);
+  showMsg(v.cfg.fly?'🚁 驾驶 '+v.cfg.name+(isTouch?'（升 / 降 按钮调高度，互动下车）':'（'+keyBindings.label('K')+' 升高 / '+keyBindings.label('H')+' 降低，再按I下车）'):'🚗 驾驶 '+v.cfg.name+'（再按I下车）',v.cfg.fly?2.4:1.6);
 }
 function exitVehicle(){
   const v=player.inVehicle;if(!v)return;
@@ -2599,7 +2599,7 @@ function automaticFireTarget(from,range,aim){
 }
 function interactionTarget(){
   if(rvOn()){const action=rvBreakout.interaction();if(action)return action;}
-  if(player.inVehicle)return {kind:'exit',label:'下车',tip:'I 下车'+(player.inVehicle.cfg.fly?(isTouch?' · 升 / 降 按钮调高度':' · Y 升高 / H 降低'):'')};
+  if(player.inVehicle)return {kind:'exit',label:'下车',tip:'I 下车'+(player.inVehicle.cfg.fly?(isTouch?' · 升 / 降 按钮调高度':' · '+keyBindings.label('K')+' 升高 / '+keyBindings.label('H')+' 降低'):'')};
   let vehicle=null,best=20;
   for(const v of vehicles){const d=dist2(player.pos,v.mesh.position);if(!v.dead&&(!vsOn()||v.team===player.team)&&!coopHumans.some(p=>p!==player&&p.inVehicle===v)&&!(v.noEnter>0)&&d<best&&Math.abs(player.pos.y-v.mesh.position.y)<3){vehicle=v;best=d;}}
   if(vehicle)return {kind:'vehicle',vehicle,label:vehicle.driver?'接管':'驾驶',tip:'I '+(vehicle.driver?'接管（队友下车） ':'驾驶 ')+vehicle.cfg.name};
@@ -2613,7 +2613,7 @@ function updInteraction(){
   if(!tip&&!player.inVehicle&&medicalDistance<10)tip=medicalDistance<fortress.shelter.r?(player.hp<player.maxHp?'＋ 野战医疗站 · 正在自动回血':'＋ 野战医疗站 · 生命已恢复'):'＋ 野战医疗站 · 走进绿色圆圈自动回血';
   if(player.dead)tip='';
   else if(!tip&&!player.inVehicle&&player.hp<player.maxHp*.5&&vsOn())tip=bankMode?'生命偏低：回己方核心附近自动回血':'生命偏低：回营地治疗，或向医疗兵靠拢';
-  else if(!tip&&!player.inVehicle&&player.hp<player.maxHp*.5)tip=Game.testMode||Game.items.medkit>0?'生命偏低：H 使用医疗包（剩'+(Game.testMode?'∞':Game.items.medkit)+'）':'医疗包用完：O 商店购买，或回基地医疗平台回血';
+  else if(!tip&&!player.inVehicle&&player.hp<player.maxHp*.5)tip=Game.testMode||Game.items.medkit>0?'生命偏低：'+keyBindings.label('H')+' 使用医疗包（剩'+(Game.testMode?'∞':Game.items.medkit)+'）':'医疗包用完：O 商店购买，或回基地医疗平台回血';
   if($('interactHint').textContent!==tip){$('vI').setAttribute('aria-label',a.tip||'互动');$('interactHint').textContent=tip;}
   $('interactHint').classList.toggle('hidden',!tip);
   const mk=battleOn()?(player.inVehicle?.cfg.fly?'降低':player.bfKit==='engineer'?'维修':player.bfKit==='support'?'补弹':'医疗'):'医疗'+(Game.testMode?'∞':Game.items.medkit);if($('vH').textContent!==mk)$('vH').textContent=mk;
@@ -2662,7 +2662,11 @@ const lookControl=createLookController({firstPerson:()=>camMode==='first',sensit
 }});
 function updLook(dt){
   if(Input.look.yaw||Input.look.pitch){lookControl.queue(-Input.look.yaw);pitchControl.queue(Input.look.pitch);Input.look.yaw=Input.look.pitch=0;Input.lastLook=performance.now();}
-  lookControl.step(dt,(Input.keys.E?1:0)-(Input.keys.Q?1:0));pitchControl.step(dt);
+  lookControl.step(dt,(Input.keys.E?1:0)-(Input.keys.Q?1:0));
+  // 键盘上下转视角（默认 Y 抬头 / H 低头），与拖动共用 camPitch 和限位
+  const keyPitch=(Input.keys.LOOKUP?1:0)-(Input.keys.LOOKDOWN?1:0);
+  if(keyPitch)camPitch=clamp(camPitch+keyPitch*1.05*dt,-1,1);
+  pitchControl.step(dt);
   camYaw=(camYaw%TAU+TAU)%TAU;
 }
 
@@ -2731,9 +2735,8 @@ function updPlayer(dt){
       }else v.stuckT=0;
     }
     if(v.cfg.fly){
-      // 升降：Y 升 / H 降（键盘上下相邻）；驾驶中本来就不能用医疗包，H 不冲突。
-      // K/空格 也算升高（手机“升”就是 K 键位）。
-      const up=Input.network?Input.network.rise:Input.keys.Y||Input.keys.K,down=Input.network?Input.network.lower:Input.keys.H;
+      // 升降：K/空格 升高，降低用“医疗 / 直升机降低”动作（默认 N）；Y / H 留给抬头低头。驾驶中本来就不能用医疗包，不冲突。
+      const up=Input.network?Input.network.rise:Input.keys.K,down=Input.network?Input.network.lower:Input.keys.H;
       if(up&&!down)v.alt=Math.min(18,v.alt+dt*8);
       if(down&&!up)v.alt=Math.max(0,v.alt-dt*8);
       v.mesh.position.y=Math.max(groundY(v.mesh.position.x,v.mesh.position.z),fortress.topAt(v.mesh.position.x,v.mesh.position.z))+2+v.alt;
@@ -2854,13 +2857,13 @@ function updPlayer(dt){
     }
   }
 
-  // I 只负责互动（载具 / 城门）；H 才是医疗包，避免开门时误吃药或想回血却关了门
+  // I 只负责互动（载具 / 城门）；医疗包是单独的动作（默认 N），避免开门时误吃药或想回血却关了门
   if(Input.pop('I')){
     const action=interactionTarget();
     if(action.kind==='rv-search')rvBreakout.interact();
     else if(action.kind==='vehicle')enterVehicle(action.vehicle);
     else if(action.kind==='gate'){if(!gate.dead)setGate(!gate.open);else showMsg(action.tip,2);}
-    else showMsg(bankOn()?'R 出兵、0 升级银行、Z 切换路线；靠近核心回血':battleOn()?'靠近本方载具按 I 驾驶；H 使用当前兵种支援能力':'附近没有可互动的东西：靠近载具驾驶，靠近城门开关门；H 是医疗包',2.4);
+    else showMsg(bankOn()?'R 出兵、0 升级银行、Z 切换路线；靠近核心回血':battleOn()?'靠近本方载具按 I 驾驶；'+keyBindings.label('H')+' 使用当前兵种支援能力':'附近没有可互动的东西：靠近载具驾驶，靠近城门开关门；'+keyBindings.label('H')+' 是医疗包',2.4);
     updInteraction();
   }
   if(Input.pop('H'))useMedkit();
@@ -2913,7 +2916,7 @@ function claimSandbox(type,id){
   else if(type==='vehicle'){
     let v=vehicles.find(v=>v.kind===id&&!v.dead);
     if(!v){Game.vehiclesOwned.push(id);v=spawnVehicle(id);}
-    enterVehicle(v);showMsg('已登上 '+VEHICLES[id].name+' · I 下车'+(v.cfg.fly?(isTouch?'；升 / 降 按钮调高度':'；Y 升高 / H 降低'):''),3);
+    enterVehicle(v);showMsg('已登上 '+VEHICLES[id].name+' · I 下车'+(v.cfg.fly?(isTouch?'；升 / 降 按钮调高度':'；'+keyBindings.label('K')+' 升高 / '+keyBindings.label('H')+' 降低'):''),3);
   }else if(type==='squad'){
     while(squad.length<squadLimit())spawnSquad();Game.squadCount=squad.length;showMsg(squad.length+'名队友已就位');
   }else if(type==='item')grantSupply({type,id});
@@ -3191,7 +3194,7 @@ function renderShop(){
       if(owned)extra=lv>=WEAPON_MAX_LV?'<div class="upg max">已满级</div>':`<button class="upg" data-up="${it.id}">强化 Lv${lv+1} · 💰${upgradePrice(it.id)}</button>`;
     }
     else if(it.type==='item'){const c=ITEMS[it.id];nm=c.name;pr=c.price;desc=c.desc;owned=(it.id==='magnet'&&Game.magnet)||(it.id==='regen'&&Game.regen);}
-    else if(it.type==='vehicle'){const c=VEHICLES[it.id];nm=c.name;pr=c.price;desc=`血量${c.hp} 伤害${c.dmg}${c.fly?' 可飞行(Y/升高，H/降低)':''}<br><span class="desc">可在「队友」分配驾驶；停放时无敌，损毁下关修好</span>`;owned=Game.vehiclesOwned.includes(it.id);
+    else if(it.type==='vehicle'){const c=VEHICLES[it.id];nm=c.name;pr=c.price;desc=`血量${c.hp} 伤害${c.dmg}${c.fly?' 可飞行('+keyBindings.label('K')+'/升高，'+keyBindings.label('H')+'/降低)':''}<br><span class="desc">可在「队友」分配驾驶；停放时无敌，损毁下关修好</span>`;owned=Game.vehiclesOwned.includes(it.id);
       if(owned&&!vehicles.some(v=>v.kind===it.id))extra=`<button class="upg" data-fix="${it.id}">立即修复 · 💰${Math.round(c.price*.25)}</button>`;}
     else{const role=SQUAD_ROLES[it.id];nm=role.name;pr=squadPrice(it.id);desc=`${role.brief} · 生命${role.hp}<br><span class="desc">最多${squadLimit()}名（现有${Game.squadCount}）；暂停选择任务，商店分配载具</span>`;owned=Game.squadCount>=squadLimit();}
     const pending=airdrops.some(a=>a.it.id===it.id&&a.it.type===it.type);
@@ -4231,7 +4234,7 @@ function syncKeyLabels(){
   $('weaponBar').dataset.key='';renderWeaponBar();
   const combat=CombatControls.settings;
   const combatLabel=(isTouch?'触屏':combat.input==='keyboard'?'纯键盘':'键鼠')+' · '+(fpsRules()?'手动瞄准 · 按住射击'+(isTouch||combat.input==='keyboard'?'':' · 右键拖动转视角'):(combat.aim==='auto'?'自动瞄准':'手动瞄准')+' · '+({auto:'自动射击',hold:'按住射击',toggle:'点击开关连射'})[combat.fire]);
-  $('keysHint').textContent=combatLabel+' · 移动 '+['up','left','down','right'].map(a=>keyBindings.label(a)).join('/')+' · '+(vsOn()?['J','R','Z','K','U','I','H','O','L','T','C','Q','E','P']:['SPRINT','J','K','U','I','H','O','L','C','Q','E','P']).map(a=>keyBindings.label(a)+' '+actionLabel(a)).join(' · ');
+  $('keysHint').textContent=combatLabel+' · 移动 '+['up','left','down','right'].map(a=>keyBindings.label(a)).join('/')+' · '+(vsOn()?['J','R','Z','K','U','I','H','O','L','T','C','LOOK','P']:['SPRINT','J','K','U','I','H','O','L','C','LOOK','P']).map(a=>a==='LOOK'?keyBindings.label('Q')+'/'+keyBindings.label('E')+' 转视角 · '+keyBindings.label('LOOKUP')+'/'+keyBindings.label('LOOKDOWN')+' 抬头低头':keyBindings.label(a)+' '+actionLabel(a)).join(' · ');
 }
 function renderKeys(){
   const grid=$('keyGrid');grid.replaceChildren();
@@ -4461,7 +4464,7 @@ function starshipInput(){
   const axis=Input.axis(),cs=Math.cos(camYaw),sn=Math.sin(camYaw),f=-axis.y,r=axis.x,edges=[];
   edges.push(...coopPendingEdges.splice(0));
   const active=Input.isPlaying()&&!place.kind;
-  const input={x:f*sn-r*cs,z:f*cs+r*sn,edges,yaw:camYaw,fp:camMode==='first',run:!!Input.keys.SPRINT,rise:!!(Input.keys.K||Input.keys.Y),lower:!!Input.keys.H,
+  const input={x:f*sn-r*cs,z:f*cs+r*sn,edges,yaw:camYaw,fp:camMode==='first',run:!!Input.keys.SPRINT,rise:!!Input.keys.K,lower:!!Input.keys.H,
     fire:active&&CombatControls.fireIntent,autoFire:active&&CombatControls.settings.fire==='auto',autoAim:CombatControls.autoAim};
   // 战地：客人只在按住时开火；俯仰和镜头距离（look，步行为 0）让房主还原准星，autoAim 表示触屏/纯键盘的轻度吸附。
   if(battleOn())Object.assign(input,{pitch:camPitch,look:player.inVehicle?camState.dist:0,fire:active&&CombatControls.held,autoFire:false,autoAim:!!aimAssistKind()});
@@ -4761,7 +4764,7 @@ function versusEnterUI(){
   showHUD();$('readyBtn').classList.add('hidden');$('sandboxBtn').classList.add('hidden');showHint(null);
   vsUI.open=false;vsUI.tab='units';$('vsPanel').classList.add('hidden');$('vsTeamTab').classList.remove('hidden');
   const hint=$('keysHint');if(!hint.dataset.campaign)hint.dataset.campaign=hint.textContent;
-  hint.textContent='WASD移动 · 按住J/左键射击 · 右键拖动或Q/E转视角 · Z/右键点按举枪 · R换弹 · O装备 · L部署 · T战况 · H兵种支援 · I上/下载具 · U手雷 · K跳跃 · C载具视角 · Esc暂停';
+  hint.textContent='WASD移动 · 按住J/左键射击 · 右键拖动或Q/E转视角 · Z/右键点按举枪 · R换弹 · O装备 · L部署 · T战况 · '+keyBindings.label('H')+'兵种支援 · I上/下载具 · U手雷 · K跳跃 · C载具视角 · Esc暂停';
   const rl=$('btnRestartLv');if(!rl.dataset.campaign)rl.dataset.campaign=rl.textContent;rl.textContent='🔄 重开对战';
   $('vH').classList.remove('hidden');$('vO').textContent='装备';$('vL').textContent='部署';$('vR').textContent='换弹';
   bfVehicleView=0;syncViewLabels();

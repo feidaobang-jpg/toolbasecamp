@@ -164,7 +164,7 @@ const near=(a,b,eps,msg)=>assert.ok(Math.abs(a-b)<=eps,`${msg}：期望约 ${b}�
     assert.equal(s.swarm,n0,'生物量不足不应孵化');
     await god(page,false);await page.evaluate(()=>{const z=__gameQA.zerg;z.biomass=200;z.bug.hp=z.bug.maxHp*.4;});await page.keyboard.press('KeyO');await wait(120);s=await st(page);
     assert.ok(s.bug.hp/s.bug.max>.7&&s.biomass<175&&s.cd.molt>3,'蜕皮应回血并扣生物量');
-    await page.evaluate(()=>{__gameQA.zerg.cd.rally=0;});n0=s.swarm;await page.keyboard.press('KeyH');await wait(200);s=await st(page);
+    await page.evaluate(()=>{__gameQA.zerg.cd.rally=0;});n0=s.swarm;await page.keyboard.press('KeyN');await wait(200);s=await st(page);
     assert.ok(s.frenzy>6&&s.swarm>n0&&s.cd.rally>20,'号令应触发狂热并呼叫增援');
     ok('酸液发射并标记集火目标；U 孵战士、I 孵飞虫按价扣生物量并进冷却，生物量不足不孵；蜕皮回血 35%；号令触发 7 秒狂热与一波增援');
 

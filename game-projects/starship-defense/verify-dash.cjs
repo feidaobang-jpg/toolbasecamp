@@ -103,26 +103,26 @@ const RING=`(()=>{const q=__gameQA,out=[];for(let i=0;i<6;i++){const a=i/6*Math.
  check('first person: dash goes where the camera looks',c.x-a.x>5.5&&Math.abs(c.z-a.z)<.5,{from:a,to:c});
  await p.evaluate(()=>__gameQA.setCamMode('third',false));
 
- // 8. helicopter: Y up, H down (no medkit), U only shows the new keys, K does not dash
+ // 8. helicopter (v0.38.1 keys): K up, N down (no medkit), U only shows the keys, K does not dash
  await p.evaluate(SETUP);
  const heli0=await p.evaluate(()=>{const q=__gameQA;q.Game.vehiclesOwned.push('heli');const v=q.spawnVehicle('heli');v.mesh.position.set(0,0,30);v.alt=4;q.enterVehicle(v);
    q.Game.items.medkit=2;q.player.hp=40;window.__heli=v;return{alt:v.alt,msg:document.getElementById('msg').textContent};});
- await p.keyboard.down('KeyY');await p.waitForTimeout(500);await p.keyboard.up('KeyY');const altUp=await p.evaluate(()=>__heli.alt);
- await p.keyboard.down('KeyH');await p.waitForTimeout(500);await p.keyboard.up('KeyH');
+ await p.keyboard.down('KeyK');await p.waitForTimeout(500);await p.keyboard.up('KeyK');const altUp=await p.evaluate(()=>__heli.alt);
+ await p.keyboard.down('KeyN');await p.waitForTimeout(500);await p.keyboard.up('KeyN');
  const afterH=await p.evaluate(()=>({alt:__heli.alt,medkit:__gameQA.Game.items.medkit,hp:__gameQA.player.hp,msg:document.getElementById('msg').textContent}));
  await p.keyboard.press('KeyU');await p.waitForTimeout(80);const uMsg=await p.evaluate(()=>document.getElementById('msg').textContent);
  const tip=await p.evaluate(()=>__gameQA.interactionTarget()?.tip||'');
  const hd=await p.evaluate(()=>({dashCd:__gameQA.player.dashCd,hudDash:document.getElementById('dashTxt').textContent}));
  await p.keyboard.press('KeyK');await p.waitForTimeout(80);const kInHeli=await p.evaluate(()=>__gameQA.player.dashCd);
- check('boarding the helicopter explains Y/H',heli0.msg.includes('Y 升高')&&heli0.msg.includes('H 降低'),heli0);
- check('Y raises the helicopter',altUp>heli0.alt+2.5,{start:heli0.alt,altUp});
- check('H lowers it and does not touch medkits',afterH.alt<altUp-2.5&&afterH.medkit===2&&afterH.hp===40&&!afterH.msg.includes('医疗包'),{altUp,afterH});
- check('U in the helicopter points to Y/H; interact tip shows Y/H',uMsg.includes('Y 升高')&&tip.includes('Y 升高 / H 降低'),{uMsg,tip});
+ check('boarding the helicopter explains K/N',heli0.msg.includes('K 升高')&&heli0.msg.includes('N 降低'),heli0);
+ check('K raises the helicopter',altUp>heli0.alt+2.5,{start:heli0.alt,altUp});
+ check('N lowers it and does not touch medkits',afterH.alt<altUp-2.5&&afterH.medkit===2&&afterH.hp===40&&!afterH.msg.includes('医疗包'),{altUp,afterH});
+ check('U in the helicopter points to K/N; interact tip shows K/N',uMsg.includes('K 升高')&&tip.includes('K 升高 / N 降低'),{uMsg,tip});
  check('no dash and no dash HUD while flying',kInHeli===0&&hd.hudDash==='',{hd,kInHeli});
- // on foot again H still heals
- await p.keyboard.press('KeyI');await p.waitForTimeout(150);await p.keyboard.press('KeyH');await p.waitForTimeout(80);
+ // on foot again the medkit key (N) still heals
+ await p.keyboard.press('KeyI');await p.waitForTimeout(150);await p.keyboard.press('KeyN');await p.waitForTimeout(80);
  const foot=await p.evaluate(()=>({inVehicle:!!__gameQA.player.inVehicle,medkit:__gameQA.Game.items.medkit,hp:__gameQA.player.hp}));
- check('back on foot H uses a medkit',!foot.inVehicle&&foot.medkit===1&&foot.hp>40,foot);
+ check('back on foot N uses a medkit',!foot.inVehicle&&foot.medkit===1&&foot.hp>40,foot);
  check('no page errors (desktop)',p.errors.length===0,p.errors);
  await p.context().close();
 

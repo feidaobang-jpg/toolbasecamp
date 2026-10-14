@@ -25,8 +25,8 @@ const url=process.env.GAME_URL||'http://127.0.0.1:8765/public/html/game/starship
  const hp=await p.evaluate(()=>({hp:Math.round(__gameQA.player.hp),max:__gameQA.player.maxHp}));
  mark('helicopter: Y up, H down');
  await p.evaluate(()=>{const q=__gameQA;q.clearEntities(false);q.Game.vehiclesOwned.push('heli');const v=q.spawnVehicle('heli');const P=q.player.pos;v.mesh.position.set(P.x,0,P.z+4);v.alt=2;q.enterVehicle(v);q.setCamYaw(v.yaw);});
- await p.waitForTimeout(900);await p.keyboard.down('KeyY');await p.waitForTimeout(1600);await p.keyboard.up('KeyY');await p.waitForTimeout(500);
- await p.keyboard.down('KeyH');await p.waitForTimeout(1400);await p.keyboard.up('KeyH');await p.waitForTimeout(700);
+ await p.waitForTimeout(900);await p.keyboard.down('KeyK');await p.waitForTimeout(1600);await p.keyboard.up('KeyK');await p.waitForTimeout(500);
+ await p.keyboard.down('KeyN');await p.waitForTimeout(1400);await p.keyboard.up('KeyN');await p.waitForTimeout(700);
  mark('end');
  const video=p.video();await ctx.close();const src=await video.path();const dst=path.join(captures,'dash-swarm-heli.webm');fs.renameSync(src,dst);
  await b.close();

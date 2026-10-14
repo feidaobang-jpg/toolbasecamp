@@ -104,7 +104,7 @@ async function open(b,opts={},query=''){
  const keys=await p.evaluate(()=>{const q=__gameQA;q.player.pos.set(0,5,-20);q.player.mesh.position.copy(q.player.pos);q.player.hp=30;q.Game.items.medkit=2;q.gate.open=true;q.gate.dead=false;return{action:q.interactionTarget().kind};});
  await p.keyboard.press('KeyI');await p.waitForTimeout(60);
  const afterI=await p.evaluate(()=>({gateOpen:__gameQA.gate.open,hp:__gameQA.player.hp,medkit:__gameQA.Game.items.medkit}));
- await p.keyboard.press('KeyH');await p.waitForTimeout(60);
+ await p.keyboard.press('KeyN');await p.waitForTimeout(60);
  const afterH=await p.evaluate(()=>({hp:__gameQA.player.hp,medkit:__gameQA.Game.items.medkit}));
  check('I toggles gate without using a medkit; H heals',keys.action==='gate'&&!afterI.gateOpen&&afterI.medkit===2&&afterH.hp>30&&afterH.medkit===1,{keys,afterI,afterH});
 
