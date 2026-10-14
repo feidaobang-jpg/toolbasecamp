@@ -1,4 +1,4 @@
-// Toy 预览/公开页实测：在 B 站 Toy 外壳的游戏 iframe 里核对战地、抗战的枪战规则（电脑视口 + 手机视口）。
+// Toy 预览/公开页实测：在 B 站 Toy 外壳的游戏 iframe 里核对战地的枪战规则（电脑视口 + 手机视口）。
 // 用法：PREVIEW_URL=https://www.bilibili.com/toy/preview/<id>/index.html node verify-fps-rules-toy.cjs
 // 外壳把游戏放在 www.bilibilitoy.com 的 iframe 里，对 iframe 自身 goto 带 qa 参数的地址；手机视口截图后触摸进不了 iframe，截图放最后。
 const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),assert=require('node:assert/strict');
@@ -34,10 +34,7 @@ const state=f=>f.evaluate(()=>{const q=__gameQA,h=q.player;return {mode:q.getCam
     await p.keyboard.down('KeyJ');await sleep(600);await p.keyboard.up('KeyJ');const fired=await state(f);assert.ok(fired.ammo<fired.mag||fired.reload);
     pass('电脑视口战地：固定第一人称、C 不切视角、不按不开火、按住 J 开火',{idle:idle.ammo,fired:fired.ammo});
     await p.screenshot({path:path.join(OUT,'toy-desktop-battlefield.png')});
-    f=await gameFrame(p);await f.click('#btnResistance');await f.click('[data-chapter="0"]');await sleep(600);
-    const war=await f.evaluate(()=>({mode:__gameQA.getCamMode(),fps:__gameQA.fpsRules()}));await f.click('#c3d',{position:{x:640,y:300},button:'middle'});await p.keyboard.press('KeyC');await sleep(300);
-    assert.equal(war.mode,'first');assert.ok(war.fps);assert.equal(await f.evaluate(()=>__gameQA.getCamMode()),'first');pass('电脑视口抗战：固定第一人称，C 不切视角',war);
-    await p.screenshot({path:path.join(OUT,'toy-desktop-resistance.png')});await p.close();
+    await p.close();
     // 手机横屏视口
     const ctx=await b.newContext({viewport:{width:844,height:390},hasTouch:true,isMobile:true,userAgent:MOBILE_UA}),m=await ctx.newPage();m.on('pageerror',e=>errors.push('mobile: '+e.message));
     const g=await gameFrame(m);await g.evaluate(()=>__gameQA.setDeviceMode('touch'));

@@ -1,12 +1,12 @@
 // 输入（枪战类布局）：键盘、鼠标瞄准、触屏浮动摇杆 / 滑屏瞄准 / 功能键，统一映射成动作状态
-// 纯键盘：WASD 移动，Q/E 左右转、Y/H 上下转，J 开火，K 跳，U 手榴弹，I 互动（上炮 / 上机枪 / 离开），L 亮剑，N 骑兵连，O 或 Z 开镜，R 换弹
-// 鼠标：电脑端默认鼠标接管（锁定），被拒绝时按住拖动；左键开火，右键开镜；空格跳，G 手榴弹，F 互动，V 亮剑，X 骑兵连
-// 键位与《枪火集结》其余模式对齐：J 射击、K 跳、U 手雷、I 互动
+// 键位 v2（2026-10，与《虫潮围城》《枪火集结》其余模式一致，参考 CS / 电脑版吃鸡）：电脑端默认鼠标接管（锁定），被拒绝时按住拖动；
+// 左键开火、右键或 Z 开镜；WASD 移动、按住 Shift 跑、空格跳、R 换弹、G 手榴弹、F 互动（上炮 / 上机枪 / 离开）、Q 亮剑、E 骑兵连、V 切换人称（main.js）
+// 旧键 J 开火、K 跳、U 手榴弹、I 互动、L 亮剑、N 骑兵连、O 开镜不再显示但仍可用；键盘转视角（Q/E、Y/H）取消
 import { clamp } from './util.js';
 
-const HOLD_KEYS = { KeyJ: 'fire', KeyO: 'ads', KeyZ: 'ads', ShiftLeft: 'ads', ShiftRight: 'ads' };
-const EDGE_KEYS = { KeyK: 'jump', Space: 'jump', KeyR: 'reload', KeyU: 'nade', KeyG: 'nade', KeyI: 'use', KeyF: 'use', KeyL: 'dash', KeyV: 'dash', KeyN: 'cav', KeyX: 'cav' };
-const OTHER_KEYS = ['KeyW', 'KeyA', 'KeyS', 'KeyD', 'ArrowUp', 'ArrowLeft', 'ArrowDown', 'ArrowRight', 'KeyQ', 'KeyE', 'KeyY', 'KeyH', 'KeyC'];
+const HOLD_KEYS = { KeyJ: 'fire', KeyZ: 'ads', KeyO: 'ads', ShiftLeft: 'sprint', ShiftRight: 'sprint' };
+const EDGE_KEYS = { Space: 'jump', KeyK: 'jump', KeyR: 'reload', KeyG: 'nade', KeyU: 'nade', KeyF: 'use', KeyI: 'use', KeyQ: 'dash', KeyL: 'dash', KeyE: 'cav', KeyN: 'cav' };
+const OTHER_KEYS = ['KeyW', 'KeyA', 'KeyS', 'KeyD', 'ArrowUp', 'ArrowLeft', 'ArrowDown', 'ArrowRight'];
 const EDGES = ['jump', 'reload', 'nade', 'dash', 'cav', 'use', 'fire'];
 
 export class Input {
@@ -14,16 +14,15 @@ export class Input {
     this.stage = stage;
     this.hooks = hooks;         // { rotated(), size(), toLogical(x,y), onDevice(kind), onEdge(name), mouseAim(), onLockLost(), onLockFail(silent) }
     this.keys = new Set();
-    this.src = { fireKey: false, fireMouse: false, fireTouch: 0, adsKey: false, adsMouse: false };
+    this.src = { fireKey: false, fireMouse: false, fireTouch: 0, adsKey: false, adsMouse: false, sprintKey: false };
     this.adsToggle = false;     // 触屏开镜键、未锁定时右键单击：点一下切换
-    this.held = { fire: false, ads: false };
+    this.held = { fire: false, ads: false, sprint: false };
     this.edges = {};
     for (const e of EDGES) this.edges[e] = false;
     this.move = { x: 0, y: 0 };
     this.joy = { x: 0, y: 0, id: null, cx: 0, cy: 0 };
     this.lookDX = 0; this.lookDY = 0;
-    this.lookKX = 0; this.lookKY = 0;
-    this.lookSrc = 'key';       // 最近一次转视角来自 mouse / touch / key，决定吸附力度
+    this.lookSrc = 'touch';     // 最近一次转视角来自 mouse / touch，决定吸附力度
     this.drag = null;           // 空白处拖动
     this.locked = false;
     this.btns = {};
@@ -195,6 +194,7 @@ export class Input {
   _sync() {
     this.held.fire = this.src.fireKey || this.src.fireMouse || this.src.fireTouch > 0;
     this.held.ads = this.src.adsKey || this.src.adsMouse || this.adsToggle;
+    this.held.sprint = this.src.sprintKey;
     const b = this.btns['act-ads'];
     if (b) b.classList.toggle('on', this.adsToggle);
   }
@@ -207,19 +207,21 @@ export class Input {
       const hk = HOLD_KEYS[code];
       if (hk === 'fire') { this.src.fireKey = true; this.edges.fire = true; }
       if (hk === 'ads') this.src.adsKey = true;
+      if (hk === 'sprint') this.src.sprintKey = true;
       const ek = EDGE_KEYS[code];
       if (ek) this.edges[ek] = true;
     } else {
       this.keys.delete(code);
       const hk = HOLD_KEYS[code];
       if (hk === 'fire') this.src.fireKey = false;
-      if (hk === 'ads') this.src.adsKey = this.keys.has('KeyO') || this.keys.has('KeyZ') || this.keys.has('ShiftLeft') || this.keys.has('ShiftRight');
+      if (hk === 'ads') this.src.adsKey = this.keys.has('KeyZ') || this.keys.has('KeyO');
+      if (hk === 'sprint') this.src.sprintKey = this.keys.has('ShiftLeft') || this.keys.has('ShiftRight');
     }
     this._sync();
   }
   isGameKey(code) { return !!HOLD_KEYS[code] || !!EDGE_KEYS[code] || OTHER_KEYS.includes(code); }
 
-  // 每帧取移动向量（x 右为正，y 前为正）与按键转视角方向
+  // 每帧取移动向量（x 右为正，y 前为正）
   sample() {
     const k = this.keys;
     let x = (k.has('KeyD') || k.has('ArrowRight') ? 1 : 0) - (k.has('KeyA') || k.has('ArrowLeft') ? 1 : 0);
@@ -227,9 +229,6 @@ export class Input {
     if (x || y) { const d = Math.hypot(x, y); x /= d; y /= d; }
     else { x = this.joy.x; y = this.joy.y; }
     this.move.x = x; this.move.y = y;
-    this.lookKX = (k.has('KeyE') ? 1 : 0) - (k.has('KeyQ') ? 1 : 0);     // +1 向右
-    this.lookKY = (k.has('KeyY') ? 1 : 0) - (k.has('KeyH') ? 1 : 0);     // +1 抬头
-    if (this.lookKX || this.lookKY) this.lookSrc = 'key';
     return this.move;
   }
   take(a) { const v = this.edges[a]; this.edges[a] = false; return v; }
@@ -239,12 +238,12 @@ export class Input {
   clear() {
     this.keys.clear();
     for (const e of EDGES) this.edges[e] = false;
-    this.src.fireKey = this.src.fireMouse = this.src.adsKey = this.src.adsMouse = false; this.src.fireTouch = 0;
+    this.src.fireKey = this.src.fireMouse = this.src.adsKey = this.src.adsMouse = this.src.sprintKey = false; this.src.fireTouch = 0;
     this.adsToggle = false;
     for (const id in this.btns) { this.btns[id]._pid = undefined; this.btns[id].classList.remove('down'); }
     this._joyEnd();
     this.drag = null;
-    this.lookDX = 0; this.lookDY = 0; this.lookKX = 0; this.lookKY = 0;
+    this.lookDX = 0; this.lookDY = 0;
     this.move.x = 0; this.move.y = 0;
     this._sync();
   }

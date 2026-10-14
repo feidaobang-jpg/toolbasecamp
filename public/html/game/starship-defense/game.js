@@ -11,13 +11,10 @@ const {VS_SIZES,TEAM_CSS,TEAM_NAME,fmtTime}=Conquest;
 let {VS_UNITS,VS_RULES,VS_BUILD_KINDS,VS_AI}=Conquest;
 import {BF_WEAPONS,BF_VEHICLES,militaryGun,militarySoldier,militaryVehicle} from './battlefield-assets.js';
 import {createRVBreakout,makeRVMesh,RV_CFG} from './rv-breakout.js';
-import {createResistanceCampaign} from './resistance-campaign.js';
 import {createZergMode} from './zerg-mode.js';
 import {createAcidArena} from './acid-arena.js';
 let acidArena=null;
 const acidOn=()=>!!acidArena?.state.active;
-let resistanceCampaign=null;
-const warOn=()=>!!resistanceCampaign?.state.active;
 let rvBreakout=null,rvFrameDt=0;
 const rvOn=()=>!!rvBreakout?.state.active;
 let versus=null,bankVersus=null,battleVersus=null,bankMode=false,lobbyMode='coop',versusBackup=null;
@@ -30,9 +27,9 @@ function selectVersusRules(rules){
  viewModelKey='';vsUI.rosterSig='';
 }
 function vsOn(){return !!(versus&&versus.state.active);}
-// 枪战规则（战地、抗战，用户 2026-10-11 确认）：步行固定第一人称、手动瞄准、按住射击；载具和骑马用第三人称跟随。
+// 枪战规则（战地，用户 2026-10-11 确认）：步行固定第一人称、手动瞄准、按住射击；载具用第三人称跟随。
 // 主战役、房车、虫族仍是多视角 + 自动瞄准，也不改玩家保存的瞄准/射击设置。
-function fpsRules(){return battleOn()||warOn();}
+function fpsRules(){return battleOn();}
 let zergMode=null;
 function zergOn(){return !!(zergMode&&zergMode.active);}
 import {createPitchController,createLookController} from '../../../js/game/drag-look.js?v=camera-response0312';
@@ -267,7 +264,7 @@ const Input={
       if(!this.isPlaying()||isTouch||!CombatControls.mouseEnabled)return;
       AudioSys.init();AudioSys.resume();
       // 枪战规则下左键是开火，转视角不能只靠它：右键拖动只转视角，原地点一下才举枪。
-      if(e.button===2){e.preventDefault();if(fpsRules()){if(document.pointerLockElement===cv){if(warOn())resistanceCampaign.toggleAim();else if(battleOn())toggleBattlefieldAim();}else{this.drag={id:e.pointerId,x:e.clientX,y:e.clientY,moved:0,sight:true};cv.setPointerCapture(e.pointerId);}}return;}
+      if(e.button===2){e.preventDefault();if(fpsRules()){if(document.pointerLockElement===cv){if(battleOn())toggleBattlefieldAim();}else{this.drag={id:e.pointerId,x:e.clientX,y:e.clientY,moved:0,sight:true};cv.setPointerCapture(e.pointerId);}}return;}
       if(e.button!==0)return;
       // 首次点击只接管鼠标，不把返回游戏的点击算成一枪；拒绝接管时仍可拖动。
       if(this.canMouseLook()&&cv.requestPointerLock&&!this.lockUnavailable&&document.pointerLockElement!==cv){this.drag={id:e.pointerId,x:e.clientX,y:e.clientY,moved:0};cv.setPointerCapture(e.pointerId);this.requestMouseLook();return;}
@@ -288,7 +285,7 @@ const Input={
       const d=this.drag;if(!d||d.id!==e.pointerId)return;
       const s=toStageScale();this.look.yaw-=(e.clientX-d.x)/s*.0075;this.look.pitch-=(e.clientY-d.y)/s*.0075;d.moved+=Math.abs(e.clientX-d.x)+Math.abs(e.clientY-d.y);d.x=e.clientX;d.y=e.clientY;
     });
-    const endDrag=e=>{if(this.drag&&this.drag.id===e.pointerId){const d=this.drag;this.drag=null;if(d.sight&&e.type==='pointerup'&&e.button===2&&d.moved<6&&this.isPlaying()){if(warOn())resistanceCampaign.toggleAim();else if(battleOn())toggleBattlefieldAim();}}if(e.type==='lostpointercapture'&&document.pointerLockElement===cv)return;if(e.button===0||e.type!=='pointerup'){this.mouseFire=false;CombatControls.release('mouse');}if(e.type==='pointercancel')CombatControls.reset();};
+    const endDrag=e=>{if(this.drag&&this.drag.id===e.pointerId){const d=this.drag;this.drag=null;if(d.sight&&e.type==='pointerup'&&e.button===2&&d.moved<6&&this.isPlaying()){if(battleOn())toggleBattlefieldAim();}}if(e.type==='lostpointercapture'&&document.pointerLockElement===cv)return;if(e.button===0||e.type!=='pointerup'){this.mouseFire=false;CombatControls.release('mouse');}if(e.type==='pointercancel')CombatControls.reset();};
     ['pointerup','pointercancel','lostpointercapture'].forEach(t=>cv.addEventListener(t,endDrag));
     document.addEventListener('pointerup',e=>{if(e.pointerType!=='touch'&&e.button===0){this.mouseFire=false;CombatControls.release('mouse');}});
     document.addEventListener('pointerlockchange',()=>{
@@ -2669,7 +2666,7 @@ const lookControl=createLookController({firstPerson:()=>camMode==='first',sensit
 function updLook(dt){
   if(Input.look.yaw||Input.look.pitch){lookControl.queue(-Input.look.yaw);pitchControl.queue(Input.look.pitch);Input.look.yaw=Input.look.pitch=0;Input.lastLook=performance.now();}
   lookControl.step(dt,(Input.keys.E?1:0)-(Input.keys.Q?1:0));
-  // 键盘上下转视角（默认 Y 抬头 / H 低头），与拖动共用 camPitch 和限位
+  // 键盘上下转视角（键位 v2 起默认不占键，可在操作设置里绑定），与鼠标共用 camPitch 和限位
   const keyPitch=(Input.keys.LOOKUP?1:0)-(Input.keys.LOOKDOWN?1:0);
   if(keyPitch)camPitch=clamp(camPitch+keyPitch*1.05*dt,-1,1);
   pitchControl.step(dt);
@@ -2742,7 +2739,7 @@ function updPlayer(dt){
       }else v.stuckT=0;
     }
     if(v.cfg.fly){
-      // 升降：K/空格 升高，降低用“医疗 / 直升机降低”动作（默认 N）；Y / H 留给抬头低头。驾驶中本来就不能用医疗包，不冲突。
+      // 升降：跳跃键（默认空格）升高，蹲下键（默认 C）或医疗键降低；驾驶中本来就不能用医疗包，不冲突。
       const up=Input.network?Input.network.rise:Input.keys.K,down=Input.network?Input.network.lower:(Input.keys.CROUCH||Input.keys.H);
       if(up&&!down)v.alt=Math.min(18,v.alt+dt*8);
       if(down&&!up)v.alt=Math.max(0,v.alt-dt*8);
@@ -2864,7 +2861,7 @@ function updPlayer(dt){
     }
   }
 
-  // I 只负责互动（载具 / 城门）；医疗包是单独的动作（默认 N），避免开门时误吃药或想回血却关了门
+  // I 只负责互动（载具 / 城门）；医疗包是单独的动作（默认 E），避免开门时误吃药或想回血却关了门
   if(Input.pop('I')){
     const action=interactionTarget();
     if(action.kind==='rv-search')rvBreakout.interact();
@@ -3573,7 +3570,6 @@ function savePrefix(){return SAVE_PREFIX+(Game.testMode?'sandbox_':'');}
 function autoSave(opts){const notify=opts?.notify!==false;
   if(acidOn())return;
   if(zergOn())return; // 虫族模式是独立玩法，不覆盖战役自动档
-  if(warOn()){resistanceCampaign.save();return;}
   if(rvOn()){rvBreakout.save();return;}
   if(coopDriver?.config||vsOn()||versusBackup||Game.state==='menu'||Game.state==='over')return;
   const d=saveData();
@@ -3754,7 +3750,7 @@ function syncFireButton(){
   const el=$('vJ'),toggle=!fpsRules()&&!zergOn()&&CombatControls.settings.fire==='toggle';
   el.classList.toggle('fire-latched',toggle&&CombatControls.toggled);
   if(toggle)el.setAttribute('aria-pressed',String(CombatControls.toggled));else el.removeAttribute('aria-pressed');
-  if(zergOn()||warOn())return; // These modes own their attack labels and skills.
+  if(zergOn())return; // These modes own their attack labels and skills.
   const text=place.kind?'确认':toggle?(CombatControls.toggled?'连射：开':'连射：关'):fpsRules()||CombatControls.settings.fire==='hold'?'射击':'自动射击';
   if(el.textContent!==text)el.textContent=text;
   el.setAttribute('aria-label',toggle?(CombatControls.toggled?'关闭连射':'开启连射'):text);
@@ -3947,15 +3943,14 @@ $('btnSaveMenu').onclick=()=>{closePanels();saveMode='save';renderSlots();$('sav
 $('btnOverLoad').onclick=()=>{saveMode='load';renderSlots();$('savePanel').classList.remove('hidden');panelOpen=true;};
 $('saveClose').onclick=closePanels;
 $('btnResume').onclick=togglePause;
-$('btnRestartLv').onclick=()=>{if(acidOn())acidArena.start();else if(warOn())resistanceCampaign.retry();else if(rvOn())rvBreakout.start();else if(vsOn())versusRematch();else restartLevel();};
+$('btnRestartLv').onclick=()=>{if(acidOn())acidArena.start();else if(rvOn())rvBreakout.start();else if(vsOn())versusRematch();else restartLevel();};
 $('btnRetry').onclick=restartLevel;
 $('btnQuit').onclick=$('btnOverQuit').onclick=()=>{
   const leavingAcid=acidOn();if(leavingAcid)acidArena.stop();
-  const leavingWar=warOn();if(leavingWar)resistanceCampaign.stop();
   if(rvOn())rvBreakout.stop();
   if(zergOn())zergMode.stop();
   if(vsOn()||versusBackup)exitVersus();
-  if(!leavingAcid&&!leavingWar&&Game.state!=='over')autoSave();
+  if(!leavingAcid&&Game.state!=='over')autoSave();
   coopDriver?.leave();clearCoopHumans();Game.coop=false;
   operations.clear();Game.state='menu';Game.testMode=false;$('sandboxBtn').classList.add('hidden');
   if(document.pointerLockElement)document.exitPointerLock&&document.exitPointerLock();
@@ -4010,7 +4005,7 @@ for(const el of document.querySelectorAll('[data-device-mode]'))el.onclick=()=>s
 
 /* ================= 纯键盘界面导航 ==========   最上层可见的面板/菜单自动选中第一项（带黄色选中框）；方向键按屏幕位置移动，
    Tab/Shift+Tab 在面板内循环，回车/空格确认，Esc 关闭或返回。重新渲染后回到原位置。 */
-const NAV_ROOTS=['menuSettingsPanel','menuSavePanel','menuMorePanel','updatesPanel','helpPanel','vsPanel','touchLayoutEditor','confirmPanel','keyPanel','tacticsPanel','operationsPanel','sandboxPanel','platformPanel','savePanel','shopPanel','buildPanel','acidUpgrade','acidResult','acidMenu','warResult','warMenu','rvResult','rvPanel','rvMenu','vsResult','zergEvolve','zergResult','zergMenu','menuOver','menuPause','vsMenu','menuMain'];
+const NAV_ROOTS=['menuSettingsPanel','menuSavePanel','menuMorePanel','updatesPanel','helpPanel','vsPanel','touchLayoutEditor','confirmPanel','keyPanel','tacticsPanel','operationsPanel','sandboxPanel','platformPanel','savePanel','shopPanel','buildPanel','acidUpgrade','acidResult','acidMenu','rvResult','rvPanel','rvMenu','vsResult','zergEvolve','zergResult','zergMenu','menuOver','menuPause','vsMenu','menuMain'];
 const nav={root:null,index:0};
 function navRoot(){
   // The modal owns its native text fields and Tab/Escape handling.
@@ -4084,8 +4079,6 @@ window.addEventListener('keydown',e=>{
     e.preventDefault();e.stopImmediatePropagation();if(e.repeat)return;Input.reset();
     if(['updatesPanel','helpPanel','menuSettingsPanel','menuSavePanel','menuMorePanel'].includes(root.id))closeInfoPanel();
     else if(root.id==='confirmPanel')$('confirmCancel').click();
-    else if(root.id==='warMenu')$('warBack').click();
-    else if(root.id==='warResult')$('warResultBack').click();
     else if(root.id==='rvMenu')$('rvBack').click();
     else if(root.id==='rvResult')$('rvResultBack').click();
     else if(root.id==='acidMenu')$('acidBack').click();
@@ -4163,15 +4156,8 @@ function loop(){
     updParticles(playing?dt:0);updScreenFx(playing?dt:0);
     frameStats(now);renderer.render(scene,camera);Input.clearFrame();return;
   }
-  const showDefenseArt=defenseArtAllowed&&!acidOn()&&!rvOn()&&!vsOn()&&!warOn()&&!zergOn();
+  const showDefenseArt=defenseArtAllowed&&!acidOn()&&!rvOn()&&!vsOn()&&!zergOn();
   defenseArt.setEnabled(showDefenseArt);battlefield.setDefenseArt(showDefenseArt);
-  if(warOn()){
-    const playing=Game.state==='battle'&&!panelOpen;
-    if(Game.msgTimer>0){Game.msgTimer-=dt;if(Game.msgTimer<=0)$('msg').classList.add('hidden');}
-    if(playing)updLook(dt);
-    resistanceCampaign.update(dt,playing);
-    frameStats(now);renderer.render(resistanceCampaign.state.scene,camera);Input.clearFrame();return;
-  }
   if(vsOn()&&Game.state==='battle'&&!panelOpen){
     if(Input.pop('O'))versusTogglePanel('weapons');else if(Input.pop('L'))versusTogglePanel('build');else if(Input.pop('R')){if(bankOn())versusTogglePanel('units');else battlefieldCommand({kind:'bfReload'});}else if(Input.pop('T'))versusTogglePanel('team');
   }else if((Game.state==='prep'||Game.state==='battle')&&!panelOpen&&!zergOn()){
@@ -4319,20 +4305,6 @@ rvBreakout=createRVBreakout({keyLabel:a=>keyBindings.label(a),THREE,scene,Game,p
 });
 player.reset('gunner');
 player.mesh.visible=false; // 菜单时隐藏
-resistanceCampaign=createResistanceCampaign({Game,Input,AudioSys,camera,get player(){return player;},showHUD,
-  isTouch:()=>isTouch,view:()=>({yaw:camYaw,pitch:camPitch,first:camMode==='first',preset:CAMERA_VIEWS[camView]}),
-  // 抗战同样是枪战规则：键鼠完全手动，触屏和纯键盘保留准星附近的轻度吸附。
-  aimAssist:()=>!!aimAssistKind(),
-  viewState:()=>({mode:camMode,index:camView,yaw:camYaw,pitch:camPitch}),
-  firstPerson(){camMode='first';camState.init=false;Input.resetLook();syncViewLabels();Input.requestMouseLook();},
-  // 骑马用第三人称跟随，只在近身/高位两档之间切换；不写入战役保存的视角偏好。
-  rideView(next=false){Input.releaseMouseLook();const riding=camMode==='third';camMode='third';camView=riding&&next?(camView===0?1:0):camView>1?0:camView;camPitch=0;camState.init=false;Input.resetLook();syncViewLabels();return CAMERA_VIEWS[camView].name;},
-  restoreView(v){if(!v)return;camMode=v.mode;camView=v.index;camYaw=v.yaw;camPitch=v.pitch;camState.init=false;Input.resetLook();syncViewLabels();},
-  setLook(yaw,pitch){camYaw=yaw;camPitch=pitch;Input.resetLook();},
-  cannonLook(){camPitch=clamp(camPitch,-.10,.50);},syncLabels:syncKeyLabels,quit:()=>$('btnQuit').click(),
-  faceForward:()=>{camYaw=0;camPitch=0;camState.init=false;lookControl.clear();pitchControl.clear();Input.resetLook();},
-  prepare(){defenseArt.setEnabled(false);battlefield.setDefenseArt(false);if(rvOn())rvBreakout.stop();if(vsOn()||versusBackup)exitVersus();coopDriver?.leave();clearCoopHumans();Game.coop=false;closePanels();hideConfirm();cancelPlacement(true);viewModel.visible=false;}
-});
 let zergView=null;
 zergMode=createZergMode({THREE,Game,Input,AudioSys,stage,scene,camera,player,base,gate,buildings,squad,vehicles,BUILDINGS,
   monsters:()=>monsters,MOUTHS,CHAPTERS,spawnMonster,moveMonster,damageMonster,damageSquad,damageVehicle,damageBuilding,damageGate,damageBase,
@@ -4355,7 +4327,7 @@ const _origLoadGame=loadGame;
 loadGame=function(d){if(acidOn())acidArena.stop();if(zergOn())zergMode.stop();player.mesh.visible=true;_origLoadGame(d);};
 acidArena=createAcidArena({keyLabel:a=>keyBindings.label(a),THREE,Game,player,Input,AudioSys,scene,stage,camera,monsters,visuals,clearEntities,showHUD,showHint,spawnParticles,playerAim,automaticFireTarget,playerMuzzle,syncFireButton,
   isTouch:()=>isTouch,getYaw:()=>camYaw,getMode:()=>camMode,cycleView:cycleCamView,quit:()=>$('btnQuit').click(),hitFlash:()=>hurtFlash=.8,
-  prepare(){defenseArt.setEnabled(false);battlefield.setDefenseArt(false);if(rvOn())rvBreakout.stop();if(zergOn())zergMode.stop();if(warOn())resistanceCampaign.stop();if(vsOn()||versusBackup)exitVersus();coopDriver?.leave();clearCoopHumans();Game.coop=false;closePanels();hideConfirm();cancelPlacement(true);operations.clear();},
+  prepare(){defenseArt.setEnabled(false);battlefield.setDefenseArt(false);if(rvOn())rvBreakout.stop();if(zergOn())zergMode.stop();if(vsOn()||versusBackup)exitVersus();coopDriver?.leave();clearCoopHumans();Game.coop=false;closePanels();hideConfirm();cancelPlacement(true);operations.clear();},
   enterView(){const view={camMode,camView,camYaw,camPitch,saved:null};try{view.saved=localStorage.getItem('chongchao-person');}catch(_){}camMode='third';camView=2;camYaw=0;camPitch=0;camState.init=false;lookControl.clear();pitchControl.clear();Input.resetLook();syncViewLabels();return view;},
   leaveView(v){if(!v)return;camMode=v.camMode;camView=v.camView;camYaw=v.camYaw;camPitch=v.camPitch;camState.init=false;try{if(v.saved===null)localStorage.removeItem('chongchao-person');else localStorage.setItem('chongchao-person',v.saved);}catch(_){}Input.resetLook();syncKeyLabels();}
 });
@@ -4394,8 +4366,8 @@ function setupWebControls(){
   platformSave=setupToyPlatform({
     store:saveStore,confirm:askConfirm,updateContinue:refreshContinue,
     prefix:SAVE_PREFIX,
-    getSave:()=>acidOn()||warOn()||rvOn()||coopDriver?.config||vsOn()||versusBackup?null:Game.state==='menu'?slotInfo(SAVE_PREFIX+'auto'):Game.testMode?null:saveData(),
-    load:d=>loadGame(d),isTest:()=>acidOn()||warOn()||rvOn()||!!coopDriver?.config||vsOn()||Game.testMode||new URLSearchParams(location.search).has('qa'),
+    getSave:()=>acidOn()||rvOn()||coopDriver?.config||vsOn()||versusBackup?null:Game.state==='menu'?slotInfo(SAVE_PREFIX+'auto'):Game.testMode?null:saveData(),
+    load:d=>loadGame(d),isTest:()=>acidOn()||rvOn()||!!coopDriver?.config||vsOn()||Game.testMode||new URLSearchParams(location.search).has('qa'),
     open:()=>{closePanels();Input.reset();panelOpen=true;$('platformPanel').classList.remove('hidden');if(document.pointerLockElement)document.exitPointerLock&&document.exitPointerLock();},close:closePanels,
     validate:d=>validateNormalSave(d,{weapons:{...WEAPONS,...LEGACY_WEAPONS},buildings:BUILDINGS,vehicles:VEHICLES})
   });
@@ -4415,8 +4387,8 @@ function setupWebControls(){
     if(e.repeat)return;
     if(e.code!=='Escape'&&(e.target.closest&&e.target.closest('select,input')||(!Input.isPlaying()&&['Enter','Space'].includes(e.code)&&e.target.closest&&e.target.closest('button,[tabindex="0"]'))))return;
     if(!$('confirmPanel').classList.contains('hidden')){if(e.code==='Escape')$('confirmCancel').click();return;}
-    if(e.code==='Enter'&&Game.state==='menu'&&$('vsMenu').classList.contains('hidden')&&!resistanceCampaign?.menuOpen())requestNewGame();
-    else if(e.code==='Enter'&&Game.state==='over'){if(acidOn())acidArena.start();else if(warOn())resistanceCampaign.retry();else if(rvOn())rvBreakout.start();else if(vsOn())versusRematch();else restartLevel();}
+    if(e.code==='Enter'&&Game.state==='menu'&&$('vsMenu').classList.contains('hidden'))requestNewGame();
+    else if(e.code==='Enter'&&Game.state==='over'){if(acidOn())acidArena.start();else if(rvOn())rvBreakout.start();else if(vsOn())versusRematch();else restartLevel();}
     else if(keyBindings.action(e.code)==='WAVE'&&Game.state==='prep'&&!panelOpen)startBattle();
     else if(e.code==='Escape'){e.preventDefault();pauseKey(true);}
     else if(keyBindings.action(e.code)==='T'&&Game.testMode&&Game.state!=='menu'){e.preventDefault();if(panelOpen)closePanels();else openSandbox();}
@@ -4428,7 +4400,7 @@ function setupWebControls(){
   if(new URLSearchParams(location.search).get('qa')==='1'){
     window.__gameQA={CAMPAIGN_DIFFICULTIES,campaignDifficulty,campaignEliteChance,campaignWaveCount,campaignSpawnInterval,baseMaxHp,AudioSys,lookControl,hiveFloor,hiveCeiling,hiveNavigation,hiveRoute,rampartHeight,rampartNavigation,RAMPARTS,mouthSpawn,navDir,moveMonster,SQUAD_ROLES,squadRole,changeSquadRole,assignSquadVehicle,boardSquadVehicle,leaveSquadVehicle,updSquadSupport,updSquadDriver,monsterTargets,buyItem,battlefield,groundMesh,environmentForChapter,classDamage,updSmartGate,setGate,CombatControls,playerAim,automaticFireTarget,operations,keyBindings,squadGear,upgradeSquad,squadMaxHp,MAX_BUILDINGS,updPickups,openShop,closePanels,WEAPONS,CHAPTERS,ELITES,BUILDINGS,ITEMS,VEHICLES,MOUTHS,HIVE,THEME,bullets,buildings,rockColliders,fortress,hive,groundY,tooSteep,slopeSpeed,interactionTarget,getCamYaw:()=>camYaw,setCamYaw:v=>{camYaw=v;},getCamMode:()=>camMode,setCamMode,collideWalls,fireBullet,updBullets,updBuildings,updPlayer,updSquad,updWave,updMonsters,updGate,updCamera,sandboxWave,loadGame,autoSave,saveData,applySave,damageGate,damageBuilding,damageSquad,damageVehicle,placeBuilding,sandboxSpawn,claimSandbox,openSandbox,saveStore,getPlatformSave:()=>platformSave,Game,player,base,gate,monsters,squad,vehicles,pickups,renderer,scene,camera,Input,newGame,requestNewGame,startBattle,startPrep,spawnMonster,spawnSquad,spawnVehicle,enterVehicle,exitVehicle,damageMonster,playerDamage,damageBase,restartLevel,clearEntities,setCameraView,visuals,weaponDps,weaponMul,upgradeWeapon,startPlacement,confirmPlacement,cancelPlacement,startDemolish,demolishTarget,findFreeSpot,spotFree,placementCheck,place,migrateWeapons,LEGACY_WEAPONS,CLASSES,renderBuild,selectWeapon,cycleWeapon,useMedkit,setSquadTask,squadBehavior,squadTaskLabel,validateNormalSave,vehicleMuzzle,vehicleAim,squadMuzzle,squadFollowPoint,squadPatrolPoint,squadAnchor,muzzleTip,updateSquadHeading,levelWin,togglePause,pauseKey,hasProgress,slotInfo,camState,dropPickup,explode,
       get acidArena(){return acidArena;},acidOn,fpsRules,manualHuman,aimAssistKind,crosshairPoint,cycleCamView,syncBattlefieldView,restoreView,starshipInput,withHuman,getCamPitch:()=>camPitch,setCamPitch:v=>{camPitch=v;},getCamView:()=>camView,getVehicleView:()=>bfVehicleView,getCamDist:()=>camState.dist,
-      get resistanceCampaign(){return resistanceCampaign;},get rvBreakout(){return rvBreakout;},get versus(){return versus;},get zerg(){return zergMode;},zergOn,selectVersusRules,bankOn,battleOn,versusBank,versusSend,versusBuildPick,startVersusAI,startVersusSim,versusSimStep,exitVersus,versusTogglePanel,versusPick,versusSeatPlan,versusGive,get VS_UNITS(){return VS_UNITS;},get VS_AI(){return VS_AI;},get VS_RULES(){return VS_RULES;},VS_SIZES,get coopHumans(){return coopHumans;},
+      get rvBreakout(){return rvBreakout;},get versus(){return versus;},get zerg(){return zergMode;},zergOn,selectVersusRules,bankOn,battleOn,versusBank,versusSend,versusBuildPick,startVersusAI,startVersusSim,versusSimStep,exitVersus,versusTogglePanel,versusPick,versusSeatPlan,versusGive,get VS_UNITS(){return VS_UNITS;},get VS_AI(){return VS_AI;},get VS_RULES(){return VS_RULES;},VS_SIZES,get coopHumans(){return coopHumans;},
       touchLayout,setDeviceMode,vehicleCanStand,queenSupply,updHUD,throwGrenade,explorationLight,tacticalWavePlan,openingSupply,tacticalPreview,tacticalPanel,setSquadMemberTask,setSquadAutoDefense,finishBattleReport,updAirdrops,updParticles,get panelOpen(){return panelOpen;},get isTouch(){return isTouch;},
       startMeasure(){frameTimes.length=0;previousFrame=0;measuring=true;},
       endMeasure(){measuring=false;const s=[...frameTimes].sort((a,b)=>a-b),sum=s.reduce((a,b)=>a+b,0);return{samples:s.length,averageFPS:1000/(sum/s.length),medianMs:s[Math.floor(s.length*.5)],p95Ms:s[Math.floor(s.length*.95)],over50ms:s.filter(v=>v>50).length,drawCalls:renderer.info.render.calls,triangles:renderer.info.render.triangles,memory:renderer.info.memory,viewport:[innerWidth,innerHeight],dpr:renderer.getPixelRatio(),drawingBuffer:[renderer.domElement.width,renderer.domElement.height],renderer:renderer.getContext().getParameter((renderer.getContext().getExtension('WEBGL_debug_renderer_info')||{}).UNMASKED_RENDERER_WEBGL||renderer.getContext().RENDERER),quality,theme:THEME,raw:frameTimes.slice()};}

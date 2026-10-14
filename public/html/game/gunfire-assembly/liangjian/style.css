@@ -70,7 +70,7 @@ body.touch-on .kb { display: none; }
 
 #skills { position: absolute; right: calc(var(--sar) + 12px); bottom: calc(var(--sab) + 12px); display: flex; gap: 8px; }
 #skills div { min-width: 86px; padding: 6px 10px; border-radius: 10px; background: rgba(30, 24, 18, .62); border: 2px solid rgba(239, 227, 196, .55); color: #fff3d6; font-size: 12px; font-weight: 800; line-height: 1.35; text-align: center; }
-#skills div b { display: inline-block; min-width: 20px; margin-right: 4px; border-radius: 5px; background: #efe3c4; color: var(--ink); font-family: ui-monospace, Consolas, monospace; }
+#skills div b { display: inline-block; min-width: 20px; padding: 0 3px; margin-right: 4px; border-radius: 5px; background: #efe3c4; color: var(--ink); font-family: ui-monospace, Consolas, monospace; }
 #skills div em { display: block; font-style: normal; color: #ffd84a; font-size: 12px; }
 #skills div.off { border-color: rgba(255, 110, 90, .7); }
 #skills div.off em { color: #ff9a88; }

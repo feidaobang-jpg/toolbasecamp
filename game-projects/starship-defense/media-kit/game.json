@@ -10,7 +10,7 @@
   },
   "name": "虫潮围城",
   "engine": "Three.js r152",
-  "current_version": "web-save-notice-v0.38.6",
+  "current_version": "web-drop-resistance-v0.38.7",
   "entrypoint": "public/html/game/starship-defense/index.html",
   "build_command": "cd game-projects/starship-defense && npm ci && npm run build; python build-toy.py",
   "release_intent": "web_demo",
@@ -50,7 +50,7 @@
     "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
     "visibility": "PUBLIC",
     "review_status": "published",
-    "verified_at": "2026-10-14T13:24:00+00:00",
+    "verified_at": "2026-10-14T14:57:16+00:00",
     "video_bindings": [
       "BV1Grpq6JEW5",
       "BV14hpL62EZ5",
@@ -60,16 +60,16 @@
       "BV1Ujad6DEuf"
     ],
     "linked_game_video": "https://www.bilibili.com/video/BV1Ujad6DEuf",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_KyAixmdT/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_38BHr3kg/index.html",
     "title": "虫潮围城",
-    "zip_sha256": "ca4c1bedb6b4a156d0c212ab513f4e4ddcf50e6d63dc923e0ee15c423aa22f34",
+    "zip_sha256": "44689d8799e5ac2d04fe5ed6eacf5f074f20a82347abaf53d1500b48de9d8e38",
     "submitted_date": "2026-10-14",
-    "release_record": "releases/web-save-notice-v0.38.6/handoff.json",
-    "submitted_version": "web-save-notice-v0.38.6",
-    "published_version": "web-save-notice-v0.38.6",
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_KrXCWUhp/index.html",
-    "note": "0.38.6 心跳自动存档静默写盘：本地与云备份时机不变，屏幕上的「本地已保存」提示不再每 30 秒弹出；买兵建塔/过关/手动存档/保存失败仍提示。只提交一次即 published，正式入口与网站线上入口各跑过 verify-save-notice.cjs 六项。实体手机未测试。",
-    "package_sha256": "ca4c1bedb6b4a156d0c212ab513f4e4ddcf50e6d63dc923e0ee15c423aa22f34",
+    "release_record": "releases/web-drop-resistance-v0.38.7/handoff.json",
+    "submitted_version": "web-drop-resistance-v0.38.7",
+    "published_version": "web-drop-resistance-v0.38.7",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_EEsCwaz1/index.html",
+    "note": "0.38.7 删掉早已搬到《枪火集结》的抗战战役代码（resistance-campaign/ui/assets 与 warOn 分支、__gameQA 暴露、NAV_ROOTS），玩家可见文案同步；战地的 battlefield-* 与 vsMenu 保留，联机房间仍能进。存档键与命名空间未改（chongchao-*／sst_save_ 保持），云档仍标 starship-defense，老玩家不受影响。预览 preview_EEsCwaz1 跑过 toy-package-check.cjs 10 项后，2026-10-14T22:52:37+08:00 以同一稳定包提交一次审核（回执预览 preview_38BHr3kg），22:54 过审 published；正式入口 https://www.bilibili.com/toy/chongchao-qianshao/index.html 复跑同一脚本 10/10（包体逐字节一致、主战役真实开局、视角写 chongchao-person 且不写 gunfire-person、入口 68,409 字节、手机横屏菜单不裁切、无报错），记录见 game-projects/site-games/releases/toy-package-check-20261014/chong-public.json。实体手机未测试。",
+    "package_sha256": "44689d8799e5ac2d04fe5ed6eacf5f074f20a82347abaf53d1500b48de9d8e38",
     "pending_updates": [
       {
         "version": "web-controls-v0.18.2",
@@ -116,9 +116,11 @@
       },
       {
         "version": "web-resistance-aim-v0.33.1",
-        "status": "pending_22_batch",
+        "status": "superseded",
         "summary": "抗战默认第一人称与举枪瞄准；橙金曳光和简化弹道；拖炮/高低调节/预计落点；手机按钮层级修复。",
-        "record": "releases/web-resistance-aim-v0.33.1/handoff.json"
+        "record": "releases/web-resistance-aim-v0.33.1/handoff.json",
+        "superseded_at": "2026-10-14",
+        "note": "抗战战役玩法已于 2026-10-11 拆到独立游戏《枪火集结》，本条挂在虫潮下的旧状态（pending_22_batch）失实；0.38.7 已把残留代码从本包删除，虫潮不再同步该项。批次任务本身也已按用户 2026-10-10 指令取消。"
       },
       {
         "version": "web-hud-layout-v0.38.4",
@@ -132,11 +134,11 @@
       }
     ],
     "published_entry": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
-    "published_verified_at": "2026-10-14T13:24:00+00:00",
+    "published_verified_at": "2026-10-14T14:57:16+00:00",
     "status": "published",
-    "package_hash": "ca4c1bedb6b4a156d0c212ab513f4e4ddcf50e6d63dc923e0ee15c423aa22f34",
+    "package_hash": "44689d8799e5ac2d04fe5ed6eacf5f074f20a82347abaf53d1500b48de9d8e38",
     "submission_time_note": "本次提交回执见 toy-submit.json；published 时间来自平台mtime，公开实测时间单独记录。",
-    "public_verified_at": "2026-10-14T13:24:00+00:00",
+    "public_verified_at": "2026-10-14T14:57:16+00:00",
     "public_runtime_evidence": {
       "status": "public_verified",
       "version": "web-opening-hints-v0.38.5",
@@ -208,11 +210,11 @@
       "screenshot": "D:/project/task-evidence/game-mode-focus-20261014/swarm-public-v0.38.5.png",
       "physical_phone_tested": false
     },
-    "version": "web-save-notice-v0.38.6",
-    "published_at": "2026-10-14T13:17:08+00:00",
+    "version": "web-drop-resistance-v0.38.7",
+    "published_at": "2026-10-14T14:54:27+00:00",
     "publication_time_note": "平台mtime记录为本次published状态时间；公开实测时间另记。",
-    "last_published_version": "web-save-notice-v0.38.6",
-    "last_submitted_version": "web-save-notice-v0.38.6",
+    "last_published_version": "web-drop-resistance-v0.38.7",
+    "last_submitted_version": "web-drop-resistance-v0.38.7",
     "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_KyAixmdT/index.html",
     "current_public_verification": "verified",
     "channel_authorization": {
@@ -221,23 +223,23 @@
       "recorded_at": "2026-10-10T03:02:52.978211+00:00",
       "scope": "2026-10-09 已完成并已发布网站的冻结版本补发；替代昨日其他渠道暂缓指令，不包含新视频或其他未完成开发"
     },
-    "last_successful_sync_version": "web-save-notice-v0.38.6",
-    "last_successful_sync_at": "2026-10-14T13:24:00+00:00",
-    "public_verified_version": "web-save-notice-v0.38.6",
+    "last_successful_sync_version": "web-drop-resistance-v0.38.7",
+    "last_successful_sync_at": "2026-10-14T14:57:16+00:00",
+    "public_verified_version": "web-drop-resistance-v0.38.7",
     "video_binding_verified_at": "2026-10-09T17:53:41.810316+08:00",
-    "source_commit": "c376df05",
+    "source_commit": "5b3044b459194cb7031dd60eae5987fe270390df",
     "package": {
-      "path": "D:/project/task-evidence/game-mode-focus-20261014/packages/chongchao-qianshao-v0.38.5.zip",
-      "sha256": "ca4c1bedb6b4a156d0c212ab513f4e4ddcf50e6d63dc923e0ee15c423aa22f34",
-      "bytes": 448290,
+      "path": "dist/toy/chongchao-qianshao/chongchao-qianshao.zip",
+      "sha256": "44689d8799e5ac2d04fe5ed6eacf5f074f20a82347abaf53d1500b48de9d8e38",
+      "bytes": 424622,
       "submitted": true,
       "entry_html_bytes": 68409,
-      "version": "web-save-notice-v0.38.6"
+      "version": "web-drop-resistance-v0.38.7"
     },
-    "submitted_package_sha256": "ca4c1bedb6b4a156d0c212ab513f4e4ddcf50e6d63dc923e0ee15c423aa22f34",
+    "submitted_package_sha256": "44689d8799e5ac2d04fe5ed6eacf5f074f20a82347abaf53d1500b48de9d8e38",
     "watermark_enabled": false,
-    "last_zip_sha256": "ca4c1bedb6b4a156d0c212ab513f4e4ddcf50e6d63dc923e0ee15c423aa22f34",
-    "last_preview_url": "https://www.bilibili.com/toy/preview/preview_KyAixmdT/index.html",
+    "last_zip_sha256": "44689d8799e5ac2d04fe5ed6eacf5f074f20a82347abaf53d1500b48de9d8e38",
+    "last_preview_url": "https://www.bilibili.com/toy/preview/preview_EEsCwaz1/index.html",
     "public_verified_without_login": true,
     "public_runtime_history": [
       {
@@ -325,17 +327,51 @@
         ],
         "record": "releases/web-acid-arena-v0.38.0/handoff.json",
         "physical_phone_tested": false
+      },
+      {
+        "status": "public_verified",
+        "at": "2026-10-14T14:57:16+00:00",
+        "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+        "version": "web-drop-resistance-v0.38.7",
+        "source_commit": "5b3044b459194cb7031dd60eae5987fe270390df",
+        "package_sha256": "44689d8799e5ac2d04fe5ed6eacf5f074f20a82347abaf53d1500b48de9d8e38",
+        "authenticated": false,
+        "sdk_mocked": false,
+        "viewports": [
+          [
+            1280,
+            720
+          ],
+          [
+            844,
+            390
+          ]
+        ],
+        "checks": [
+          "正式入口运行的 game.compat.js 与本次上传包逐字节一致",
+          "已删除的抗战战役不在正式包里",
+          "存档前缀仍是 toy-chongchao-v1-sst_save_，键名与命名空间未改",
+          "主战役真实点击能开局",
+          "视角只写 chongchao-person，不写 gunfire-person",
+          "上传入口 68,409 字节",
+          "手机横屏菜单不裁切",
+          "无脚本报错"
+        ],
+        "record": "game-projects/site-games/releases/toy-package-check-20261014/chong-public.json",
+        "physical_phone_tested": false
       }
     ],
     "package_hash_kind": "zip_sha256",
     "previous_public_runtime_revision": "v25804",
-    "platform_readback_at": "2026-10-14T13:24:00+00:00",
+    "platform_readback_at": "2026-10-14T14:57:16+00:00",
     "submitted_at": "2026-10-14T13:15:29+00:00",
     "entry_html_bytes": 68409,
-    "platform_mtime": 1791983828
+    "platform_mtime": 1791989667,
+    "platform_checked_at": "2026-10-14T22:54:46+08:00",
+    "status_checked_at": "2026-10-14T14:54:27+00:00"
   },
   "website_url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
-  "published_toy_version": "web-save-notice-v0.38.6",
+  "published_toy_version": "web-drop-resistance-v0.38.7",
   "web_toy_versions_match": true,
   "migration": {
     "source": "D:/project/gpt/worlds/breachline",
@@ -346,15 +382,15 @@
   "skill_updated": true,
   "steam_status": "Optional possibility only; Toy/video response determines any future decision",
   "extension_review_status": "published",
-  "preview_version": "web-acid-arena-v0.38.0",
-  "submitted_toy_version": "web-opening-hints-v0.38.5",
-  "website_version": "web-save-notice-v0.38.6",
-  "website_verified_at": "2026-10-14T12:08:10.901968+00:00",
+  "preview_version": "web-drop-resistance-v0.38.7",
+  "submitted_toy_version": "web-drop-resistance-v0.38.7",
+  "website_version": "web-drop-resistance-v0.38.7",
+  "website_verified_at": "2026-10-14T23:02:00+08:00",
   "site_list_name": "虫潮围城",
   "controls": "原有多动作按键和Shift按住冲刺保留；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。",
   "default_theme": "dark",
   "feedback_ledger": "feedback-ledger.json",
-  "handoff": "releases/web-opening-hints-v0.38.5/handoff.json",
+  "handoff": "releases/web-drop-resistance-v0.38.7/handoff.json",
   "squad_controls": "商店雇佣机枪/突击/医疗/工程队友；准备阶段免费转职，强化保留；队友卡片分配四种已购载具，玩家I接管；暂停菜单跟随/守基地。",
   "environments": {
     "desert": "第1–3章：荒漠，可选白天/夜晚",
@@ -402,7 +438,7 @@
     "keyboard_modes": "Tab/菜单上下进入模式组，左右或A/D选项，Enter/空格/J确认，有aria-pressed选中状态"
   },
   "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
-  "website_commit": "c376df05",
+  "website_commit": "11140d6351bc9e7e2a4006674f1035d6edda1229",
   "campaign_difficulty": {
     "default": "normal",
     "choices": [
@@ -1078,14 +1114,14 @@
   },
   "website": {
     "status": "deployed_verified",
-    "version": "web-save-notice-v0.38.6",
-    "source_commit": "c376df05",
-    "runtime_sha256": "cf094a6850a3cc588a797eecb3a561f9ebafbbc1426120d9efe13d74cc27b27f",
-    "verified_at": "2026-10-14T13:24:00+00:00",
-    "record": "releases/web-opening-hints-v0.38.5/hints-website.json",
-    "evidence": "curl 线上 update-history.js 读回 GAME_VERSION=0.38.6；verify-save-notice.cjs 以网站入口跑通六项",
+    "version": "web-drop-resistance-v0.38.7",
+    "source_commit": "11140d6351bc9e7e2a4006674f1035d6edda1229",
+    "runtime_sha256": "3ed814b15f81868176ad0abec4ad5101ed44b3e8b609a354898fb65eb5d089a9",
+    "verified_at": "2026-10-14T23:02:00+08:00",
+    "record": "game-projects/site-games/releases/game-split-hygiene-20261014/notes.md",
+    "evidence": "curl 线上 game.compat.js 1,280,293 字节，sha256 3ed814b15f818681…89a9 与本地构建逐字节一致，包里搜不到抗战字符串；index.html 无 #btnResistance 残留。存档键与命名空间未改（chongchao-*／sst_save_）。2026-10-14T23:02 复验仍一致，其后 master 提交未再改 public/。",
     "runtime_file": "线上 game.compat.js（含本次 notify 分支）",
-    "runtime_bytes": 1345621
+    "runtime_bytes": 1280293
   },
   "current_development_tool": "Codex",
   "rv_town": {
@@ -1201,7 +1237,11 @@
     "website_verified": true,
     "controls": "默认第一人称，C保留切换；Z/右键或举枪按钮瞄准；炮旁K拉炮，WASD/摇杆移动，I放下再操炮；Q/E或A/D左右、W/S或±调高低、空白处拖动瞄炮，J开炮。",
     "ballistics": "简化重力弹道、橙金曳光、枪口烟与命中反馈；炮位预计落点。无镜头震动。",
-    "website_verified_at": "2026-10-10T19:59:04.507933+08:00"
+    "website_verified_at": "2026-10-10T19:59:04.507933+08:00",
+    "status": "moved_to_gunfire_assembly",
+    "moved_at": "2026-10-11",
+    "removal_record": "releases/web-drop-resistance-v0.38.7/handoff.json",
+    "note": "抗战战役 2026-10-11 起作为独立游戏《枪火集结》运营（网站 /html/game/gunfire-assembly/、Toy feidao-gunfire），本条只作历史留存；0.38.7 已把本包内残留的 resistance-campaign／ui／assets 代码与 warOn 分支删除，虫潮不再有该玩法的任何入口与存档键。"
   },
   "channel_baseline_history": [
     {
@@ -1508,7 +1548,7 @@
     "new_video_authorized": false
   },
   "website_status": "deployed_verified",
-  "website_runtime_sha256": "cf094a6850a3cc588a797eecb3a561f9ebafbbc1426120d9efe13d74cc27b27f",
+  "website_runtime_sha256": "3ed814b15f81868176ad0abec4ad5101ed44b3e8b609a354898fb65eb5d089a9",
   "feedback_oct11": {
     "version": "web-feedback-v0.34.1",
     "status": "website_verified_toy_auditing",

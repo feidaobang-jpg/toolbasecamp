@@ -182,7 +182,7 @@ export class PinganGame extends Game {
       this.place(h, L.start.x, L.start.z);
       ui.say('李云龙', '传我命令：全团集合，打平安县城！');
       ui.say('张大彪', '一营听令，跟团长上！');
-      this.after(4.5, () => ui.toast(this.app.isTouch() ? '准星对着敌人开火，靠近会吸附，打头加倍；机枪阵地正面打不穿，绕到侧面、跳进去，或者扔手榴弹、叫骑兵连。打掉机枪手，机枪就归你用' : '准星对着敌人开火，靠近会吸附，打头加倍；机枪阵地正面打不穿——绕到侧面、跳进去，或者用手榴弹（U）、骑兵连（N）。打掉机枪手，机枪就归你用（I）', 7));
+      this.after(4.5, () => ui.toast(this.app.isTouch() ? '准星对着敌人开火，靠近会吸附，打头加倍；机枪阵地正面打不穿，绕到侧面、跳进去，或者扔手榴弹、叫骑兵连。打掉机枪手，机枪就归你用' : '准星对着敌人开火，靠近会吸附，打头加倍；机枪阵地正面打不穿——绕到侧面、跳进去，或者用手榴弹（G）、骑兵连（E）。打掉机枪手，机枪就归你用（F）', 7));
     } else if (n === 2) {
       if (fresh) this.place(h, 2, 84);
       c.visible = true; c.placed = false; c.x = L.cannonStart.x; c.z = L.cannonStart.z; c.hp = c.maxHp;
@@ -399,7 +399,7 @@ export class PinganGame extends Game {
   }
   beginChoice() {
     this.flags.choice = 1; this.choiceT = 5; this.choiceN = 0;
-    this.ui.toast(this.app.isTouch() ? '两条路：操炮朝城楼开炮（原作结局）；或者离开炮位，从城门冲进去救秀芹（改写结局）' : '两条路：操炮朝城楼开炮（原作结局）；或者离开炮位（I），从城门冲进去救秀芹（改写结局）', 9);
+    this.ui.toast(this.app.isTouch() ? '两条路：操炮朝城楼开炮（原作结局）；或者离开炮位，从城门冲进去救秀芹（改写结局）' : '两条路：操炮朝城楼开炮（原作结局）；或者离开炮位（F），从城门冲进去救秀芹（改写结局）', 9);
   }
   updateChoice(dt) {
     const h = this.hero;

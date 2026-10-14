@@ -23,7 +23,7 @@ const check = (name, ok, detail) => { out.push({ name, ok: !!ok, detail }); cons
 
   await boot();
   const lobby = await R(() => ({ ver: document.getElementById('gameVersion').textContent, cards: [...document.querySelectorAll('#lobbyModes > .lobbyCard')].map((b) => b.id + ':' + b.textContent.replace(/\s+/g, ' ').trim()), oldCard: !!document.getElementById('btnResistance'), warMenu: !!document.getElementById('warMenu'), lead: document.querySelector('.lobbyLead').textContent, qa: Object.keys(window.__gameQA).filter((k) => /resist/i.test(k)) }));
-  check('大厅 v0.4.0：只有一个「抗战战役 · 亮剑三章」入口（写着苍云岭、李家坡、平安县城三章重做），旧的章节选择入口和战役菜单都没了', lobby.ver === 'v0.4.0' && lobby.cards.length === 1 && /btnPingan:抗战战役 · 亮剑三章/.test(lobby.cards[0]) && /苍云岭、李家坡、平安县城/.test(lobby.cards[0]) && !lobby.oldCard && !lobby.warMenu && /李家坡/.test(lobby.lead) && !lobby.qa.length, lobby);
+  check('大厅只留一个「抗战战役 · 亮剑三章」入口（写着苍云岭、李家坡、平安县城三章重做），旧的章节选择入口和战役菜单都没了', /^v\d+\.\d+\.\d+$/.test(lobby.ver) && lobby.cards.length === 1 && /btnPingan:抗战战役 · 亮剑三章/.test(lobby.cards[0]) && /苍云岭、李家坡、平安县城/.test(lobby.cards[0]) && !lobby.oldCard && !lobby.warMenu && /李家坡/.test(lobby.lead) && !lobby.qa.length, lobby);
   const hist = await R(() => { const b = document.getElementById('updatesList') || document.body; return b.textContent.includes('李家坡重做'); });
   check('更新记录有 0.4.0「李家坡重做，三章全部换新」', hist, null);
 

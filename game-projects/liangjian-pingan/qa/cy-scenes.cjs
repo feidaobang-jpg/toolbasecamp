@@ -16,7 +16,7 @@ const run = (page, sec) => page.evaluate((n) => { for (let i = 0; i < n; i++) __
   await run(page, 0.5);
   notes.push(await page.evaluate(() => ({ downed: __lj.game.tongue.downed, alive: __lj.game.tongue.alive, use: document.getElementById('prompt').textContent })));
   await shot(page, 'cy-scene-downed.png');
-  await page.evaluate(() => { __lj.app.input.key('KeyI', true, false); __lj.app.input.key('KeyI', false, false); });
+  await page.evaluate(() => { __lj.app.input.key('KeyF', true, false); __lj.app.input.key('KeyF', false, false); });
   await run(page, 2); await shot(page, 'cy-scene-capture1.png');
   await run(page, 9); await shot(page, 'cy-scene-capture2.png');
   await run(page, 14); await run(page, 3); await shot(page, 'cy-scene-binoc.png');
@@ -29,7 +29,7 @@ const run = (page, sec) => page.evaluate((n) => { for (let i = 0; i < n; i++) __
   // 第四阶段：上炮、瞄一个偏的点放炮
   await page.evaluate(() => { const g = __lj.game; g.place(g.hero, g.cannon.x + 0.4, g.cannon.z + 2.2); });
   await run(page, 0.3);
-  await page.evaluate(() => { __lj.app.input.key('KeyI', true, false); __lj.app.input.key('KeyI', false, false); });
+  await page.evaluate(() => { __lj.app.input.key('KeyF', true, false); __lj.app.input.key('KeyF', false, false); });
   await run(page, 0.5);
   await page.evaluate(() => { const g = __lj.game; g.cam.yaw = g.cannon.aimYaw = 0.2; g.cannon.elev = 1.08; });
   await run(page, 0.5); await shot(page, 'cy-scene-aim-tp.png');
