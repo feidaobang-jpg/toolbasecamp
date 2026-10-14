@@ -15,6 +15,9 @@ export const DEF = {
   wall: { look: 'rifle', hp: 2, speed: 0, range: 50, score: 120 },
   mortar: { look: 'rifle', hp: 2, speed: 0, range: 90, score: 200 },
   boss: { look: 'boss', hp: 280, speed: 4.9, score: 3000 },
+  // 苍云岭：军曹（抓舌头的目标，行为同步兵）、警卫员虎子
+  sergeant: { look: 'sergeant', hp: 4, speed: 3.1, range: 30, score: 300 },
+  huzi: { look: 'huzi', hp: 9, speed: 6.6, range: 26 },
 };
 const _v = new THREE.Vector3();
 

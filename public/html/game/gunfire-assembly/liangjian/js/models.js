@@ -24,6 +24,14 @@ const LOOKS = {
   officer: { coat: 0xa89250, pants: 0x9a8648, wrap: 0x3a2c22, hat: 'flap', hatC: 0xa89250, weapon: 'katana', belt: 0x4b3521, tab: 0xc23b2b, scale: 1.04 },
   elite: { coat: 0x565c3c, pants: 0x4d5336, wrap: 0x2f2a22, hat: 'helmet', hatC: 0x3d4230, weapon: 'smg', belt: 0x2a2018, tab: 0xd8d2b8, goggles: true, scale: 1.05 },
   boss: { coat: 0x5d6240, pants: 0x545a3a, wrap: 0x231c16, hat: 'cap', hatC: 0x5d6240, weapon: 'katana', left: 'pistol', belt: 0x3a2618, tab: 0xd0a030, cape: 0x2b3024, gloves: 0xf2efe6, scale: 1.2 },
+  // 苍云岭：军曹（臂章、腰刀、步枪）、虎子（警卫员）、柱子（炮手，背弹药袋）、坂田（眼镜、披风）、楚云飞与 358 团参谋（国军黄绿呢军装）、担架队
+  sergeant: { coat: 0xb39c58, pants: 0xa8914f, wrap: 0x8f8250, hat: 'flap', hatC: 0xb39c58, weapon: 'rifle', pack: 0x7b6a3c, belt: 0x4b3521, tab: 0xd0a030, band: 0xe8e2d0 },
+  huzi: { coat: 0x7b8b9a, pants: 0x71839a, wrap: 0xa3aaad, hat: 'cap', hatC: 0x7b8b9a, weapon: 'pistol', belt: 0x5a3d26, strap: true, scale: 0.96 },
+  zhuzi: { coat: 0x758696, pants: 0x6b7d92, wrap: 0x9aa2a6, hat: 'cap', hatC: 0x758696, weapon: 'none', pack: 0x6f6a4a, belt: 0x5a3d26 },
+  sakata: { coat: 0x5d6240, pants: 0x545a3a, wrap: 0x231c16, hat: 'cap', hatC: 0x5d6240, weapon: 'katana', left: 'pistol', belt: 0x3a2618, tab: 0xd0a030, cape: 0x2b3024, gloves: 0xf2efe6, glasses: true, scale: 1.12 },
+  chu: { coat: 0x6e6a4c, pants: 0x5f5b40, wrap: 0x2c241c, hat: 'cap', hatC: 0x6e6a4c, weapon: 'none', belt: 0x4a3020, tab: 0xc23b2b, cape: 0x4c4a36, gloves: 0xf2efe6, star: true, scale: 1.08 },
+  guojun: { coat: 0x77724f, pants: 0x6a6546, wrap: 0x2c241c, hat: 'cap', hatC: 0x77724f, weapon: 'none', belt: 0x4a3020, tab: 0xc23b2b, star: true },
+  bearer: { coat: 0x7b8b9a, pants: 0x71839a, wrap: 0xa3aaad, hat: 'cap', hatC: 0x7b8b9a, weapon: 'none', belt: 0x5a3d26, band: 0xe8e2d0 },
   // 秀芹：花棉袄、黑裤、辫子；被绑着的版本身上有绳子
   xiuqin: { coat: 0xa3523f, pants: 0x38424f, wrap: 0x38424f, hat: 'none', weapon: 'none', belt: 0x8f4636, hair: 0x1d1814, rope: 0xcdb98a, scale: 0.98 },
   xiuqinFree: { coat: 0xa3523f, pants: 0x38424f, wrap: 0x38424f, hat: 'none', weapon: 'none', belt: 0x8f4636, hair: 0x1d1814, scale: 0.98 },
@@ -44,11 +52,14 @@ function soldierGeos(key) {
   g.box(0.06, 0.06, 0.03, -0.09, 0.84, -0.185, 0x2a2018, 0, 0, 0, 0);
   g.box(0.06, 0.06, 0.03, 0.09, 0.84, -0.185, 0x2a2018, 0, 0, 0, 0);
   if (key === 'hero') { g.box(0.22, 0.04, 0.03, 0, 0.9, -0.185, 0x2a2018, 0, 0, 0, 0); g.box(0.2, 0.05, 0.03, 0, 0.7, -0.185, 0x3a2c22, 0, 0, 0, 0); }
-  if (key === 'boss') g.box(0.16, 0.035, 0.03, 0, 0.74, -0.185, 0x1c1612, 0, 0, 0, 0);
+  if (key === 'boss' || key === 'sakata') g.box(0.16, 0.035, 0.03, 0, 0.74, -0.185, 0x1c1612, 0, 0, 0, 0);
+  if (L.glasses) { g.box(0.1, 0.07, 0.03, -0.09, 0.85, -0.195, 0x1a1a1a, 0, 0, 0, 0); g.box(0.1, 0.07, 0.03, 0.09, 0.85, -0.195, 0x1a1a1a, 0, 0, 0, 0); g.box(0.06, 0.02, 0.03, 0, 0.86, -0.195, 0x1a1a1a, 0, 0, 0, 0); }
+  if (L.band) g.box(0.16, 0.1, 0.19, -0.335, 0.4, 0, L.band, 0, 0, 0, 0);
   if (L.hat === 'cap') {
     g.box(0.4, 0.15, 0.4, 0, 1.04, 0, L.hatC, 0, 0, 0, 0.1);
     g.box(0.3, 0.04, 0.16, 0, 0.99, -0.26, L.hatC, 0, 0, 0, 0.05);
-    if (key !== 'boss') g.box(0.07, 0.07, 0.03, 0, 1.05, -0.205, 0xc23b2b, 0, 0, 0, 0);
+    if (L.star) g.box(0.08, 0.08, 0.03, 0, 1.05, -0.205, 0xf2efe6, 0, 0, 0, 0);
+    else if (key !== 'boss' && key !== 'sakata') g.box(0.07, 0.07, 0.03, 0, 1.05, -0.205, 0xc23b2b, 0, 0, 0, 0);
     else g.box(0.07, 0.07, 0.03, 0, 1.05, -0.205, 0xd0a030, 0, 0, 0, 0);
   } else if (L.hat === 'helmet') {
     g.cyl(0.26, 0.2, 0, 1.04, 0, L.hatC, 8, 0.72, 0, 0, 0, 0.15);
@@ -240,6 +251,52 @@ export function buildCannon() {
   flash.rotation.x = Math.PI / 2; flash.position.set(0, 0.06, -1.95); flash.scale.setScalar(4.5); flash.visible = false;
   slide.add(flash);
   return { root, yawG, pitchG, slide, flash, wheelL, wheelR, muzzleZ: -1.95, muzzleY: 0.06 };
+}
+
+// ---------- 迫击炮（苍云岭柱子的炮）：座板 + 炮身 + 两脚架；炮口朝 -Z，俯仰轴在座板上 ----------
+export function buildMortar() {
+  const root = new THREE.Group();
+  const yawG = new THREE.Group();
+  root.add(yawG);
+  const steel = 0x4c5444, dark = 0x2c302a;
+  let g = new Geo();
+  g.cyl(0.42, 0.08, 0, 0.05, 0.12, dark, 10, 0.9);                  // 座板
+  g.box(0.5, 0.05, 0.12, 0, 0.1, 0.12, steel, 0, 0, 0, 0);
+  // 两脚架：撑在炮身前段，开脚落地
+  g.box(0.05, 0.95, 0.05, -0.28, 0.45, -0.62, steel, 0, -0.18, 0.32, 0);
+  g.box(0.05, 0.95, 0.05, 0.28, 0.45, -0.62, steel, 0, -0.18, -0.32, 0);
+  g.box(0.5, 0.05, 0.06, 0, 0.82, -0.52, dark, 0, 0, 0, 0);
+  g.box(0.08, 0.16, 0.08, 0.16, 0.86, -0.5, dark, 0, 0, 0, 0);       // 方向机
+  const base = g.build(MAT.vc); base.castShadow = true;
+  yawG.add(base);
+  const pitchG = new THREE.Group();
+  pitchG.position.set(0, 0.16, 0.12);
+  yawG.add(pitchG);
+  const slide = new THREE.Group();
+  pitchG.add(slide);
+  g = new Geo();
+  g.cyl(0.075, 1.1, 0, 0, -0.55, steel, 10, 1, Math.PI / 2);
+  g.cyl(0.09, 0.08, 0, 0, -1.08, dark, 10, 1, Math.PI / 2);
+  g.cyl(0.1, 0.12, 0, 0, -0.02, dark, 10, 0.8, Math.PI / 2);
+  g.box(0.05, 0.1, 0.14, 0.09, 0.07, -0.7, 0x8a7a50, 0, 0, 0, 0);    // 瞄准镜
+  const tube = g.build(MAT.vc); tube.castShadow = true;
+  slide.add(tube);
+  const flash = new THREE.Mesh(flashGeo, MAT.muzzle);
+  flash.rotation.x = Math.PI / 2; flash.position.set(0, 0, -1.18); flash.scale.setScalar(2.4); flash.visible = false;
+  slide.add(flash);
+  return { root, yawG, pitchG, slide, flash, muzzleZ: -1.12, muzzleY: 0 };
+}
+
+// 担架（两名担架员抬着走）
+export function buildStretcher() {
+  const g = new Geo();
+  g.box(0.62, 0.06, 2.0, 0, 0, 0, 0x6b4a2c, 0, 0, 0, 0);
+  g.box(0.56, 0.1, 1.7, 0, 0.06, 0, 0xd8d0b8, 0, 0, 0, 0.1);
+  g.box(0.5, 0.16, 0.6, 0, 0.14, 0.4, 0x7b8b9a, 0, 0, 0, 0.1);
+  g.box(0.26, 0.16, 0.26, 0, 0.16, -0.62, 0xe3b98f, 0, 0, 0, 0.1);
+  for (const sx of [-0.33, 0.33]) g.box(0.05, 0.05, 2.7, sx, 0, 0, 0x5a3d26, 0, 0, 0, 0);
+  const m = g.build(MAT.vc); m.castShadow = true;
+  return m;
 }
 
 // ---------- 战马与骑兵 ----------
