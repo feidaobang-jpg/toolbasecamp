@@ -1,0 +1,285 @@
+{
+ "at": "2026-10-14T08:10:13.062Z",
+ "passed": 19,
+ "total": 19,
+ "checks": [
+  {
+   "name": "语音清单 20 条（17 条原声 + 3 条合成）全部能下载解码，不再有 lashanglai，也不加载苍云岭的语音",
+   "ok": true,
+   "detail": {
+    "list": [
+     "yidalipao",
+     "hong",
+     "geiwohong",
+     "kaipao",
+     "shanben_bieda",
+     "suansha",
+     "li_bushi",
+     "xq_zhi",
+     "xq_kaipao",
+     "bie_kaipao",
+     "xq_xiabeizi",
+     "xq_qiaobuqi",
+     "kaipao3",
+     "yongzhesheng",
+     "chong",
+     "qibinglian",
+     "jingrui",
+     "liangjian",
+     "fuyu",
+     "tiancai"
+    ],
+    "loaded": [
+     "yidalipao",
+     "hong",
+     "geiwohong",
+     "kaipao",
+     "shanben_bieda",
+     "suansha",
+     "li_bushi",
+     "xq_zhi",
+     "xq_kaipao",
+     "bie_kaipao",
+     "xq_xiabeizi",
+     "xq_qiaobuqi",
+     "kaipao3",
+     "yongzhesheng",
+     "chong",
+     "qibinglian",
+     "jingrui",
+     "liangjian",
+     "fuyu",
+     "tiancai"
+    ]
+   }
+  },
+  {
+   "name": "城门、机枪堡都没了约 1.6 秒后进入城楼过场：秀芹和山本在城楼上，两侧有卫兵，镜头对着城楼",
+   "ok": true,
+   "detail": {
+    "fin": {
+     "finale": 1,
+     "scn": false
+    },
+    "host": {
+     "scn": true,
+     "cut": 23.1,
+     "cast": 2,
+     "guards": 2,
+     "cam": 11.7
+    },
+    "d0": "山本一木楼下的八路，别打啦！你们往楼上看——这个女人，你们认识吗？"
+   }
+  },
+  {
+   "name": "过场依次播放原声：山本“别打啦”→ 李云龙“算什么军人”→ 秀芹“你开炮啊”→ 张大彪“别开炮”，结束后进入抉择",
+   "ok": true,
+   "detail": {
+    "v1": [
+     "shanben_bieda",
+     "hong",
+     "suansha",
+     "xq_kaipao",
+     "bie_kaipao"
+    ],
+    "ch": {
+     "choice": 1,
+     "scn": false,
+     "cut": false,
+     "ending": ""
+    }
+   }
+  },
+  {
+   "name": "抉择时目标写明两条路",
+   "ok": true,
+   "detail": "第三阶段 · 朝城楼开炮，或者冲进城门救秀芹"
+  },
+  {
+   "name": "迟迟不决定时秀芹在城楼上催（原声“值！团长，开炮！”）",
+   "ok": true,
+   "detail": [
+    "shanben_bieda",
+    "hong",
+    "suansha",
+    "xq_kaipao",
+    "bie_kaipao",
+    "xq_zhi"
+   ]
+  },
+  {
+   "name": "上炮后瞄准城楼：落点标成红色并注明“秀芹在上面”",
+   "ok": true,
+   "detail": {
+    "elev": {
+     "manned": true,
+     "e": 0.508,
+     "n": 126,
+     "hit": "tower"
+    },
+    "aimCol": {
+     "col": "ff6a55",
+     "aim": "仰角 29°　落点 城楼（秀芹在上面）　炮弹 8"
+    }
+   }
+  },
+  {
+   "name": "朝城楼按 J：先进“开炮”过场（李云龙“不会拿士兵的生命去换自己的老婆”），炮还没出膛，结局记为原作",
+   "ok": true,
+   "detail": {
+    "ending": "classic",
+    "scn": true,
+    "shells": 0,
+    "saved": "\"classic\""
+   }
+  },
+  {
+   "name": "过场约 13 秒后真正开炮（原声“开炮！开炮！开炮！”），过场里拖视角也打中城楼：城楼塌、秀芹和山本的模型移除、城楼卫兵阵亡",
+   "ok": true,
+   "detail": {
+    "fired": {
+     "shells": 1,
+     "scn": false,
+     "kaipao3": true,
+     "inFlight": 1
+    },
+    "down": {
+     "towerDown": 1,
+     "tower": false,
+     "cast": 0,
+     "guards": 0
+    }
+   }
+  },
+  {
+   "name": "原作结局进第四阶段：李云龙喊“给秀芹报仇”",
+   "ok": true,
+   "detail": {
+    "phase": 4,
+    "dlg": [
+     "一营跟我上！"
+    ],
+    "cur": "李云龙弟兄们，冲啊！给秀芹报仇！"
+   }
+  },
+  {
+   "name": "原作结局的决战：山本带伤（八成血），院子里没有秀芹，开场台词对得上",
+   "ok": true,
+   "detail": {
+    "hp": 224,
+    "max": 280,
+    "xq": false,
+    "line": "山本一木李云龙，你连自己的女人都敢轰。"
+   }
+  },
+  {
+   "name": "原作结局结算：标题“平安县城，拿下了！”，第一行写“结局 城楼开炮（原作）”",
+   "ok": true,
+   "detail": {
+    "state": "result",
+    "title": "平安县城，拿下了！",
+    "stats": "结局城楼开炮（原作）用时0:58歼敌3干掉精锐0开炮1 发“天才”炮击0拼刀成功0骑兵连出击0缴获军火库否阵亡0受击1爆头0规则无限命 · 标准"
+   }
+  },
+  {
+   "name": "城楼抉择之前，门洞仍不放人进城",
+   "ok": true,
+   "detail": {
+    "z": -16.3
+   }
+  },
+  {
+   "name": "过场中按 J 跳过：直接进入抉择，台词和字幕立即停掉；贴门站的人先退后两步",
+   "ok": true,
+   "detail": {
+    "scn": false,
+    "choice": 1,
+    "cut": false,
+    "speaking": 0,
+    "dlg": true,
+    "heroZ": -14.5
+   }
+  },
+  {
+   "name": "抉择时按 W 冲进城门：走改写结局，城楼上的人撤走，城墙上不再有敌人，结局记为改写，加 2500 分",
+   "ok": true,
+   "detail": {
+    "ending": "rescue",
+    "cast": 0,
+    "onWall": 0,
+    "saved": "\"rescue\"",
+    "dScore": 2500,
+    "score0": 0
+   }
+  },
+  {
+   "name": "改写结局进第四阶段：城楼没塌，李云龙喊“把秀芹抢回来”",
+   "ok": true,
+   "detail": {
+    "phase": 4,
+    "tower": true,
+    "cur": "李云龙弟兄们，冲啊！把秀芹抢回来！",
+    "q": "一营跟我上，别让山本跑了！"
+   }
+  },
+  {
+   "name": "改写结局的决战：秀芹绑在院子里的木桩上，山本满血，开场台词拿秀芹要挟",
+   "ok": true,
+   "detail": {
+    "hp": 280,
+    "max": 280,
+    "xq": true,
+    "at": [
+     9,
+     -101.5
+    ],
+    "inScene": true,
+    "line": "山本一木李云龙，再往前一步，你的女人就没命了。"
+   }
+  },
+  {
+   "name": "打赢后给秀芹松绑（木桩留下、秀芹站起来），结算标题“秀芹也救回来了”，写“结局 救下秀芹（改写）”",
+   "ok": true,
+   "detail": {
+    "free": {
+     "cast": 2,
+     "line": "李云龙秀芹！没事了，山本完了。"
+    },
+    "r2": {
+     "state": "result",
+     "title": "平安县城拿下了，秀芹也救回来了！",
+     "stats": "平安县城拿下了，秀芹也救回来了！评价：炊事班长结局救下秀芹（改写）用时0:24歼敌1干掉精锐0开炮0 发“天才”炮击0拼刀成功0骑兵连出击0缴获军火库否阵亡0受击0爆头0规则无限命 · 标准战功合计 12175　最高 12175改写结局：没朝城楼开炮，冲进去把秀芹抢了回来。原作里那一炮是李云龙亲口下的令——想看，下次在城门外操炮瞄准城楼。要是打得过瘾，回 B 站给视频点个三连，就当给独立团发军饷了。再战一次返回主菜单"
+    }
+   }
+  },
+  {
+   "name": "从第四阶段直接开局：沿用上次结局（救人＝城楼还在，原作＝城楼已塌，没打过按原作）；从头开局不带结局",
+   "ok": true,
+   "detail": {
+    "rescue": {
+     "ending": "rescue",
+     "tower": true
+    },
+    "classic": {
+     "ending": "classic",
+     "tower": false,
+     "raw": "\"classic\""
+    },
+    "none": {
+     "ending": "classic",
+     "tower": false
+    },
+    "p1": {
+     "ending": "",
+     "tower": true
+    }
+   }
+  },
+  {
+   "name": "全程没有报错",
+   "ok": true,
+   "detail": []
+  }
+ ],
+ "errors": []
+}
