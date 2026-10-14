@@ -28,3 +28,5 @@
 不重跑全部历史测试；按改动范围选择。检查失败先修复再发布；无法真机验证时如实保留未测项，不能用桌面模拟冒充。
 
 | LJ-STORY-003：同上重做版 `game.js` 的城楼过场、抉择与结局，`audio.js` 语音清单，`main.js` 结局存档；枪火集结 `resistance-*.js`（旧第三章已删） | 城门轰开后进城楼过场（秀芹、山本、两名卫兵），0.9 秒后开火键或空格可跳过且台词立即停。“城楼没塌不许进门洞”的限制只在抉择期间放行——否则改写路线会被堵死（v0.5.0 发布前自动通关卡门口 15 分钟）。朝城楼开炮先进过场、约 13 秒后出膛，出膛前恢复下令时的瞄准，保证这一炮落在城楼上；冲进城门走改写结局，城楼不塌、城墙敌人撤走。原作结局山本八成血、改写结局满血且秀芹在院中木桩上；结算第一行写结局，没走到抉择的败局不写。结局存 `lj_pingan_v1_ending`，第四、五阶段直接开局沿用（没打过按原作）。语音清单 20 条（17 原声 + 3 合成）都要能下载解码；弹幕已删，不要恢复。按行正则批量删调用要重新构建，留下的悬空 `if` 只有构建能查出来。 | `game-projects/liangjian-pingan/qa/story.cjs`（19 条）、`ROUTE=rescue node playthrough.cjs 1 std` 与原作三档 `playthrough.cjs`、`gunfire-chapters.cjs`（9 条：删旧第三章后第一二章与跳转）、`options.cjs` 的弹幕已去掉断言。基线 pingan v0.5.0 / 枪火集结 0.2.3，经过见 `game-projects/liangjian-pingan/media-kit/releases/v0.5.0/notes.md`。 |
+
+| MODE-FOCUS-010：虫潮菜单与枪火大厅、章节菜单 | 虫潮默认基地防守，旧玩法折叠且保留原进度入口，自由测试在更多；折叠标题用 Enter 不得误开新局。枪火直达平安县城仍调用章节路由，章节重做标记读 remake 配置；隐藏未开发占位，旧玩法可展开进入，旧第三章存档仍跳重做版。 | `verify-menu.cjs` 八视口、`game-projects/site-games/qa/mode-focus.cjs` 三视口与七玩法短时交互；`gunfire-chapters.cjs` 九项旧章机制回归。基线 0.38.3 / 0.2.4，盘点不等于全模式通关或真机验收，见 releases/mode-focus-20261014。 |

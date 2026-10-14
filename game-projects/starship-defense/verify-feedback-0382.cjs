@@ -1,7 +1,8 @@
 // v0.38.2：母皇出生保护+血量、触屏右侧栏避让、矮台阶可走。
 const {chromium}=require('C:/Users/37818/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const fs=require('fs'),path=require('path');
-const release=path.join(__dirname,'media-kit/releases',process.env.RELEASE||'web-feedback-v0.38.2');
+const release=process.env.QA_OUT||path.join(__dirname,'media-kit/releases',process.env.RELEASE||'web-feedback-v0.38.2');
+const expectedVersion=process.env.EXPECTED_VERSION||'0.38.2';
 const url=process.env.GAME_URL||'http://127.0.0.1:8765/public/html/game/starship-defense/index.html';
 const results={},fail=[];
 const check=(n,ok,d)=>{results[n]={ok:!!ok,...(d!==undefined?{detail:d}:{})};if(!ok)fail.push(n);console.log((ok?'PASS ':'FAIL ')+n+(ok?'':'  '+JSON.stringify(d)));};
@@ -16,7 +17,7 @@ const check=(n,ok,d)=>{results[n]={ok:!!ok,...(d!==undefined?{detail:d}:{})};if(
   await p.keyboard.press('Enter');await p.waitForTimeout(800);
 
   const ver=await p.evaluate(async()=>{try{const m=await import('./update-history.js');return m.GAME_VERSION;}catch(e){return document.getElementById('gameVersion')?.textContent||'';}});
-  check('版本为 0.38.2',ver==='0.38.2'||String(ver).includes('0.38.2'),ver);
+  check('版本为 '+expectedVersion,ver===expectedVersion||String(ver).includes(expectedVersion),ver);
 
   // 强制触屏布局
   await p.evaluate(()=>{document.getElementById('stage').classList.add('touch-mode');document.body.classList.add('touch-mode');});
