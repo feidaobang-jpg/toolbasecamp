@@ -11,10 +11,10 @@
   "toy_slug": "feidao-gunfire",
   "toy_url": "https://www.bilibili.com/toy/feidao-gunfire/index.html",
   "toy_status": "published",
-  "notes": "从虫潮围城拆出的枪战模式大厅；首版含战地据点与抗战战役。网站与 Toy 已上线；相关视频简介已公开核验含枪火集结入口。 2026-10-14：抗战战役第三章平安县城整章换成重做版（pingan/ 独立页面），记录见 game-projects/liangjian-pingan/media-kit/。 2026-10-14 0.3.0：抗战战役第一章换成重做版苍云岭，苍云岭与平安县城共用 liangjian/ 亮剑战役页面（pingan/ 只剩跳转），旧骑兵连章节删除；大厅推荐入口改成亮剑战役。记录见 game-projects/liangjian-pingan/media-kit/releases/v0.6.0/。",
-  "toy_public_verified_at": "2026-10-12T14:43:00.000Z",
+  "notes": "从虫潮围城拆出的枪战模式大厅；首版含战地据点与抗战战役。网站与 Toy 已上线；相关视频简介已公开核验含枪火集结入口。 2026-10-14：抗战战役第三章平安县城整章换成重做版（pingan/ 独立页面），记录见 game-projects/liangjian-pingan/media-kit/。 2026-10-14 0.3.0：抗战战役第一章换成重做版苍云岭，苍云岭与平安县城共用 liangjian/ 亮剑战役页面（pingan/ 只剩跳转），旧骑兵连章节删除；大厅推荐入口改成亮剑战役。记录见 game-projects/liangjian-pingan/media-kit/releases/v0.6.0/。 2026-10-14 0.4.1：存档命名空间与虫潮分开（gunfire-*／gfs_save_，四把通用输入键仍共用，首次启动一次性复制旧偏好），并删掉本包里残留的虫族模式与房车生存代码；换键保住老玩家的本地档、Toy 云档与旧备份文件。网站与 Toy 均已核验上线，经过见 game-projects/site-games/releases/game-split-hygiene-20261014/notes.md。",
+  "toy_public_verified_at": "2026-10-14T22:57:01+08:00",
   "bilibili_descriptions_verified_at": "2026-10-12T17:10:00+08:00",
-  "handoff": "releases/web-lijiapo-v0.4.0/handoff.json",
+  "handoff": "releases/web-save-ns-split-v0.4.1/handoff.json",
   "channel_baseline_history": [
     {
       "at": "2026-10-12T12:31:12.320579+00:00",
@@ -205,41 +205,43 @@
       "record": "releases/web-save-notice-v0.3.1/handoff.json"
     }
   ],
-  "website_version": "web-lijiapo-v0.4.0",
-  "website_commit": "8c48b16ba72f7140c82dfdc8df0e01715addd6eb",
-  "website_verified_at": "2026-10-14T13:23:01.384Z",
+  "website_version": "web-save-ns-split-v0.4.1",
+  "website_commit": "11140d6351bc9e7e2a4006674f1035d6edda1229",
+  "website_verified_at": "2026-10-14T23:02:00+08:00",
   "website": {
     "status": "deployed_verified",
-    "at": "2026-10-14T13:23:01.384Z",
-    "source_commit": "8c48b16ba72f7140c82dfdc8df0e01715addd6eb",
-    "runtime_sha256": "b9322cfb4b6f3b91814caf168592f0722ab446d2568bf3e8dfeb3192265c564f",
+    "at": "2026-10-14T23:02:00+08:00",
+    "source_commit": "11140d6351bc9e7e2a4006674f1035d6edda1229",
+    "runtime_sha256": "8bd1e552cfc709898426c72c4464df02fa0964ba991986bf140ad8d9bdda6720",
     "liangjian_runtime_sha256": "c100a196b2979404e4f50a5206aca07c02e51167efd12d4dfc045aaeaba135a8",
-    "version": "web-lijiapo-v0.4.0"
+    "version": "web-save-ns-split-v0.4.1",
+    "runtime_bytes": 1149511,
+    "evidence": "curl 线上 game.compat.js 1,149,511 字节，sha256 8bd1e552cfc70989…6720 与本地构建逐字节一致；包内含 gunfire-person／gfs_save_／旧 chongchao_* 云档兜底与新导出文件名，无 zerg／rv 字符串；liangjian/game.compat.js 未改动（c100a196b2979404…）。2026-10-14T23:02 复验仍一致，其后 master 提交未再改 public/。"
   },
   "web_toy_versions_match": true,
   "toy": {
     "id": 43022175699968,
     "slug": "feidao-gunfire",
     "url": "https://www.bilibili.com/toy/feidao-gunfire/index.html",
-    "status": "auditing",
-    "review_status": "auditing",
+    "status": "published",
+    "review_status": "published",
     "submitted_version": "web-save-ns-split-v0.4.1",
     "submitted_at": "2026-10-14T22:52:33+08:00",
     "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_KwxHycAQ/index.html",
     "package_sha256": "a0ae1de913ffbbb20614d666b1b905e0dcac9e09eabd7cce74d5d72afbe01e61",
-    "published_version": "web-lijiapo-v0.4.0",
-    "last_published_version": "web-lijiapo-v0.4.0",
-    "last_successful_sync_version": "web-lijiapo-v0.4.0",
-    "last_successful_sync_at": "2026-10-14T21:27:57+08:00",
-    "public_verified_at": "2026-10-14T21:27:57+08:00",
-    "published_verified_at": "2026-10-14T21:27:57+08:00",
-    "public_verified_version": "web-lijiapo-v0.4.0",
+    "published_version": "web-save-ns-split-v0.4.1",
+    "last_published_version": "web-save-ns-split-v0.4.1",
+    "last_successful_sync_version": "web-save-ns-split-v0.4.1",
+    "last_successful_sync_at": "2026-10-14T22:57:01+08:00",
+    "public_verified_at": "2026-10-14T22:57:01+08:00",
+    "published_verified_at": "2026-10-14T22:57:01+08:00",
+    "public_verified_version": "web-save-ns-split-v0.4.1",
     "current_public_verification": "verified",
     "watermark_enabled": false,
-    "release_record": "releases/web-lijiapo-v0.4.0/handoff.json",
-    "verified_at": "2026-10-14T21:27:57+08:00",
-    "source_commit": "8c48b16ba72f7140c82dfdc8df0e01715addd6eb",
-    "note": "0.4.1 存档命名空间与虫潮分开（gunfire-*／gfs_save_，首次启动一次性复制旧偏好）＋删掉本包里残留的虫族模式与房车生存代码。Toy 包内的本地存档前缀仍写成 toy-gunfire-v1-sst_save_，云档读取保留旧的 chongchao_* 兜底，导入仍认旧的 starship-defense 备份标识，已发布玩家的本地进度、自动备份、云档和备份文件都不失效。预览 preview_w9n7dPez 用 toy-package-check.cjs 跑过 10 项（运行的脚本与本次包体逐字节一致、战地真实点击能开局、视角只写 gunfire-person、入口 68,269 字节、手机横屏菜单不裁切、无报错），2026-10-14T22:52:33+08:00 提交一次审核，状态 auditing。上一稳定版 web-lijiapo-v0.4.0 仍是线上 published 基线。实体手机未测试。",
+    "release_record": "releases/web-save-ns-split-v0.4.1/handoff.json",
+    "verified_at": "2026-10-14T22:57:01+08:00",
+    "source_commit": "5b3044b459194cb7031dd60eae5987fe270390df",
+    "note": "0.4.1 存档命名空间与虫潮分开（gunfire-*／gfs_save_，首次启动一次性复制旧偏好）＋删掉本包里残留的虫族模式与房车生存代码。Toy 包内的本地存档前缀仍写成 toy-gunfire-v1-sst_save_，云档读取保留旧的 chongchao_* 兜底，导入仍认旧的 starship-defense 备份标识，已发布玩家的本地进度、自动备份、云档和备份文件都不失效。预览 preview_w9n7dPez 用 toy-package-check.cjs 跑过 10 项后，2026-10-14T22:52:33+08:00 以同一稳定包提交一次审核（回执预览 preview_KwxHycAQ），22:54 过审 published；正式入口 https://www.bilibili.com/toy/feidao-gunfire/index.html 复跑同一脚本 10/10（包体逐字节一致、战地真实开局、视角只写 gunfire-person、入口 68,269 字节、手机横屏菜单不裁切、无报错），记录见 game-projects/site-games/releases/toy-package-check-20261014/gunfire-public.json。实体手机未测试。",
     "public_runtime_revision": "v25864",
     "public_runtime_evidence": {
       "task_id": "01a133de-6dff-7e82-901b-e857af3188b6-toy-guest-20261013-1",
@@ -264,11 +266,11 @@
       ],
       "record": "game-projects/site-games/releases/guest-entry-20261013/public-qa.json"
     },
-    "status_checked_at": "2026-10-14T21:27:58+08:00",
-    "last_submitted_version": "web-lijiapo-v0.4.0",
-    "last_zip_sha256": "ffb582f45fa6c682d29f5669387ad96fe036c399606ff2a2bf1958d326b27f55",
-    "last_preview_url": "https://www.bilibili.com/toy/preview/preview_652x4RRN/index.html",
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_652x4RRN/index.html",
+    "status_checked_at": "2026-10-14T22:54:42+08:00",
+    "last_submitted_version": "web-save-ns-split-v0.4.1",
+    "last_zip_sha256": "a0ae1de913ffbbb20614d666b1b905e0dcac9e09eabd7cce74d5d72afbe01e61",
+    "last_preview_url": "https://www.bilibili.com/toy/preview/preview_w9n7dPez/index.html",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_w9n7dPez/index.html",
     "published_entry": "https://www.bilibili.com/toy/feidao-gunfire/index.html",
     "public_verified_without_login": true,
     "public_runtime_history": [
@@ -277,16 +279,57 @@
         "at": "2026-10-12T14:43:00.000Z",
         "url": "https://www.bilibili.com/toy/feidao-gunfire/index.html",
         "evidence": "Public revision v25562; lobby grid 3 columns, version v0.1.1, lobby fits without scrolling at 1280x720 (logged-in read-only check)."
+      },
+      {
+        "status": "public_verified",
+        "at": "2026-10-14T22:57:01+08:00",
+        "url": "https://www.bilibili.com/toy/feidao-gunfire/index.html",
+        "version": "web-save-ns-split-v0.4.1",
+        "source_commit": "5b3044b459194cb7031dd60eae5987fe270390df",
+        "package_sha256": "a0ae1de913ffbbb20614d666b1b905e0dcac9e09eabd7cce74d5d72afbe01e61",
+        "authenticated": false,
+        "sdk_mocked": false,
+        "viewports": [
+          [
+            1280,
+            720
+          ],
+          [
+            844,
+            390
+          ]
+        ],
+        "checks": [
+          "正式入口运行的 game.compat.js 与本次上传包逐字节一致",
+          "已删除的虫族模式／房车生存不在正式包里",
+          "存档前缀仍是 toy-gunfire-v1-sst_save_（老玩家进度不失效）",
+          "战地真实点击能开局",
+          "视角只写 gunfire-person，不写 chongchao-person",
+          "上传入口 68,269 字节",
+          "手机横屏菜单不裁切",
+          "无脚本报错"
+        ],
+        "record": "game-projects/site-games/releases/toy-package-check-20261014/gunfire-public.json",
+        "physical_phone_tested": false
       }
     ],
-    "version": "web-lijiapo-v0.4.0",
-    "package_hash": "ffb582f45fa6c682d29f5669387ad96fe036c399606ff2a2bf1958d326b27f55",
+    "version": "web-save-ns-split-v0.4.1",
+    "package_hash": "a0ae1de913ffbbb20614d666b1b905e0dcac9e09eabd7cce74d5d72afbe01e61",
     "package_hash_kind": "zip_sha256",
     "previous_public_runtime_revision": "v25562",
     "zip_sha256": "a0ae1de913ffbbb20614d666b1b905e0dcac9e09eabd7cce74d5d72afbe01e61",
-    "platform_checked_at": "2026-10-14T22:54:46+08:00"
+    "platform_checked_at": "2026-10-14T22:54:42+08:00",
+    "entry_html_bytes": 68269,
+    "package": {
+      "path": "dist/toy/feidao-gunfire/feidao-gunfire.zip",
+      "sha256": "a0ae1de913ffbbb20614d666b1b905e0dcac9e09eabd7cce74d5d72afbe01e61",
+      "bytes": 4314325,
+      "submitted": true,
+      "entry_html_bytes": 68269,
+      "version": "web-save-ns-split-v0.4.1"
+    }
   },
   "qa": "releases/web-anonymous-v0.1.3/handoff.json",
-  "published_toy_version": "web-lijiapo-v0.4.0",
+  "published_toy_version": "web-save-ns-split-v0.4.1",
   "extension_review_status": "published"
 }
