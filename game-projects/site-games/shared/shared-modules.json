@@ -1,0 +1,58 @@
+{
+  "_说明": "虫潮围城与枪火集结是同一条引擎线的两款游戏，运行时各自目录里必须各留一份完整拷贝（Toy 打包和子路径加载都按目录走），所以共用模块采用『一份规范源 + 两款各一份运行副本』。改共用模块请改 game-projects/site-games/shared/ 里的规范源，再用 sync-shared.mjs --write 覆盖两款；某一版里先就地修好了就用 --adopt 收进规范源。sync-shared.mjs 不带参数就是漂移检查，有漂移返回非 0。",
+  "games": ["starship-defense", "gunfire-assembly"],
+  "shared": [
+    "bank-versus.js",
+    "battlefield-assets.js",
+    "battlefield-palette.js",
+    "boot.js",
+    "campaign-difficulty.js",
+    "dark-visuals.js",
+    "defense-progression.js",
+    "enemy-visuals.js",
+    "exploration-light.js",
+    "fortress-layout.js",
+    "fortress-world.js",
+    "key-bindings.js",
+    "monster-navigation.js",
+    "operations.js",
+    "save-store.js",
+    "save-validation.js",
+    "squad-roles.js",
+    "tactical-waves.js",
+    "touch-layout.js",
+    "unit-visuals.js",
+    "versus-creatures.js",
+    "versus.js",
+    "wall-geometry.js",
+    "worlds-visuals.js"
+  ],
+  "perGame": {
+    "game.js": "玩法内核已按游戏分叉（自动瞄准语义、视角预设数量、首领血量与行军步长、镜头直连与队列），合并等于让一款游戏继承另一款的行为",
+    "game.compat.js": "构建产物，由各自的 game.js 用 build-compat 打包，不入库比对内容一致性",
+    "cloud-save.js": "云档标记 game 字段不同：starship-defense / gunfire-assembly",
+    "save-panel.js": "导出备份 envelope 的 game 字段不同，导入时按这个字段校验",
+    "toy-platform.js": "Toy 官方云档键名、试玩入口地址与绑定视频不同",
+    "combat-controls.js": "枪火还有抗战战役的固定说明，虫潮只剩战地模式",
+    "update-history.js": "各自的版本号与玩家可见更新日志",
+    "battlefield-environments.js": "虫潮的战场美术开关（setDefenseArt 与章节配色）在枪火不存在，光照分支不同",
+    "battlefield-versus.js": "枪火战地要求玩家手动换弹并显示换弹提示，虫潮保留空仓自动装填",
+    "hive-world.js": "虫潮把虫巢通道下沉深度调成 4（回程步行接近平地），枪火仍是 22",
+    "tactical-panel.js": "虫潮的战术面板多一行本章提示（chapterTip）",
+    "terrain-controls.js": "虫潮把两处土丘高度统一成 HILL_HEIGHT=2，枪火保留原来的 6/7/3.2"
+  },
+  "chongchaoOnly": {
+    "acid-arena.js": "酸液围场只有虫潮有入口",
+    "defense-art.js": "虫潮主战役的防守方美术",
+    "menu-scroll.js": "虫潮菜单滚动处理",
+    "menu-shell.js": "虫潮模式大厅（基地防守 / 银行塔防 / 房车 / 虫族 / 酸液 / 自由测试）",
+    "rv-art.js": "房车城镇美术",
+    "rv-breakout.js": "房车生存模式",
+    "rv-town.js": "房车城镇世界",
+    "zerg-mode.js": "虫族模式"
+  },
+  "gunfireOnly": {
+    "liangjian/": "抗战战役亮剑三章分包",
+    "pingan/": "平安县城分包（旧地址跳转用）"
+  }
+}
