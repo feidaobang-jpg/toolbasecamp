@@ -108,8 +108,12 @@ def run():
         mine_before = votes.get_my_votes(first)
         empty = votes.get_mode_poll(first)
         assert len(empty["options"]) == 5 and empty["total"] == 0 and empty["selected"] == ""
+        # 选项须与虫潮主菜单一致：战地 / 抗战已拆到《枪火集结》，不再出现在本投票里
+        assert [o["key"] for o in empty["options"]] == ["defense", "bank", "rv", "zerg", "acid"]
         rejected(lambda: votes.get_mode_poll("invalid-device"), 400)
         rejected(lambda: votes.cast_mode_vote(votes.ModeVoteIn(device_id=first, target="sandbox"), None), 400)
+        for retired in ("battlefield", "resistance"):
+            rejected(lambda: votes.cast_mode_vote(votes.ModeVoteIn(device_id=first, target=retired), None), 400)
         def choose(device, target):
             return votes.cast_mode_vote(votes.ModeVoteIn(device_id=device, target=target), None)
         for _ in range(3):
@@ -135,9 +139,9 @@ def run():
         assert choose(first, "")["total"] == 1  # withdrawal is idempotent
         assert votes.get_mode_poll(first)["selected"] == ""
         for i in range(4):
-            choose(f"{100+i:024x}", "battlefield")
+            choose(f"{100+i:024x}", "bank")
         rejected(lambda: choose("f" * 24, "rv"), 429)
-        assert choose(second, "resistance")["total"] == 5  # existing device may switch at network cap
+        assert choose(second, "acid")["total"] == 5  # existing device may switch at network cap
         assert choose(second, "")["total"] == 4  # and withdraw
         assert votes.get_board(limit=20, offset=0, sort="votes")["totals"] == before["totals"]
         assert votes.get_my_votes(first) == mine_before
