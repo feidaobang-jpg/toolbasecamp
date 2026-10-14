@@ -41,7 +41,7 @@ export function createAcidArena(a){
       .touch-mode #acidHUD{width:245px;font-size:11px;padding:5px 9px;left:8px;top:8px}.touch-mode #acidLife{font-size:17px}
       #stage.menu-compact .acidCard h1{font-size:25px;margin:5px 0}#stage.menu-compact .acidRules,#stage.menu-compact #acidChoices{margin:8px 0;gap:8px}#stage.menu-compact .acidRules p{font-size:12px;padding:8px}#stage.menu-compact .acidLead{font-size:14px;margin:6px 0}#stage.menu-compact #acidMenu,#stage.menu-compact #acidUpgrade,#stage.menu-compact #acidResult{padding:12px 24px}#stage.menu-compact #acidChoices .mbtn{padding:10px;min-height:90px}
     `;document.head.append(style);
-    b.onclick=()=>{AudioSys.init();$('menuMain').classList.add('hidden');$('acidMenu').classList.remove('hidden');const r=readRecord();$('acidRecord').textContent=r?'本机最快通关 '+r.best.toFixed(1)+' 秒 · 通关 '+r.wins+' 次':'独立挑战，不影响基地、房车和虫族进度。';$('acidControls').textContent=a.isTouch()?'左侧摇杆移动 · 右侧射击/闪避 · 获得护盾后点护盾使用':'WASD 移动 · J 射击 · K 闪避 · I 护盾 · C 视角 · Q/E 转头 · Esc 暂停';};
+    b.onclick=()=>{AudioSys.init();$('menuMain').classList.add('hidden');$('acidMenu').classList.remove('hidden');const r=readRecord();$('acidRecord').textContent=r?'本机最快通关 '+r.best.toFixed(1)+' 秒 · 通关 '+r.wins+' 次':'独立挑战，不影响基地、房车和虫族进度。';$('acidControls').textContent=a.isTouch()?'左侧摇杆移动 · 右侧射击/闪避 · 获得护盾后点护盾使用':'WASD 移动 · 鼠标转视角 · 左键射击 · '+a.keyLabel('K')+' 闪避 · '+a.keyLabel('I')+' 护盾 · '+a.keyLabel('C')+' 视角 · Esc 暂停';};
     $('acidStart').onclick=start;$('acidRetry').onclick=start;
     $('acidBack').onclick=()=>{$('acidMenu').classList.add('hidden');$('menuMain').classList.remove('hidden');};
     $('acidResultBack').onclick=$('acidUpgradeQuit').onclick=a.quit;

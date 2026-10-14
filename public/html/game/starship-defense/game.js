@@ -66,6 +66,7 @@ let combatStorage;try{combatStorage=localStorage;}catch(_e){}
 const CombatControls=createCombatControls(combatStorage);
 let combatSection=null;
 const keyBindings=createKeyBindings();
+const KL=a=>keyBindings.label(a);
 let bindingAction=null;
 const currentBuildingLimit=()=>buildingLimit(Game,operations.active);
 const THEME='dark',PAL=BATTLEFIELD_PALETTE;
@@ -232,12 +233,12 @@ const Input={
   joy:{active:false,id:-1,x:0,y:0},
   look:{yaw:0,pitch:0},wheel:0,mouseFire:false,drag:null,touchLook:null,
   isPlaying:()=>false,onPause:null,onTouchDetected:null,
-  canMouseLook(){return this.isPlaying()&&!isTouch&&CombatControls.mouseEnabled&&camMode==='first'&&!place.kind;},
+  canMouseLook(){return this.isPlaying()&&!isTouch&&CombatControls.capture;},
   requestMouseLook(){
     const cv=$('c3d');
     if(!this.canMouseLook()||document.pointerLockElement||this.lockPending||this.lockUnavailable||!cv.requestPointerLock||navigator.userActivation?.isActive===false)return;
     this.lockPending=true;this.lockExpectedRelease=false;
-    const failed=()=>{this.lockPending=false;this.lockUnavailable=true;if(this.canMouseLook())showMsg('鼠标未能接管：可按住画面拖动瞄准，或使用 Q/E 转向',2.6);};
+    const failed=()=>{this.lockPending=false;this.lockUnavailable=true;if(this.canMouseLook())showMsg('鼠标未能接管：可按住画面拖动转视角',2.6);};
     try{cv.requestPointerLock()?.catch?.(failed);}catch(_e){failed();}
   },
   releaseMouseLook(){
@@ -250,6 +251,7 @@ const Input={
       const onButton=e.target.closest&&e.target.closest('button,[tabindex="0"]');
       if(onButton&&this.isPlaying()&&e.target!==document.body)e.target.blur();
       else if(onButton&&['Enter','Space'].includes(e.code))return;
+      if(e.code==='Tab'&&!this.isPlaying())return;
       const k=this.mapKey(e.code);
       if(k==='J'&&this.isPlaying()&&!place.kind&&!e.repeat)CombatControls.press(e.code);
       if(k==='P'){e.preventDefault();if(!e.repeat&&this.onPause)this.onPause();return;}
@@ -294,7 +296,8 @@ const Input={
       if(document.pointerLockElement===cv){
         if(!this.canMouseLook()){this.releaseMouseLook();return;}
         this.lockOwned=true;this.resetLook();
-        showMsg('鼠标已接管瞄准：移动转向，左键射击，Esc 释放并暂停',2.6);
+        if(keyBindings.takeNotice())showMsg('电脑键位已改：鼠标转视角、左键射击 · '+['I','U','H','X','C','O','L','WAVE'].filter(a=>keyBindings.code(a)).map(a=>KL(a)+' '+actionLabel(a)).join(' · ')+'（暂停菜单「操作设置」可改）',6);
+        else showMsg('鼠标已接管瞄准：移动转向，左键射击，Esc 释放并暂停',2.6);
       }else if(this.lockOwned){
         const expected=this.lockExpectedRelease;this.lockOwned=false;this.lockExpectedRelease=false;this.reset();
         if(!expected&&this.isPlaying()&&this.onPause)this.onPause();
@@ -434,14 +437,13 @@ function setCameraView(index,notify=true){
   camView=((index%CAMERA_VIEWS.length)+CAMERA_VIEWS.length)%CAMERA_VIEWS.length;
   if(camMode==='first')setCamMode('third',false);
   camYaw=behindYaw();camPitch=0;camState.init=false;delete player.lookHeading;Input.resetLook();
-  if(notify)showMsg('视角：'+CAMERA_VIEWS[camView].name+'（C 切换视角）',1.4);
+  if(notify)showMsg('视角：'+CAMERA_VIEWS[camView].name+'（'+KL('C')+' 切换视角）',1.4);
   syncViewLabels();
 }
 function setCamMode(mode,notify=true){
   camMode=mode==='first'?'first':'third';camPitch=0;camYaw=behindYaw();camState.init=false;delete player.lookHeading;Input.resetLook();
   try{localStorage.setItem('chongchao-person',camMode);}catch(_e){}
-  if(camMode==='third')Input.releaseMouseLook();
-  if(notify)showMsg(camMode==='first'?'第一人称（C 切回第三人称）':'第三人称 · '+CAMERA_VIEWS[camView].name,1.4);
+  if(notify)showMsg(camMode==='first'?'第一人称（'+KL('C')+' 切回第三人称）':'第三人称 · '+CAMERA_VIEWS[camView].name,1.4);
   syncViewLabels();
   Input.requestMouseLook();
 }
@@ -452,7 +454,7 @@ let bfVehicleView=0;
 /* C 循环：各第三人称预设 → 第一人称 → 回到第一个预设 */
 function cycleCamView(){
   if(battleOn()){
-    if(!player.inVehicle){showMsg(isTouch?'战地模式步行固定第一人称，上载具后可切换跟随距离':'战地模式步行固定第一人称，上载具后 C 切换跟随距离',1.8);return;}
+    if(!player.inVehicle){showMsg(isTouch?'战地模式步行固定第一人称，上载具后可切换跟随距离':'战地模式步行固定第一人称，上载具后 '+KL('C')+' 切换跟随距离',1.8);return;}
     bfVehicleView=1-bfVehicleView;camState.init=false;showMsg('载具视角：'+BF_VEHICLE_VIEWS[bfVehicleView].name,1.2);return;
   }
   if(camMode==='first')setCameraView(0);
@@ -651,7 +653,7 @@ const BUILDINGS={
   mortarTurret:{name:'重型迫击炮',hp:450,price:1400,dmg:180,rate:2.4,range:64,explode:7,desc:'64米预判抛射，爆炸覆盖7米，专打地面虫群'},
 };
 const ITEMS={
-  medkit:{name:'医疗包',price:120,desc:'按N回复60生命(按最大生命比例增强)',heal:60},
+  medkit:{name:'医疗包',price:120,desc:'按医疗键回复60生命(按最大生命比例增强)',heal:60},
   shield:{name:'护盾电池',price:300,desc:'获得60点能量护盾(上限150)',shield:60},
   adren:{name:'肾上腺素',price:250,desc:'20秒内移速+40%、射速+40%',buff:20},
   hpUp:{name:'强化装甲',price:500,desc:'最大生命+40',permanent:true},
@@ -2043,7 +2045,7 @@ function enterVehicle(v){
   player.inVehicle=v;player.mesh.visible=false;player.vy=0;player.onGround=false;
   if(reassigned)autoSave();
   AudioSys.sfx('vehicle');
-  showMsg(v.cfg.fly?'🚁 驾驶 '+v.cfg.name+(isTouch?'（升 / 降 按钮调高度，互动下车）':'（'+keyBindings.label('K')+' 升高 / '+keyBindings.label('H')+' 降低，再按I下车）'):'🚗 驾驶 '+v.cfg.name+'（再按I下车）',v.cfg.fly?2.4:1.6);
+  showMsg(v.cfg.fly?'🚁 驾驶 '+v.cfg.name+(isTouch?'（升 / 降 按钮调高度，互动下车）':'（'+keyBindings.label('K')+' 升高 / '+KL('CROUCH')+' 降低，再按 '+KL('I')+' 下车）'):'🚗 驾驶 '+v.cfg.name+'（再按 '+KL('I')+' 下车）',v.cfg.fly?2.4:1.6);
 }
 function exitVehicle(){
   const v=player.inVehicle;if(!v)return;
@@ -2121,7 +2123,7 @@ function mountSquadChoices(card,slot){
     options.push([kind,VEHICLES[kind].name+(taken?' · 已占用':vehicles.some(v=>v.kind===kind)?'':' · 修好后驾驶'),taken]);
   }
   select('驾驶分配','crewVehicle',options,g.vehicle||'').onchange=e=>assignSquadVehicle(slot,e.target.value);
-  const note=document.createElement('p');note.className='desc';note.textContent=operations.active?'副本内步行跟随，返回后恢复驾驶分配。':'分配后自动上车、跟随/守基地并开火；玩家靠近按 I 可接管，队友转为步行。';card.appendChild(note);
+  const note=document.createElement('p');note.className='desc';note.textContent=operations.active?'副本内步行跟随，返回后恢复驾驶分配。':'分配后自动上车、跟随/守基地并开火；玩家靠近按 '+KL('I')+' 可接管，队友转为步行。';card.appendChild(note);
 }
 function boardSquadVehicle(s,v){
   if(!s||s.dead||s.vehicle||!v||v.dead||v.driver||player.inVehicle===v||operations.active)return false;
@@ -2603,11 +2605,11 @@ function automaticFireTarget(from,range,aim){
 }
 function interactionTarget(){
   if(rvOn()){const action=rvBreakout.interaction();if(action)return action;}
-  if(player.inVehicle)return {kind:'exit',label:'下车',tip:'I 下车'+(player.inVehicle.cfg.fly?(isTouch?' · 升 / 降 按钮调高度':' · '+keyBindings.label('K')+' 升高 / '+keyBindings.label('H')+' 降低'):'')};
+  if(player.inVehicle)return {kind:'exit',label:'下车',tip:KL('I')+' 下车'+(player.inVehicle.cfg.fly?(isTouch?' · 升 / 降 按钮调高度':' · '+keyBindings.label('K')+' 升高 / '+KL('CROUCH')+' 降低'):'')};
   let vehicle=null,best=20;
   for(const v of vehicles){const d=dist2(player.pos,v.mesh.position);if(!v.dead&&(!vsOn()||v.team===player.team)&&!coopHumans.some(p=>p!==player&&p.inVehicle===v)&&!(v.noEnter>0)&&d<best&&Math.abs(player.pos.y-v.mesh.position.y)<3){vehicle=v;best=d;}}
-  if(vehicle)return {kind:'vehicle',vehicle,label:vehicle.driver?'接管':'驾驶',tip:'I '+(vehicle.driver?'接管（队友下车） ':'驾驶 ')+vehicle.cfg.name};
-  if(dist2(player.pos,gate.mesh.position)<170&&Math.abs(player.pos.y-PLAT.H)<2)return {kind:'gate',label:gate.dead?'城门损毁':gate.open?'关门':'开门',tip:gate.dead?'城门损毁，下关自动修复':'I '+(gate.open?'关闭':'开启')+'城门 · 走向城门会自动开门'};
+  if(vehicle)return {kind:'vehicle',vehicle,label:vehicle.driver?'接管':'驾驶',tip:KL('I')+' '+(vehicle.driver?'接管（队友下车） ':'驾驶 ')+vehicle.cfg.name};
+  if(dist2(player.pos,gate.mesh.position)<170&&Math.abs(player.pos.y-PLAT.H)<2)return {kind:'gate',label:gate.dead?'城门损毁':gate.open?'关门':'开门',tip:gate.dead?'城门损毁，下关自动修复':KL('I')+' '+(gate.open?'关闭':'开启')+'城门 · 走向城门会自动开门'};
   return {kind:'none',label:'互动',tip:''};
 }
 function updInteraction(){
@@ -2617,7 +2619,7 @@ function updInteraction(){
   if(!tip&&!player.inVehicle&&medicalDistance<10)tip=medicalDistance<fortress.shelter.r?(player.hp<player.maxHp?'＋ 野战医疗站 · 正在自动回血':'＋ 野战医疗站 · 生命已恢复'):'＋ 野战医疗站 · 走进绿色圆圈自动回血';
   if(player.dead)tip='';
   else if(!tip&&!player.inVehicle&&player.hp<player.maxHp*.5&&vsOn())tip=bankMode?'生命偏低：回己方核心附近自动回血':'生命偏低：回营地治疗，或向医疗兵靠拢';
-  else if(!tip&&!player.inVehicle&&player.hp<player.maxHp*.5)tip=Game.testMode||Game.items.medkit>0?'生命偏低：'+keyBindings.label('H')+' 使用医疗包（剩'+(Game.testMode?'∞':Game.items.medkit)+'）':'医疗包用完：O 商店购买，或回基地医疗平台回血';
+  else if(!tip&&!player.inVehicle&&player.hp<player.maxHp*.5)tip=Game.testMode||Game.items.medkit>0?'生命偏低：'+keyBindings.label('H')+' 使用医疗包（剩'+(Game.testMode?'∞':Game.items.medkit)+'）':'医疗包用完：'+KL('O')+' 商店购买，或回基地医疗平台回血';
   if($('interactHint').textContent!==tip){$('vI').setAttribute('aria-label',a.tip||'互动');$('interactHint').textContent=tip;}
   $('interactHint').classList.toggle('hidden',!tip);
   const mk=battleOn()?(player.inVehicle?.cfg.fly?'降低':player.bfKit==='engineer'?'维修':player.bfKit==='support'?'补弹':'医疗'):'医疗'+(Game.testMode?'∞':Game.items.medkit);if($('vH').textContent!==mk)$('vH').textContent=mk;
@@ -2625,9 +2627,9 @@ function updInteraction(){
 function useMedkit(){
   if(bankOn()){showMsg('靠近己方核心可自动回血',1.5);return;}
   if(battleOn()){if(!versus.support(player)&&player===versus.state.local)showMsg('兵种支援：医疗兵治疗、工程兵维修、支援兵补弹；靠近友军使用',2);return;}
-  if(player.inVehicle&&!rvOn()){showMsg('驾驶中不能用医疗包，先按 I 下车',1.6);return;}
+  if(player.inVehicle&&!rvOn()){showMsg('驾驶中不能用医疗包，先按 '+KL('I')+' 下车',1.6);return;}
   if(player.hp>=player.maxHp){showMsg('生命已满，医疗包留到关键时刻',1.4);return;}
-  if(!Game.testMode&&Game.items.medkit<=0){showMsg('没有医疗包！O 打开商店购买',2);return;}
+  if(!Game.testMode&&Game.items.medkit<=0){showMsg('没有医疗包！'+KL('O')+' 打开商店购买',2);return;}
   if(!Game.testMode)Game.items.medkit--;
   const healed=Math.min(Math.round(ITEMS.medkit.heal*Math.max(1,player.maxHp/120)),player.maxHp-player.hp);
   player.hp+=healed;updHPBar(player.bar,player.hp/player.maxHp);
@@ -2656,7 +2658,7 @@ function selectWeapon(id,quiet=false){
   if(!quiet)showMsg('🔫 '+WEAPONS[id].name+(weaponLv(id)?' Lv'+weaponLv(id):''),1);
   renderWeaponBar();updViewModel();
 }
-function cycleWeapon(step){if(Game.weapons.length<2){showMsg('只有一把枪：O 商店购买更多武器',1.6);return;}const i=Game.weapons.indexOf(Game.curWeapon);selectWeapon(Game.weapons[(i+step+Game.weapons.length)%Game.weapons.length]);}
+function cycleWeapon(step){if(Game.weapons.length<2){showMsg('只有一把枪：'+KL('O')+' 商店购买更多武器',1.6);return;}const i=Game.weapons.indexOf(Game.curWeapon);selectWeapon(Game.weapons[(i+step+Game.weapons.length)%Game.weapons.length]);}
 // 虫潮需要快速扫视战场；保留按时钟平滑消费及第一人称的较低转速。
 const pitchControl=createPitchController({sensitivity:1,response:30,speed:Math.PI,maxPending:.65,turn:d=>{camPitch=clamp(camPitch+d,-1,1);}});
 const lookControl=createLookController({firstPerson:()=>camMode==='first',sensitivity:1,response:30,
@@ -2741,7 +2743,7 @@ function updPlayer(dt){
     }
     if(v.cfg.fly){
       // 升降：K/空格 升高，降低用“医疗 / 直升机降低”动作（默认 N）；Y / H 留给抬头低头。驾驶中本来就不能用医疗包，不冲突。
-      const up=Input.network?Input.network.rise:Input.keys.K,down=Input.network?Input.network.lower:Input.keys.H;
+      const up=Input.network?Input.network.rise:Input.keys.K,down=Input.network?Input.network.lower:(Input.keys.CROUCH||Input.keys.H);
       if(up&&!down)v.alt=Math.min(18,v.alt+dt*8);
       if(down&&!up)v.alt=Math.max(0,v.alt-dt*8);
       v.mesh.position.y=Math.max(groundY(v.mesh.position.x,v.mesh.position.z),fortress.topAt(v.mesh.position.x,v.mesh.position.z))+2+v.alt;
@@ -2868,7 +2870,7 @@ function updPlayer(dt){
     if(action.kind==='rv-search')rvBreakout.interact();
     else if(action.kind==='vehicle')enterVehicle(action.vehicle);
     else if(action.kind==='gate'){if(!gate.dead)setGate(!gate.open);else showMsg(action.tip,2);}
-    else showMsg(bankOn()?'R 出兵、0 升级银行、Z 切换路线；靠近核心回血':battleOn()?'靠近本方载具按 I 驾驶；'+keyBindings.label('H')+' 使用当前兵种支援能力':'附近没有可互动的东西：靠近载具驾驶，靠近城门开关门；'+keyBindings.label('H')+' 是医疗包',2.4);
+    else showMsg(bankOn()?KL('R')+' 出兵、'+KL('N0')+' 升级银行、'+KL('Z')+' 切换路线；靠近核心回血':battleOn()?'靠近本方载具按 '+KL('I')+' 驾驶；'+keyBindings.label('H')+' 使用当前兵种支援能力':'附近没有可互动的东西：靠近载具驾驶，靠近城门开关门；'+keyBindings.label('H')+' 是医疗包',2.4);
     updInteraction();
   }
   if(Input.pop('H'))useMedkit();
@@ -2921,7 +2923,7 @@ function claimSandbox(type,id){
   else if(type==='vehicle'){
     let v=vehicles.find(v=>v.kind===id&&!v.dead);
     if(!v){Game.vehiclesOwned.push(id);v=spawnVehicle(id);}
-    enterVehicle(v);showMsg('已登上 '+VEHICLES[id].name+' · I 下车'+(v.cfg.fly?(isTouch?'；升 / 降 按钮调高度':'；'+keyBindings.label('K')+' 升高 / '+keyBindings.label('H')+' 降低'):''),3);
+    enterVehicle(v);showMsg('已登上 '+VEHICLES[id].name+' · '+KL('I')+' 下车'+(v.cfg.fly?(isTouch?'；升 / 降 按钮调高度':'；'+keyBindings.label('K')+' 升高 / '+KL('CROUCH')+' 降低'):''),3);
   }else if(type==='squad'){
     while(squad.length<squadLimit())spawnSquad();Game.squadCount=squad.length;showMsg(squad.length+'名队友已就位');
   }else if(type==='item')grantSupply({type,id});
@@ -3038,7 +3040,7 @@ function chapterBriefing(){
     :'早杀母皇：本章通关领补给；晚杀：完整虫潮掉落更多，也更难防守。';
   return (Game.level===1?'本章（'+chapterCfg().name+'）：'+chapterCfg().tip+'\n':'')
     +'守住基地，耐久归零即失败；玩家阵亡会在基地复活，基地损伤保留。\n'
-    +'整备：'+keyBindings.label('O')+' 商店买枪强化 · '+keyBindings.label('L')+' 建造炮塔与城墙 · '+keyBindings.label('R')+' 准备完毕开战。\n'
+    +'整备：'+keyBindings.label('O')+' 商店买枪强化 · '+keyBindings.label('L')+' 建造炮塔与城墙 · '+KL('WAVE')+' 准备完毕开战。\n'
     +hive;
 }
 function startPrep(){
@@ -3066,7 +3068,7 @@ function startPrep(){
   showMsg(levelName(),3);
   const tip=Game.level===1?'本章：'+chapterCfg().tip+' · ':'';
   const opening=currentWavePlan();
-  showHint(!Game.testMode&&opening.opening?opening.hint+' · '+keyBindings.label('O')+' 商店 · '+keyBindings.label('L')+' 建造 · '+keyBindings.label('R')+' 开战':tip+keyBindings.label('O')+' 商店 · '+keyBindings.label('L')+' 建造 · '+keyBindings.label('R')+' 开战 · 守住基地');
+  showHint(!Game.testMode&&opening.opening?opening.hint+' · '+keyBindings.label('O')+' 商店 · '+keyBindings.label('L')+' 建造 · '+KL('WAVE')+' 开战':tip+keyBindings.label('O')+' 商店 · '+keyBindings.label('L')+' 建造 · '+KL('WAVE')+' 开战 · 守住基地');
   if(collected)setTimeout(()=>showMsg('💰 战场金币已自动回收 +'+collected,2),900);
   autoSave();
 }
@@ -3310,7 +3312,7 @@ if(it.type==='weapon'){if(!Game.weapons.includes(it.id))Game.weapons.push(it.id)
         else if(it.id==='repair'){base.hp=Math.min(base.maxHp,base.hp+Math.max(500,base.maxHp*.25));updHPBar(base.bar,base.hp/base.maxHp);}
         showMsg('📦 获得 '+c.name,1.6);
       }
-      else if(it.type==='vehicle'){if(!Game.testMode||!vehicles.some(v=>v.kind===it.id)){Game.vehiclesOwned.push(it.id);spawnVehicle(it.id);}showMsg('🚗 '+VEHICLES[it.id].name+' 已送达停机坪！靠近按I驾驶',2.2);}
+      else if(it.type==='vehicle'){if(!Game.testMode||!vehicles.some(v=>v.kind===it.id)){Game.vehiclesOwned.push(it.id);spawnVehicle(it.id);}showMsg('🚗 '+VEHICLES[it.id].name+' 已送达停机坪！靠近按 '+KL('I')+' 驾驶',2.2);}
       else if(it.type==='squad'){if(Game.testMode||squad.length<Game.squadCount)spawnSquad(it.slot);if(Game.testMode)Game.squadCount=squad.length;showMsg('🪖 队友已加入！用右上角「队友」按钮切换跟随/守家，基地告急时自动回防。',2.6);}
 }
 function updAirdrops(dt){
@@ -3364,7 +3366,7 @@ function startPlacement(kind,free=false){
   const cfg=BUILDINGS[kind];let ring=null;
   if(cfg.range){ring=new THREE.Mesh(new THREE.RingGeometry(cfg.range-.25,cfg.range,72),new THREE.MeshBasicMaterial({color:0x7fd7ff,transparent:true,opacity:.28,depthWrite:false,side:THREE.DoubleSide}));ring.rotation.x=-Math.PI/2;scene.add(ring);}
   Object.assign(place,{mode:'build',target:null,kind,ghost,ring,mat,valid:false,reason:'',free,lastMouse:Input.mouseFire});
-  $('placeTip').textContent='可连续摆放 · 走动移动虚影 · Q/E 或鼠标转视角调整朝向 · J/回车/左键/射击键 放置一座 · L 换建筑 · Esc/取消 结束（每座放下才扣钱）';
+  $('placeTip').textContent='可连续摆放 · 走动移动虚影 · 转视角调整朝向 · 左键/回车/射击键 放置一座 · '+KL('L')+' 换建筑 · Esc/取消 结束（每座放下才扣钱）';
   stage.classList.add('placing');$('placeBar').classList.remove('hidden');$('placeName').textContent=cfg.name+' · 连续建造'+(free||Game.testMode?'':' · 💰'+cfg.price);
   AudioSys.sfx('click');updPlacement();
 }
@@ -3407,7 +3409,7 @@ function startDemolish(){
   const ghost=new THREE.Group();scene.add(ghost);
   Object.assign(place,{mode:'demolish',kind:'demolish',ghost,ring,mat:new THREE.MeshBasicMaterial(),target:null,valid:false,reason:'',free:false,lastMouse:Input.mouseFire});
   stage.classList.add('placing');$('placeBar').classList.remove('hidden');$('placeName').textContent='🔨 拆除模式';$('placeOk').textContent='🔨 拆除 J';
-  $('placeTip').textContent='走动或 Q/E 转向要拆的设施（红圈）· J/回车/左键 拆除并返还一半造价 · 可连续拆 · L 返回建造菜单 · Esc 退出';
+  $('placeTip').textContent='走动或转视角对准要拆的设施（红圈）· 左键/回车 拆除并返还一半造价 · 可连续拆 · '+KL('L')+' 返回建造菜单 · Esc 退出';
   AudioSys.sfx('click');updPlacement();
 }
 function demolishTarget(){
@@ -3468,7 +3470,7 @@ function confirmPlacement(){
   // Keep the selected building and preview for the next position. Recheck the
   // budget, facility cap and collisions before every placement, including here.
   updPlacement();
-  showMsg('🏗 '+cfg.name+' 已建好！移到空位可继续放置 · L 换建筑 · Esc/取消 结束',1.8);autoSave();
+  showMsg('🏗 '+cfg.name+' 已建好！移到空位可继续放置 · '+KL('L')+' 换建筑 · Esc/取消 结束',1.8);autoSave();
 }
 // 放置模式下 J/左键/射击键确认，不再开火
 function placementInput(){
@@ -3701,7 +3703,7 @@ function newGame(test){
     Object.keys(SQUAD_ROLES).forEach((role,i)=>squadGear(i).role=role);
     for(let i=0;i<4;i++)spawnSquad();Game.squadCount=squad.length;
     Game.state='battle';$('readyBtn').classList.add('hidden');
-    sandboxSpawn('showcase');showHint('自由测试：持续虫潮 · 无敌 · 无限弹药 · T 开测试台');
+    sandboxSpawn('showcase');showHint('自由测试：持续虫潮 · 无敌 · 无限弹药 · '+KL('T')+' 开测试台');
     showMsg('🧪 自由测试 · 玩家、小队、载具与基地无敌',3);
   }
 }
@@ -3779,7 +3781,7 @@ function updHUD(dt){
   $('baseGuide').textContent=distance<10?'🏰 基地附近':arrows[(Math.round(Math.atan2(sy,sx)/(Math.PI/4))+8)%8]+' 基地 '+Math.round(distance)+'米';
   $('goldTxt').textContent=Game.testMode?'∞':Math.floor(Game.gold);
   $('scoreTxt').textContent=Game.score;
-  if(player.inVehicle)$('weapTxt').textContent='🚗 '+player.inVehicle.cfg.name+' · I 下车';
+  if(player.inVehicle)$('weapTxt').textContent='🚗 '+player.inVehicle.cfg.name+' · '+KL('I')+' 下车';
   else $('weapTxt').textContent='🔫 '+WEAPONS[Game.curWeapon].name+(weaponLv(Game.curWeapon)?' Lv'+weaponLv(Game.curWeapon):'')+(WEAPONS[Game.curWeapon].beam&&player.heat>.05?' 🔥'+Math.round(player.heat*30)+'%':'');
   updHUDItem();updJumpUI();
   $('squadTxt').textContent=Game.squadCount||squad.length?`🪖 小队 ${squad.length}/${Math.max(Game.squadCount,squad.length)} · ${squadTaskLabel()} · 驾驶${squad.filter(s=>s.vehicle).length}`:'';
@@ -4097,6 +4099,8 @@ window.addEventListener('keydown',e=>{
     else if(!['menuMain','menuOver'].includes(root.id))closePanels();
     return;
   }
+  // 战况 / 队伍面板默认用 Tab 打开：再按一次 Tab 关上，而不是在面板里切焦点
+  if(root.id==='vsPanel'&&vsUI.open&&vsUI.tab==='team'&&keyBindings.action(e.code)==='T'){e.preventDefault();e.stopImmediatePropagation();versusClosePanel();return;}
   if(e.code==='Tab'){
     e.preventDefault();e.stopImmediatePropagation();const items=navItems(root);if(!items.length)return;
     const i=items.indexOf(t);navFocus(items[(i<0?0:i+(e.shiftKey?-1:1)+items.length)%items.length]);return;
@@ -4250,14 +4254,14 @@ const tacticalPanel=mountTacticalPanel({Game,squad,vehicles,squadGear,squadRole,
 function actionLabel(a){return (bankOn()?{R:'出兵',O:'买枪',L:'建造',Z:'换路线',N0:'升级银行',T:'队伍'}[a]:null)||(battleOn()?{R:'换弹',O:'装备',L:'部署',Z:'举枪',H:'兵种支援',T:'战况',C:'载具视角'}[a]:null)||KEY_ACTIONS[a][0];}
 function syncKeyLabels(){
   syncViewLabels();combatSection?.lockAim(fpsRules());
-  $('fullBtn').textContent=isTouch?'全屏':'全屏 F';
-  $('readyBtn').textContent='✅ 准备完毕，开战！（'+keyBindings.label('R')+'）';
+  $('fullBtn').textContent=isTouch||!keyBindings.code('F')?'全屏':'全屏 '+KL('F');
+  $('readyBtn').textContent='✅ 准备完毕，开战！（'+KL('WAVE')+'）';
   $('menuButton').textContent=isTouch?'暂停':'暂停 '+keyBindings.label('P');
   $('menuButton').setAttribute('aria-label','打开游戏菜单，'+keyBindings.label('P')+' 或 Esc');
   $('weaponBar').dataset.key='';renderWeaponBar();
   const combat=CombatControls.settings;
-  const combatLabel=(isTouch?'触屏':combat.input==='keyboard'?'纯键盘':'键鼠')+' · '+(fpsRules()?'手动瞄准 · 按住射击'+(isTouch||combat.input==='keyboard'?'':' · 右键拖动转视角'):(combat.aim==='auto'?'自动瞄准':'手动瞄准')+' · '+({auto:'自动射击',hold:'按住射击',toggle:'点击开关连射'})[combat.fire]);
-  $('keysHint').textContent=combatLabel+' · 移动 '+['up','left','down','right'].map(a=>keyBindings.label(a)).join('/')+' · '+(vsOn()?['J','R','Z','K','U','I','H','O','L','T','C','LOOK','P']:['SPRINT','J','K','U','I','H','O','L','C','LOOK','P']).map(a=>a==='LOOK'?keyBindings.label('Q')+'/'+keyBindings.label('E')+' 转视角 · '+keyBindings.label('LOOKUP')+'/'+keyBindings.label('LOOKDOWN')+' 抬头低头':keyBindings.label(a)+' '+actionLabel(a)).join(' · ');
+  const combatLabel=(isTouch?'触屏':combat.input==='drag'?'键鼠（拖动转视角）':'键鼠')+' · '+(fpsRules()?'手动瞄准 · 按住射击'+(isTouch||combat.input==='mouse'?'':' · 右键拖动转视角'):(combat.aim==='auto'?'自动瞄准':'手动瞄准')+' · '+({auto:'自动射击',hold:'按住射击',toggle:'点击开关连射'})[combat.fire]);
+  $('keysHint').textContent=combatLabel+' · 移动 '+['up','left','down','right'].map(a=>keyBindings.label(a)).join('/')+' · '+(vsOn()?['J','R','Z','K','U','I','H','O','L','T','C','LOOK','P']:['SPRINT','J','K','U','I','H','X','O','L','WAVE','C','LOOK','P']).map(a=>a==='LOOK'?(keyBindings.code('Q')||keyBindings.code('E')?KL('Q')+'/'+KL('E')+' 转视角':'鼠标转视角')+(keyBindings.code('LOOKUP')||keyBindings.code('LOOKDOWN')?' · '+KL('LOOKUP')+'/'+KL('LOOKDOWN')+' 抬头低头':''):keyBindings.label(a)+' '+actionLabel(a)).join(' · ');
 }
 function renderKeys(){
   const grid=$('keyGrid');grid.replaceChildren();
@@ -4307,7 +4311,7 @@ battlefield=new BattlefieldEnvironment(scene,groundMesh,visuals.environmentObjec
 try{battlefield.setTimeOfDay(localStorage.getItem('chongchao-daylight'));}catch(_e){}
 setBattlefieldEnvironment(environmentForChapter(Game.chapter));
 setupVersus();
-rvBreakout=createRVBreakout({THREE,scene,Game,player,WORLD,AudioSys,stage,camera,Input,visuals,monsters,CHAPTERS,spawnMonster,spawnVehicle,enterVehicle,clearEntities,closePanels,hideConfirm,askConfirm,showMsg,showHint,showHUD,updHPBar,vehicleAim,vehicleMuzzle,fireBullet,damageVehicle,playerDamage,
+rvBreakout=createRVBreakout({keyLabel:a=>keyBindings.label(a),THREE,scene,Game,player,WORLD,AudioSys,stage,camera,Input,visuals,monsters,CHAPTERS,spawnMonster,spawnVehicle,enterVehicle,clearEntities,closePanels,hideConfirm,askConfirm,showMsg,showHint,showHUD,updHPBar,vehicleAim,vehicleMuzzle,fireBullet,damageVehicle,playerDamage,
   artContext:{renderer,sun,hemi,sunOffset:SUN_OFFSET},
   isTouch:()=>isTouch,lastDt:()=>rvFrameDt,setPanel:v=>panelOpen=v,vsOn,exitVersus,clearCoop:()=>{coopDriver?.leave();clearCoopHumans();Game.coop=false;},quit:()=>$('btnQuit').click(),
   skyObjects:()=>[visuals.environmentObjects.sky,visuals.environmentObjects.stars,visuals.environmentObjects.moon].filter(Boolean),
@@ -4349,7 +4353,7 @@ const _origNewGame=newGame;
 newGame=function(t){if(acidOn())acidArena.stop();if(zergOn())zergMode.stop();player.mesh.visible=true;_origNewGame(t);};
 const _origLoadGame=loadGame;
 loadGame=function(d){if(acidOn())acidArena.stop();if(zergOn())zergMode.stop();player.mesh.visible=true;_origLoadGame(d);};
-acidArena=createAcidArena({THREE,Game,player,Input,AudioSys,scene,stage,camera,monsters,visuals,clearEntities,showHUD,showHint,spawnParticles,playerAim,automaticFireTarget,playerMuzzle,syncFireButton,
+acidArena=createAcidArena({keyLabel:a=>keyBindings.label(a),THREE,Game,player,Input,AudioSys,scene,stage,camera,monsters,visuals,clearEntities,showHUD,showHint,spawnParticles,playerAim,automaticFireTarget,playerMuzzle,syncFireButton,
   isTouch:()=>isTouch,getYaw:()=>camYaw,getMode:()=>camMode,cycleView:cycleCamView,quit:()=>$('btnQuit').click(),hitFlash:()=>hurtFlash=.8,
   prepare(){defenseArt.setEnabled(false);battlefield.setDefenseArt(false);if(rvOn())rvBreakout.stop();if(zergOn())zergMode.stop();if(warOn())resistanceCampaign.stop();if(vsOn()||versusBackup)exitVersus();coopDriver?.leave();clearCoopHumans();Game.coop=false;closePanels();hideConfirm();cancelPlacement(true);operations.clear();},
   enterView(){const view={camMode,camView,camYaw,camPitch,saved:null};try{view.saved=localStorage.getItem('chongchao-person');}catch(_){}camMode='third';camView=2;camYaw=0;camPitch=0;camState.init=false;lookControl.clear();pitchControl.clear();Input.resetLook();syncViewLabels();return view;},
@@ -4385,7 +4389,7 @@ function setupWebControls(){
     try{localStorage.setItem('chongchao-daylight',battlefield.timeOfDay);}catch(_e){}
     syncLightingLabels();
   };
-  combatSection=mountCombatSettings($('keyPanel'),CombatControls,()=>{Input.reset();if(!CombatControls.mouseEnabled&&document.pointerLockElement)document.exitPointerLock();syncKeyLabels();});
+  combatSection=mountCombatSettings($('keyPanel'),CombatControls,()=>{Input.reset();if(!CombatControls.capture&&document.pointerLockElement)document.exitPointerLock();syncKeyLabels();});
   $('keyPanel').insertBefore(combatSection,$('keyStatus'));
   platformSave=setupToyPlatform({
     store:saveStore,confirm:askConfirm,updateContinue:refreshContinue,
@@ -4413,10 +4417,9 @@ function setupWebControls(){
     if(!$('confirmPanel').classList.contains('hidden')){if(e.code==='Escape')$('confirmCancel').click();return;}
     if(e.code==='Enter'&&Game.state==='menu'&&$('vsMenu').classList.contains('hidden')&&!resistanceCampaign?.menuOpen())requestNewGame();
     else if(e.code==='Enter'&&Game.state==='over'){if(acidOn())acidArena.start();else if(warOn())resistanceCampaign.retry();else if(rvOn())rvBreakout.start();else if(vsOn())versusRematch();else restartLevel();}
-    else if(keyBindings.action(e.code)==='R'&&Game.state==='prep'&&!panelOpen)startBattle();
+    else if(keyBindings.action(e.code)==='WAVE'&&Game.state==='prep'&&!panelOpen)startBattle();
     else if(e.code==='Escape'){e.preventDefault();pauseKey(true);}
     else if(keyBindings.action(e.code)==='T'&&Game.testMode&&Game.state!=='menu'){e.preventDefault();if(panelOpen)closePanels();else openSandbox();}
-    else if(keyBindings.action(e.code)==='T'&&Game.state==='menu'){newGame(true);}
     else if(keyBindings.action(e.code)==='M')$('muteBtn').click();else if(keyBindings.action(e.code)==='F')$('fullBtn').click();
   });
   window.addEventListener('blur',()=>{Input.reset();if(['prep','battle'].includes(Game.state))togglePause();});
@@ -4630,7 +4633,7 @@ function renderVersusSize(){
   const n=vsUI.size;
   document.querySelectorAll('[data-vs-size]').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.vsSize===n?'true':'false'));
   $('vsMenuTitle').textContent=bankMode?'🏦 银行塔防对战':'⚑ 战地模式 · 沙漠据点战';
-  document.querySelectorAll('#vsMenu .vs-rules').forEach((el,i)=>{if(!el.dataset.conquest)el.dataset.conquest=el.textContent;el.textContent=bankMode?(i===0?'经营银行、每10秒收入、派兵放虫、建造炮塔，英雄升级并购买武器。三路推进，摧毁敌方核心获胜。每局独立，仅保存战绩，退出后重新开局。':'R 出兵 / 面板内 0 升级银行 / Z 换路线 / L 建造 / O 买枪 / T 给队友转钱。保留多种视角与自动瞄准设置；手机使用同名按钮。好友可中途加入接手电脑，双方每人独立银行与金币。'):el.dataset.conquest;});
+  document.querySelectorAll('#vsMenu .vs-rules').forEach((el,i)=>{if(!el.dataset.conquest)el.dataset.conquest=el.textContent;el.textContent=bankMode?(i===0?'经营银行、每10秒收入、派兵放虫、建造炮塔，英雄升级并购买武器。三路推进，摧毁敌方核心获胜。每局独立，仅保存战绩，退出后重新开局。':KL('R')+' 出兵 / 面板内 '+KL('N0')+' 升级银行 / '+KL('Z')+' 换路线 / '+KL('L')+' 建造 / '+KL('O')+' 买枪 / '+KL('T')+' 给队友转钱。保留多种视角与自动瞄准设置；手机使用同名按钮。好友可中途加入接手电脑，双方每人独立银行与金币。'):el.dataset.conquest;});
   $('vsSizeNote').textContent=bankMode?'每队 '+n+' 人，每人独立银行与金币，空位由电脑补充。':'每队 '+n+' 个玩家/电脑座位，另有 8 名步兵增援与 4 类载具。空位由电脑补充，双方固定装备与生命。';
   renderVersusRecord();
 }
@@ -4788,7 +4791,7 @@ function versusEnterUI(){
   showHUD();$('readyBtn').classList.add('hidden');$('sandboxBtn').classList.add('hidden');showHint(null);
   vsUI.open=false;vsUI.tab='units';$('vsPanel').classList.add('hidden');$('vsTeamTab').classList.remove('hidden');
   const hint=$('keysHint');if(!hint.dataset.campaign)hint.dataset.campaign=hint.textContent;
-  hint.textContent='WASD移动 · 按住J/左键射击 · 右键拖动或Q/E转视角 · Z/右键点按举枪 · R换弹 · O装备 · L部署 · T战况 · '+keyBindings.label('H')+'兵种支援 · I上/下载具 · U手雷 · K跳跃 · C载具视角 · Esc暂停';
+  hint.textContent='WASD移动 · 鼠标转视角 · 按住左键射击 · 右键或'+KL('Z')+'举枪 · '+KL('SPRINT')+'跑步 · '+KL('R')+'换弹 · '+KL('O')+'装备 · '+KL('L')+'部署 · '+KL('T')+'战况 · '+KL('H')+'兵种支援 · '+KL('I')+'上/下载具 · '+KL('U')+'手雷 · '+KL('K')+'跳跃 · '+KL('C')+'载具视角 · Esc暂停';
   const rl=$('btnRestartLv');if(!rl.dataset.campaign)rl.dataset.campaign=rl.textContent;rl.textContent='🔄 重开对战';
   $('vH').classList.remove('hidden');$('vO').textContent='装备';$('vL').textContent='部署';$('vR').textContent='换弹';
   bfVehicleView=0;syncViewLabels();
@@ -4939,7 +4942,7 @@ function bankVersusEnterUI(){
   showHUD();$('readyBtn').classList.add('hidden');$('sandboxBtn').classList.add('hidden');showHint(null);
   vsUI.open=false;vsUI.tab='units';$('vsPanel').classList.add('hidden');$('vsTeamTab').classList.toggle('hidden',versus.size<2);
   const hint=$('keysHint');if(!hint.dataset.campaign)hint.dataset.campaign=hint.textContent;
-  hint.textContent='WASD移动 · J/左键射击 · R 出兵面板（打开后 1-9 派兵、0 升级银行）· Z 切换进攻路线 · L 建造 · O 买枪'+(versus.size>1?' · T 队伍（给队友转钱）':'')+' · U 手雷 · K 跳跃 · C 切换视角 · Q/E 转视角 · Esc 暂停';
+  hint.textContent='WASD移动 · 鼠标转视角 · 左键射击 · '+KL('R')+' 出兵面板（打开后 1-9 派兵、'+KL('N0')+' 升级银行）· '+KL('Z')+' 切换进攻路线 · '+KL('L')+' 建造 · '+KL('O')+' 买枪'+(versus.size>1?' · '+KL('T')+' 队伍（给队友转钱）':'')+' · '+KL('U')+' 手雷 · '+KL('K')+' 跳跃 · '+KL('C')+' 切换视角 · Esc 暂停';
   const rl=$('btnRestartLv');if(!rl.dataset.campaign)rl.dataset.campaign=rl.textContent;rl.textContent='🔄 重开对战';
   $('vH').classList.add('hidden');$('vC').classList.remove('hidden');$('vO').textContent='买枪';$('vL').textContent='建造';$('vR').textContent='出兵';$('vZ').textContent='路线';$('vZ').setAttribute('aria-label','切换进攻路线');$('vR').setAttribute('aria-label','出兵与升级银行');$('vZ').classList.remove('aiming');$('vZ').setAttribute('aria-pressed','false');syncViewLabels();
 }
@@ -5041,7 +5044,7 @@ function bankUpdVersusHUD(dt){
   const lane=({left:'上路',mid:'中路',right:'下路',alt:'轮换'})[t.lane];
   let mates='';
   if(n>1){const list=versus.members(me).filter(s=>s.pid!==t.pid);mates='\n👥 '+'队友：'+list.map(s=>versus.seatName(s)+(s.ai&&s.name&&s.name!=='电脑'?'（电脑接管）':'')+' 英雄Lv'+s.level).join(' · ');const votes=versus.members(me).filter(s=>s.surrender).length;if(votes)mates+=' · 🏳 投降 '+votes+'/'+versus.members(me).filter(s=>!s.ai).length;}
-  $('vsEco').textContent='💰 '+Math.floor(t.gold)+' · 英雄 Lv'+t.level+'/15 · '+(t.level>=15?'经验已满':Math.floor(t.xp)+'/'+versus.xpNeeded(t.level)+'经验')+' · 伤害 +'+Math.round((t.level-1)*VS_RULES.heroDamagePerLevel*100)+'%'+versus.buffText(t.pid)+'\n🏦 银行 Lv'+t.bank+(t.bankDown>0?'（重建 '+Math.ceil(t.bankDown)+' 秒）':'')+' · 每10秒 +'+versus.incomeOf(t.pid)+'\n⚔ 增援 '+lane+' · 付费兵力 '+versus.popOf(t.pid)+'/'+versus.popCap()+mates+'\n'+(isTouch?'出兵 / 建造 / 商店 按钮':'R 出兵 · L 建造 · O 买枪 · Z 换路线'+(n>1?' · T 队伍':''));
+  $('vsEco').textContent='💰 '+Math.floor(t.gold)+' · 英雄 Lv'+t.level+'/15 · '+(t.level>=15?'经验已满':Math.floor(t.xp)+'/'+versus.xpNeeded(t.level)+'经验')+' · 伤害 +'+Math.round((t.level-1)*VS_RULES.heroDamagePerLevel*100)+'%'+versus.buffText(t.pid)+'\n🏦 银行 Lv'+t.bank+(t.bankDown>0?'（重建 '+Math.ceil(t.bankDown)+' 秒）':'')+' · 每10秒 +'+versus.incomeOf(t.pid)+'\n⚔ 增援 '+lane+' · 付费兵力 '+versus.popOf(t.pid)+'/'+versus.popCap()+mates+'\n'+(isTouch?'出兵 / 建造 / 商店 按钮':KL('R')+' 出兵 · '+KL('L')+' 建造 · '+KL('O')+' 买枪 · '+KL('Z')+' 换路线'+(n>1?' · '+KL('T')+' 队伍':''));
   renderWeaponBar();
   if(vsUI.open&&(vsUI.t-=dt)<=0){vsUI.t=.2;renderVersusPanel();}
   if(Game.msgTimer>0){Game.msgTimer-=dt;if(Game.msgTimer<=0)$('msg').classList.add('hidden');}

@@ -485,14 +485,14 @@ html,body{overscroll-behavior:none}
     <div id="hint" class="hidden"></div>
     <div id="interactHint" class="hidden"></div>
     <div id="weaponBar" aria-label="武器栏"></div>
-    <div id="keysHint">WASD移动 · 按住Shift跑步 · J/鼠标左键射击 · 点画面用鼠标转视角 · K/空格跳跃 · I互动(门/载具) · N医疗包 · U手雷 · 直升机K升/N降 · Y/H抬头低头 · 1-6/X/滚轮换枪 · C切换视角 · Q/E转视角 · O商店 · L建造 · R开战 · P/Esc暂停</div>
+    <div id="keysHint">WASD移动 · 鼠标转视角 · 左键射击 · 按住Shift跑步 · 空格跳跃 · F互动(门/载具) · E医疗包 · G手雷 · 直升机 空格升 / C降 · 1-6/Q/滚轮换枪 · V切换视角 · B商店 · T建造 · X开战 · P/Esc暂停</div>
   </div>
   <!-- 虫族战况面板必须在 #hud 之外：虫族开局会隐藏战役 HUD，面板要能独立显示。 -->
   <div id="zergHud" class="hidden" aria-label="虫族战况"></div>
   <!-- 放置工具栏与触控层同级，避免视角区域遮挡按钮。 -->
     <!-- 保存状态提示同样提到触控层之上，手机上才能点它打开档案站；显隐跟随 #hud。 -->
     <!-- 开战按钮也必须在触控层之上：#hud(z10) 低于 #touchUI(z20)，留在 hud 内会被全屏视角拖拽层吞掉触摸。 -->
-    <button id="readyBtn" class="hidden">✅ 准备完毕，开战！（R）</button>
+    <button id="readyBtn" class="hidden">✅ 准备完毕，开战！（X）</button>
     <button class="mbtn save-health campaign-only" id="saveHealth" aria-label="查看保存状态"></button>
     <section id="vsPanel" class="hidden" aria-label="对战指挥面板">
       <div class="vs-head">
@@ -506,7 +506,7 @@ html,body{overscroll-behavior:none}
     </section>
     <div id="placeBar" class="hidden" role="group" aria-label="建造放置">
       <div><b id="placeName"></b> <span id="placeState"></span></div>
-      <div class="small" id="placeTip">走动移动虚影 · Q/E 或鼠标转视角就能转朝向 · J/回车/左键/射击键 确认 · L 返回建造菜单 · Esc 退出（放下时才扣钱，拆除返还一半）</div>
+      <div class="small" id="placeTip">走动移动虚影 · 转视角就能转朝向 · 左键/回车/射击键 确认 · T 返回建造菜单 · Esc 退出（放下时才扣钱，拆除返还一半）</div>
       <div class="btnRow"><button class="mbtn green" id="placeOk">✔ 放置 J</button><button class="mbtn red" id="placeCancel">✖ 取消</button></div>
     </div>
 
@@ -599,7 +599,7 @@ html,body{overscroll-behavior:none}
     <div class="small helpText" tabindex="0" role="region" aria-label="玩法内容">
       <p>《枪火集结》推荐先玩「抗战战役 · 亮剑三章」（苍云岭、李家坡、平安县城，全部重做），可从大厅直接进入章节菜单；战地据点争夺收在「其他玩法 · 早期体验」中。早期内容尚未完成本轮打磨，原有进度保留。</p>
       <p>操作基调：手动瞄准、有限弹匣、空仓须手动换弹、举枪。战地步行固定偏第一人称枪感，抗战战役是越肩第三人称 / 第一人称两个视角；具体键位进入模式后可看模式说明，也可在「操作设置」改键。</p>
-      <p class="desktop-help">电脑通用：WASD 移动，鼠标/拖动或 Q/E 转视角，J/左键射击，Z/右键举枪，R 手动换弹（打空不会自动装填），U 手雷，N 医疗，Y / H 抬头低头，C 切换视角，Esc/P 暂停。</p>
+      <p class="desktop-help">电脑通用（默认鼠标接管）：WASD 移动，鼠标转视角，左键射击，右键举枪，Shift 跑步，空格跳跃，R 手动换弹（打空不会自动装填），G 手雷，F 互动，E 医疗，V 切换视角，Esc/P 暂停；键位可在「操作设置」里改。</p>
       <p class="touch-help">手机对照吃鸡习惯：左下摇杆移动，屏幕空白处拖动瞄准；按住右侧大红「射击」可一边开火一边拖枪；「举枪」精瞄，「换弹」空仓必点；跳跃/手雷/互动在射击键旁。</p>
       <p class="touch-help">手机通用：左下摇杆移动，空白处拖动瞄准，右侧射击/跳跃/互动等；右上可切换视角与打开菜单。</p>
       <p>基地防守、银行塔防、房车与虫族仍在《虫潮围城》。可从本大厅设置栏返回虫潮。</p>
@@ -639,7 +639,7 @@ html,body{overscroll-behavior:none}
     <div class="btnRow"><button class="mbtn green" data-vs-ai="easy">对战电脑 · 简单</button><button class="mbtn green" data-vs-ai="normal">对战电脑 · 普通</button><button class="mbtn green" data-vs-ai="hard">对战电脑 · 困难</button></div>
     <div class="btnRow"><button class="mbtn" id="vsOnline">👥 好友对战（联机，最多 8 人，空位电脑补）</button><button class="mbtn" id="vsMenuBack">← 返回</button></div>
     <p class="small" id="vsRecordTxt" role="status"></p>
-    <div class="small vs-rules">射击：按住 J 或左键 / 转视角：第一人称鼠标接管 / 未接管时右键拖动或 Q E / 举枪：Z 或右键点按 / 装备：O / 部署：L / 战况：T / 换弹：R（空仓不会自动装填） / 支援：N / 抬头低头：Y H / 上下车：I。手机：左摇杆移动，空白处拖视角，按住射击可继续拖枪；右侧有举枪与换弹键。双方各有8名电脑步兵与越野车、坦克、装甲车、直升机；备用弹药无限。联机由房主计算战局，中途加入接手电脑座位。</div>
+    <div class="small vs-rules">射击：按住左键 / 转视角：鼠标接管（未接管时右键拖动） / 举枪：右键或 Z / 装备：B / 部署：T / 战况：Tab / 换弹：R（空仓不会自动装填） / 支援：E / 上下车：F / 跑步：Shift。手机：左摇杆移动，空白处拖视角，按住射击可继续拖枪；右侧有举枪与换弹键。双方各有8名电脑步兵与越野车、坦克、装甲车、直升机；备用弹药无限。联机由房主计算战局，中途加入接手电脑座位。</div>
   </div>
   <div id="vsResult" class="overlay menu hidden" role="dialog" aria-modal="true" aria-labelledby="vsResultTitle">
     <h2 id="vsResultTitle"></h2>
@@ -688,7 +688,7 @@ html,body{overscroll-behavior:none}
   <div id="buildPanel" class="panel hidden" style="width:540px;">
     <div class="buildHeader">
       <button class="closeX" id="buildClose" aria-label="关闭建造">✕</button>
-      <h3>🏗 基地建造 · 选设施后走动摆放，J确认，L换建筑</h3>
+      <h3>🏗 基地建造 · 选设施后走动摆放，左键确认，T换建筑</h3>
       <div id="buildGold">0</div>
       <div class="panelPager" aria-label="建造翻页"><button type="button" class="mbtn" data-panel-page="-1">↑ 上一页</button><button type="button" class="mbtn" data-panel-page="1">↓ 下一页</button></div>
     </div>

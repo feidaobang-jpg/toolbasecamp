@@ -1,8 +1,9 @@
 // Real browser input verifies acquisition, free mouse aim, shooting and safe release.
+// 2026-10 键位 v2：第三人称也鼠标接管（切视角不再松开鼠标），视角键 V、商店 B；“纯键盘”取消，旧设置换成“按住画面拖动”。
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
 const {chromium}=require(process.env.PW||'D:/project/godot/absurd-3d-daily/node_modules/playwright');
 const URL=process.env.GAME_URL||'http://127.0.0.1:8967/html/game/starship-defense/index.html';
-const OUT=process.env.QA_OUTPUT||path.join(__dirname,'media-kit/releases/web-fps-mouse-v0.36.2/qa');
+const OUT=process.env.QA_OUTPUT||path.join(__dirname,'media-kit/releases/web-keys-v2/fps-mouse');
 fs.mkdirSync(OUT,{recursive:true});const results=[];
 const pass=(name,data)=>{results.push({name,data});console.log('PASS',name,JSON.stringify(data??''));};
 (async()=>{
@@ -45,13 +46,13 @@ const pass=(name,data)=>{results.push({name,data});console.log('PASS',name,JSON.
   await p.click('#btnResume');await p.waitForFunction(()=>document.pointerLockElement?.id==='c3d');
   const resumed=await state(p);assert.equal(resumed.gold,before.gold);assert.deepEqual(resumed.pos,after.pos);
   pass('Resume captures the mouse and preserves the current run');
-  await p.keyboard.press('KeyO');await settle(p);assert.equal(await locked(p),null);assert.ok(await p.locator('#shopPanel').isVisible());
+  await p.keyboard.press('KeyB');await settle(p);assert.equal(await locked(p),null);assert.ok(await p.locator('#shopPanel').isVisible());
   await p.click('#shopClose');await p.waitForFunction(()=>document.pointerLockElement?.id==='c3d');
   pass('Shop releases the mouse; closing it returns to first-person control');
-  await p.keyboard.press('KeyC');await settle(p);assert.equal(await locked(p),null);assert.equal((await state(p)).playing,true);
-  pass('Changing to third-person releases the mouse without pausing');
-   for(let i=0;i<3;i++){await p.keyboard.press('KeyC');await p.waitForTimeout(100);}await p.waitForFunction(()=>document.pointerLockElement?.id==='c3d');
-  pass('Cycling back to first-person captures the mouse');
+  await p.keyboard.press('KeyV');await settle(p);assert.equal(await locked(p),'c3d');assert.equal((await state(p)).playing,true);
+  pass('Changing to third-person (V) keeps the mouse captured without pausing');
+   for(let i=0;i<3;i++){await p.keyboard.press('KeyV');await p.waitForTimeout(100);}await p.waitForFunction(()=>document.pointerLockElement?.id==='c3d');
+  pass('Cycling views keeps the mouse captured');
   const progress=await state(p);
   await p.evaluate(()=>__gameQA.setDeviceMode('touch'));await settle(p);assert.equal(await locked(p),null);
   const switched=await state(p);assert.equal(switched.gold,progress.gold);assert.deepEqual(switched.pos,progress.pos);assert.equal(switched.fire,false);
@@ -67,9 +68,7 @@ const pass=(name,data)=>{results.push({name,data});console.log('PASS',name,JSON.
    const {context:c,page}=await load({keyboard:mode==='keyboard',touch:mode==='touch',fallback:mode==='fallback'});
    await page.click('#btnStart');await settle(page);assert.equal(await locked(page),null);
    await page.evaluate(()=>{__gameQA.player.invulnerable=999;__gameQA.AudioSys.master.gain.value=0;});
-   if(mode==='keyboard'){
-    const a=await state(page);await page.keyboard.down('KeyE');await page.waitForTimeout(300);await page.keyboard.up('KeyE');assert.notEqual((await state(page)).yaw,a.yaw);
-   }else if(mode==='fallback'){
+   if(mode==='keyboard'||mode==='fallback'){
     const a=await state(page);await page.mouse.move(640,250);await page.mouse.down();await page.mouse.move(770,250,{steps:8});await page.mouse.up();await settle(page);assert.notEqual((await state(page)).yaw,a.yaw);
     assert.equal((await state(page)).fire,false);
    }else{
@@ -79,7 +78,7 @@ const pass=(name,data)=>{results.push({name,data});console.log('PASS',name,JSON.
     await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await settle(page);assert.notEqual((await state(page)).yaw,a.yaw);
     await page.screenshot({path:path.join(OUT,'phone-portrait.png')});
    }
-   assert.equal(await locked(page),null);pass(mode+' keeps its playable input without mouse capture');await c.close();
+   assert.equal(await locked(page),null);pass((mode==='keyboard'?'old pure-keyboard setting (now drag)':mode)+' keeps its playable input without mouse capture');await c.close();
   }
   // Gunfire modes now live in their own game; this regression covers the playable insect campaign.
   assert.deepEqual(errors,[]);pass('No browser runtime errors');
