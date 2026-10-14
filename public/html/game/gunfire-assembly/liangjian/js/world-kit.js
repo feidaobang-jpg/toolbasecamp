@@ -126,13 +126,17 @@ export function resolveCircle(world, u, r, feet = 0, hero = false) {
   }
 }
 
-// 脚下能站的最高顶面（地面为 0）。只认不高于脚面一点点的顶面，所以必须跳上去而不是走上去
+// 地形高度：平地章节没有 hgt，就是 0；有山坡的章节（李家坡）由场景提供 world.hgt(x, z)
+export function terrainAt(world, x, z) { return world.hgt ? world.hgt(x, z) : 0; }
+
+// 脚下能站的最高顶面（地面为地形高度）。只认不高于脚面一点点的顶面，所以必须跳上去而不是走上去
 export function groundAt(world, x, z, feet) {
   const cs = world.colliders;
-  let g = 0;
+  let g = world.hgt ? world.hgt(x, z) : 0;
+  const base = g;
   for (let i = 0; i < cs.length; i++) {
     const c = cs[i];
-    if (!c.on || c.y0 > 0 || NO_STAND[c.tag] || c.h > feet + 0.06 || c.h <= g) continue;
+    if (!c.on || c.y0 > base + 0.3 || NO_STAND[c.tag] || c.h > feet + 0.06 || c.h <= g) continue;
     if (x >= c.x0 - 0.3 && x <= c.x1 + 0.3 && z >= c.z0 - 0.3 && z <= c.z1 + 0.3) g = c.h;
   }
   return g;
@@ -156,7 +160,7 @@ export function losBlocked(world, ax, az, bx, bz, minH = 1.7, ay = 1.4, by = 1.4
   const dx = bx - ax, dz = bz - az;
   for (let i = 0; i < cs.length; i++) {
     const c = cs[i];
-    if (!c.on || c.h < minH || c.y0 > 3) continue;
+    if (!c.on || c.h < minH || c.y0 - (c.base || 0) > 3) continue;
     if (c.x1 < x0 || c.x0 > x1 || c.z1 < z0 || c.z0 > z1) continue;
     // 逐段检查进入点高度
     let t0 = 0, t1 = 1, ok = true;

@@ -32,7 +32,8 @@ export class Game {
     scene.fog = new THREE.Fog(env.fog, env.fogNear, env.fogFar);
     this.camera = new THREE.PerspectiveCamera(50, 16 / 9, 0.08, 900);
     scene.add(this.camera);
-    scene.add(new THREE.HemisphereLight(env.sky, env.ground, env.hemi));
+    this.hemi = new THREE.HemisphereLight(env.sky, env.ground, env.hemi);
+    scene.add(this.hemi);
     const sun = (this.sun = new THREE.DirectionalLight(env.sun, env.sunI));
     sun.position.set(-34, 46, 22);
     sun.shadow.mapSize.set(2048, 2048);
@@ -41,6 +42,7 @@ export class Game {
     scene.add(sun, sun.target);
     this.world = this.buildWorld(scene);
     this.fx = new Fx(scene);
+    this.fx.hgt = this.world.hgt || null;
     this.units = []; this.enemies = []; this.allies = [];
     this.bullets = []; this.nades = []; this.shells = []; this.mortars = []; this.riders = []; this.mgs = []; this.pickups = []; this.timers = []; this.cast = [];
     this.cam = { yaw: 0, pitch: 0, pendYaw: 0, pendPitch: 0, view: 0, clip: 1, F: new THREE.Vector3(0, 1.5, 90), turning: false, orbitT: 0 };
@@ -150,16 +152,20 @@ export class Game {
     const def = DEF[type];
     const model = buildSoldier(o.look || def.look);
     this.scene.add(model.root);
-    const u = { kind, type, def, x, z, y: o.y || 0, yaw: o.yaw === undefined ? (kind === 'enemy' ? Math.PI : 0) : o.yaw, hp: o.hp || def.hp, maxHp: o.hp || def.hp, alive: true, r: 0.42, model, walk: rand(TAU), moving: 0, aim: 0, state: 'idle', stT: rand(0.4, 1.6), think: rand(0.5), target: null, flashT: 0, deadT: 0, slash: -1, cheer: 0, active: kind === 'ally', group: o.group || '', hold: !!o.hold, name: o.name || '', slot: o.slot || 0, pref: o.pref || rand(13, 22), wantCannon: !!o.cannon, nest: o.nest || null, down: 0, regen: 0, strafe: 0, strafeT: rand(1, 3), burst: 0, vx: 0, vz: 0, wake: o.wake || 40, shotT: 0, px: x, pz: z };
+    const u = { kind, type, def, x, z, y: o.y !== undefined ? o.y : this.groundY(x, z), fixedY: o.y !== undefined, yaw: o.yaw === undefined ? (kind === 'enemy' ? Math.PI : 0) : o.yaw, hp: o.hp || def.hp, maxHp: o.hp || def.hp, alive: true, r: 0.42, model, walk: rand(TAU), moving: 0, aim: 0, state: 'idle', stT: rand(0.4, 1.6), think: rand(0.5), target: null, flashT: 0, deadT: 0, slash: -1, cheer: 0, active: kind === 'ally', group: o.group || '', hold: !!o.hold, name: o.name || '', slot: o.slot || 0, pref: o.pref || rand(13, 22), wantCannon: !!o.cannon, nest: o.nest || null, down: 0, regen: 0, strafe: 0, strafeT: rand(1, 3), burst: 0, vx: 0, vz: 0, wake: o.wake || 40, shotT: 0, px: x, pz: z };
     this.units.push(u);
     (kind === 'enemy' ? this.enemies : this.allies).push(u);
     model.root.position.set(x, u.y, z); model.root.rotation.y = u.yaw;
     return u;
   }
   after(sec, fn) { this.timers.push({ t: sec, fn }); }
+  // 地形高度与离地高度（平地章节恒为 0 / u.y）
+  groundY(x, z) { return this.world.hgt ? this.world.hgt(x, z) : 0; }
+  elev(u) { return u.y - (this.world.hgt ? this.world.hgt(u.x, u.z) : 0); }
   place(u, x, z) {
     u.x = x; u.z = z; u.px = x; u.pz = z;
-    if (u === this.hero) { u.y = 0; u.vy = 0; u.onGround = true; }
+    if (u === this.hero) { u.y = this.groundY(x, z); u.vy = 0; u.onGround = true; }
+    else if (this.world.hgt && !u.fixedY) u.y = this.groundY(x, z);
     resolveCircle(this.world, u, u.r, u.y, u === this.hero);
     u.model.root.position.set(u.x, u.y, u.z);
   }
@@ -218,6 +224,7 @@ export class Game {
     for (const u of this.allies) updateAlly(this, u, dt);
     for (const u of this.enemies) { if (u.type === 'boss') this.updateBossUnit(u, dt); else updateEnemy(this, u, dt); }
     this.separate();
+    if (this.world.hgt) this.groundUnits();
     this.updateBullets(dt);
     this.updateNades(dt);
     this.updateShells(dt);
@@ -333,7 +340,7 @@ export class Game {
       if (use) { this.leaveMG(); use = false; }
       else { this.controlMG(dt); return; }
     }
-    const nearCannon = this.gunUsable() && can.placed && can.alive && h.y < 0.5 && dist2(h.x, h.z, can.x, can.z + 1.6) < 3.4 * 3.4;
+    const nearCannon = this.gunUsable() && can.placed && can.alive && this.elev(h) < 0.5 && dist2(h.x, h.z, can.x, can.z + 1.6) < 3.4 * 3.4;
     const gun = nearCannon ? null : this.gunNear();
     const extra = nearCannon || gun ? null : this.useOption(h);   // 本章特有的互动（例如抓舌头）
     ui.setUse(nearCannon ? this.gunCfg.use : gun ? '机枪' : extra ? extra.label : null);
@@ -375,7 +382,7 @@ export class Game {
     h.vy -= GRAVITY * dt;
     h.y += h.vy * dt;
     const gnd = groundAt(this.world, h.x, h.z, prevY);
-    if (h.y <= gnd && h.vy <= 0) {
+    if (h.y <= gnd + (this.world.hgt && h.onGround && h.vy <= 0 ? 0.45 : 0) && h.vy <= 0) {
       if (h.vy < -6) { this.fx.dust(h.x, gnd + 0.05, h.z, 5); this.audio.play('thud', 0.3); }
       h.y = gnd; h.vy = 0; h.onGround = true;
     } else h.onGround = false;
@@ -441,10 +448,10 @@ export class Game {
     // 没吸到人：沿视线找第一个挡住的东西或地面
     let t = skip;
     for (; t < range; t += 0.8) {
-      const py = oy + fy * t;
-      if (py <= 0.02 || pointBlocked(this.world, ox + fx * t, py, oz + fz * t)) break;
+      const py = oy + fy * t, px = ox + fx * t, pz = oz + fz * t;
+      if (py <= this.groundY(px, pz) + 0.02 || pointBlocked(this.world, px, py, pz)) break;
     }
-    a.x = ox + fx * t; a.y = Math.max(0.02, oy + fy * t); a.z = oz + fz * t; a.dist = t;
+    a.x = ox + fx * t; a.z = oz + fz * t; a.y = Math.max(this.groundY(a.x, a.z) + 0.02, oy + fy * t); a.dist = t;
   }
 
   heroShoot() {
@@ -481,8 +488,9 @@ export class Game {
     const dd = clamp(d, 6, 20);
     const tx = h.x + (dx / d) * dd, tz = h.z + (dz / d) * dd;
     const mesh = new THREE.Mesh(this.nadeGeo, MAT.vc); mesh.castShadow = true; this.scene.add(mesh);
-    this.nades.push({ x0: h.x, z0: h.z, y0: h.y, x1: tx, z1: tz, t: 0, d: 0.72, mesh, r: 4.6, dmg: 5, team: 0 });
-    this.fx.ring(tx, 0.07, tz, 4.6, 0.72, 0xffe9a8, 2);
+    const ty = this.groundY(tx, tz);
+    this.nades.push({ x0: h.x, z0: h.z, y0: h.y, y1: ty, x1: tx, z1: tz, t: 0, d: 0.72, mesh, r: 4.6, dmg: 5, team: 0 });
+    this.fx.ring(tx, ty + 0.07, tz, 4.6, 0.72, 0xffe9a8, 2);
     this.audio.play('throw');
     h.slash = 0.36;
   }
@@ -504,7 +512,8 @@ export class Game {
     this.hurtUnit(b, 7, 0, 0, 'blade');
     this.stats.clash++; this.addScore(400);
     const mx = (b.x + this.hero.x) / 2, mz = (b.z + this.hero.z) / 2;
-    this.fx.sparks(mx, 1.4, mz, 26, 0xffffff); this.fx.ring(mx, 0.1, mz, 5, 0.4, 0xffffff, 1);
+    const gy = this.groundY(mx, mz);
+    this.fx.sparks(mx, gy + 1.4, mz, 26, 0xffffff); this.fx.ring(mx, gy + 0.1, mz, 5, 0.4, 0xffffff, 1);
     this.fx.clearWarnings();
     this.audio.play('clang');
     this.ui.stamp('狭路相逢勇者胜！', 1.5);
@@ -525,7 +534,7 @@ export class Game {
       const off = lanes[i];
       const model = buildRider();
       const x = (inCity ? 0 : h.x) + rx * off - fx_ * (24 + Math.abs(i - 2) * 2.5), z = h.z + rz * off - fz_ * (24 + Math.abs(i - 2) * 2.5);
-      model.root.rotation.y = yaw; model.root.position.set(x, 0, z);
+      model.root.rotation.y = yaw; model.root.position.set(x, this.groundY(x, z), z);
       this.scene.add(model.root);
       this.riders.push({ model, x, z, fx: fx_, fz: fz_, d: 0, hit: new Set(), t: rand(TAU), hop: 0 });
     }
@@ -544,13 +553,14 @@ export class Game {
       const blocked = pointBlocked(this.world, r.x + r.fx * 1.5, 0.5, r.z + r.fz * 1.5);
       r.hop = damp(r.hop, blocked && blocked.h < 3 ? 1.5 : 0, 9, dt);
       if (blocked && blocked.h >= 3) r.d = 999;
-      r.model.root.position.set(r.x, r.hop + Math.abs(Math.sin(r.t)) * 0.16, r.z);
+      const rg = this.groundY(r.x, r.z);
+      r.model.root.position.set(r.x, rg + r.hop + Math.abs(Math.sin(r.t)) * 0.16, r.z);
       r.model.root.rotation.x = Math.sin(r.t) * 0.05;
       r.model.legs.forEach((l, k) => { l.rotation.x = Math.sin(r.t + (k < 2 ? 0 : Math.PI) + (k % 2) * 0.6) * 0.9; });
       r.model.rider.armR.rotation.x = 2.5 + Math.sin(r.t * 0.5) * 0.5;
-      if (rand() < dt * 14) this.fx.dust(r.x, 0.1, r.z, 1);
+      if (rand() < dt * 14) this.fx.dust(r.x, rg + 0.1, r.z, 1);
       for (const e of this.enemies) {
-        if (!e.alive || e.y > 2 || r.hit.has(e)) continue;
+        if (!e.alive || e.y - rg > 2 || r.hit.has(e)) continue;
         if (dist2(e.x, e.z, r.x, r.z) < 2.0 * 2.0) { r.hit.add(e); this.hurtUnit(e, e.type === 'boss' ? 3 : 5, r.fx, r.fz, 'blade'); this.audio.play('slash', 0.7); this.fx.sparks(e.x, 1.3, e.z, 6, 0xffffff); }
       }
       if (r.d > 78) { this.scene.remove(r.model.root); this.riders.splice(i, 1); }
@@ -562,14 +572,15 @@ export class Game {
     for (const m of this.mgs) this.scene.remove(m.model.root);
     this.mgs = this.mgSpots().map(([id, n, face = 1]) => {
       const model = buildMG();
-      model.root.position.set(n.x, 1.47, n.z + 1.2 * face); model.root.rotation.set(0, face > 0 ? Math.PI : 0, 0);   // 架在正面沙袋上，枪口朝外
+      const gy = this.groundY(n.x, n.z);
+      model.root.position.set(n.x, gy + 1.47, n.z + 1.2 * face); model.root.rotation.set(0, face > 0 ? Math.PI : 0, 0);   // 架在正面沙袋上，枪口朝外
       this.scene.add(model.root);
-      return { id, x: n.x, z: n.z + 0.15 * face, model, ammo: MG_BELT, cd: 0, reload: 0 };
+      return { id, x: n.x, z: n.z + 0.15 * face, gy, model, ammo: MG_BELT, cd: 0, reload: 0 };
     });
   }
   gunNear() {
     const h = this.hero;
-    if (h.y > 0.5) return null;
+    if (this.elev(h) > 0.5) return null;
     for (const m of this.mgs) {
       if (dist2(h.x, h.z, m.x, m.z) > 2.3 * 2.3) continue;
       if (this.enemies.some((e) => e.alive && e.type === 'mg' && e.nest === m.id)) continue;   // 机枪手还在
@@ -579,7 +590,7 @@ export class Game {
   }
   manMG(m) {
     const h = this.hero;
-    h.mg = m; h.x = m.x; h.z = m.z; h.y = 0; h.vy = 0; h.onGround = true; h.moving = 0; h.ads = false;
+    h.mg = m; h.x = m.x; h.z = m.z; h.y = m.gy || 0; h.vy = 0; h.onGround = true; h.moving = 0; h.ads = false;
     this.ui.setPrompt(null);
     this.audio.play('uiok');
     if (!this.flags.mgTip) { this.flags.mgTip = 1; this.ui.toast(this.app.isTouch() ? '滑屏瞄准，按住开火键扫射；点“离开机枪”下来' : '转动准星瞄准，按住开火键扫射；再按 I 下来', 5); }
@@ -587,7 +598,7 @@ export class Game {
   leaveMG() { this.hero.mg = null; }
   controlMG(dt) {
     const h = this.hero, m = h.mg, inp = this.input, c = this.cam;
-    h.x = m.x; h.z = m.z; h.y = 0; h.vy = 0; h.onGround = true; h.moving = 0; h.yaw = c.yaw; h.ads = false;
+    h.x = m.x; h.z = m.z; h.y = m.gy || 0; h.vy = 0; h.onGround = true; h.moving = 0; h.yaw = c.yaw; h.ads = false;
     this.computeAim();
     m.cd -= dt;
     const firing = inp.held.fire; inp.take('fire');
@@ -599,14 +610,14 @@ export class Game {
     for (const e of ['jump', 'nade', 'dash']) inp.take(e);
     if (inp.take('cav')) this.callCavalry();
     const fx = fwdX(c.yaw), fz = fwdZ(c.yaw);
-    m.model.root.position.set(m.x + fx * 0.8, 1.05, m.z + fz * 0.8);
+    m.model.root.position.set(m.x + fx * 0.8, (m.gy || 0) + 1.05, m.z + fz * 0.8);
     m.model.root.rotation.set(c.pitch, c.yaw, 0);
   }
   shootMG(m) {
     const c = this.cam, a = this.aim;
     m.cd = 0.075; m.ammo--;
     const fx = fwdX(c.yaw), fz = fwdZ(c.yaw);
-    const mx = m.x + fx * 1.9, my = Math.max(1.0, 1.25 + Math.sin(c.pitch) * 1.1), mz = m.z + fz * 1.9;
+    const mx = m.x + fx * 1.9, my = (m.gy || 0) + Math.max(1.0, 1.25 + Math.sin(c.pitch) * 1.1), mz = m.z + fz * 1.9;
     let dx = a.x - mx, dy = a.y - my, dz = a.z - mz;
     let l = Math.hypot(dx, dy, dz);
     if (l < 2.2 || dx * a.fx + dy * a.fy + dz * a.fz < 0) { dx = a.fx; dy = a.fy; dz = a.fz; l = 1; }
@@ -624,7 +635,7 @@ export class Game {
   manCannon() {
     const c = this.cannon, h = this.hero;
     c.manned = true; c.fireLock = true; this.cam.yaw = c.aimYaw; this.cam.pendYaw = 0; this.cam.pendPitch = 0; this.cam.pitch = 0;
-    h.x = c.x + 0.9; h.z = c.z + 1.7; h.y = 0; h.vy = 0; h.onGround = true; h.yaw = 0; h.moving = 0; h.aim = 0; h.ads = false;
+    h.x = c.x + 0.9; h.z = c.z + 1.7; h.y = this.groundY(h.x, h.z); h.vy = 0; h.onGround = true; h.yaw = 0; h.moving = 0; h.aim = 0; h.ads = false;
     this.ui.setPrompt(null);
     this.audio.play('uiok');
     if (!this.flags.manned) { this.flags.manned = 1; this.ui.toast(this.app.isTouch() ? this.gunCfg.tipTouch : this.gunCfg.tip, 7); }
@@ -632,7 +643,7 @@ export class Game {
   leaveCannon() {
     const c = this.cannon, h = this.hero;
     c.manned = false; this.arc.visible = false; this.aimRing.visible = false; this.ui.setAim(null);
-    h.x = c.x + 2.2; h.z = c.z + 2.4; h.y = 0; h.vy = 0; resolveCircle(this.world, h, h.r, 0, true);
+    h.x = c.x + 2.2; h.z = c.z + 2.4; h.y = this.groundY(h.x, h.z); h.vy = 0; resolveCircle(this.world, h, h.r, h.y, true);
     this.cam.pendYaw = 0; this.cam.pendPitch = 0; this.cam.pitch = 0;
   }
   controlCannon(dt) {
@@ -808,17 +819,17 @@ export class Game {
         } else {
           if (h.alive) {
             const rr = h.r + 0.1;
-            if (segPointD2(b.x, b.z, nx, nz, h.x, h.z) < rr * rr && my < h.y + 2.05 && my > h.y - 0.1) { this.hurtHero(b.dmg, b.x - b.dx, b.z - b.dz); dead = true; }
+            if (segPointD2(b.x, b.z, nx, nz, h.x, h.z) < rr * rr && my < h.y + 2.05 && my > h.y - 0.1) { if (this.heroCover(b)) fx.sparks(nx - b.dx * 0.6, ny, nz - b.dz * 0.6, 3, 0xffe2a0); else this.hurtHero(b.dmg, b.x - b.dx, b.z - b.dz); dead = true; }
           }
           if (!dead) for (const a of this.allies) {
             if (!a.alive || a.down > 0) continue;
-            if (segPointD2(b.x, b.z, nx, nz, a.x, a.z) < 0.3 && my < 2 && my > -0.1) { this.hurtUnit(a, b.dmg, b.dx, b.dz, 'bullet'); dead = true; break; }
+            if (segPointD2(b.x, b.z, nx, nz, a.x, a.z) < 0.3 && my < a.y + 2 && my > a.y - 0.1) { if (!this.allyCover(a, b)) this.hurtUnit(a, b.dmg, b.dx, b.dz, 'bullet'); dead = true; break; }
           }
           if (!dead && c.visible && c.alive && this.gunExposed() && segPointD2(b.x, b.z, nx, nz, c.x, c.z + 0.8) < 2.2 && my < 1.9) { this.hurtCannon(b.dmg * 0.5); fx.sparks(nx, ny, nz, 4); dead = true; }
         }
         if (!dead) {
           if (pointBlocked(w, nx, ny, nz, b.ign)) { fx.sparks(nx - b.dx * 0.3, ny, nz - b.dz * 0.3, 3, 0xffe2a0); fx.dust(nx - b.dx * 0.4, ny, nz - b.dz * 0.4, 1); dead = true; }
-          else if (ny <= 0.02) { fx.dust(nx, 0.05, nz, 2); dead = true; }
+          else { const gy = this.world.hgt ? this.world.hgt(nx, nz) : 0; if (ny <= gy + 0.02) { fx.dust(nx, gy + 0.05, nz, 2); dead = true; } }
         }
         b.x = nx; b.y = ny; b.z = nz;
       }
@@ -834,7 +845,7 @@ export class Game {
       const n = this.nades[i];
       n.t += dt;
       const k = Math.min(1, n.t / n.d);
-      const x = lerp(n.x0, n.x1, k), z = lerp(n.z0, n.z1, k), y = 1.4 + 5.5 * k * (1 - k) * (1 + (n.high || 0)) - 1.35 * k + (n.y0 || 0) * (1 - k);
+      const x = lerp(n.x0, n.x1, k), z = lerp(n.z0, n.z1, k), y = 1.4 + 5.5 * k * (1 - k) * (1 + (n.high || 0)) - 1.35 * k + (n.y0 || 0) * (1 - k) + (n.y1 || 0) * k;
       n.mesh.position.set(x, y, z); n.mesh.rotation.x += dt * 12; n.mesh.rotation.z += dt * 7;
       if (k >= 1) {
         this.scene.remove(n.mesh); this.nades.splice(i, 1);
@@ -844,22 +855,24 @@ export class Game {
   }
   // 地面爆炸：team=0 伤敌，team=1 伤我
   blast(x, z, r, dmg, team) {
-    this.fx.explosion(x, 0.1, z, r, false);
+    const gy = this.groundY(x, z);
+    this.fx.explosion(x, gy + 0.1, z, r, false);
     this.sfxAt('explode', x, z, 0.9);
     if (team === 0) {
-      for (const e of this.enemies) { if (!e.alive || e.y > 2) continue; const d = dist(e.x, e.z, x, z); if (d < r) this.hurtUnit(e, d < r * 0.5 ? dmg : 2, e.x - x, e.z - z, 'blast'); }
+      for (const e of this.enemies) { if (!e.alive || e.y - gy > 2) continue; const d = dist(e.x, e.z, x, z); if (d < r) this.hurtUnit(e, d < r * 0.5 ? dmg : 2, e.x - x, e.z - z, 'blast'); }
     } else {
       const h = this.hero;
-      if (h.alive && dist(h.x, h.z, x, z) < r && h.y < 2.6 && !(this.cannon.manned)) this.hurtHero(2, x, z);
+      if (h.alive && dist(h.x, h.z, x, z) < r && h.y - gy < 2.6 && !(this.cannon.manned)) this.hurtHero(2, x, z);
       for (const a of this.allies) if (a.alive && a.down <= 0 && dist(a.x, a.z, x, z) < r) this.hurtUnit(a, 3, a.x - x, a.z - z, 'blast');
       const c = this.cannon;
       if (c.visible && c.alive && this.gunExposed() && dist(c.x, c.z, x, z) < r + 1) this.hurtCannon(4);
     }
   }
   launchMortar(tx, tz, r, time, fromX, fromY, fromZ) {
-    this.fx.warn(tx, tz, r, time);
+    const gy = this.groundY(tx, tz);
+    this.fx.warn(tx, tz, r, time, undefined, gy);
     const mesh = new THREE.Mesh(this.nadeGeo, MAT.vc); mesh.scale.setScalar(1.6); this.scene.add(mesh);
-    this.mortars.push({ x: tx, z: tz, r, t: 0, d: time, mesh, fx: fromX, fy: fromY, fz: fromZ });
+    this.mortars.push({ x: tx, z: tz, gy, r, t: 0, d: time, mesh, fx: fromX, fy: fromY, fz: fromZ });
     this.sfxAt('whistle', tx, tz, 0.7);
   }
   updateMortars(dt) {
@@ -867,7 +880,7 @@ export class Game {
       const m = this.mortars[i];
       m.t += dt;
       const k = Math.min(1, m.t / m.d);
-      m.mesh.position.set(lerp(m.fx, m.x, k), lerp(m.fy, 0, k) + 26 * k * (1 - k), lerp(m.fz, m.z, k));
+      m.mesh.position.set(lerp(m.fx, m.x, k), lerp(m.fy, m.gy || 0, k) + 26 * k * (1 - k), lerp(m.fz, m.z, k));
       if (k >= 1) { this.scene.remove(m.mesh); this.mortars.splice(i, 1); this.blast(m.x, m.z, m.r, 0, 1); }
     }
   }
@@ -886,7 +899,7 @@ export class Game {
     if (!u.alive) return;
     if (u.kind === 'ally') { u.down = 8; u.hp = 0; u.moving = 0; return; }   // 战友倒地后会被卫生员救起
     u.alive = false; u.deadT = 0; u.fallYaw = Math.atan2(dx, dz);
-    if (u.y > 2) { u.fall = 1; }
+    if (this.elev(u) > 2) { u.fall = 1; }
     if (silent) return;
     this.stats.kills++; this.addScore(u.def.score || 100);
     this.sfxAt('kill', u.x, u.z, 0.6);
@@ -941,18 +954,20 @@ export class Game {
   }
 
   spawnMed(x, z) {
-    const mesh = new THREE.Mesh(this.medGeo, MAT.vc); mesh.castShadow = true; mesh.position.set(x, 0, z); this.scene.add(mesh);
-    this.pickups.push({ type: 'med', x, z, mesh });
+    const gy = this.groundY(x, z);
+    const mesh = new THREE.Mesh(this.medGeo, MAT.vc); mesh.castShadow = true; mesh.position.set(x, gy, z); this.scene.add(mesh);
+    this.pickups.push({ type: 'med', x, z, gy, mesh });
   }
   spawnLoot(x, z) {
-    const mesh = new THREE.Mesh(this.crateGeo, MAT.vc); mesh.castShadow = true; mesh.position.set(x, 0, z); mesh.scale.setScalar(1.3); this.scene.add(mesh);
-    this.pickups.push({ type: 'loot', x, z, mesh });
+    const gy = this.groundY(x, z);
+    const mesh = new THREE.Mesh(this.crateGeo, MAT.vc); mesh.castShadow = true; mesh.position.set(x, gy, z); mesh.scale.setScalar(1.3); this.scene.add(mesh);
+    this.pickups.push({ type: 'loot', x, z, gy, mesh });
   }
   updatePickups(dt) {
     const h = this.hero;
     for (let i = this.pickups.length - 1; i >= 0; i--) {
       const p = this.pickups[i];
-      p.mesh.rotation.y += dt * 1.4; p.mesh.position.y = 0.25 + Math.sin(this.t * 3 + i) * 0.1;
+      p.mesh.rotation.y += dt * 1.4; p.mesh.position.y = (p.gy || 0) + 0.25 + Math.sin(this.t * 3 + i) * 0.1;
       if (!h.alive || dist2(h.x, h.z, p.x, p.z) > 1.5 * 1.5) continue;
       if (p.type === 'med') {
         if (h.maxHp <= 1) { this.addScore(200); this.audio.play('pickup'); this.ui.toast('一发模式：急救包折成战功 +200', 1.6); this.scene.remove(p.mesh); this.pickups.splice(i, 1); continue; }
@@ -971,14 +986,21 @@ export class Game {
     }
   }
 
+  // 有地形时，地面单位每帧贴着坡面走（站在城墙等固定高度上的不动）
+  groundUnits() {
+    const hg = this.world.hgt;
+    for (const u of this.units) if (u !== this.hero && u.alive && !u.fixedY) u.y = hg(u.x, u.z);
+  }
   separate() {
     const us = this.units;
+    const hg = this.world.hgt;
+    for (const u of us) u._up = hg ? u.y - hg(u.x, u.z) > 2 : u.y > 2;
     for (let i = 0; i < us.length; i++) {
       const a = us[i];
-      if (!a.alive || a.y > 2 || a.down > 0) continue;
+      if (!a.alive || a._up || a.down > 0) continue;
       for (let j = i + 1; j < us.length; j++) {
         const b = us[j];
-        if (!b.alive || b.y > 2 || b.down > 0) continue;
+        if (!b.alive || b._up || b.down > 0) continue;
         if (Math.abs(a.y - b.y) > 1.2) continue;
         const dx = b.x - a.x, dz = b.z - a.z, d2 = dx * dx + dz * dz, rr = a.r + b.r;
         if (d2 >= rr * rr || d2 < 1e-6) continue;
@@ -1032,14 +1054,14 @@ export class Game {
         u.deadT += dt;
         const k = Math.min(1, u.deadT / 0.4);
         m.root.rotation.x = k * 1.5;
-        if (u.fall) { u.y = Math.max(0, u.y - dt * 14 * Math.min(1, u.deadT * 2)); u.z += dt * 2.2 * (u.y > 0 ? 1 : 0); }
+        if (u.fall) { const gy = this.groundY(u.x, u.z); u.y = Math.max(gy, u.y - dt * 14 * Math.min(1, u.deadT * 2)); u.z += dt * 2.2 * (u.y > gy ? 1 : 0); }
         m.root.position.set(u.x, u.y + 0.05 - Math.max(0, u.deadT - 2.4) * 0.5, u.z);
         setSoldierMat(m, MAT.vc); m.flash.visible = false;
         if (u.deadT > 4.4) { this.scene.remove(m.root); this.units.splice(i, 1); const arr = u.kind === 'enemy' ? this.enemies : this.allies; arr.splice(arr.indexOf(u), 1); }
         continue;
       }
       u.flashT = Math.max(0, u.flashT - dt); u.shotT = Math.max(0, u.shotT - dt);
-      if (u.down > 0) { m.root.rotation.x = 1.45; m.root.position.set(u.x, 0.05, u.z); setSoldierMat(m, MAT.vc); m.flash.visible = false; continue; }
+      if (u.down > 0) { m.root.rotation.x = 1.45; m.root.position.set(u.x, u.y + 0.05, u.z); setSoldierMat(m, MAT.vc); m.flash.visible = false; continue; }
       if (u.downed) { m.root.rotation.x = 1.25; m.root.rotation.y = u.yaw; m.root.position.set(u.x, u.y + 0.05, u.z); setSoldierMat(m, u.flashT > 0 ? MAT.flash : MAT.vc); m.flash.visible = false; continue; }
       m.root.rotation.x = u.state === 'stun' ? 0.35 : 0;
       if (u.slash >= 0) { u.slash += dt * (u.type === 'boss' ? 2.4 : 1.8); if (u.slash > 1) u.slash = -1; }
@@ -1107,10 +1129,12 @@ export class Game {
         const d = onGun ? 1.5 : lerp(v.dist, 3.1, adsK);
         const cx = px - fx * d, cy = py - fy * d, cz = pz - fz * d;
         let clip = 1;
-        if (cy < 0.3) clip = Math.min(clip, (py - 0.3) / Math.max(0.01, py - cy));
+        const gc = this.groundY(cx, cz) + 0.3;
+        if (cy < gc) clip = Math.min(clip, (py - gc) / Math.max(0.01, py - cy));
         // 墙、房子、土坎挡在镜头与主角之间时把镜头拉近
         for (const col of this.world.colliders) {
-          if (!col.on || col.h < 1.2 || col.y0 > 3) continue;
+          const cb = col.base || 0;
+          if (!col.on || col.h - cb < 1.2 || col.y0 - cb > 3) continue;
           const t = segRect(px, pz, cx, cz, col);
           if (t >= 0 && t < clip) { const yAt = py + (cy - py) * t; if (yAt < col.h + 0.25) clip = t; }
         }
@@ -1284,6 +1308,20 @@ export class Game {
   gunBar() { return null; }
   gunBarLabel() { return '炮组'; }
   spareUnit() { return false; }
+  // 主角 / 战友在掩体（例如交通壕）里时，章节可以让一部分子弹打在掩体上
+  heroCover() { return false; }
+  allyCover() { return false; }
+  // 按阶段换光照（白天、夜里、拂晓）：只改给出的项
+  setLight(o) {
+    const f = this.scene.fog;
+    if (o.fog !== undefined) f.color.setHex(o.fog);
+    if (o.fogNear !== undefined) { f.near = o.fogNear; f.far = o.fogFar; }
+    if (o.sky !== undefined) this.hemi.color.setHex(o.sky);
+    if (o.ground !== undefined) this.hemi.groundColor.setHex(o.ground);
+    if (o.hemi !== undefined) this.hemi.intensity = o.hemi;
+    if (o.sun !== undefined) this.sun.color.setHex(o.sun);
+    if (o.sunI !== undefined) this.sun.intensity = o.sunI;
+  }
   updateChapter() {}
   respawnPoint() { const s = this.startPos(); return [s.x, s.z]; }
   advanceFormation() { return false; }

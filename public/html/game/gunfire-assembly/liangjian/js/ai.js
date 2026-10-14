@@ -33,7 +33,7 @@ export function move(g, u, dx, dz, speed, dt) {
   if (u.avoidT > 0) { u.avoidT -= dt; const px = -nz * u.avoidDir, pz = nx * u.avoidDir; nx = px * 0.92 + nx * 0.25; nz = pz * 0.92 + nz * 0.25; }
   const ox = u.x, oz = u.z;
   u.x += nx * speed * dt; u.z += nz * speed * dt;
-  resolveCircle(g.world, u, u.r);
+  resolveCircle(g.world, u, u.r, u.y);
   if (Math.hypot(u.x - ox, u.z - oz) < speed * dt * 0.35) {
     u.stuckT = (u.stuckT || 0) + dt;
     if (u.stuckT > 0.22 && !(u.avoidT > 0)) { u.avoidT = 0.9; u.avoidDir = u.avoidDir ? -u.avoidDir : (rand() < 0.5 ? 1 : -1); u.stuckT = 0; }
@@ -67,7 +67,7 @@ export function shootAt(g, u, t, spread, lead, speed = 34, left = false) {
   const tx = t.x + (t.vx || 0) * fl * lead + rand(-spread, spread) * d;
   const tz = t.z + (isCannon ? 0.8 : 0) + (t.vz || 0) * fl * lead + rand(-spread, spread) * d;
   const ty = (t.y || 0) + (isCannon ? 0.9 : 1.1) + rand(-spread, spread) * d * 0.4;
-  g.fireBullet(1, _v.x, _v.y, _v.z, tx, ty, tz, 1, speed, u.y > 2 ? 'citywall' : null);
+  g.fireBullet(1, _v.x, _v.y, _v.z, tx, ty, tz, 1, speed, g.elev(u) > 2 ? 'citywall' : null);
   u.shotT = 0.07;
   g.sfxAt(u.type === 'elite' || u.type === 'boss' ? 'mg' : 'rifle', u.x, u.z, 0.75);
 }
@@ -112,15 +112,15 @@ export function updateEnemy(g, u, dt) {
   if (type === 'mg') {
     still(u, dt);
     const ox = u.x, oz = u.z + 1.75;
-    const ok = t.z > u.z - 1 && d < def.range && !losBlocked(g.world, ox, oz, t.x, t.z, 1.7, 1.7, 1.2);
+    const ok = t.z > u.z - 1 && d < def.range && !losBlocked(g.world, ox, oz, t.x, t.z, 1.7, u.y + 1.7, (t.y || 0) + 1.2);
     if (u.state === 'burst') {
       u.sh -= dt;
       u.tx = damp(u.tx, t.x, 2.2, dt); u.tz = damp(u.tz, t.z, 2.2, dt);
       u.yaw = angStep(u.yaw, yawTo(u.tx - u.x, u.tz - u.z), 5 * dt);
       if (u.sh <= 0) {
         u.sh = 0.085; u.burst--;
-        g.fireBullet(1, ox, 1.72, oz, u.tx + rand(-2.0, 2.0), 1.0, u.tz + rand(-2.0, 2.0), 1, 36, null);
-        g.fx.sparks(ox, 1.72, oz + 0.3, 1, 0xffe08a);
+        g.fireBullet(1, ox, u.y + 1.72, oz, u.tx + rand(-2.0, 2.0), (t.y || 0) + 1.0, u.tz + rand(-2.0, 2.0), 1, 36, null);
+        g.fx.sparks(ox, u.y + 1.72, oz + 0.3, 1, 0xffe08a);
         g.sfxAt('mg', u.x, u.z, 0.9);
         if (u.burst <= 0) { u.state = 'idle'; u.stT = rand(2.2, 3.2); }
       }
@@ -214,9 +214,10 @@ export function updateAlly(g, u, dt) {
     let best = null, bd = u.def.range * (wallOk ? 1.5 : 1);
     for (const e of g.enemies) {
       if (!e.alive || !e.active || e.downed) continue;
-      if (e.y > 2 && !wallOk) continue;
-      const d = dist(u.x, u.z, e.x, e.z) + (e.y > 2 ? 6 : 0);
-      if (d < bd && !losBlocked(g.world, u.x, u.z, e.x, e.z, 1.7, 1.4, e.y + 1.2)) { bd = d; best = e; }
+      const up = g.elev(e) > 2;
+      if (up && !wallOk) continue;
+      const d = dist(u.x, u.z, e.x, e.z) + (up ? 6 : 0);
+      if (d < bd && !losBlocked(g.world, u.x, u.z, e.x, e.z, 1.7, u.y + 1.4, e.y + 1.2)) { bd = d; best = e; }
     }
     u.target = best;
   }
