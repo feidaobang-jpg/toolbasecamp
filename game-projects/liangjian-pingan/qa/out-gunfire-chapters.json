@@ -1,13 +1,13 @@
 {
- "at": "2026-10-14T13:48:01.636Z",
+ "at": "2026-10-14T14:19:36.252Z",
  "passed": 10,
  "total": 10,
  "checks": [
   {
-   "name": "大厅 v0.4.0：只有一个「抗战战役 · 亮剑三章」入口（写着苍云岭、李家坡、平安县城三章重做），旧的章节选择入口和战役菜单都没了",
+   "name": "大厅只留一个「抗战战役 · 亮剑三章」入口（写着苍云岭、李家坡、平安县城三章重做），旧的章节选择入口和战役菜单都没了",
    "ok": true,
    "detail": {
-    "ver": "v0.4.0",
+    "ver": "v0.4.1",
     "cards": [
      "btnPingan:抗战战役 · 亮剑三章 推荐体验 · 苍云岭、李家坡、平安县城三章全部重做，进去后在菜单里选章、继续进度"
     ],
@@ -59,7 +59,7 @@
   {
    "name": "亮剑战役菜单的“返回大厅”回到枪火集结大厅",
    "ok": true,
-   "detail": "http://127.0.0.1:8799/html/game/gunfire-assembly/index.html"
+   "detail": "http://localhost:8795/html/game/gunfire-assembly/index.html"
   },
   {
    "name": "再从大厅进来，落在上次玩的李家坡",
@@ -77,7 +77,7 @@
   {
    "name": "旧的 pingan/index.html 地址跳到亮剑战役的平安县城",
    "ok": true,
-   "detail": "http://127.0.0.1:8799/html/game/gunfire-assembly/liangjian/index.html?qa=1&ch=pingan"
+   "detail": "http://localhost:8795/html/game/gunfire-assembly/liangjian/index.html?qa=1&ch=pingan"
   },
   {
    "name": "旧抗战战役的脚本已删（resistance-*.js 取不到）",

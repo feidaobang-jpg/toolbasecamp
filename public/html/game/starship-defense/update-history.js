@@ -1,6 +1,9 @@
 // Player-facing notes travel with the same game package; no network or account required.
-export const GAME_VERSION='0.38.6';
+export const GAME_VERSION='0.38.7';
 export const UPDATE_HISTORY=[
+  {version:'0.38.7',date:'2026-10-14',title:'清掉早已搬走的抗战战役代码',changes:[
+    '抗战战役在《枪火集结》里独立成游戏，本包菜单一直没有这个入口，但旧代码还留在包里，和联机战地的枪战规则混在一起。现在这部分代码删掉，你的视角偏好、战役进度和云档都不受影响。',
+    '战地模式仍然可以联机进入，键位、瞄准和视角规则不变；主战役、房车生存、虫族模式、酸液竞技场照旧。']},
   {version:'0.38.6',date:'2026-10-14',title:'自动存档不再反复弹提示',changes:[
     '每 30 秒的后台自动存档改为静默写盘，屏幕上的「本地已保存」提示不会再隔一会儿顶出来挡画面。',
     '买兵建塔、过关、手动存档和保存失败、云档待选择等需要你看到的情况仍会立即提示，约 5 秒后淡出；点提示可以打开存档面板，自动存档和云备份的时机没有改变。']},
