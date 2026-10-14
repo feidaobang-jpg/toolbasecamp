@@ -53,21 +53,11 @@ export function periodSoldier(team='ally',weapon='rifle',officer=false){
  const saber=new T.Group(),sb=build(saber);sb.box(0xc3c8bd,0,.49,0,.045,.85,.018).rotation.z=-.11;sb.box(leather,0,-.02,0,.07,.18,.06);sb.box(0xb39a59,0,.08,0,.20,.025,.08);saber.position.set(.41,1.30,.22);saber.visible=false;g.add(saber);compact(saber);
  compact(g);g.userData={legs,gun,muzzle:gun.userData.muzzle,saber,team};return g;
 }
-export function horse(color=0x70503b){
- const g=new T.Group(),b=build(g),hide=color,black=0x302c27;
- const body=b.ball(hide,0,1.18,0,.72);body.scale.set(.55,.68,1.55);
- const neck=b.box(hide,0,1.68,.69,.40,1.0,.46);neck.rotation.x=-.32;
- const head=b.box(hide,0,2.16,1.02,.34,.38,.64);head.rotation.x=-.24;
- for(const s of [-1,1]){b.cone(hide,s*.11,2.48,.83,.072,.25,5);b.ball(0x171b19,s*.173,2.22,1.11,.025);}
- b.box(black,0,2.14,.77,.10,.61,.17);b.box(black,0,2.09,1.25,.36,.035,.25);b.box(0xa49071,0,1.64,-.08,.66,.16,.60);b.box(0x443122,0,1.78,-.26,.63,.18,.16);
- const tail=b.box(black,0,1.06,-1.00,.11,.71,.13);tail.rotation.x=-.30;
- const legs=[];for(const x of [-.24,.24])for(const z of [-.68,.66]){const p=new T.Group();p.position.set(x,1.05,z);g.add(p);b.box(hide,0,-.38,0,.14,.74,.15,p);b.box(black,0,-.83,.045,.18,.16,.25,p);legs.push(p);}
- compact(g);g.userData={legs};return g;
-}
 export function sign(text,color='#eadfc3',bg='#343b36',width=4,height=.9){
  const c=document.createElement('canvas');c.width=512;c.height=128;const ctx=c.getContext('2d');ctx.fillStyle=bg;ctx.fillRect(0,0,512,128);ctx.strokeStyle='#998360';ctx.lineWidth=8;ctx.strokeRect(4,4,504,120);ctx.fillStyle=color;ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='bold 58px sans-serif';ctx.fillText(text,256,66,476);const texture=new T.CanvasTexture(c);texture.colorSpace=T.SRGBColorSpace;const mesh=new T.Mesh(new T.PlaneGeometry(width,height),new T.MeshBasicMaterial({map:texture,side:T.DoubleSide}));mesh.rotation.y=Math.PI;return mesh;
 }
-export function buildResistanceMap(chapter){
+// 抗战战役第二章「李家坡」（旧版）的地图；第一、三章是重做版，在 liangjian/ 里
+export function buildResistanceMap(chapter=0){
  const root=new T.Group(),staticRoot=new T.Group(),b=build(staticRoot),colliders=[],objectives={},stations=[],destructibles=[];root.add(staticRoot);
  let seed=1942+chapter;const rnd=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};
  const bounds={minX:-64,maxX:64,minZ:-38,maxZ:170};
@@ -78,8 +68,8 @@ export function buildResistanceMap(chapter){
  function wall(x,z,w,d,h=2,c=0x8c8776){b.box(c,x,h/2,z,w,h,d);b.box(0xaaa18a,x,h+.08,z,w+.1,.15,d+.12);solid(x,z,w,d,h);for(let i=0;i<w;i+=1.2)b.box(0x6c6b5e,x-w/2+i,h*.5,z+d/2+.006,.025,h,.012);}
  function house(x,z,w=9,d=10,c=0xb9aa84,lift=0){const group=new T.Group(),hb=build(group);group.position.set(x,lift,z);staticRoot.add(group);hb.box(c,0,2,0,w,4,d);if(!lift)solid(x,z,w,d,5.1);hb.box(0x6d6656,0,.33,0,w+.3,.65,d+.3);for(const side of [-1,1]){const roof=hb.box(0x5b6060,side*w*.255,4.54,0,w*.56,.19,d+1.4);roof.rotation.z=-side*.34;}for(let n=0;n<d;n+=.65)hb.box(0x777c76,0,5.03,-d/2+n,.35,.14,.14);hb.box(0x484e48,0,5.1,0,.22,.17,d+1.3);hb.box(0x584631,0,1.35,-d/2-.03,1.7,2.7,.12);for(const side of [-1,1]){hb.box(0x303e3b,side*w*.3,2.2,-d/2-.06,1.5,1.25,.1);for(let k=-1;k<=1;k++)hb.box(0x776b50,side*w*.3+k*.42,2.2,-d/2-.13,.06,1.25,.08);}return {x,z};}
  function sandbags(x,z,w=7,angle=0){const group=new T.Group(),sb=build(group);group.position.set(x,0,z);group.rotation.y=angle;for(let row=0;row<3;row++)for(let n=0;n<Math.floor(w/.9);n++){const bag=sb.box(row%2?0x9f946e:0xaba27e,-w/2+n*.9+(row%2)*.25,.18+row*.29,0,.88,.29,.59);bag.rotation.y=(rnd()-.5)*.15;}staticRoot.add(group);solid(x,z,angle?1:w,angle?w:1,1.08);}
- function tree(x,z){b.cyl(0x65513b,x,2.5,z,.20,5,7);for(let i=0;i<3;i++){const twig=b.box(0x65513b,x+(i-1)*.5,3.9,z,.13,2.9,.13);twig.rotation.z=(i-1)*.5;}if(chapter!==1){const crown=b.ball(0x626c47,x,5,z,2.3);crown.scale.y=.65;}solid(x,z,.65,.65,5);}
- for(let i=0;i<36;i++){const side=i%2?1:-1,x=side*(66+rnd()*64),z=rnd()*270-60;const m=b.cone(chapter===1?0x8a896b:0x8b896e,x,8,z,18+rnd()*30,16+rnd()*20,5);m.rotation.y=rnd()*6.28;}
+ function tree(x,z){b.cyl(0x65513b,x,2.5,z,.20,5,7);for(let i=0;i<3;i++){const twig=b.box(0x65513b,x+(i-1)*.5,3.9,z,.13,2.9,.13);twig.rotation.z=(i-1)*.5;}{const crown=b.ball(0x626c47,x,5,z,2.3);crown.scale.y=.65;}solid(x,z,.65,.65,5);}
+ for(let i=0;i<36;i++){const side=i%2?1:-1,x=side*(66+rnd()*64),z=rnd()*270-60;const m=b.cone(0x8b896e,x,8,z,18+rnd()*30,16+rnd()*20,5);m.rotation.y=rnd()*6.28;}
  for(let i=0;i<22;i++)tree((i%2?1:-1)*(28+rnd()*30),rnd()*170-20);
  function supply(x,z,label='军需箱'){b.box(0x6f623e,x,.5,z,1.3,1,1);for(const a of [-.47,.47])b.box(0x4b513c,x+a,.5,z,.07,1.04,1.04);const tag=sign(label,'#eee1bb','#485247',2.4,.6);tag.position.set(x,1.65,z);root.add(tag);stations.push({x,z,label});}
  function bunker(x,z,key){const group=new T.Group(),bb=build(group);group.position.set(x,0,z);bb.box(0x787562,0,1.5,0,6,3,4);bb.box(0x54594a,0,2.1,-2.02,4,.48,.06);bb.box(0x96917b,0,3.05,0,6.4,.3,4.4);const barrel=bb.cyl(0x353a31,0,1.9,-2.7,.07,1.8);barrel.rotation.x=Math.PI/2;compact(group);root.add(group);const collider=solid(x,z,6,4,3.3,key);const obj={key,x,z,hp:250,maxHp:250,mesh:group,collider,dead:false};destructibles.push(obj);return obj;}
@@ -92,10 +82,6 @@ export function buildResistanceMap(chapter){
   wall(-30,75,28,2,3,0x99845f);wall(30,75,28,2,3,0x99845f);
   bunker(-14,93,'left-bunker');bunker(14,98,'right-bunker');house(-22,133,9,8,0x99937a);house(20,142,10,9,0xa59774);
   objectives.trench={x:-7,z:58};objectives.assault={x:0,z:91};objectives.final={x:0,z:137};supply(-5,-9);supply(-7,58,'前沿弹药');
- }else{
-  for(const z of [30,76]){for(const x of [-30,-18,18,30]){const fence=b.box(0x60503a,x,1,z,9,.16,.17);for(const xx of [-3,0,3])b.box(0x60503a,x+xx,.7,z,.18,1.4,.18);}sandbags(-21,z+6,10);sandbags(22,z+6,10);}
-  house(-37,132,10,13);house(39,142,10,14);objectives.charge={x:0,z:83};objectives.final={x:0,z:146};supply(-7,-10);
-  const wagon=new T.Group(),wb=build(wagon);wb.box(0x766042,0,1.1,0,2.3,.9,4);for(const x of [-1.2,1.2])for(const z of [-1.2,1.2]){const wheel=wb.cyl(0x39372b,x,.6,z,.56,.14,12);wheel.rotation.z=Math.PI/2;}wb.box(0x9c9070,0,1.6,0,2.0,.25,3.5);compact(wagon);wagon.position.set(-3,0,-5);root.add(wagon);objectives.wagon=wagon;
  }
  // Decorative crates, telephone poles and visible edge embankments establish the period.
  for(const x of [-62,62]){b.box(0x7e775b,x,1.15,65,3,2.3,212);solid(x,65,3,212,2.3);}

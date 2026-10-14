@@ -69,7 +69,7 @@ class App {
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.aq = this.device === 'touch' ? 'low' : 'high';
-    this.audio = new GameAudio();
+    this.audio = new GameAudio(this.chapter.id);
     this.audio.setVolume(this.s.volume / 100);
     this.ui = new UI(this);
     this.input = new Input(this.stage, {

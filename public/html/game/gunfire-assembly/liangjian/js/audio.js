@@ -1,8 +1,9 @@
 // 声音：音效与鼓点军乐用 WebAudio 合成（原创）；喊话多数截自电视剧《亮剑》原声，片源里没有的几句是本机合成。
-// 语音清单在 assets/voice/index.json，来源与时间点见 game-projects/liangjian-pingan/media-kit/assets/voice.json
+// 语音清单在 assets/voice/index.json（按章节分组，每章只加载自己的），来源与时间点见 game-projects/liangjian-pingan/media-kit/assets/voice.json
 
 export class GameAudio {
-  constructor() {
+  constructor(chapter = '') {
+    this.chapter = chapter;
     this.ctx = null;
     this.volume = 0.8;
     this.voices = {};
@@ -39,6 +40,7 @@ export class GameAudio {
     // 先读清单，只取实际存在的语音，没有就只显示字幕
     let list = [];
     try { const r = await fetch('assets/voice/index.json'); if (r.ok) list = await r.json(); } catch (e) { /* 忽略 */ }
+    if (!Array.isArray(list)) list = (list && list[this.chapter]) || [];
     for (const id of list) {
       if (!/^[a-z0-9_]+$/.test(id)) continue;
       try {
@@ -120,6 +122,11 @@ export class GameAudio {
         this._noise(t, 1.3, 'lowpass', 1700, 70, 1.1 * vol);
         this._noise(t + 0.32, 0.9, 'lowpass', 600, 80, 0.3 * vol);
         this._noise(t + 0.7, 1.1, 'bandpass', 300, 100, 0.16 * vol, 0.4);
+        break;
+      case 'mortar':
+        this._noise(t, 0.05, 'highpass', 2400, 1200, 0.5 * vol);
+        this._tone(t, 0.32, 'sine', 170 * p, 55, 0.9 * vol);
+        this._noise(t, 0.4, 'lowpass', 1400, 200, 0.5 * vol);
         break;
       case 'whistle': this._tone(t, 1.5, 'sine', 1700, 520, 0.09 * vol, null, 0.3); break;
       case 'throw': this._noise(t, 0.16, 'bandpass', 700, 1800, 0.18 * vol, 1.5); break;

@@ -280,7 +280,8 @@ export class UI {
     row.hidden = false;
     if (this.cache.cl !== label) { this.cache.cl = label; row.firstElementChild.textContent = label; }
     const w = Math.round(clamp(frac, 0, 1) * 100);
-    if (this.cache.cn !== w) { this.cache.cn = w; const b = $('cannon-bar'); b.style.width = w + '%'; b.classList.toggle('low', w < 35); }
+    // 只有炮组血量低才标红；转移进度这类往上涨的进度条不标
+    if (this.cache.cn !== w) { this.cache.cn = w; const b = $('cannon-bar'); b.style.width = w + '%'; b.classList.toggle('low', w < 35 && label === '炮组'); }
   }
   setBoss(frac, stun) {
     const b = $('boss');
@@ -340,6 +341,27 @@ export class UI {
   }
   toast(text, dur = 2.4) { const t = $('toast'); t.textContent = text; t.hidden = false; this.toastT = dur; }
 
+  // 望远镜遮罩（过场里看远处用）：画在一张画布上，两个圆孔
+  setBinoc(on) {
+    let c = this.binoc;
+    if (!on) { if (c && !c.hidden) c.hidden = true; return; }
+    if (!c) { c = this.binoc = document.createElement('canvas'); c.id = 'binoc'; $('stage').insertBefore(c, $('hud')); }
+    const [w, h] = this.app.size();
+    if (c.width !== w || c.height !== h) {
+      c.width = w; c.height = h;
+      const x = c.getContext('2d');
+      x.fillStyle = '#06080b'; x.fillRect(0, 0, w, h);
+      x.globalCompositeOperation = 'destination-out';
+      const r = Math.min(h * 0.47, w * 0.27);
+      for (const cx of [w / 2 - r * 0.8, w / 2 + r * 0.8]) {
+        const g = x.createRadialGradient(cx, h / 2, r * 0.8, cx, h / 2, r);
+        g.addColorStop(0, 'rgba(0,0,0,1)'); g.addColorStop(1, 'rgba(0,0,0,0)');
+        x.fillStyle = g; x.beginPath(); x.arc(cx, h / 2, r, 0, 7); x.fill();
+      }
+      x.globalCompositeOperation = 'source-over';
+    }
+    c.hidden = false;
+  }
   clearDialog() { this.dlgQ.length = 0; this.dlgT = 0; $('dialog').hidden = true; }
   clearTransient() {
     this.dlgQ.length = 0; this.dlgT = 0; $('dialog').hidden = true;
@@ -348,6 +370,7 @@ export class UI {
     this.setPrompt(null); this.setAim(null); this.marker(false); this.setBoss(null); this.setCannon(null); this.setUse(null); this.setCrossTip(null); this.setCross(false);
     this.clearLabels();
     this.setVignette(0);
+    this.setBinoc(false);
   }
 
   // 按游戏时间推进的动效（暂停时不走）

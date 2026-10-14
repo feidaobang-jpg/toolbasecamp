@@ -1,7 +1,7 @@
 export const WAR_CHAPTERS=[
+ {name:'苍云岭 · 突围',tag:'重做版 / 坚守山头 / 抓舌头 / 迫击炮',brief:'重做版：新一团在苍云岭掩护师部转移，被坂田联队围在山头。顶住进攻等转移走完，用枪打倒军曹抓个舌头，再把柱子的迫击炮送到五百米外——只有两发炮弹，打掉坂田的指挥部就按原作冲出去，两发都偏就得冲上去对付坂田。操作和平安县城一样，喊话用《亮剑》原声。本章有自己的菜单和进度。',remake:'cangyunling',stages:[]},
  {name:'李家坡 · 交通壕突击',tag:'步兵 / 手榴弹 / 阵地突破',brief:'扮演李云龙带领突击班，从交通壕逼近山崎部队。利用掩体接近机枪火力点，用手榴弹打开突破口，再夺取坡顶阵地。',stages:['夺取前沿交通壕','炸毁两座机枪堡垒','冲入坡顶指挥阵地']},
- {name:'骑兵连 · 冲锋突围',tag:'骑乘 / 军刀 / 掩护撤离',brief:'跟随孙德胜的骑兵连冲开封锁。上马后用冲刺拉近距离，挥刀冲击敌骑和步兵，掩护后方运输车撤离。以骑兵连冲锋名场面改编为可重玩的突围任务。',stages:['上马，与骑兵连集结','冲破前方日军封锁线','掩护运输车抵达撤离点']},
- {name:'平安县城 · 开炮',tag:'重做版 / 越肩射击 / 操炮 / 双结局',brief:'重做版：扮演李云龙扫清城外机枪阵地，护送意大利炮上阵、轰开城门；山本把秀芹押上城楼——按原作朝城楼开炮，或者冲进城门救人，两种结局；再打进县城决战山本。越肩第三人称与第一人称可切换，能跳跃，有亮剑突进和骑兵连两个技能，打掉机枪手后阵地机枪可以接管。喊话用《亮剑》原声。本章有自己的菜单和进度。',remake:true,stages:[]},
+ {name:'平安县城 · 开炮',tag:'重做版 / 越肩射击 / 操炮 / 双结局',brief:'重做版：扮演李云龙扫清城外机枪阵地，护送意大利炮上阵、轰开城门；山本把秀芹押上城楼——按原作朝城楼开炮，或者冲进城门救人，两种结局；再打进县城决战山本。越肩第三人称与第一人称可切换，能跳跃，有亮剑突进和骑兵连两个技能，打掉机枪手后阵地机枪可以接管。喊话用《亮剑》原声。本章有自己的菜单和进度。',remake:'pingan',stages:[]},
 ];
 export function mountResistanceUI(api){
  const $=id=>document.getElementById(id),stage=$('stage');
@@ -56,7 +56,7 @@ export function mountResistanceUI(api){
   }
  }
  const wrap=document.createElement('div');wrap.innerHTML=`
- <div id="warMenu" class="overlay menu hidden"><div class="warKicker">枪火集结 · 剧情模式</div><h1>抗 战 战 役</h1><p class="small">《亮剑》名场面改编 · 单人带领电脑队友 · 三章直接选择与重玩 · 检查点继续 · 固定装备</p><div id="warChapters"></div><p id="warKeysDesktop" class="small">WASD 移动 · J 射击 / 军刀 · U 手雷 · I 互动 / 上下马 · K 跳跃 / 骑马冲刺<br>按住 J / 左键射击 · 右键拖动或 Q / E 转头 · Z / 右键点按 举枪瞄准 · O 切枪 · R / L 手动换弹（空仓不会自动装填） · N 医疗 · Y / H 抬头低头 · T 小队指令 · Esc 暂停<br>步行固定第一人称、手动瞄准；骑马时 C 切换跟随距离</p><p id="warKeysTouch" class="small">对照吃鸡手感：左摇杆移动，空白处拖视角；大红射击键按住开火并可拖枪；旁侧「举枪」「换弹」空仓必点换弹。手雷、跳跃、互动在右侧。骑乘后射击变挥刀、跳跃变冲刺。第三章「平安县城」是重做版，操作在那一章自己的菜单里说明。</p><div class="btnRow"><button id="warContinue" class="mbtn green">继续检查点</button><button id="warBack" class="mbtn">返回大厅</button></div><p id="warSaveInfo" class="small"></p></div>
+ <div id="warMenu" class="overlay menu hidden"><div class="warKicker">枪火集结 · 剧情模式</div><h1>抗 战 战 役</h1><p class="small">《亮剑》名场面改编 · 单人带领电脑队友 · 三章直接选择与重玩 · 检查点继续 · 固定装备</p><div id="warChapters"></div><p id="warKeysDesktop" class="small">WASD 移动 · J 射击 · U 手雷 · I 互动 · K 跳跃<br>按住 J / 左键射击 · 右键拖动或 Q / E 转头 · Z / 右键点按 举枪瞄准 · O 切枪 · R / L 手动换弹（空仓不会自动装填） · N 医疗 · Y / H 抬头低头 · T 小队指令 · Esc 暂停<br>第二章「李家坡」步行固定第一人称、手动瞄准；第一章「苍云岭」和第三章「平安县城」是重做版，操作在那一章自己的菜单里说明</p><p id="warKeysTouch" class="small">对照吃鸡手感：左摇杆移动，空白处拖视角；大红射击键按住开火并可拖枪；旁侧「举枪」「换弹」空仓必点换弹。手雷、跳跃、互动在右侧。第一章「苍云岭」和第三章「平安县城」是重做版，操作在那一章自己的菜单里说明。</p><div class="btnRow"><button id="warContinue" class="mbtn green">继续检查点</button><button id="warBack" class="mbtn">返回大厅</button></div><p id="warSaveInfo" class="small"></p></div>
  <div id="warHUD" class="hidden"><strong id="warTitle"></strong><div id="warMission"></div><div id="warProgress"></div><div id="warHint"></div></div>
  <canvas id="warMap" class="hidden" width="180" height="204" aria-label="战役地图：金色目标、红色敌军、蓝色队友、白色玩家"></canvas>
  <button id="warAim" class="hidden" aria-pressed="false">举枪瞄准 Z</button>

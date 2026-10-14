@@ -320,7 +320,7 @@ export class Game {
       drain(); ui.setUse(null);
       return;
     }
-    if (this.cut > 0) { h.moving = 0; h.ads = false; h.aim = damp(h.aim, 0, 10, dt); drain(); return; }
+    if (this.cut > 0) { h.moving = 0; h.ads = false; h.aim = damp(h.aim, 0, 10, dt); ui.setPrompt(null); ui.setUse(null); drain(); return; }
     // 互动键（I / F）：炮位旁上炮、阵地里接管机枪，再按一次离开
     let use = inp.take('use');
     if (can.manned) {
@@ -1047,7 +1047,7 @@ export class Game {
       const sd = m.melee;
       const tgt = u.target;
       const pitch = tgt && u.aim > 0.3 ? Math.atan2((tgt.y || 0) + 1.2 - (u.y + 1.3), Math.max(2, dist(u.x, u.z, tgt.x, tgt.z))) : 0;
-      poseSoldier(m, { walk: u.walk, moving: u.moving, aim: sd ? 0 : u.aim, aimL: u.type === 'boss' ? u.aim : 0, pitch, carry: sd ? 'blade' : (u.def.look === 'rifle' || u.def.look === 'ally') ? 'rifle' : 'side', slash: u.slash, cheer: u.cheer });
+      poseSoldier(m, { walk: u.walk, moving: u.moving, aim: sd ? 0 : u.aim, aimL: u.type === 'boss' ? u.aim : 0, pitch, carry: sd ? 'blade' : (u.def.look === 'rifle' || u.def.look === 'ally' || u.def.look === 'sergeant') ? 'rifle' : 'side', slash: u.slash, cheer: u.cheer });
       if (u.type === 'boss' && u.state === 'dash') { m.armR.rotation.x = 1.5; m.body.rotation.x = 0.5; }
       m.root.position.set(u.x, u.y, u.z);
       m.root.rotation.y = u.yaw;
@@ -1192,7 +1192,7 @@ export class Game {
     const b = this.boss;
     ui.setBoss(b && b.alive && this.cut <= 0 ? b.hp / b.maxHp : null, b && (b.state === 'stun' || b.state === 'recover'));
     ui.setVignette(Math.max(h.hurtT * 1.6, h.alive && h.hp <= 1 && h.maxHp > 1 ? 0.25 + 0.12 * Math.sin(this.t * 6) : 0, h.alive ? 0 : 0.6));
-    ui.setCross(this.mode === 'play' && h.alive && this.cut <= 0 && !c.manned && !this.flags.won, !!this.aim.target, h.ads, this.hitT > 0 ? this.hitKind : 0);
+    ui.setCross(this.mode === 'play' && h.alive && this.cut <= 0 && (!c.manned || !!this.gunCfg.cross) && !this.flags.won, !!this.aim.target && !c.manned, h.ads, this.hitT > 0 ? this.hitKind : 0);
     ui.setCrossTip(c.manned || !h.alive || this.cut > 0 ? null : this.headT > 0 ? '爆头！' : h.reloadT > 0 ? '换弹中…' : h.mag > 0 && h.mag <= 3 ? '子弹不多了' : null, this.headT > 0);
     // 动作键状态（触屏按钮与电脑右下角的状态条共用）
     if (c.manned) ui.setAction('fire', this.gunCfg.fireLabel, c.shells > 0 ? (c.reload > 0 ? '装填' : '×' + c.shells) : '等炮弹', c.reload > 0 || c.shells <= 0, 'J');

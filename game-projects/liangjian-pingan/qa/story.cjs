@@ -19,9 +19,10 @@ const check = (name, ok, detail) => { out.push({ name, ok: !!ok, detail }); cons
 
   // ---------- 语音 ----------
   await page.waitForFunction(() => Object.keys(__lj.app.audio.voices || {}).length >= 20, null, { timeout: 20000 }).catch(() => {});
-  const vo = await page.evaluate(async () => { const list = await (await fetch('assets/voice/index.json')).json(); return { list, loaded: Object.keys(__lj.app.audio.voices) }; });
+  // 语音清单按章节分组：平安县城只加载自己那一组
+  const vo = await page.evaluate(async () => { const idx = await (await fetch('assets/voice/index.json')).json(); return { list: idx.pingan, loaded: Object.keys(__lj.app.audio.voices) }; });
   const need = ['yidalipao', 'hong', 'geiwohong', 'kaipao', 'shanben_bieda', 'suansha', 'li_bushi', 'xq_zhi', 'xq_kaipao', 'bie_kaipao', 'xq_xiabeizi', 'xq_qiaobuqi', 'kaipao3', 'yongzhesheng', 'chong', 'qibinglian', 'jingrui', 'liangjian', 'fuyu', 'tiancai'];
-  check('语音清单 20 条（17 条原声 + 3 条合成）全部能下载解码，不再有 lashanglai', need.every((id) => vo.list.includes(id) && vo.loaded.includes(id)) && vo.list.length === 20 && !vo.list.includes('lashanglai'), vo);
+  check('语音清单 20 条（17 条原声 + 3 条合成）全部能下载解码，不再有 lashanglai，也不加载苍云岭的语音', need.every((id) => vo.list.includes(id) && vo.loaded.includes(id)) && vo.list.length === 20 && !vo.list.includes('lashanglai') && !vo.loaded.some((id) => /^(cy|bt)_/.test(id)), vo);
 
   // ---------- 原作结局：完整看过场，朝城楼开炮 ----------
   await breach();

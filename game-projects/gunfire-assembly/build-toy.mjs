@@ -15,10 +15,11 @@ const VERSION = GAME.current_version;
 const SLUG = 'feidao-gunfire';
 
 const BASE_FILES = ['index.html', 'boot.js', 'game.compat.js', 'combat-controls.css', 'author-home.js', 'base.css', 'icon.svg', 'vendor/LICENSE.txt'];
-// 抗战战役第三章「平安县城」重做版：同包内的独立页面（入口、样式、兼容包与喊话语音）
-const PINGAN_FILES = ['pingan/index.html', 'pingan/style.css', 'pingan/game.compat.js',
-  ...fs.readdirSync(path.join(SOURCE, 'pingan/assets/voice')).sort().map(n => 'pingan/assets/voice/' + n)];
-const RUNTIME_FILES = [...BASE_FILES, ...PINGAN_FILES];
+// 抗战战役「亮剑战役」重做版（第一章苍云岭、第三章平安县城）：同包内的独立页面（入口、样式、兼容包与按章节分组的原声语音）；
+// pingan/index.html 只剩一个跳转页，照顾旧链接
+const LIANGJIAN_FILES = ['liangjian/index.html', 'liangjian/style.css', 'liangjian/game.compat.js', 'pingan/index.html',
+  ...fs.readdirSync(path.join(SOURCE, 'liangjian/assets/voice')).sort().map(n => 'liangjian/assets/voice/' + n)];
+const RUNTIME_FILES = [...BASE_FILES, ...LIANGJIAN_FILES];
 const sha256 = p => createHash('sha256').update(fs.readFileSync(p)).digest('hex');
 
 function writeZip(archive, entries) {

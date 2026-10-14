@@ -1,6 +1,7 @@
 // 双端布局与触屏（枪战类布局）：各尺寸菜单是否完整、手机竖屏旋转、浮动摇杆、滑屏瞄准、开火键拖动瞄准、各功能键、三种操作模式切换
 // 触屏为浏览器触控模拟（CDP），不是手机真机。
 const { open, shot } = require('./lib.cjs');
+const { CH } = require('./lib.cjs');
 const results = [];
 const check = (name, ok, detail) => results.push({ name, ok: !!ok, detail });
 
@@ -34,7 +35,7 @@ async function touchSession(ctx, page) {
 const center = (page, sel) => page.evaluate((s) => { const r = document.querySelector(s).getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; }, sel);
 const step = (page, n) => page.evaluate((k) => __lj.step(k, true), n);
 const gs = (page) => page.evaluate(() => { const g = __lj.game, h = g.hero; return { x: h.x, y: h.y, z: h.z, yaw: g.cam.yaw, pitch: g.cam.pitch, bullets: g.bullets.filter((b) => b.team === 0).length, state: __lj.app.state, view: g.cam.view, mode: __lj.app.mode(), rot: __lj.app.rot, size: __lj.app.size(), nades: h.nades, dashCd: h.dashCd, cavCd: h.cavCd, mag: h.mag, reloadT: h.reloadT, ads: h.ads, manned: g.cannon.manned }; });
-const cleanField = (page, phase = 1, x = 0, z = 80) => page.evaluate(([ph, px, pz]) => { __lj.manual(true); const g = __lj.game; if (g.phase !== ph) g.reset(ph, false); for (const e of g.enemies) { e.alive = false; e.deadT = 9; } g.timers.length = 0; g.cut = 0; g.flags.counter = 1; g.flags.nA = 1; g.flags.nB = 1; g.flags.p1done = 1; for (const b of g.world.bunkers) b.cd = 999; g.place(g.hero, px, pz); g.cam.yaw = 0; g.cam.pitch = 0; __lj.app.demo = true; __lj.step(6, true); }, [phase, x, z]);
+const cleanField = (page, phase = 1, x = 0, z = 80) => page.evaluate(([ph, px, pz]) => { __lj.manual(true); const g = __lj.game; if (g.phase !== ph) g.reset(ph, false); for (const e of g.enemies) { e.alive = false; e.deadT = 9; } g.timers.length = 0; g.cut = 0; g.flags.counter = 1; g.flags.nA = 1; g.flags.nB = 1; g.flags.p1done = 1; for (const b of g.world.bunkers || []) b.cd = 999; g.place(g.hero, px, pz); g.cam.yaw = 0; g.cam.pitch = 0; __lj.app.demo = true; __lj.step(6, true); }, [phase, x, z]);
 const BTN_IDS = ['joy-base', 'act-fire', 'act-jump', 'act-ads', 'act-reload', 'act-nade', 'act-dash', 'act-cav', 'btn-view', 'btn-pause', 'btn-full'];
 const layoutScript = (ids) => {
   const vw = innerWidth, vh = innerHeight;
@@ -217,7 +218,9 @@ const layoutScript = (ids) => {
       await shot(page, `play-${w}x${h}.png`);
       await page.evaluate(() => { __lj.app.cycle('leftFire', 1); });
       // 操炮键
-      await cleanField(page, 3, 0.5, 28);
+      // 平安县城在第三阶段操意大利炮（8 发）；苍云岭在第四阶段操迫击炮（2 发，出膛后镜头跟着炮弹飞完才能离开炮位）
+      const cy = CH === 'cangyunling';
+      if (cy) await cleanField(page, 4, -5.6, -49.8); else await cleanField(page, 3, 0.5, 28);
       await step(page, 4);
       const useVis = await page.evaluate(() => ({ hidden: document.getElementById('act-use').hidden, text: document.querySelector('#act-use span').textContent, prompt: document.getElementById('prompt').hidden }));
       const layU = await page.evaluate(layoutScript, BTN_IDS.concat(['act-use']));
@@ -231,8 +234,9 @@ const layoutScript = (ids) => {
       await T.down(5, fx, fy); await step(page, 4); await T.end(); await step(page, 4);
       const sh = await page.evaluate(() => __lj.game.cannon.shells);
       await shot(page, `cannon-${w}x${h}.png`);
+      if (cy) { for (let k = 0; k < 30 && (await page.evaluate(() => !!__lj.game.shellCam)); k++) await step(page, 30); await page.evaluate(() => { const g = __lj.game; if (g.scn) g.endScene(true); }); await step(page, 3); }
       await tapBtn('#act-use'); const lv = await gs(page);
-      check(`${tag}：炮位旁出现“操炮”键（不出现键盘提示），点击上炮；摇杆转炮口、开火键开炮；再点“离开炮位”`, !useVis.hidden && useVis.text === '操炮' && useVis.prompt && mn.manned && useText2 === '离开炮位' && cy1 < cy0 - 0.1 && sh === 7 && !lv.manned && !layU.off.length && !layU.over.length, { useVis, manned: mn.manned, useText2, cy0, cy1, sh, layU });
+      check(`${tag}：炮位旁出现“操炮”键（不出现键盘提示），点击上炮；摇杆转炮口、开火键开炮；再点“离开炮位”`, !useVis.hidden && useVis.text === '操炮' && useVis.prompt && mn.manned && useText2 === '离开炮位' && cy1 < cy0 - (cy ? 0.05 : 0.1) && sh === (cy ? 1 : 7) && !lv.manned && !layU.off.length && !layU.over.length, { useVis, manned: mn.manned, useText2, cy0, cy1, sh, layU });
       // 右上角：切换人称（按下即触发）、暂停
       await cleanField(page, 1);
       const [vx, vy] = await center(page, '#btn-view');
