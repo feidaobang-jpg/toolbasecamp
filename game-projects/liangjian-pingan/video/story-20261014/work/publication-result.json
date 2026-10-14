@@ -1,215 +1,251 @@
 {
-  "schema_version": 1,
-  "task_id": "pingan-story-20261014",
-  "game": "liangjian-pingan v0.5.0 / 枪火集结 0.2.3",
-  "publication_scope": "仅 B站（用户 2026-10-12 长期指令：视频只做、只发 B站）",
-  "executed_by": "Qoder",
-  "executed_at": "2026-10-14T13:14:15+08:00",
-
-  "final_video": {
-    "path": "final/bilibili-zh/gameplay-zh-final.mp4",
-    "sha256": "ae713d10342f541d01a4b693f41ad542688a4e29cb52a108eeafe4a97d597fa8",
-    "bytes": 209714879,
-    "duration_seconds": 160.567,
-    "resolution": "1920x1080",
-    "fps": 30,
-    "technical_qa": "pass",
-    "technical_qa_warnings": [
-      "151.867–155.1s、155.4–158.667s 为结算面板与尾卡静帧，属设计内容"
-    ]
-  },
-
-  "approval": {
-    "status": "approved_by_user",
-    "approved_hash": "ae713d10342f541d01a4b693f41ad542688a4e29cb52a108eeafe4a97d597fa8",
-    "approval_event_id": "pingan-story-20261014-review-ae713d10342f",
-    "user_words": "发布视频（2026-10-14，针对已交审的本期成片与 publish.json）",
-    "note": "本期成片此前已交人工审片；用户当次指令即为对该哈希的放行。"
-  },
-
-  "account": {
-    "name": "飞刀班长",
-    "uid": "16214353",
-    "verified_by": "创作中心右上角头像与 space.bilibili.com/16214353 链接、toy whoami 返回 uid 16214353"
-  },
-
-  "submission": {
-    "bvid": "BV12ypy68EZz",
-    "aid": 117437542438809,
-    "cid": 42728361690,
-    "url": "https://www.bilibili.com/video/BV12ypy68EZz/",
-    "submitted_at": "2026-10-14T13:14:15+08:00",
-    "submit_evidence": "投稿页出现「稿件投递成功」；稿件管理列表首行为本期标题、00:02:41、投稿时间 2026年10月14日 13:14:15",
-    "geetest": "未出现滑块，自动完成提交",
-    "first_submit_payload_missing_desc": true,
-    "first_submit_missing_desc_detail": "首次提交的 /x/vu/web/create 稿件里 desc 为空（公开页与 x/web-interface/view 的 desc 长度 0），标签、封面、话题都在。13:19 左右用稿件编辑页重新写入简介并再次提交，编辑请求体已抓到 desc 456 字。",
-    "desc_fix": {
-      "at": "2026-10-14T13:20:30+08:00",
-      "endpoint": "POST /x/vu/web/edit",
-      "payload_desc_length": 456,
-      "payload_verified": true,
-      "public_verified_at": "2026-10-14T13:21:00+08:00",
-      "public_desc_length": 456
-    },
-    "review_status": {
-      "state": 0,
-      "state_meaning": "公开可见",
-      "checked_at": "2026-10-14T13:21:00+08:00",
-      "note": "稿件管理显示 进行中 0 / 已发布 37；公开页与匿名 view 接口均可访问，即本期已可被玩家看到。"
-    },
-    "form_final_state": {
-      "title": "开炮，还是冲进去救秀芹？平安县城做成了双结局｜枪火集结",
-      "tid": 17,
-      "tid_name": "游戏",
-      "copyright": 3,
-      "copyright_name": "原创",
-      "creation_statement_id": 1,
-      "creation_statement": "含AI生成内容",
-      "tags": ["哔哩哔哩Toy创意挑战", "原创", "bilibilitoy", "亮剑", "平安县城", "枪火集结", "自制游戏", "游戏开发", "单机游戏", "AI"],
-      "topic": {"name": "哔哩哔哩Toy创意挑战", "topic_id": 1346285, "selected": true, "verified_in_payload": true},
-      "desc_length": 456,
-      "cover_16x9": "https://i0.hdslb.com/bfs/archive/9aa2214a6ca9a9cd2e9bd0ac672cea2818f232a9.jpg",
-      "cover_16x9_size": "1920x1080",
-      "cover_4x3": "https://i2.hdslb.com/bfs/archive/b2604d33e48659b3235a616b7d859b4f1efbfd16.jpg",
-      "cover_4x3_size": "1440x1080",
-      "is_only_self": 0,
-      "watermark_state": 1,
-      "subtitle_open": 0,
-      "no_reprint": 0,
-      "space_hidden": 2,
-      "note": "标签 Claude 大写被 B站拒收，改为小写 claude 后因 10 个标签上限被挤掉，最终为上述 9 个内容标签 + 1 个话题；简介字幕未上传 srt，成片已内嵌硬字幕。"
-    }
-  },
-
-  "collection_membership": {
-    "status": "not_applicable_pending_mapping",
-    "reason": "创作中心「合集管理」当前只有 1 个合集「虫潮围城开发实录」（season/collection 9248439，共 8 集），没有枪火集结/平安县城的正式合集；投稿表单的「加入合集」下拉也只有该合集。",
-    "action_taken": "未加入任何合集，未新建合集，未把本期混入虫潮合集（按 bilibili-publishing.md：没有正式合集或目标不明确时记录待关联并告知用户）。",
-    "next_action": "等用户确认是否为枪火集结建正式合集并给出名称；确认后把本期与 BV1Lfp76KEDd 归入。",
-    "verified_at": "2026-10-14T13:24:00+08:00"
-  },
-
-  "toy_binding": {
-    "toy_id": 43022175699968,
-    "toy_slug": "feidao-gunfire",
-    "toy_url": "https://www.bilibili.com/toy/feidao-gunfire/index.html",
-    "command": "toy video bind BV12ypy68EZz --toy 43022175699968 --json",
-    "bound_at": "2026-10-14T13:26:00+08:00",
-    "verified_by": "toy video list 43022175699968 --json 返回本期 aid 117437542438809 / BV12ypy68EZz，标题与时长 161 秒一致",
-    "other_bound_videos": ["BV1Lfp76KEDd", "BV1KFpJ6sEEK"],
-    "note": "CLI 的 video bind 不接受 --yes，--json 即无交互提交。"
-  },
-
-  "pinned_comment": {
-    "bvid": "BV12ypy68EZz",
-    "rpid": "317017937249",
-    "posted_at": "2026-10-14T13:28:00+08:00",
-    "length": 175,
-    "api": "POST x/v2/reply/add（message/type=1/oid/plat=1/csrf）→ POST x/v2/reply/top（action=1）",
-    "pre_check": "发布前 x/v2/reply 读回该稿件评论数 0，无重复引导",
-    "public_verified": true,
-    "public_verified_at": "2026-10-14T13:36:00+08:00",
-    "public_evidence": "匿名 x/v2/reply 读回 upper.top.rpid=317017937249、作者 飞刀班长、175 字"
-  },
-
-  "space_dynamic": {
-    "status": "auto_generated_by_submission",
-    "verified_at": "2026-10-14T13:30:00+08:00",
-    "evidence": "space.bilibili.com/16214353/dynamic 顶部出现「飞刀班长 · 投稿了视频 · 哔哩哔哩Toy创意挑战 · 02:41 开炮，还是冲进去救秀芹？」并带本期简介",
-    "action_taken": "已有自动投稿动态，只记录不再另发宣传动态（按发布闭环规则，单独图文宣传需用户另行要求）"
-  },
-
-  "activities_and_traffic_reward": {
-    "checked_at": "2026-10-14T13:31:00+08:00",
-    "flow_reward_url": "https://member.bilibili.com/york/flow-reward/?navhide=1",
-    "available_reward_count": 0,
-    "official_text": "可用流量奖励 0；当前暂无流量奖励",
-    "decision": "本轮无券可用，记录后跳过用券与稿件筛选流程；未做付费推广，未申请必火推广。",
-    "activity": "本期已按 Toy 活动要求带 bilibilitoy 标签与话题 1346285，未重复报名其他活动。",
-    "note": "申报与用券都不等于获得推流。"
-  },
-
-  "push_stream_application": {
-    "status": "blocked_login_required",
-    "doc_url": "https://docs.qq.com/sheet/DU3dnQkR1WG5RUnp0?tab=7mm8hw",
-    "sheet_name": "【进行中】日常推流",
-    "headers_verified_at": "2026-10-14T13:33:00+08:00",
-    "headers": {
-      "A2": "UP主昵称",
-      "B2": "视频链接（请填写带BV号的长链，而非含b23.tv的短链）",
-      "C2": "投稿tag是否加bilibilitoy&带话题：哔哩哔哩Toy创意挑战",
-      "D2": "是否置顶Toy链接到评论区",
-      "E2": "是否视频中宣传Toy平台",
-      "F2": "运营反馈（一般24h内反馈）"
-    },
-    "activity_window": "表头 A1 资源周期 9月17日-10月15日，本期在有效期内",
-    "dedupe_check": "表内查找 BV12ypy68EZz 返回「无结果」，本期未申请过",
-    "last_known_data_row": "约第 430 行（游客态逐格读取在 425 行后开始失真，未取到可靠末行；填入前需在登录态重新定位）",
-    "row_to_fill": {
-      "A": "飞刀班长",
-      "B": "https://www.bilibili.com/video/BV12ypy68EZz/",
-      "C": "是",
-      "D": "是",
-      "E": "是",
-      "F": ""
-    },
-    "e_for_yes": "成片尾卡文字明确写「哔哩哔哩 Toy 入口见简介」，属视频内宣传 Toy 平台；简介首条即 Toy 试玩链接。",
-    "blocker": "腾讯文档当前为游客态（body 含 skeleton-guest-mode、界面显示「只能查看／登录腾讯文档」），剪贴板 paste 与键入都进不了单元格编辑；未写入，未把本地材料称作已申请。",
-    "local_material": "work/publish/bilibili-zh/Toy推流申请.txt",
-    "next_action": "用户在浏览器里登录腾讯文档后，按 row_to_fill 只填本期一行并回读云端保存状态。"
-  },
-
-  "previous_video_maintenance": {
-    "target_bvid": "BV1Lfp76KEDd",
-    "target_aid": 117422241617495,
-    "target_title": "平安县城，开炮！我在虫潮围城把亮剑名场面做成了能玩的战役",
-    "why_this_one": "同一项目（抗战战役·平安县城）上一条主要宣传视频，且已绑定同一个 Toy 43022175699968",
-    "snapshot": "work/publish/bilibili-zh/previous-video-BV1Lfp76KEDd-snapshot.json",
-    "description": {
-      "before_length": 607,
-      "after_length": 729,
-      "change": "把原「更新（2026-10-14）」段落补全到 v0.5.0：城楼秀芹过场、双结局、共两条结局，并加上本期新视频长链；其余原有描述、试玩入口、投票页链接与通关说明全部保留",
-      "submitted_at": "2026-10-14T13:33:00+08:00",
-      "submit_evidence": "编辑页「稿件投递成功」，抓到的 POST /x/vu/web/edit 请求体 desc 729 字且含 BV12ypy68EZz，标题/封面/标签/分区与提交前一致",
-      "public_verified": false,
-      "public_check": "提交后匿名 x/web-interface/view 仍返回 desc 607 字（旧文本），即修改进入复审，公开生效待复核",
-      "next_action": "后续任务读回：若公开 desc 长度变为 729 且含 BV12ypy68EZz 即已生效；仍为 607 则记待公开核验，不重复提交。"
-    },
-    "pinned_comment": {
-      "before": {"rpid": "316768399809", "pinned": true, "note": "内含已过期的 Toy 链接 https://www.bilibili.com/toy/chongchao-qianshao/index.html"},
-      "after": {"rpid": "317018397809", "pinned": true, "length": 356},
-      "incident": "B站未提供可用的评论编辑接口（x/v2/reply/update、/modify、/edit 均 404）。在探测接口时误把 x/v2/reply/del 一并调用，返回 code=0，原置顶评论 316768399809 被删除。已如实记录，原文保存在 snapshot 文件里。",
-      "recovery": "按发布闭环的兜底做法新发一条引导评论并置顶（含版本提示、本期新视频链接、当前 Toy 完整试玩链接、三章内容回顾、投票入口），原评论不再恢复。",
-      "public_verified": true,
-      "public_verified_at": "2026-10-14T13:36:00+08:00",
-      "public_evidence": "匿名 x/v2/reply 读回 upper.top.rpid=317018397809、作者 飞刀班长、356 字"
-    },
-    "toy_binding_check": "维护后 toy video list 仍含 BV1Lfp76KEDd，绑定未变；未删除旧片、未改标题封面、未改公开状态。",
-    "not_touched": ["BV1KFpJ6sEEK（虫潮围城战地视频，0.2.3 handoff 判定其简介仍准确，本次不改）"]
-  },
-
-  "concurrency_note": {
-    "account_write_lock": "C:/Users/37818/.claude/state/bili-activities/account-write.lock",
-    "lock_state_at_start": "被占用，owner.json 为 Codex 任务 01a137f4-0430-7731-8313-96ed49bb705f-publish01，started_at 2026-10-14T01:40:48Z（本地 09:40），至本次操作已持有约 3 小时 40 分",
-    "holder_status": "该 Codex 工作区 C:/Users/37818/.codex/worktrees/pingan-video-20261014 的 run-state.json 仍停在 phase=publishing、uploaded=false、等待对其哈希 eec2db8a7e81 的人工审片；没有进程命令行引用该工作区",
-    "decision": "未删除他人的锁。因本期 BV 的写操作（评论、简介）只作用于本任务已发布的稿件，且写前均做了评论查重与读回，继续完成收尾；如该 Codex 会话恢复，它会再次投稿另一条 181.9 秒的平安县城视频，需用户先决定是否作废，避免重复投稿。",
-    "risk_flag_for_user": "同一项目存在两条待发的平安县城视频（本期 160.6 秒 v0.5.0 已发布；Codex 会话 181.9 秒哈希 eec2db8a7e81 未发布且仍持锁）。"
-  },
-
-  "evidence_files": {
-    "publish_payload": "work/publish/bilibili-zh/publish.json",
-    "application_material": "work/publish/bilibili-zh/Toy推流申请.txt",
-    "previous_video_snapshot": "work/publish/bilibili-zh/previous-video-BV1Lfp76KEDd-snapshot.json",
-    "qa": "work/qa.md",
-    "covers": ["final/bilibili-zh/cover-home-4x3.jpg", "final/bilibili-zh/cover-space-16x9.jpg"],
-    "screenshot_note": "内置浏览器面板可见并截图成功（投稿成功页），但截图未落盘；关键证据以抓取到的投稿/编辑请求体与匿名接口读回为准。"
-  },
-
-  "open_items": [
-    "腾讯文档【进行中】日常推流本期行未填：游客态不可写，需用户登录腾讯文档后补填（材料已备好）。",
-    "旧视频 BV1Lfp76KEDd 的简介修改已提交但公开仍是旧文本，待复审生效后读回核验。",
-    "枪火集结没有正式合集，本期与 BV1Lfp76KEDd 的合集归入待用户确认。",
-    "Codex 会话仍持有 B站账号写锁并等待其 181.9 秒视频的人工审片，需用户决定是否作废以避免重复投稿。",
-    "24 小时 / 72 小时 / 7 天数据复盘按现有规则在后续任务里做，不建定时任务。"
+ "schema_version": 1,
+ "task_id": "pingan-story-20261014",
+ "game": "liangjian-pingan v0.5.0 / 枪火集结 0.2.3",
+ "publication_scope": "仅 B站（用户 2026-10-12 长期指令：视频只做、只发 B站）",
+ "executed_by": "Qoder",
+ "executed_at": "2026-10-14T13:14:15+08:00",
+ "final_video": {
+  "path": "final/bilibili-zh/gameplay-zh-final.mp4",
+  "sha256": "ae713d10342f541d01a4b693f41ad542688a4e29cb52a108eeafe4a97d597fa8",
+  "bytes": 209714879,
+  "duration_seconds": 160.567,
+  "resolution": "1920x1080",
+  "fps": 30,
+  "technical_qa": "pass",
+  "technical_qa_warnings": [
+   "151.867–155.1s、155.4–158.667s 为结算面板与尾卡静帧，属设计内容"
   ]
+ },
+ "approval": {
+  "status": "approved_by_user",
+  "approved_hash": "ae713d10342f541d01a4b693f41ad542688a4e29cb52a108eeafe4a97d597fa8",
+  "approval_event_id": "pingan-story-20261014-review-ae713d10342f",
+  "user_words": "发布视频（2026-10-14，针对已交审的本期成片与 publish.json）",
+  "note": "本期成片此前已交人工审片；用户当次指令即为对该哈希的放行。"
+ },
+ "account": {
+  "name": "飞刀班长",
+  "uid": "16214353",
+  "verified_by": "创作中心右上角头像与 space.bilibili.com/16214353 链接、toy whoami 返回 uid 16214353"
+ },
+ "submission": {
+  "bvid": "BV12ypy68EZz",
+  "aid": 117437542438809,
+  "cid": 42728361690,
+  "url": "https://www.bilibili.com/video/BV12ypy68EZz/",
+  "submitted_at": "2026-10-14T13:14:15+08:00",
+  "submit_evidence": "投稿页出现「稿件投递成功」；稿件管理列表首行为本期标题、00:02:41、投稿时间 2026年10月14日 13:14:15",
+  "geetest": "未出现滑块，自动完成提交",
+  "first_submit_payload_missing_desc": true,
+  "first_submit_missing_desc_detail": "首次提交的 /x/vu/web/create 稿件里 desc 为空（公开页与 x/web-interface/view 的 desc 长度 0），标签、封面、话题都在。13:19 左右用稿件编辑页重新写入简介并再次提交，编辑请求体已抓到 desc 456 字。",
+  "desc_fix": {
+   "at": "2026-10-14T13:20:30+08:00",
+   "endpoint": "POST /x/vu/web/edit",
+   "payload_desc_length": 456,
+   "payload_verified": true,
+   "public_verified_at": "2026-10-14T13:21:00+08:00",
+   "public_desc_length": 456
+  },
+  "review_status": {
+   "state": 0,
+   "state_meaning": "公开可见",
+   "checked_at": "2026-10-14T13:21:00+08:00",
+   "note": "稿件管理显示 进行中 0 / 已发布 37；公开页与匿名 view 接口均可访问，即本期已可被玩家看到。"
+  },
+  "form_final_state": {
+   "title": "开炮，还是冲进去救秀芹？平安县城做成了双结局｜枪火集结",
+   "tid": 17,
+   "tid_name": "游戏",
+   "copyright": 3,
+   "copyright_name": "原创",
+   "creation_statement_id": 1,
+   "creation_statement": "含AI生成内容",
+   "tags": [
+    "哔哩哔哩Toy创意挑战",
+    "原创",
+    "bilibilitoy",
+    "亮剑",
+    "平安县城",
+    "枪火集结",
+    "自制游戏",
+    "游戏开发",
+    "单机游戏",
+    "AI"
+   ],
+   "topic": {
+    "name": "哔哩哔哩Toy创意挑战",
+    "topic_id": 1346285,
+    "selected": true,
+    "verified_in_payload": true
+   },
+   "desc_length": 456,
+   "cover_16x9": "https://i0.hdslb.com/bfs/archive/9aa2214a6ca9a9cd2e9bd0ac672cea2818f232a9.jpg",
+   "cover_16x9_size": "1920x1080",
+   "cover_4x3": "https://i2.hdslb.com/bfs/archive/b2604d33e48659b3235a616b7d859b4f1efbfd16.jpg",
+   "cover_4x3_size": "1440x1080",
+   "is_only_self": 0,
+   "watermark_state": 1,
+   "subtitle_open": 0,
+   "no_reprint": 0,
+   "space_hidden": 2,
+   "note": "标签 Claude 大写被 B站拒收，改为小写 claude 后因 10 个标签上限被挤掉，最终为上述 9 个内容标签 + 1 个话题；简介字幕未上传 srt，成片已内嵌硬字幕。"
+  }
+ },
+ "collection_membership": {
+  "status": "not_applicable_pending_mapping",
+  "reason": "创作中心「合集管理」当前只有 1 个合集「虫潮围城开发实录」（season/collection 9248439，共 8 集），没有枪火集结/平安县城的正式合集；投稿表单的「加入合集」下拉也只有该合集。",
+  "action_taken": "未加入任何合集，未新建合集，未把本期混入虫潮合集（按 bilibili-publishing.md：没有正式合集或目标不明确时记录待关联并告知用户）。",
+  "next_action": "等用户确认是否为枪火集结建正式合集并给出名称；确认后把本期与 BV1Lfp76KEDd 归入。",
+  "verified_at": "2026-10-14T13:24:00+08:00"
+ },
+ "toy_binding": {
+  "toy_id": 43022175699968,
+  "toy_slug": "feidao-gunfire",
+  "toy_url": "https://www.bilibili.com/toy/feidao-gunfire/index.html",
+  "command": "toy video bind BV12ypy68EZz --toy 43022175699968 --json",
+  "bound_at": "2026-10-14T13:26:00+08:00",
+  "verified_by": "toy video list 43022175699968 --json 返回本期 aid 117437542438809 / BV12ypy68EZz，标题与时长 161 秒一致",
+  "other_bound_videos": [
+   "BV1Lfp76KEDd",
+   "BV1KFpJ6sEEK"
+  ],
+  "note": "CLI 的 video bind 不接受 --yes，--json 即无交互提交。"
+ },
+ "pinned_comment": {
+  "bvid": "BV12ypy68EZz",
+  "rpid": "317017937249",
+  "posted_at": "2026-10-14T13:28:00+08:00",
+  "length": 175,
+  "api": "POST x/v2/reply/add（message/type=1/oid/plat=1/csrf）→ POST x/v2/reply/top（action=1）",
+  "pre_check": "发布前 x/v2/reply 读回该稿件评论数 0，无重复引导",
+  "public_verified": true,
+  "public_verified_at": "2026-10-14T13:36:00+08:00",
+  "public_evidence": "匿名 x/v2/reply 读回 upper.top.rpid=317017937249、作者 飞刀班长、175 字"
+ },
+ "space_dynamic": {
+  "status": "auto_generated_by_submission",
+  "verified_at": "2026-10-14T13:30:00+08:00",
+  "evidence": "space.bilibili.com/16214353/dynamic 顶部出现「飞刀班长 · 投稿了视频 · 哔哩哔哩Toy创意挑战 · 02:41 开炮，还是冲进去救秀芹？」并带本期简介",
+  "action_taken": "已有自动投稿动态，只记录不再另发宣传动态（按发布闭环规则，单独图文宣传需用户另行要求）"
+ },
+ "activities_and_traffic_reward": {
+  "checked_at": "2026-10-14T13:31:00+08:00",
+  "flow_reward_url": "https://member.bilibili.com/york/flow-reward/?navhide=1",
+  "available_reward_count": 0,
+  "official_text": "可用流量奖励 0；当前暂无流量奖励",
+  "decision": "本轮无券可用，记录后跳过用券与稿件筛选流程；未做付费推广，未申请必火推广。",
+  "activity": "本期已按 Toy 活动要求带 bilibilitoy 标签与话题 1346285，未重复报名其他活动。",
+  "note": "申报与用券都不等于获得推流。"
+ },
+ "push_stream_application": {
+  "status": "blocked_login_required",
+  "doc_url": "https://docs.qq.com/sheet/DU3dnQkR1WG5RUnp0?tab=7mm8hw",
+  "sheet_name": "【进行中】日常推流",
+  "headers_verified_at": "2026-10-14T13:33:00+08:00",
+  "headers": {
+   "A2": "UP主昵称",
+   "B2": "视频链接（请填写带BV号的长链，而非含b23.tv的短链）",
+   "C2": "投稿tag是否加bilibilitoy&带话题：哔哩哔哩Toy创意挑战",
+   "D2": "是否置顶Toy链接到评论区",
+   "E2": "是否视频中宣传Toy平台",
+   "F2": "运营反馈（一般24h内反馈）"
+  },
+  "activity_window": "表头 A1 资源周期 9月17日-10月15日，本期在有效期内",
+  "dedupe_check": "表内查找 BV12ypy68EZz 返回「无结果」，本期未申请过",
+  "last_known_data_row": "约第 430 行（游客态逐格读取在 425 行后开始失真，未取到可靠末行；填入前需在登录态重新定位）",
+  "row_to_fill": {
+   "A": "飞刀班长",
+   "B": "https://www.bilibili.com/video/BV12ypy68EZz/",
+   "C": "是",
+   "D": "是",
+   "E": "是",
+   "F": ""
+  },
+  "e_for_yes": "成片尾卡文字明确写「哔哩哔哩 Toy 入口见简介」，属视频内宣传 Toy 平台；简介首条即 Toy 试玩链接。",
+  "blocker": "腾讯文档当前为游客态（body 含 skeleton-guest-mode、界面显示「只能查看／登录腾讯文档」），剪贴板 paste 与键入都进不了单元格编辑；未写入，未把本地材料称作已申请。",
+  "local_material": "work/publish/bilibili-zh/Toy推流申请.txt",
+  "next_action": "用户在浏览器里登录腾讯文档后，按 row_to_fill 只填本期一行并回读云端保存状态。"
+ },
+ "previous_video_maintenance": {
+  "target_bvid": "BV1Lfp76KEDd",
+  "target_aid": 117422241617495,
+  "target_title": "平安县城，开炮！我在虫潮围城把亮剑名场面做成了能玩的战役",
+  "why_this_one": "同一项目（抗战战役·平安县城）上一条主要宣传视频，且已绑定同一个 Toy 43022175699968",
+  "snapshot": "work/publish/bilibili-zh/previous-video-BV1Lfp76KEDd-snapshot.json",
+  "description": {
+   "before_length": 607,
+   "after_length": 729,
+   "change": "把原「更新（2026-10-14）」段落补全到 v0.5.0：城楼秀芹过场、双结局、共两条结局，并加上本期新视频长链；其余原有描述、试玩入口、投票页链接与通关说明全部保留",
+   "submitted_at": "2026-10-14T13:33:00+08:00",
+   "submit_evidence": "编辑页「稿件投递成功」，抓到的 POST /x/vu/web/edit 请求体 desc 729 字且含 BV12ypy68EZz，标题/封面/标签/分区与提交前一致",
+   "public_verified": false,
+   "public_check": "提交后匿名 x/web-interface/view 仍返回 desc 607 字（旧文本），即修改进入复审，公开生效待复核",
+   "next_action": "后续任务读回：若公开 desc 长度变为 729 且含 BV12ypy68EZz 即已生效；仍为 607 则记待公开核验，不重复提交。"
+  },
+  "pinned_comment": {
+   "before": {
+    "rpid": "316768399809",
+    "pinned": true,
+    "note": "内含已过期的 Toy 链接 https://www.bilibili.com/toy/chongchao-qianshao/index.html"
+   },
+   "after": {
+    "rpid": "317018397809",
+    "pinned": true,
+    "length": 356
+   },
+   "incident": "B站未提供可用的评论编辑接口（x/v2/reply/update、/modify、/edit 均 404）。在探测接口时误把 x/v2/reply/del 一并调用，返回 code=0，原置顶评论 316768399809 被删除。已如实记录，原文保存在 snapshot 文件里。",
+   "recovery": "按发布闭环的兜底做法新发一条引导评论并置顶（含版本提示、本期新视频链接、当前 Toy 完整试玩链接、三章内容回顾、投票入口），原评论不再恢复。",
+   "public_verified": true,
+   "public_verified_at": "2026-10-14T13:36:00+08:00",
+   "public_evidence": "匿名 x/v2/reply 读回 upper.top.rpid=317018397809、作者 飞刀班长、356 字"
+  },
+  "toy_binding_check": "维护后 toy video list 仍含 BV1Lfp76KEDd，绑定未变；未删除旧片、未改标题封面、未改公开状态。",
+  "not_touched": [
+   "BV1KFpJ6sEEK（虫潮围城战地视频，0.2.3 handoff 判定其简介仍准确，本次不改）"
+  ]
+ },
+ "concurrency_note": {
+  "account_write_lock": "C:/Users/37818/.claude/state/bili-activities/account-write.lock",
+  "lock_state_at_start": "被占用，owner.json 为 Codex 任务 01a137f4-0430-7731-8313-96ed49bb705f-publish01，started_at 2026-10-14T01:40:48Z（本地 09:40），至本次操作已持有约 3 小时 40 分",
+  "holder_status": "该 Codex 工作区 C:/Users/37818/.codex/worktrees/pingan-video-20261014 的 run-state.json 仍停在 phase=publishing、uploaded=false、等待对其哈希 eec2db8a7e81 的人工审片；没有进程命令行引用该工作区",
+  "decision": "未删除他人的锁。因本期 BV 的写操作（评论、简介）只作用于本任务已发布的稿件，且写前均做了评论查重与读回，继续完成收尾；如该 Codex 会话恢复，它会再次投稿另一条 181.9 秒的平安县城视频，需用户先决定是否作废，避免重复投稿。",
+  "risk_flag_for_user": "同一项目存在两条待发的平安县城视频（本期 160.6 秒 v0.5.0 已发布；Codex 会话 181.9 秒哈希 eec2db8a7e81 未发布且仍持锁）。"
+ },
+ "evidence_files": {
+  "publish_payload": "work/publish/bilibili-zh/publish.json",
+  "application_material": "work/publish/bilibili-zh/Toy推流申请.txt",
+  "previous_video_snapshot": "work/publish/bilibili-zh/previous-video-BV1Lfp76KEDd-snapshot.json",
+  "qa": "work/qa.md",
+  "covers": [
+   "final/bilibili-zh/cover-home-4x3.jpg",
+   "final/bilibili-zh/cover-space-16x9.jpg"
+  ],
+  "screenshot_note": "内置浏览器面板可见并截图成功（投稿成功页），但截图未落盘；关键证据以抓取到的投稿/编辑请求体与匿名接口读回为准。",
+  "toy_collection_release": "game-projects/feidao-gamehub/media-kit/releases/gunfire-video-badge-20261014/release.json",
+  "toy_collection_qa_script": "D:/project/task-artifacts/liangjian-pingan-story-video-20261014/qa-hub-preview.cjs"
+ },
+ "open_items": [
+  "腾讯文档【进行中】日常推流本期行未填：游客态不可写，需用户登录腾讯文档后补填（材料已备好）。",
+  "旧视频 BV1Lfp76KEDd 的简介修改已提交但公开仍是旧文本，待复审生效后读回核验。",
+  "枪火集结没有正式合集，本期与 BV1Lfp76KEDd 的合集归入待用户确认。",
+  "Codex 会话仍持有 B站账号写锁并等待其 181.9 秒视频的人工审片，需用户决定是否作废以避免重复投稿。",
+  "24 小时 / 72 小时 / 7 天数据复盘按现有规则在后续任务里做，不建定时任务。"
+ ],
+ "toy_collection_card": {
+  "toy_id": 40495283951616,
+  "slug": "feidao-games",
+  "url": "https://www.bilibili.com/toy/feidao-games/index.html",
+  "action": "合集里枪火集结卡片补上本期已核实绑定的实机视频角标 BV12ypy68EZz，并按平安县城重做版更正玩法说明",
+  "package_entry": "game-projects/feidao-gamehub/package/index.html，11,078 字节（低于 Toy 入口 100KB 建议与 1MB 上限）",
+  "preview_verified": "https://www.bilibili.com/toy/preview/preview_qhAGZYB5/index.html 用无头 Edge 进内层 bilibilitoy.com frame 实测：14 张卡片齐全、枪火集结 hasBadge=true、封面加载成功、点角标新开 BV12ypy68EZz、无 console 报错",
+  "submitted_at": "2026-10-14T13:51:22+08:00",
+  "public_verified_at": "2026-10-14T13:53:51+08:00 复核 toy mylist 为 published；线上合集内层 frame 再读到同一张新卡片，点卡片经官方 SDK 跳出 feidao-gunfire（带 from=feidao-gamehub）",
+  "write_lock": "C:/Users/37818/.claude/state/toy/40495283951616-write.lock 只在提交那一小段持有，写完立即释放",
+  "gunfire_toy_note": "枪火集结 0.2.3 本体已于 10:52 提审、10:54 published；自那次提审后 public/** 无新增改动（git diff 73d6cca8..05e91fc6 -- public/ 为空），本稳定版本不重复送审。",
+  "evidence": "game-projects/feidao-gamehub/media-kit/releases/gunfire-video-badge-20261014/release.json",
+  "not_verified": [
+   "手机真机在 Toy 外壳内点卡片与角标的触控表现（本机为桌面模拟）"
+  ]
+ }
 }
