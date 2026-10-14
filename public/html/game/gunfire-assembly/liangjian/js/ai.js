@@ -71,6 +71,7 @@ export function shootAt(g, u, t, spread, lead, speed = 34, left = false) {
 
 export function updateEnemy(g, u, dt) {
   if (!u.alive) return;
+  if (u.downed) { still(u, dt); u.aim = 0; return; }   // 被打残倒地，等着被抓
   u.stT -= dt; u.think -= dt;
   const h = g.hero;
   if (!u.active) {
@@ -209,7 +210,7 @@ export function updateAlly(g, u, dt) {
     const wallOk = g.allyEngageWall();
     let best = null, bd = u.def.range * (wallOk ? 1.5 : 1);
     for (const e of g.enemies) {
-      if (!e.alive || !e.active) continue;
+      if (!e.alive || !e.active || e.downed) continue;
       if (e.y > 2 && !wallOk) continue;
       const d = dist(u.x, u.z, e.x, e.z) + (e.y > 2 ? 6 : 0);
       if (d < bd && !losBlocked(g.world, u.x, u.z, e.x, e.z, 1.7, 1.4, e.y + 1.2)) { bd = d; best = e; }

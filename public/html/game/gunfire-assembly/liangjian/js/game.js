@@ -148,9 +148,9 @@ export class Game {
 
   addUnit(kind, type, x, z, o = {}) {
     const def = DEF[type];
-    const model = buildSoldier(def.look);
+    const model = buildSoldier(o.look || def.look);
     this.scene.add(model.root);
-    const u = { kind, type, def, x, z, y: o.y || 0, yaw: o.yaw === undefined ? (kind === 'enemy' ? Math.PI : 0) : o.yaw, hp: def.hp, maxHp: def.hp, alive: true, r: 0.42, model, walk: rand(TAU), moving: 0, aim: 0, state: 'idle', stT: rand(0.4, 1.6), think: rand(0.5), target: null, flashT: 0, deadT: 0, slash: -1, cheer: 0, active: kind === 'ally', group: o.group || '', hold: !!o.hold, name: o.name || '', slot: o.slot || 0, pref: o.pref || rand(13, 22), wantCannon: !!o.cannon, nest: o.nest || null, down: 0, regen: 0, strafe: 0, strafeT: rand(1, 3), burst: 0, vx: 0, vz: 0, wake: o.wake || 40, shotT: 0, px: x, pz: z };
+    const u = { kind, type, def, x, z, y: o.y || 0, yaw: o.yaw === undefined ? (kind === 'enemy' ? Math.PI : 0) : o.yaw, hp: o.hp || def.hp, maxHp: o.hp || def.hp, alive: true, r: 0.42, model, walk: rand(TAU), moving: 0, aim: 0, state: 'idle', stT: rand(0.4, 1.6), think: rand(0.5), target: null, flashT: 0, deadT: 0, slash: -1, cheer: 0, active: kind === 'ally', group: o.group || '', hold: !!o.hold, name: o.name || '', slot: o.slot || 0, pref: o.pref || rand(13, 22), wantCannon: !!o.cannon, nest: o.nest || null, down: 0, regen: 0, strafe: 0, strafeT: rand(1, 3), burst: 0, vx: 0, vz: 0, wake: o.wake || 40, shotT: 0, px: x, pz: z };
     this.units.push(u);
     (kind === 'enemy' ? this.enemies : this.allies).push(u);
     model.root.position.set(x, u.y, z); model.root.rotation.y = u.yaw;
@@ -225,6 +225,7 @@ export class Game {
     this.updateRiders(dt);
     this.updatePickups(dt);
     this.updatePhase(dt);
+    this.updateChapter(dt);
     this.poseAll(dt);
     this.updateCamera(dt);
     this.ambient(dt);
@@ -411,7 +412,7 @@ export class Game {
     const range = h.weapon === 'lmg' ? 60 : 55;
     let near = null, nAng = 9, nT = 0, nd = 0, npx = 0, npy = 0, npz = 0;
     for (const e of this.enemies) {
-      if (!e.alive) continue;
+      if (!e.alive || e.downed) continue;
       const s = e.model.scale, top = e.y + 1.9 * s;
       const t = (e.x - ox) * fx + (e.y + 1.05 * s - oy) * fy + (e.z - oz) * fz;
       if (t < skip || t > range) continue;
@@ -878,7 +879,7 @@ export class Game {
     u.hp -= dmg; u.flashT = 0.09;
     if (u.kind === 'enemy') { u.active = true; if (u.group) wakeGroup(this, u.group); }
     if (kind === 'bullet') { this.fx.blood(u.x, u.y + 1.2, u.z); this.sfxAt('hit', u.x, u.z, 0.5); }
-    if (u.hp <= 0) this.killUnit(u, false, dx, dz);
+    if (u.hp <= 0) { if (!this.spareUnit(u, dmg, kind)) this.killUnit(u, false, dx, dz); }
     else if (u.kind === 'ally') u.regen = 5;
   }
   killUnit(u, silent, dx = 0, dz = 0) {
@@ -1039,6 +1040,7 @@ export class Game {
       }
       u.flashT = Math.max(0, u.flashT - dt); u.shotT = Math.max(0, u.shotT - dt);
       if (u.down > 0) { m.root.rotation.x = 1.45; m.root.position.set(u.x, 0.05, u.z); setSoldierMat(m, MAT.vc); m.flash.visible = false; continue; }
+      if (u.downed) { m.root.rotation.x = 1.25; m.root.rotation.y = u.yaw; m.root.position.set(u.x, u.y + 0.05, u.z); setSoldierMat(m, u.flashT > 0 ? MAT.flash : MAT.vc); m.flash.visible = false; continue; }
       m.root.rotation.x = u.state === 'stun' ? 0.35 : 0;
       if (u.slash >= 0) { u.slash += dt * (u.type === 'boss' ? 2.4 : 1.8); if (u.slash > 1) u.slash = -1; }
       if (u.cheer > 0) u.cheer += dt;
@@ -1087,18 +1089,7 @@ export class Game {
     // 镜头高度跟脚下地面走，不跟跳跃弧线（掉下去时跟着降）
     c.gy = damp(c.gy, h.onGround ? h.y : Math.min(h.y, c.gy), 10, dt);
     if (manned) {
-      const yaw = can.aimYaw, fxx = fwdX(yaw), fzz = fwdZ(yaw);
-      if (view === 1) {
-        // 炮手视角：炮盾前沿、炮管右侧
-        cam.position.set(can.x + rightX(yaw) * 0.42 + fxx * 0.75, 1.5, can.z + rightZ(yaw) * 0.42 + fzz * 0.75);
-        const pu = can.elev * 0.55 - 0.03, cp = Math.cos(pu);
-        _v.set(cam.position.x + fxx * cp, cam.position.y + Math.sin(pu), cam.position.z + fzz * cp);
-      } else {
-        const p = 13 * DEG, d = 8.5;
-        _v.set(can.x + fxx * 5, 2.4, can.z + fzz * 5);
-        cam.position.set(_v.x - fxx * d * Math.cos(p), _v.y + d * Math.sin(p), _v.z - fzz * d * Math.cos(p));
-      }
-      cam.lookAt(_v);
+      this.gunCamera(view, dt);
       c.F.set(can.x, 1.5, can.z); c.camDist = 9; c.clip = 1;
     } else {
       const cp = Math.cos(c.pitch), fx = fwdX(c.yaw) * cp, fy = Math.sin(c.pitch), fz = fwdZ(c.yaw) * cp;
@@ -1134,6 +1125,22 @@ export class Game {
     }
     this.moveSun(c.F.x, c.F.z);
     this.updateFades(view === 1 || manned);
+  }
+  // 操炮时的镜头：默认是意大利炮（第一人称＝炮手视角，第三人称＝炮后视角）；迫击炮这类曲射火炮由章节覆盖
+  gunCamera(view) {
+    const can = this.cannon, cam = this.camera;
+    const yaw = can.aimYaw, fxx = fwdX(yaw), fzz = fwdZ(yaw);
+    if (view === 1) {
+      // 炮手视角：炮盾前沿、炮管右侧
+      cam.position.set(can.x + rightX(yaw) * 0.42 + fxx * 0.75, 1.5, can.z + rightZ(yaw) * 0.42 + fzz * 0.75);
+      const pu = can.elev * 0.55 - 0.03, cp = Math.cos(pu);
+      _v.set(cam.position.x + fxx * cp, cam.position.y + Math.sin(pu), cam.position.z + fzz * cp);
+    } else {
+      const p = 13 * DEG, d = 8.5;
+      _v.set(can.x + fxx * 5, 2.4, can.z + fzz * 5);
+      cam.position.set(_v.x - fxx * d * Math.cos(p), _v.y + d * Math.sin(p), _v.z - fzz * d * Math.cos(p));
+    }
+    cam.lookAt(_v);
   }
   // 挡住主角的城楼、门洞、房子做淡化
   updateFades(off) {
@@ -1181,7 +1188,7 @@ export class Game {
     ui.setObjective(text);
     // 战友队形朝目标方向展开
     if (mk && this.advanceFormation()) this.advYaw = angStep(this.advYaw, yawTo(mk.x - h.x, mk.z - h.z), dt * 1.2); else this.advYaw = angStep(this.advYaw, 0, dt * 1.2);
-    ui.setCannon(this.gunBar());
+    ui.setCannon(this.gunBar(), this.gunBarLabel());
     const b = this.boss;
     ui.setBoss(b && b.alive && this.cut <= 0 ? b.hp / b.maxHp : null, b && (b.state === 'stun' || b.state === 'recover'));
     ui.setVignette(Math.max(h.hurtT * 1.6, h.alive && h.hp <= 1 && h.maxHp > 1 ? 0.25 + 0.12 * Math.sin(this.t * 6) : 0, h.alive ? 0 : 0.6));
@@ -1275,6 +1282,9 @@ export class Game {
   gunExposed() { return false; }
   gunTargetable() { return false; }
   gunBar() { return null; }
+  gunBarLabel() { return '炮组'; }
+  spareUnit() { return false; }
+  updateChapter() {}
   respawnPoint() { const s = this.startPos(); return [s.x, s.z]; }
   advanceFormation() { return false; }
   chapterLabels() {}

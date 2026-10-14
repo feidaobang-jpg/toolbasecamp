@@ -274,10 +274,11 @@ export class UI {
   setLives(t) { if (this.cache.lv !== t) { this.cache.lv = t; $('lives').textContent = t; } }
   setScore(n) { if (this.cache.sc !== n) { this.cache.sc = n; $('score').textContent = '战功 ' + n; } }
   setObjective(html) { if (this.cache.ob !== html) { this.cache.ob = html; $('objective').innerHTML = html; } }
-  setCannon(frac) {
+  setCannon(frac, label = '炮组') {
     const row = $('cannon-row');
     if (frac === null) { if (!row.hidden) row.hidden = true; return; }
     row.hidden = false;
+    if (this.cache.cl !== label) { this.cache.cl = label; row.firstElementChild.textContent = label; }
     const w = Math.round(clamp(frac, 0, 1) * 100);
     if (this.cache.cn !== w) { this.cache.cn = w; const b = $('cannon-bar'); b.style.width = w + '%'; b.classList.toggle('low', w < 35); }
   }
