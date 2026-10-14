@@ -1,6 +1,9 @@
 // Player-facing notes travel with the same game package; no network or account required.
-export const GAME_VERSION='0.38.1';
+export const GAME_VERSION='0.38.2';
 export const UPDATE_HISTORY=[
+  {version:'0.38.2',date:'2026-10-14',title:'聚焦基地防守，整理试玩入口',changes:[
+    '基地防守保留默认入口；银行、房车、虫族与酸液围场收进「其他玩法 · 测试版」，说明尚未完成本轮打磨。',
+    '自由测试移到「更多」。保留已有玩法、存档、继续游戏与文件备份；先打磨主模式，暂缓扩展新模式。']},
   {version:'0.38.1',date:'2026-10-14',title:'Y / H 抬头低头，医疗改到 N',changes:[
     '电脑键盘新增 Y 抬头 / H 低头，和拖动画面上下看是同一个范围；Q / E 仍是左右转。',
     '医疗包 / 兵种支援 / 虫族号令 / 直升机降低的默认键从 H 改为 N，直升机升高只用 K（空格）。自己在「操作设置」里改过的键位保持不变，提示文字跟随当前键位。']},

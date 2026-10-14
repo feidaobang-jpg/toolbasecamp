@@ -1,6 +1,9 @@
 // Player-facing notes travel with the same game package; no network or account required.
-export const GAME_VERSION='0.2.1';
+export const GAME_VERSION='0.2.2';
 export const UPDATE_HISTORY=[
+  {version:'0.2.2',date:'2026-10-14',title:'优先体验平安县城，明确早期内容',changes:[
+    '大厅增加平安县城重做版直达入口；章节选择保留三章，李家坡与骑兵连标明早期体验。',
+    '战地收进「其他玩法 · 早期体验」；撤下尚未开发的模式占位与开放承诺，保留原有进度。']},
   {version:'0.2.1',date:'2026-10-14',title:'修正提示里的旧键位',changes:[
     '战地模式和互动提示里还写着“H 兵种支援 / 医疗”“直升机 Y 升 H 降”，实际默认键在 0.2.0 已改成 N 和 K；提示文字改为跟随当前键位。']},
   {version:'0.2.0',date:'2026-10-14',title:'平安县城整章重做',changes:[
