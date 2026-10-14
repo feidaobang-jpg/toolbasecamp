@@ -1,0 +1,36 @@
+{
+  "version": "web-save-notice-v0.38.6",
+  "at": "2026-10-14T13:22:21+00:00",
+  "status": "website_and_toy_public_verified",
+  "qa": "qa.json",
+  "change": "玩家反馈屏幕上的「本地已保存」提示每 30 秒弹一次。每 30 秒的心跳自动存档改为静默写盘（LocalSaveStore.write 新增 notify:false），仍写本地、仍更新状态文字、仍按原时机云备份，但不再回调 onStatus 弹提示；买兵建塔、过关、手动存档、保存失败与云档待选择照旧立即提示。",
+  "package": {
+    "zip_sha256": "ca4c1bedb6b4a156d0c212ab513f4e4ddcf50e6d63dc923e0ee15c423aa22f34",
+    "zip_bytes": 448290,
+    "entry_html_bytes": 68409
+  },
+  "website": {
+    "status": "deployed_verified",
+    "version": "web-save-notice-v0.38.6",
+    "verified_at": "2026-10-14T13:22:21+00:00",
+    "evidence": "curl 线上 update-history.js/game.js/game.compat.js 含新版本号与 notify 分支；verify-save-notice.cjs 以线上网址复跑通过"
+  },
+  "toy": {
+    "id": 38678478981120,
+    "status": "published",
+    "submitted_version": "web-save-notice-v0.38.6",
+    "submitted_at": "2026-10-14T13:15:29+00:00",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_KrXCWUhp/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_KyAixmdT/index.html",
+    "package_sha256": "ca4c1bedb6b4a156d0c212ab513f4e4ddcf50e6d63dc923e0ee15c423aa22f34",
+    "published_version": "web-save-notice-v0.38.6",
+    "published_at": "2026-10-14T13:17:08+00:00",
+    "public_verified_at": "2026-10-14T13:22:21+00:00",
+    "public_evidence": "verify-save-notice.cjs 以正式 Toy 入口跑通 6 项（含真实心跳不弹出）"
+  },
+  "bilibili": {
+    "decision": "deferred_accumulating",
+    "reason": "普通小改，不使现有入口说明或简介失实；按发布节奏只累计一次稳定更新，未达 3 次＋7 天门槛"
+  },
+  "taptap": "not_requested"
+}
