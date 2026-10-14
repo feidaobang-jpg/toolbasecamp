@@ -1,6 +1,10 @@
 // Player-facing notes travel with the same game package; no network or account required.
-export const GAME_VERSION='0.38.1';
+export const GAME_VERSION='0.38.2';
 export const UPDATE_HISTORY=[
+  {version:'0.38.2',date:'2026-10-14',title:'母皇不易秒杀 · 触屏右侧栏避让',changes:[
+    '虫巢母皇出生后短时无敌、血量提高，避免刚进老巢就被激光几秒打掉；出洞中的虫子同样不受伤。',
+    '手机触屏右下九键不再挡住右侧队友/战术/存档按钮，整栏挪到动作键左侧。',
+    '矮台阶与洞口沿更容易直接走上，陡坡判定略放宽；母巢浅坡回程保留。']},
   {version:'0.38.1',date:'2026-10-14',title:'Y / H 抬头低头，医疗改到 N',changes:[
     '电脑键盘新增 Y 抬头 / H 低头，和拖动画面上下看是同一个范围；Q / E 仍是左右转。',
     '医疗包 / 兵种支援 / 虫族号令 / 直升机降低的默认键从 H 改为 N，直升机升高只用 K（空格）。自己在「操作设置」里改过的键位保持不变，提示文字跟随当前键位。']},
