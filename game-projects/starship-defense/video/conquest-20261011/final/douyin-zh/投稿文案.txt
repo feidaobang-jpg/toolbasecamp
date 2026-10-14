@@ -9,4 +9,3 @@
 抢两个点就能持续扣敌方兵力票，追人也别丢了旗。
 试玩：https://www.zhengxiaohui.cn/games.html （复制到浏览器，选择虫潮围城 → 战地模式）
 玩法建议／愿望单：https://www.zhengxiaohui.cn/game-vote.html
-战地据点模式由Codex辅助开发。
