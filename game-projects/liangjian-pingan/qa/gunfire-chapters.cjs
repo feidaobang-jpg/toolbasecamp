@@ -15,6 +15,7 @@ const check = (name, ok, detail) => { out.push({ name, ok: !!ok, detail }); cons
   const page = await ctx.newPage();
   const errors = [];
   page.on('pageerror', (e) => errors.push('pageerror: ' + e.message));
+  page.on('requestfailed', r => console.log('REQUEST_FAILED ' + r.url() + ' ' + r.failure()?.errorText));
   page.on('console', (m) => { if (m.type() === 'error') errors.push('console: ' + m.text()); });
   const boot = async () => { await page.goto(URL + '?qa=1'); await page.waitForFunction(() => window.__gameQA && window.__gameQA.resistanceCampaign && window.__ccReady, null, { timeout: 30000 }); };
   await boot();
@@ -70,7 +71,7 @@ const check = (name, ok, detail) => { out.push({ name, ok: !!ok, detail }); cons
   check('旧的 pingan/index.html 地址跳到亮剑战役的平安县城', /liangjian\/index\.html\?.*ch=pingan/.test(page.url()), page.url());
 
   check('全程没有报错', !errors.length, errors);
-  fs.writeFileSync(path.join(__dirname, 'out-gunfire-chapters.json'), JSON.stringify({ at: new Date().toISOString(), passed: out.filter((c) => c.ok).length, total: out.length, checks: out, errors }, null, 1));
+  fs.writeFileSync(process.env.QA_OUT || path.join(__dirname, 'out-gunfire-chapters.json'), JSON.stringify({ at: new Date().toISOString(), passed: out.filter((c) => c.ok).length, total: out.length, checks: out, errors }, null, 1));
   console.log(`${out.filter((c) => c.ok).length}/${out.length} passed`);
   await browser.close();
   process.exit(out.every((c) => c.ok) ? 0 : 1);

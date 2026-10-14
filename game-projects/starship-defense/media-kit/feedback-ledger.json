@@ -1,6 +1,6 @@
 {
   "note": "评论反馈台账：已处理的评论不再重复修复/回复。video 为视频 BV 或动态 opus:<id>；kind/status 由开发判断；reply_rpid 为我方回复。",
-  "updated_at": "2026-10-12T12:38:50.037199+00:00",
+  "updated_at": "2026-10-14T06:06:34Z",
   "items": [
     {
       "rpid": "319415014640",
@@ -1335,6 +1335,84 @@
       "reply_rpid": null,
       "reply_verified_at": "2026-10-12T12:37:47.283Z",
       "evidence": "D:/project/task-artifacts/all-games-input-safety-20261012/replies/tablet-public.jpg"
+    },
+    {
+      "feedback_key": "e46c2c5c63c7aa1579272cf04f98d62ffc77c619a9fbd703fbde0a6d722475f0",
+      "rpid": "316976321921",
+      "root_rpid": "316976321921",
+      "video": "opus/1253705235842465792",
+      "oid": "410772284",
+      "type": 11,
+      "user": "黄milk龙",
+      "date": "2026-10-13 23:25",
+      "text": "上不去了[大哭][大哭][大哭]",
+      "kind": "bug",
+      "status": "fixed_and_replied",
+      "adopted_by": "用户截图指定：看一下这3个问题解决了吗？如果没解决就修复并回复",
+      "fixed_in": "web-feedback-v0.38.2",
+      "fix_summary": "矮台阶/洞口沿可直接走上（0.85m），陡坡判定放宽",
+      "channels": {
+        "website": "deployed_verified",
+        "toy": "published_verified_cdn_v26220",
+        "taptap": "not_requested"
+      },
+      "reply_text": "矮台阶／洞口沿已修好：大约一人高内可以直接走上，陡坡也稍微放宽了。网站和 Toy 都已更新（0.38.2），刷新或重新打开再试一次～",
+      "reply_rpid": "317027561441",
+      "note": "网站/Toy 0.38.2 已上线；原楼回复已公开读回。",
+      "updated_at": "2026-10-14T07:43:09Z",
+      "reply_verified_at": "2026-10-14T07:43:09Z"
+    },
+    {
+      "feedback_key": "0c8d8d9095b38f75d8076f1a00dff6c37322024a8012a6664793105ad01ad791",
+      "rpid": "316970777489",
+      "root_rpid": "316970777489",
+      "video": "opus/1253705235842465792",
+      "oid": "410772284",
+      "type": 11,
+      "user": "新老鼠人暗区突围",
+      "date": "2026-10-13 22:30",
+      "text": "我一直在他家里。他们一出现就打，刚刚下一篇的时候，女皇出现了。没过几秒就没了。",
+      "kind": "balance",
+      "status": "fixed_and_replied",
+      "adopted_by": "用户截图指定：看一下这3个问题解决了吗？如果没解决就修复并回复",
+      "fixed_in": "web-feedback-v0.38.2",
+      "fix_summary": "母皇血量 36→90×，出生 4 秒保护，emerge/protect 期间不受伤",
+      "channels": {
+        "website": "deployed_verified",
+        "toy": "published_verified_cdn_v26220",
+        "taptap": "not_requested"
+      },
+      "reply_text": "母皇已加强：血量提高，刚从洞里出来有短时保护，出洞过程中也不会被秒。网站和 Toy 都已更新，重新打开进老巢再打一次就对了。",
+      "reply_rpid": "317027562705",
+      "note": "网站/Toy 0.38.2 已上线；原楼回复已公开读回。",
+      "updated_at": "2026-10-14T07:43:09Z",
+      "reply_verified_at": "2026-10-14T07:43:09Z"
+    },
+    {
+      "feedback_key": "a437c93b3a261b835ccc813d55def24094f8f071489cbda07f1cd6f1f77c741d",
+      "rpid": "316966191841",
+      "root_rpid": "316966191841",
+      "video": "opus/1253705235842465792",
+      "oid": "410772284",
+      "type": 11,
+      "user": "秀云be-shown",
+      "date": "2026-10-13 21:44",
+      "text": "还有就是右下角这九个键位挡住了右边显示栏的按键，看不清是什么操作",
+      "kind": "bug",
+      "status": "fixed_and_replied",
+      "adopted_by": "用户截图指定：看一下这3个问题解决了吗？如果没解决就修复并回复",
+      "fixed_in": "web-feedback-v0.38.2",
+      "fix_summary": "触屏 #hudRight 左移到动作键左侧",
+      "channels": {
+        "website": "deployed_verified",
+        "toy": "published_verified_cdn_v26220",
+        "taptap": "not_requested"
+      },
+      "reply_text": "手机触屏右侧队友／战术／存档栏已挪到右下九键左侧，不再被动作键挡住。刷新或重新打开 Toy／网站后再看一眼就行。",
+      "reply_rpid": "317027615313",
+      "note": "网站/Toy 0.38.2 已上线；原楼回复已公开读回。",
+      "updated_at": "2026-10-14T07:43:09Z",
+      "reply_verified_at": "2026-10-14T07:43:09Z"
     }
   ]
 }

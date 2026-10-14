@@ -63,7 +63,8 @@ export function mountResistanceUI(api){
  <div id="warStatus" class="hidden"></div><div id="warLoadout" class="hidden"></div><div id="warDialogue" class="hidden"></div><div id="warReticle" class="hidden"></div><div id="warDamage" class="hidden"></div><button id="warOrder" class="hidden">小队：跟随</button>
  <div id="warResult" class="overlay menu hidden"><div class="warKicker">战役记录</div><h1 id="warResultTitle"></h1><p id="warResultText" class="small"></p><div class="btnRow"><button id="warNext" class="mbtn green">下一章</button><button id="warReplay" class="mbtn">重玩本章</button><button id="warSelect" class="mbtn">章节选择</button><button id="warResultBack" class="mbtn">返回大厅</button></div></div>`;
  for(const node of [...wrap.children])stage.append(node);
- WAR_CHAPTERS.forEach((c,i)=>{const btn=document.createElement('button');btn.className='warChapter';btn.dataset.chapter=String(i);btn.innerHTML=`<small>第 ${i+1} 章 · ${c.tag}</small><strong>${c.name}</strong><span>${c.brief}</span>`;btn.onclick=()=>api.start(i);$('warChapters').append(btn);});
+ WAR_CHAPTERS.forEach((c,i)=>{const btn=document.createElement('button');btn.className='warChapter';btn.dataset.chapter=String(i);btn.innerHTML=`<small>第 ${i+1} 章 · ${c.remake?'推荐 · 重做版':'早期体验 · 待打磨'}<br>${c.tag}</small><strong>${c.name}</strong><span>${c.brief}</span>`;btn.onclick=()=>api.start(i);$('warChapters').append(btn);});
+ if($('btnPingan'))$('btnPingan').onclick=()=>api.start(0);   // 大厅推荐入口：亮剑战役重做版，从第一章苍云岭进
  if(button.isConnected)button.onclick=()=>open();
  $('warBack').onclick=()=>{hide('warMenu');$('menuMain').classList.remove('hidden');button.focus?.();};
  $('warContinue').onclick=api.continue;$('warReplay').onclick=api.retry;$('warNext').onclick=api.next;$('warSelect').onclick=()=>{api.stop();open();};$('warResultBack').onclick=api.quit;$('warOrder').onclick=api.order;$('warAim').onclick=api.toggleAim;

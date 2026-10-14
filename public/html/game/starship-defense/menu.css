@@ -94,3 +94,8 @@
 #stage.menu-compact #menuMain .lobbyCard{padding:6px 10px;gap:0}
 #stage.menu-compact #menuMain .lobbyCard span{display:none}
 #stage #campaignConfig.hidden{display:none!important}
+#earlyModes{margin-top:12px;border-top:1px solid var(--menu-line);padding-top:8px}
+#earlyModes summary{min-height:44px;padding:10px 6px;cursor:pointer;color:#b8cfda;font-size:var(--menu-font);line-height:1.5}
+#earlyModes summary:focus-visible{outline:3px solid var(--menu-gold);outline-offset:-3px}
+#earlyModeList{display:flex;flex-direction:column;gap:6px}
+#menuMain .earlyNote{font-size:13px;line-height:1.5;color:#cbb887;margin:6px 0 10px;text-align:left}

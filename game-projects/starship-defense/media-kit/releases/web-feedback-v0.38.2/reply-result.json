@@ -1,0 +1,38 @@
+{
+  "ok": true,
+  "account": {
+    "mid": "16214353",
+    "uname": "飞刀班长"
+  },
+  "results": [
+    {
+      "user": "黄milk龙",
+      "root": "316976321921",
+      "code": 0,
+      "message": "OK",
+      "reply": "317027561441",
+      "visible": true,
+      "skipped": false
+    },
+    {
+      "user": "新老鼠人暗区突围",
+      "root": "316970777489",
+      "code": 0,
+      "message": "OK",
+      "reply": "317027562705",
+      "visible": true,
+      "skipped": false
+    },
+    {
+      "user": "秀云be-shown",
+      "root": "316966191841",
+      "code": 0,
+      "message": "OK",
+      "reply": "317027615313",
+      "visible": true,
+      "skipped": false
+    }
+  ],
+  "at": "2026-10-14T07:42:35.163497+00:00",
+  "verified_public_at": "2026-10-14T07:43:09Z"
+}

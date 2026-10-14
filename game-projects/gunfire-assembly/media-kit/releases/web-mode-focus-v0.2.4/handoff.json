@@ -1,0 +1,16 @@
+{
+  "version": "web-mode-focus-v0.2.4",
+  "task_id": "01a13802-a02f-7001-b8dc-d20160dfb4ac-work01",
+  "at": "2026-10-14T06:35:09.187368+00:00",
+  "status": "validated_pending_release",
+  "scope": "mode entry organization; gameplay and save keys preserved",
+  "notes": "game-projects/site-games/releases/mode-focus-20261014/notes.md",
+  "qa": "game-projects/site-games/releases/mode-focus-20261014/qa.json",
+  "website": {
+    "status": "pending"
+  },
+  "toy": {
+    "status": "pending"
+  },
+  "taptap": "not_requested"
+}

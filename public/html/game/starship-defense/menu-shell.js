@@ -1,5 +1,5 @@
 const MODES={
-  campaign:{button:'btnCampaign',title:'基地防守',tag:'建造防线 · 小队协作',description:'守住前哨基地，抵御越来越强的虫潮。选择守卫与难度后出发。'},
+  campaign:{button:'btnCampaign',title:'基地防守',tag:'主模式 · 建造防线 · 小队协作',description:'守住前哨基地，抵御虫潮。先整备武器、建造防线，再开始迎敌；攒钱强化并雇佣队友。选择守卫与难度后出发。'},
   bank:{button:'btnBankVersus',title:'银行塔防对战',tag:'经营银行 · 派兵推线',description:'升级银行积累资金，派出士兵、布置防御塔，攻破对方基地。可挑战电脑，也可与好友对战。',action:'选择对战配置'},
   rv:{button:'btnRV',title:'房车生存',tag:'废弃城镇 · 搜刮与撤离',description:'驾驶房车探索城镇，搜集燃料、食物与零件。整备载具、搜索感染区，再前往营地撤离。',action:'进入城镇整备'},
   zerg:{button:'btnZerg',title:'虫族模式',tag:'孵化虫群 · 攻陷要塞',description:'化身母虫，孵化并指挥虫群，摧毁人类防线。通过进化增强虫群，完成三段攻城。',action:'选择虫族出征'},
@@ -16,7 +16,10 @@ export function mountMenuShell(stage){
     for(const [key,item] of Object.entries(MODES)){
       const b=$(item.button);b.classList.toggle('mode-sel',key===mode);b.setAttribute('aria-pressed',String(key===mode));
     }
+    const early=!['campaign','test'].includes(mode);
     $('modeTitle').textContent=data.title;$('modeTag').textContent=data.tag;$('modeDescription').textContent=data.description;
+    $('modeStatus').hidden=!early;
+    if(early)$('earlyModes').open=true;
     $('campaignConfig').classList.toggle('hidden',!campaign);
     $('startRow').classList.toggle('hidden',!campaign);
     $('modeActionRow').classList.toggle('hidden',campaign);
@@ -24,9 +27,10 @@ export function mountMenuShell(stage){
   }
   for(const [mode,data] of Object.entries(MODES)){
     const button=$(data.button);launch[mode]=button.onclick;
-    button.onclick=()=>select(mode);
+    button.onclick=()=>{if(mode==='test')button.closest('.menuDialog')?.querySelector('[data-menu-close]')?.click();select(mode);};
     button.querySelector('strong').textContent=data.title;
     button.querySelector('span').textContent=data.tag;
+    if(!['campaign','test'].includes(mode))$('earlyModeList').append(button);
   }
   $('btnModeStart').onclick=e=>{if(launch[selected])launch[selected](e);};
   for(const id of ['rvBack','zergBack','acidBack'])$(id).addEventListener('click',()=>select('campaign'));

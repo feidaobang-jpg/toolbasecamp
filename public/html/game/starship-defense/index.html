@@ -221,7 +221,8 @@ button::before,button::after{content:none!important}
 #vC,#vP{top:var(--corner-top);bottom:auto}#vC{right:calc(var(--corner-right) + 144px + 2 * var(--corner-gap));width:86px}#vP{right:calc(var(--corner-right) + 72px + var(--corner-gap));width:72px}#cornerTools #fullBtn{width:72px}
 #hudRight{right:var(--corner-right);top:calc(var(--corner-top) + var(--corner-height) + var(--corner-gap))}
 
-.touch-mode #hudRight{top:64px;font-size:9px;line-height:1.35;max-width:140px}
+/* 触屏右下 3×3 动作键会盖住原贴右边的信息栏按钮；整栏挪到动作键左侧（左缘键约 touch-right+136+58=234，再留缝）。 */
+.touch-mode #hudRight{top:58px;right:calc(var(--touch-right,40px) + 234px);font-size:9px;line-height:1.35;max-width:150px}
 /* 战术信息集中在主动打开的面板，战斗时只留一个入口。 */
 /* 右面板统一对齐：战术入口撑满面板宽，功能按钮走等宽两列网格，避免左靠/右靠/换行参差。 */
 #tacticsButton{pointer-events:auto;display:block;box-sizing:border-box;width:100%;margin-top:5px;max-width:100%;min-height:44px;padding:5px 9px;font-size:11px;white-space:normal;text-align:left}
@@ -319,7 +320,7 @@ button::before,button::after{content:none!important}
 #stage.versus-mode.touch-mode #vsPhase{display:none}
 #stage.versus-mode.touch-mode #bfFlags{top:64px;font-size:10px;gap:4px}
 #stage.versus-mode.touch-mode #bfFlags span{padding:3px 6px}
-#stage.versus-mode.touch-mode #hudRight{top:94px;max-width:230px}
+#stage.versus-mode.touch-mode #hudRight{top:94px;right:calc(var(--touch-right,40px) + var(--bf-step,68px) * 3 + var(--bf-size,58px) + 12px);max-width:200px}
 #stage.versus-mode.touch-mode #vsEco{font-size:10px}
 #stage.versus-mode #vR{right:calc(var(--touch-right,40px) + 204px);bottom:var(--touch-bottom,36px)}
 #stage.versus-mode #vZ{right:calc(var(--touch-right,40px) + 204px);bottom:calc(var(--touch-bottom,36px) + 68px)}
@@ -486,16 +487,14 @@ html,body{overscroll-behavior:none}
         <strong>银行塔防对战</strong>
         <span>升级银行 · 派兵造塔 · 可电脑/好友对战</span>
       </button>
-      <button type="button" class="lobbyCard" id="btnTest" data-mode="test">
-        <strong>自由测试</strong>
-        <span>无限资源 · 调试武器与建造 · 快捷键 T</span>
-      </button>
     </div>
+    <details id="earlyModes"><summary tabindex="0">其他玩法 · 测试版</summary><p class="earlyNote">尚未完成本轮打磨，可自愿体验。原有进度保留。</p><div id="earlyModeList"></div></details>
       </div></section>
       <section class="mainWorkspace" aria-labelledby="modeTitle">
         <div class="modeContent" data-menu-scroll>
           <div class="modeHeading"><p id="modeTag"></p><h2 id="modeTitle">基地防守</h2></div>
           <p id="modeDescription"></p>
+          <p id="modeStatus" class="earlyNote" hidden>测试版 · 尚未完成本轮打磨，玩法与难度仍待完善。</p>
           <section id="campaignConfig" aria-label="基地防守设置"><h3>选择前哨守卫</h3>
     <div class="btnRow" id="classRow">
       <div class="classCard sel" tabindex="0" role="button" data-c="gunner"><b>机枪兵</b><span class="classStats"><br>机枪伤害 +25%<br>受到伤害 −15%<br>生命 120 · 持续守线</span><span class="classRole">持续守线</span></div>
@@ -533,7 +532,7 @@ html,body{overscroll-behavior:none}
   </section>
   <section id="menuMorePanel" class="panel menuDialog hidden" role="dialog" aria-modal="true" aria-labelledby="menuMoreTitle">
     <header class="infoHeader"><h3 id="menuMoreTitle">更多</h3><button class="closeX" data-menu-close aria-label="关闭更多菜单">×</button></header>
-    <div class="dialogGrid"><button class="mbtn" id="helpMenu">玩法说明</button><button class="mbtn" id="updatesMenu">更新日志</button><a class="mbtn" data-author-home href="https://space.bilibili.com/16214353" target="_blank" rel="noopener noreferrer">作者B站主页</a></div>
+    <div class="dialogGrid"><button class="mbtn" id="helpMenu">玩法说明</button><button class="mbtn" id="updatesMenu">更新日志</button><button type="button" class="mbtn" id="btnTest" data-mode="test"><strong>自由测试</strong><span hidden>无限资源 · 试用武器与建造</span></button><a class="mbtn" data-author-home href="https://space.bilibili.com/16214353" target="_blank" rel="noopener noreferrer">作者B站主页</a></div>
   </section>
 
   <section id="updatesPanel" class="panel hidden infoPanel" role="dialog" aria-modal="true" aria-labelledby="updatesTitle">
@@ -552,7 +551,7 @@ html,body{overscroll-behavior:none}
       <p>母皇：早杀可减少本章后续虫潮35%，每次通关额外领补给；晚杀保留更多虫群掉落。「队友集合 / 载具救援」各冷却20秒并保留血量，在虫洞内救援时载具停在洞口。</p>
       <p>城门：玩家和队友靠近自动开门，队友通过后自动关门，也可用互动手动开关。看小地图和基地方向提示找家；载具被打坏下关自动修好，进度自动保存。</p>
       <p>建造与小队：最多64座设施；队友可拾金币与血包，商店可升级队友武器和护甲。9个副本随章节解锁，每个副本三档难度分别领奖。</p>
-      <p>地表白天 / 夜晚可在主菜单或暂停菜单切换并保存；进入虫洞自动开启手电，跟随视角照亮前路，不耗电。左侧选择模式，右侧查看说明与配置，再点击开始。银行、房车和虫族有各自的出发设置；「继续上次」继续基地防守。</p>
+      <p>地表白天 / 夜晚可在主菜单或暂停菜单切换并保存；进入虫洞自动开启手电，跟随视角照亮前路，不耗电。主菜单默认基地防守；银行、房车、虫族与酸液围场收在「其他玩法 · 测试版」，自由测试在「更多」中。「继续上次」继续基地防守，其他玩法从各自入口继续。</p>
     </div>
   </section>
 
@@ -692,7 +691,7 @@ html,body{overscroll-behavior:none}
   </div>
 </div>
 <script src="./boot.js?v=mobile12"></script>
-<script defer src="./game.compat.js?v=keys0381" onerror="window.__ccBootError('游戏资源下载失败')"></script>
+<script defer src="./game.compat.js?v=fb0382" onerror="window.__ccBootError('游戏资源下载失败')"></script>
 <script src="../../../js/game/thumb-preview.js"></script>
 <script type="module">
 // 内联自 /js/game/landscape-typing.js：Toy/TapTap 包不含站点共享目录，外链模块会缺失
