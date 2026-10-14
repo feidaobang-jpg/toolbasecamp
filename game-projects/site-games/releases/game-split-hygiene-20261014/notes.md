@@ -38,6 +38,14 @@
 - `shared-modules.json` 的 `perGame` 逐个写明 12 个确实分叉的模块和原因：`game.js` 是两款玩法本身（不是漂移，不合并）、`game.compat.js` 是构建产物、`cloud-save.js`/`save-panel.js` 是本次分开的存档标识、`toy-platform.js` 是 Toy 键与入口、`combat-controls.js` 是抗战文案删除后的差异、`update-history.js` 是各自版本、其余是地形高度/洞穴深度/手动弹药装填等玩法参数差异。今后新增分叉必须在清单里写原因，不能靠再复制一份规避检查。
 - 验证：`--bootstrap` 建立 → 默认检查退出 0；负例（往规范源 `key-bindings.js` 尾部加一个换行）报 `DRIFT key-bindings.js：starship-defense 与规范源不一致，gunfire-assembly 与规范源不一致` 并退出 1；还原后回到 0；`--write` 跑完 `git status public/html` 无变化，说明本次收成规范源**没有引入任何行为差异**。
 
+## 4. 换存档键时保住老玩家已有的档（11140d63）
+
+网站侧的行为回归覆盖不到 Toy 打包和「旧文件能不能继续用」，这三处是从最终包体倒推出来的：
+
+- `build-toy.mjs` 的守卫原来要求包里必须含 `"sst_save_"`，换键后直接报错拦住了打包（这条守卫是有用的，包没构建成功就发不出去）。改查 `"gfs_save_"`，但**重写目标继续用已发布版本一直在用的 `toy-gunfire-v1-sst_save_`**：Toy 的存档本来就按作品隔离，键名换新只会把 0.4.0 玩家的本地进度、`auto-backup` 和「这一成绩已提交」状态清零，换不了任何好处。
+- `toy-platform.js` 的云档键换成 `gunfire_*` 后，读取保留 `chongchao_*` 兜底（含旧的按设备记录），新档一律写 `gunfire_*`，第一次云备份就自然迁过去；备份列表按记录去重，不把同一份列两遍。
+- `save-panel.js` 的导入原来只认 `gunfire-assembly`，玩家以前导出的备份标的是 `starship-defense`，会被当成格式错误拒掉；现在两个标识都收，内容照样过 `validate`。导出文件名顺带改成「枪火集结-存档-」。
+
 ## 已知缺口与未验证项（如实保留）
 
 - `verify-fps-rules.cjs` 本地已跑通 19 项，但战地入口在 0.4.0 后只留在枪火大厅，虫潮这边改成通过联机房间的 `selectVersusRules('conquest')` 进入同一段代码；顺带修了脚本里早就不存在的 `#keysPause` 选择器（改成暂停菜单里的「游戏设置」）。
@@ -45,3 +53,11 @@
 - 虫潮其他脚本（`verify-squad-ops.cjs`、`verify-touch-layout.cjs`、`capture-squad-ops.cjs`）也还写着 `#keysPause`，本次未改，碰到对应任务时再修。
 - 枪火仍带 5 档视角预设，超出「每款 3D 默认 4 个视角」的规则；这属于产品改动，本次清理没有擅自砍，等用户点头再改。
 - 桌面浏览器模拟不等于手机真机验收。
+
+## 5. 各渠道状态
+
+- **网站**：`11140d63` 推送后线上产物按字节核验过——`html/game/gunfire-assembly/game.compat.js` 1,149,511 字节（sha256 前 16 位 `8bd1e552cfc70989`），与本地构建逐字节一致，含 `gunfire-person`、`gfs_save_`、旧的 `chongchao_*` 云档兜底与新导出文件名；`html/game/starship-defense/game.compat.js` 1,280,293 字节，包里搜不到抗战字符串。两款的 `index.html` 里也没有 `#zergHud` / `#btnResistance` 残留。
+- **Toy**：同一稳定包各提交一次审核。枪火集结 0.4.1（Toy 43022175699968，zip sha256 `a0ae1de9…`，预览 `preview_w9n7dPez` → 提交后 `preview_KwxHycAQ`，2026-10-14T22:52:33+08:00）；虫潮围城 0.38.7（Toy 38678478981120，zip sha256 `44689d87…`，预览 `preview_EEsCwaz1` → 提交后 `preview_38BHr3kg`，22:52:37）。提交时状态都是 `auditing`，`auditing` 不等于上线，过审后再推进 `published_*` 基线。
+- **Toy 预览实测**：新增 `game-projects/site-games/qa/toy-package-check.cjs`，每款 10 项全通过（证据 `site-games/releases/toy-package-check-20261014/{gunfire,chong}.json` 与同名截图）。这项检查专门盯「预览里跑的脚本 = 本次构建的包」和「Toy 包内的存档前缀仍是已发布那把」，网站回归覆盖不到这两点。包体预检（`toy_doctor.py`）两款只有一条已知的无 contenthash WARN；入口 `index.html` 未压缩 68,269 / 68,409 字节，在 100KB 建议线内。
+- **TapTap**：按 2026-10-10 的规则默认不发布，本次未同步。
+- **视频简介**：两款这次都是内部清理与存档正确性修复，未构成「重大版本」，现有简介没有失实表述，按累计节奏记为待合并项，不单独更新。

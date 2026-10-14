@@ -49,7 +49,7 @@
     "slug": "chongchao-qianshao",
     "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
     "visibility": "PUBLIC",
-    "review_status": "published",
+    "review_status": "auditing",
     "verified_at": "2026-10-14T13:24:00+00:00",
     "video_bindings": [
       "BV1Grpq6JEW5",
@@ -60,16 +60,16 @@
       "BV1Ujad6DEuf"
     ],
     "linked_game_video": "https://www.bilibili.com/video/BV1Ujad6DEuf",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_KyAixmdT/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_38BHr3kg/index.html",
     "title": "虫潮围城",
-    "zip_sha256": "ca4c1bedb6b4a156d0c212ab513f4e4ddcf50e6d63dc923e0ee15c423aa22f34",
+    "zip_sha256": "44689d8799e5ac2d04fe5ed6eacf5f074f20a82347abaf53d1500b48de9d8e38",
     "submitted_date": "2026-10-14",
     "release_record": "releases/web-save-notice-v0.38.6/handoff.json",
-    "submitted_version": "web-save-notice-v0.38.6",
+    "submitted_version": "web-drop-resistance-v0.38.7",
     "published_version": "web-save-notice-v0.38.6",
     "preview_url": "https://www.bilibili.com/toy/preview/preview_KrXCWUhp/index.html",
-    "note": "0.38.6 心跳自动存档静默写盘：本地与云备份时机不变，屏幕上的「本地已保存」提示不再每 30 秒弹出；买兵建塔/过关/手动存档/保存失败仍提示。只提交一次即 published，正式入口与网站线上入口各跑过 verify-save-notice.cjs 六项。实体手机未测试。",
-    "package_sha256": "ca4c1bedb6b4a156d0c212ab513f4e4ddcf50e6d63dc923e0ee15c423aa22f34",
+    "note": "0.38.7 删掉早已搬到《枪火集结》的抗战战役代码（resistance-campaign/ui/assets 与 warOn 分支、__gameQA 暴露、NAV_ROOTS），玩家可见文案同步；战地的 battlefield-* 与 vsMenu 保留，联机房间仍能进。存档键与命名空间未改（chongchao-*／sst_save_ 保持），云档仍标 starship-defense，老玩家不受影响。预览 preview_EEsCwaz1 跑过 toy-package-check.cjs 10 项（包体逐字节一致、主战役真实开局、视角写 chongchao-person 且不写 gunfire-person、入口 68,409 字节、手机横屏菜单不裁切、无报错），2026-10-14T22:52:37+08:00 提交一次审核，状态 auditing。实体手机未测试。",
+    "package_sha256": "44689d8799e5ac2d04fe5ed6eacf5f074f20a82347abaf53d1500b48de9d8e38",
     "pending_updates": [
       {
         "version": "web-controls-v0.18.2",
@@ -332,7 +332,8 @@
     "platform_readback_at": "2026-10-14T13:24:00+00:00",
     "submitted_at": "2026-10-14T13:15:29+00:00",
     "entry_html_bytes": 68409,
-    "platform_mtime": 1791983828
+    "platform_mtime": 1791983828,
+    "platform_checked_at": "2026-10-14T22:54:46+08:00"
   },
   "website_url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
   "published_toy_version": "web-save-notice-v0.38.6",
