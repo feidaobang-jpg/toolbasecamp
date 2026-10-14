@@ -100,6 +100,43 @@
   "verified_at": "2026-10-14T13:24:00+08:00",
   "resolved_at": "2026-10-14T14:40:00+08:00"
  },
+ "tuiliu_application": {
+  "doc_name": "【哔哩哔哩Toy】稿件推流申请表",
+  "doc_url": "https://docs.qq.com/sheet/DU3dnQkR1WG5RUnp0",
+  "doc_url_note": "之前浏览器里打开的 https://docs.qq.com/sheet/DWGNbTXFkQVFuaWd1 是错号，登录态与游客态都返回「文档不存在」；材料文件 Toy推流申请.txt 第 2 行本来就写着正确地址 DU3dnQkR1WG5RUnp0?tab=7mm8hw，本次又经本人登录后的 docs.qq.com/desktop 最近文档列表二次确认。以后开表直接用 DU3dnQkR1WG5RUnp0。",
+  "sheet_tab": "【进行中】日常推流",
+  "resource_window": "表头写资源周期 9月17日-10月15日，本期 10-14 投稿在窗口内；表格日常滚动，本期填在末行",
+  "login": "用户 2026-10-14 在内置浏览器扫微信码登录（账号显示 郑晓辉），随后由 Qoder 填写",
+  "row": 425,
+  "last_data_row_before": 424,
+  "values": {
+   "A": "飞刀班长",
+   "B": "https://www.bilibili.com/video/BV12ypy68EZz/",
+   "C": "是",
+   "D": "是",
+   "E": "是",
+   "F": ""
+  },
+  "column_meaning": {
+   "A": "UP主昵称",
+   "B": "视频链接（请填写带BV号的长链，而非含b23.tv的短链）",
+   "C": "投稿tag是否加bilibilitoy&带话题：哔哩哔哩Toy创意挑战",
+   "D": "是否置顶Toy链接到评论区",
+   "E": "是否视频中宣传Toy平台",
+   "F": "运营反馈（一般24h内反馈），由官方填写故留空"
+  },
+  "value_basis": {
+   "C": "游客态 x/tag/archive/tags?bvid=BV12ypy68EZz 实时读回 10 个标签，含 bilibiliToy 与话题「哔哩哔哩Toy创意挑战」。",
+   "D": "置顶评论 rpid 317017937249 首行即 Toy 试玩链接，已匿名核验。",
+   "E": "成片尾卡字幕（render.py Card 文本）含「哔哩哔哩 Toy 入口见简介」，解说结尾说「试玩入口和投票页在简介里」；未口播平台名，按画面文字计为是。"
+  },
+  "pre_check": "先用表内 Ctrl+F 查找 BV12ypy68EZz，结果「无结果」，确认未重复申请；再按名称框逐格读到 A424 为最后一条数据（薄荷小鹿-游戏版），425 起为空。",
+  "format_match": "与本人上一行 412（BV1Grpq6JEW5）一致：昵称、带尾斜杠长链、是/是/是、F 列留给运营。",
+  "filled_at": "2026-10-14T15:04:00+08:00",
+  "saved_verified": "页面显示「最近保存 15:04」；随后整页刷新重新逐格读回 A425:E425 仍为上述值、F425 与 A426 为空，提示「上次修改是在刚刚进行的」。",
+  "status": "已申请（等待运营反馈，F 列由官方 24h 内填写）",
+  "evidence": "D:/project/task-artifacts/liangjian-pingan-story-video-20261014/live-tags.json"
+ },
  "bilibili_video_collection": {
   "user_decision": "AskUserQuestion 选择「只收本期这一条（推荐）」：仅把 BV12ypy68EZz 放进新合集，BV1Lfp76KEDd 与 BV1KFpJ6sEEK 留在「合集·虫潮围城开发实录」不动（B站一个视频只能属于一个合集，迁出会打断虫潮开发实录的连播）。",
   "season_id": 9322434,
@@ -268,8 +305,7 @@
   "toy_collection_qa_script": "D:/project/task-artifacts/liangjian-pingan-story-video-20261014/qa-hub-preview.cjs"
  },
  "open_items": [
-  "腾讯文档【进行中】日常推流申请行仍未填：游客态不能写入，需本人登录腾讯文档填写（材料已备好，微信登录二维码已打开待扫）。",
-  "24 小时 / 72 小时 / 7 天数据复盘按观察窗口在后续任务里读回，记录进本文件与 Toy 后台。"
+  "24 小时 / 72 小时 / 7 天数据复盘按观察窗口在后续任务里读回，记录进本文件与 Toy 后台；同时看推流表 F 列运营是否回填「已推流」。"
  ],
  "toy_collection_card": {
   "toy_id": 40495283951616,
@@ -290,6 +326,7 @@
  "resolved_items": [
   "旧视频 BV1Lfp76KEDd 简介修改已于 14:08 游客态读回公开生效（607→729 字，含本期视频链接）。",
   "枪火集结正式 B站视频合集已按用户决定新建：「合集·枪火集结」season_id 9322434，只收本期 BV12ypy68EZz 一条，14:41 游客态公开核验通过；旧合集「虫潮围城开发实录」9248439 仍为 8 条未受影响。",
-  "B站账号写锁已按用户授权从被取消的 Codex 会话（task_id 01a137f4-…-publish01，01:40:48Z 起）释放，由 Qoder 取得并在本次收尾释放；「添加单集」稿件列表里只读到本期这一条平安县城双结局视频，未见那条 181.9 秒重复片投稿过。"
+  "B站账号写锁已按用户授权从被取消的 Codex 会话（task_id 01a137f4-…-publish01，01:40:48Z 起）释放，由 Qoder 取得并在本次收尾释放；「添加单集」稿件列表里只读到本期这一条平安县城双结局视频，未见那条 181.9 秒重复片投稿过。",
+  "腾讯文档【哔哩哔哩Toy】稿件推流申请表【进行中】日常推流第 425 行已填（飞刀班长 / BV12ypy68EZz 长链 / 是 / 是 / 是，F 列留给运营），15:04 云端保存并整页刷新读回复核；正确表地址为 docs.qq.com/sheet/DU3dnQkR1WG5RUnp0。"
  ]
 }

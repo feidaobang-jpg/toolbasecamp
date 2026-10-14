@@ -126,14 +126,15 @@
     "result": "用户 2026-10-14 确认「只收本期这一条」后新建「合集·枪火集结」season_id 9322434（小节「正片」10429619），BV12ypy68EZz 为第 1 集；14:41 游客态读回 meta.name=合集·枪火集结、total=1、稿件 season_id=9322434、is_season_display=true，旧合集 9248439 仍是 8 条未受影响",
     "evidence": "game-projects/liangjian-pingan/video/story-20261014/work/publication-result.json 的 bilibili_video_collection 节",
     "scope_note": "BV1Lfp76KEDd 与 BV1KFpJ6sEEK 按用户决定留在「合集·虫潮围城开发实录」，B站一个视频只能属于一个合集，不迁出"
+   },
+   {
+    "item": "腾讯文档【进行中】日常推流申请表本期行",
+    "result": "用户扫码登录后由 Qoder 填写：表「【哔哩哔哩Toy】稿件推流申请表」正确地址 docs.qq.com/sheet/DU3dnQkR1WG5RUnp0（旧记录里的 DWGNbTXFkQVFuaWd1 登录态也返回「文档不存在」，是错号），页签【进行中】日常推流第 425 行 = 飞刀班长 / https://www.bilibili.com/video/BV12ypy68EZz/ / 是 / 是 / 是，F 列留给运营；填前 Ctrl+F 查 BV12ypy68EZz 为「无结果」不重复，15:04 云端保存并整页刷新逐格读回",
+    "evidence": "game-projects/liangjian-pingan/video/story-20261014/work/publication-result.json 的 tuiliu_application 节",
+    "still_open": "F 列运营反馈（一般 24h 内）由官方填写，后续复盘时顺带看是否回填「已推流」"
    }
   ],
   "not_done": [
-   {
-    "item": "腾讯文档【进行中】日常推流申请表本期行",
-    "reason": "游客态只能查看，粘贴与键入进不了单元格编辑",
-    "resume": "用户登录腾讯文档后按 work/publish/bilibili-zh/Toy推流申请.txt 的 A:E 只填本期一行，先表内查找 BV12ypy68EZz 查重、重新定位末行，F 列留空，看到云端保存成功才算已申请"
-   },
    {
     "item": "流量奖励用券",
     "reason": "官方页显示可用流量奖励 0，本轮无券可跳过；下次发片再按快速判断复查",
