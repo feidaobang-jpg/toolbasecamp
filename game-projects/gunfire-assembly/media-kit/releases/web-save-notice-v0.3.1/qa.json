@@ -1,0 +1,81 @@
+{
+  "method": "Playwright(本机 Edge headless) + 自带静态服务；真实等待主循环 30 秒心跳自动存档触发，并用 MutationObserver 记录提示胶囊 class 变化",
+  "scripts": {
+    "behaviour": "game-projects/starship-defense/verify-save-notice.cjs",
+    "store_unit": "game-projects/starship-defense/verify-cloud-save.mjs",
+    "pill_fade": "game-projects/starship-defense/verify-readybtn-touch.cjs"
+  },
+  "runs": [
+    {
+      "target": "local package",
+      "url": "http://127.0.0.1:8907/html/game/gunfire-assembly/index.html",
+      "viewport": [
+        1280,
+        720
+      ],
+      "passed": true,
+      "checks": 6
+    },
+    {
+      "target": "toy preview",
+      "url": "https://www.bilibili.com/toy/preview/preview_hvn6TazZ/index.html",
+      "viewport": [
+        1280,
+        720
+      ],
+      "passed": true,
+      "checks": 6
+    },
+    {
+      "target": "toy preview (mobile landscape)",
+      "url": "https://www.bilibili.com/toy/preview/preview_hvn6TazZ/index.html",
+      "viewport": [
+        844,
+        390
+      ],
+      "passed": true,
+      "checks": 6
+    },
+    {
+      "target": "toy public",
+      "url": "https://www.bilibili.com/toy/feidao-gunfire/index.html",
+      "viewport": [
+        1280,
+        720
+      ],
+      "passed": true,
+      "checks": 6
+    },
+    {
+      "target": "website public",
+      "url": "https://www.zhengxiaohui.cn/html/game/gunfire-assembly/index.html",
+      "viewport": [
+        1280,
+        720
+      ],
+      "passed": true,
+      "checks": 6
+    }
+  ],
+  "per_target_checks": [
+    "进场提示约5秒后淡出",
+    "notify:false 心跳存档写盘且状态更新但提示不弹",
+    "事件型存档仍提示且可点",
+    "提示约5秒后淡出并让出点击",
+    "保存失败仍立即提示",
+    "真实30秒心跳触发期间提示0次"
+  ],
+  "package": {
+    "zip_sha256": "a43dfa5c41031febae992413e9d2d766cdef3af624c2be7fd839cafd9aa4ff77",
+    "zip_bytes": 2749419,
+    "entry_html_bytes": 69934
+  },
+  "doctor": {
+    "passed": true,
+    "warning": "JS/CSS 文件名无内容指纹（仅缓存建议，不影响本次发布）"
+  },
+  "limitations": [
+    "桌面与手机均为浏览器模拟，未做实体手机真机验收",
+    "云备份自动上传路径未开启（默认按需），只验证本地提示与写盘"
+  ]
+}
