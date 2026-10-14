@@ -4,6 +4,9 @@ import {newSaveId} from './save-store.js';
 import {cloudRecord,SaveConflict} from './cloud-save.js';
 const CLOUD_KEY='gunfire_normal_v1';
 const AUTO_KEY='gunfire_auto_v2',BACKUP_KEY='gunfire_previous_v2';
+// 0.4.1 之前《枪火集结》在自己作品内沿用的是虫潮的键名；Toy 云存储按作品隔离，旧键只在本作品里出现，
+// 因此只用于读取兜底，不做跨作品判断。
+const LEGACY_CLOUD='chongchao_normal_v1',LEGACY_AUTO='chongchao_auto_v2',LEGACY_BACKUP='chongchao_previous_v2',LEGACY_DEVICE='chongchao_device_';
 const PLAY_URL='https://www.bilibili.com/toy/feidao-gunfire/index.html';
 const VIDEO='BV1Lfp76KEDd';
 
@@ -50,9 +53,19 @@ export class ToySaveProvider {
   async read(){
     await this.ready;
     const values=await this.bridge.call('getCloudStorage',undefined,{cacheKey:'save-read',refresh:true});
-    const current=this.parse(values[AUTO_KEY])||this.parse(values[CLOUD_KEY]);
-    const devices=Object.entries(values).filter(([key])=>key.startsWith('gunfire_device_')).map(([,raw])=>this.parse(raw));
-    return {current,backups:[this.parse(values[BACKUP_KEY]),this.parse(values[CLOUD_KEY]),...devices].filter(Boolean).sort((a,b)=>b.save.time-a.save.time)};
+    // Toy 的云存储按作品隔离，0.4.1 之前本作品里用的还是 chongchao_* 这批键名（两款尚未分家）。
+    // 换键后必须仍读得到老玩家的云档，否则一次更新就把进度清零；旧键只作读取兜底，新档一律写 gunfire_*，
+    // 第一次云备份就把它们带到新键上。
+    const legacy=[this.parse(values[LEGACY_AUTO]),this.parse(values[LEGACY_CLOUD]),this.parse(values[LEGACY_BACKUP])];
+    const current=this.parse(values[AUTO_KEY])||this.parse(values[CLOUD_KEY])||legacy.find(Boolean)||null;
+    const devices=Object.entries(values)
+      .filter(([key])=>key.startsWith('gunfire_device_')||key.startsWith(LEGACY_DEVICE))
+      .map(([,raw])=>this.parse(raw));
+    const seen=new Set();
+    const backups=[this.parse(values[BACKUP_KEY]),this.parse(values[CLOUD_KEY]),...legacy,...devices]
+      .filter(r=>r&&!seen.has(JSON.stringify(r))&&(seen.add(JSON.stringify(r)),true))
+      .sort((a,b)=>b.save.time-a.save.time);
+    return {current,backups};
   }
   async write(save,revision){
     const {current}=await this.read();if((current?.revision||null)!==revision)throw new SaveConflict();

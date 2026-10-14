@@ -67,14 +67,16 @@ export function mountSavePanel(game,{toyProvider,storage}={}){
   $('cloudBackup').onclick=()=>{try{const d=store.parse(store.readRaw(game.prefix+'cloud-backup'));if(!d)throw Error('尚无恢复前备份');game.confirm('恢复前次本地进度？当前进度仍会保留。','恢复本地备份',()=>{try{restore(d);}catch(e){error(e);}});}catch(e){error(e);}};
   $('saveExport').onclick=()=>{try{
     const d=requireNormal(),blob=new Blob([JSON.stringify({schema:1,game:'gunfire-assembly',save:d},null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');
-    a.href=url;a.download='虫潮围城-存档-'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),10000);status('存档文件已导出，请妥善保存');
+    a.href=url;a.download='枪火集结-存档-'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),10000);status('存档文件已导出，请妥善保存');
   }catch(e){error(e);}};
   $('saveImport').onclick=()=>$('saveImportFile').click();
   $('saveImportFile').onchange=()=>action($('saveImport'),async()=>{
     const file=$('saveImportFile').files?.[0];$('saveImportFile').value='';if(!file)return;
     if(file.size>65536)throw Error('存档文件过大，请选择游戏导出的 JSON 备份');
     let envelope;try{envelope=JSON.parse(await file.text());}catch{throw Error('存档文件格式错误，未改动当前进度');}
-    const d=envelope.game==='gunfire-assembly'&&envelope.schema===1?envelope.save:null;
+    // 0.4.1 前本作品的备份文件标的是 starship-defense（两款还没分家），老玩家的备份必须还能导入；
+    // 内容本身还要过 game.validate，光靠标识放行不了不兼容的档。
+    const d=(envelope.game==='gunfire-assembly'||envelope.game==='starship-defense')&&envelope.schema===1?envelope.save:null;
     if(!game.validate(d))throw Error('存档内容不兼容，未改动当前进度');
     game.confirm('导入 '+describe(d)+'？当前本地进度会先备份。','确认导入',()=>{try{restore(d);}catch(e){error(e);}});
   });

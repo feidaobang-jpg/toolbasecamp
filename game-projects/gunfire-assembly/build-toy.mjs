@@ -72,8 +72,13 @@ export function build() {
   fs.writeFileSync(indexPath, text, 'utf-8');
   const compatPath = path.join(PACKAGE, 'game.compat.js');
   const bundled = fs.readFileSync(compatPath, 'utf-8');
-  if (!bundled.includes('"sst_save_"')) throw new Error('Rebuild game.compat.js before packaging: save namespace not found');
-  fs.writeFileSync(compatPath, bundled.replaceAll('"sst_save_"', '"toy-gunfire-v1-sst_save_"'), 'utf-8');
+  if (!bundled.includes('"gfs_save_"')) throw new Error('Rebuild game.compat.js before packaging: save namespace not found');
+  // Toy 的云档与本地档都按作品隔离，键名换不换都不影响别的游戏；这里把 gfs_save_ 落回
+  // 0.4.1 之前一直在用的 toy-gunfire-v1-sst_save_，是为了已发布的 Toy 玩家更新后本地进度、
+  // 自动备份和「这一成绩已提交」状态一字不变。网站上两款分家靠的是源码里的 gfs_save_，不是这里。
+  const packaged = bundled.replaceAll('"gfs_save_"', '"toy-gunfire-v1-sst_save_"');
+  if (packaged === bundled) throw new Error('Save prefix rewrite did not apply');
+  fs.writeFileSync(compatPath, packaged, 'utf-8');
   const archive = path.join(OUT, 'feidao-gunfire.zip');
   if (fs.existsSync(archive)) fs.rmSync(archive);
   writeZip(archive, RUNTIME_FILES.map(name => [name, fs.readFileSync(path.join(PACKAGE, name))]));
