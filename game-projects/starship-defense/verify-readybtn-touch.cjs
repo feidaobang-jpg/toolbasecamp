@@ -13,12 +13,18 @@ const server=http.createServer((req,res)=>{
 });
 const geo=page=>page.evaluate(()=>{
   const stage=document.getElementById('stage'),btn=document.getElementById('readyBtn'),chip=document.getElementById('saveHealth');
-  const b=btn.getBoundingClientRect(),s=stage.getBoundingClientRect();
+  // 开战按钮现在住在 #prepDock 里，offsetTop 只到备战条；改成按舞台逻辑坐标量（竖屏旋转时换轴）
+  const sr=stage.getBoundingClientRect(),r=btn.getBoundingClientRect();
+  const sw=stage.offsetWidth,sh=stage.offsetHeight;
+  const m=new DOMMatrix(getComputedStyle(stage).transform);
+  const rotated=Math.abs(m.b)>Math.abs(m.a)+.01,s=Math.hypot(m.a,m.b)||1;
+  const scx=sr.x+sr.width/2,scy=sr.y+sr.height/2;
+  const top=rotated?sh/2-(r.right-scx)/s:(r.y-sr.y)/s,h=rotated?r.width/s:r.height/s;
   const cs=getComputedStyle(chip);
-  const cx=b.left+b.width/2,cy=b.top+b.height/2;
+  const cx=r.left+r.width/2,cy=r.top+r.height/2;
   const hit=document.elementFromPoint(cx,cy);
   return {state:__gameQA.Game.state,rotated:stage.style.transform.includes('rotate'),
-    btn:{topInStage:btn.offsetTop,h:btn.offsetHeight,stageH:stage.clientHeight,stageW:stage.clientWidth},
+    btn:{topInStage:top,h,stageH:sh,stageW:sw},
     chip:{faded:chip.classList.contains('faded'),opacity:cs.opacity,pe:cs.pointerEvents,top:chip.offsetTop},
     hitIsBtn:!!(hit&&hit.closest&&hit.closest('#readyBtn')),hitId:hit&&hit.id};
 });

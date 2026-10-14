@@ -1,0 +1,2000 @@
+{
+ "desktop": {
+  "viewport": "1280x720",
+  "device": "desktop",
+  "stage": {
+   "logicalWidth": 960,
+   "logicalHeight": 540,
+   "rotated": false,
+   "scale": 1.333
+  },
+  "touchModeClass": false,
+  "state": "prep",
+  "boxes": {
+   "hudTop": {
+    "x": 10,
+    "y": 7.5,
+    "width": 246,
+    "height": 128.4,
+    "z": "auto",
+    "pe": "none"
+   },
+   "radar": {
+    "x": 10,
+    "y": 141.9,
+    "width": 112,
+    "height": 112,
+    "z": "auto",
+    "pe": "none"
+   },
+   "hudLeft": {
+    "x": 10,
+    "y": 7.5,
+    "width": 246,
+    "height": 337.4,
+    "z": "25",
+    "pe": "none"
+   },
+   "hudRight": {
+    "x": 721.6,
+    "y": 57.5,
+    "width": 230.9,
+    "height": 239.5,
+    "z": "auto",
+    "pe": "none"
+   },
+   "saveHealth": {
+    "x": 10,
+    "y": 310.9,
+    "width": 246,
+    "height": 34,
+    "z": "auto",
+    "pe": "auto"
+   },
+   "hint": {
+    "x": 10,
+    "y": 259.9,
+    "width": 246,
+    "height": 45,
+    "z": "auto",
+    "pe": "none"
+   },
+   "interactHint": {
+    "x": 371.3,
+    "y": 409,
+    "width": 217.5,
+    "height": 27,
+    "z": "15",
+    "pe": "none"
+   },
+   "readyBtn": {
+    "x": 374.4,
+    "y": 11.5,
+    "width": 211.2,
+    "height": 39,
+    "z": "auto",
+    "pe": "auto"
+   },
+   "prepDock": {
+    "x": 351.4,
+    "y": 11.5,
+    "width": 257.2,
+    "height": 89,
+    "z": "30",
+    "pe": "none"
+   },
+   "prepDockRow": {
+    "x": 351.4,
+    "y": 56.5,
+    "width": 257.2,
+    "height": 44,
+    "z": "auto",
+    "pe": "auto"
+   },
+   "weaponBar": {
+    "x": 451.4,
+    "y": 485,
+    "width": 57.3,
+    "height": 31,
+    "z": "auto",
+    "pe": "auto"
+   },
+   "keysHint": {
+    "x": 19.8,
+    "y": 517.4,
+    "width": 920.4,
+    "height": 18.6,
+    "z": "auto",
+    "pe": "none"
+   },
+   "msg": {
+    "x": 273.8,
+    "y": 129.6,
+    "width": 412.4,
+    "height": 31,
+    "z": "12",
+    "pe": "none"
+   },
+   "cornerTools": {
+    "x": 716.5,
+    "y": 7.5,
+    "width": 236,
+    "height": 44,
+    "z": "38",
+    "pe": "auto"
+   },
+   "tacticsButton": {
+    "x": 351.4,
+    "y": 56.5,
+    "width": 163.2,
+    "height": 44,
+    "z": "auto",
+    "pe": "auto"
+   },
+   "squadOrderBtn": {
+    "x": 520.6,
+    "y": 56.5,
+    "width": 88,
+    "height": 44,
+    "z": "auto",
+    "pe": "auto"
+   },
+   "webTools": {
+    "x": 733.6,
+    "y": 227,
+    "width": 206.9,
+    "height": 61,
+    "z": "35",
+    "pe": "auto"
+   },
+   "joyBase": {
+    "x": 0,
+    "y": 0,
+    "width": 0,
+    "height": 0,
+    "z": "auto",
+    "pe": "auto"
+   },
+   "vJ": {
+    "x": 0,
+    "y": 0,
+    "width": 0,
+    "height": 0,
+    "z": "auto",
+    "pe": "auto"
+   },
+   "vSPRINT": {
+    "x": 0,
+    "y": 0,
+    "width": 0,
+    "height": 0,
+    "z": "auto",
+    "pe": "auto"
+   }
+  },
+  "overlaps": [],
+  "centerBlocks": [
+   {
+    "id": "hudLeft",
+    "blockedPct": 7.39,
+    "box": [
+     10,
+     7.5,
+     246,
+     337.4
+    ]
+   },
+   {
+    "id": "prepDock",
+    "blockedPct": 5.64,
+    "box": [
+     351.4,
+     11.5,
+     257.2,
+     89
+    ]
+   },
+   {
+    "id": "msg",
+    "blockedPct": 4.89,
+    "box": [
+     273.8,
+     129.6,
+     412.4,
+     31
+    ]
+   },
+   {
+    "id": "prepDockRow",
+    "blockedPct": 4.33,
+    "box": [
+     351.4,
+     56.5,
+     257.2,
+     44
+    ]
+   },
+   {
+    "id": "hudRight",
+    "blockedPct": 4.25,
+    "box": [
+     721.6,
+     57.5,
+     230.9,
+     239.5
+    ]
+   },
+   {
+    "id": "tacticsButton",
+    "blockedPct": 2.75,
+    "box": [
+     351.4,
+     56.5,
+     163.2,
+     44
+    ]
+   },
+   {
+    "id": "hudTop",
+    "blockedPct": 2.27,
+    "box": [
+     10,
+     7.5,
+     246,
+     128.4
+    ]
+   },
+   {
+    "id": "interactHint",
+    "blockedPct": 2.25,
+    "box": [
+     371.3,
+     409,
+     217.5,
+     27
+    ]
+   },
+   {
+    "id": "squadOrderBtn",
+    "blockedPct": 1.48,
+    "box": [
+     520.6,
+     56.5,
+     88,
+     44
+    ]
+   },
+   {
+    "id": "hint",
+    "blockedPct": 1.1,
+    "box": [
+     10,
+     259.9,
+     246,
+     45
+    ]
+   },
+   {
+    "id": "saveHealth",
+    "blockedPct": 0.83,
+    "box": [
+     10,
+     310.9,
+     246,
+     34
+    ]
+   },
+   {
+    "id": "webTools",
+    "blockedPct": 0.8,
+    "box": [
+     733.6,
+     227,
+     206.9,
+     61
+    ]
+   },
+   {
+    "id": "readyBtn",
+    "blockedPct": 0.59,
+    "box": [
+     374.4,
+     11.5,
+     211.2,
+     39
+    ]
+   },
+   {
+    "id": "weaponBar",
+    "blockedPct": 0.26,
+    "box": [
+     451.4,
+     485,
+     57.3,
+     31
+    ]
+   },
+   {
+    "id": "cornerTools",
+    "blockedPct": 0.16,
+    "box": [
+     716.5,
+     7.5,
+     236,
+     44
+    ]
+   }
+  ],
+  "errors": [],
+  "taps": [
+   {
+    "id": "tacticsButton",
+    "hit": "tacticsButton",
+    "tapped": true
+   },
+   {
+    "id": "squadOrderBtn",
+    "hit": "squadOrderBtn",
+    "tapped": true
+   },
+   {
+    "id": "readyBtn",
+    "hit": "readyBtn",
+    "tapped": true
+   }
+  ]
+ },
+ "desktopShort": {
+  "viewport": "1366x625",
+  "device": "desktop",
+  "stage": {
+   "logicalWidth": 960,
+   "logicalHeight": 439,
+   "rotated": false,
+   "scale": 1.423
+  },
+  "touchModeClass": false,
+  "state": "prep",
+  "boxes": {
+   "hudTop": {
+    "x": 10,
+    "y": 7,
+    "width": 246,
+    "height": 128.4,
+    "z": "auto",
+    "pe": "none"
+   },
+   "radar": {
+    "x": 10,
+    "y": 141.4,
+    "width": 112,
+    "height": 112,
+    "z": "auto",
+    "pe": "none"
+   },
+   "hudLeft": {
+    "x": 10,
+    "y": 7,
+    "width": 246,
+    "height": 337.4,
+    "z": "25",
+    "pe": "none"
+   },
+   "hudRight": {
+    "x": 722.1,
+    "y": 56.6,
+    "width": 230.9,
+    "height": 239.5,
+    "z": "auto",
+    "pe": "none"
+   },
+   "saveHealth": {
+    "x": 10,
+    "y": 310.4,
+    "width": 246,
+    "height": 34,
+    "z": "auto",
+    "pe": "auto"
+   },
+   "hint": {
+    "x": 10,
+    "y": 259.4,
+    "width": 246,
+    "height": 45,
+    "z": "auto",
+    "pe": "none"
+   },
+   "interactHint": {
+    "x": 371.2,
+    "y": 308.2,
+    "width": 217.5,
+    "height": 27,
+    "z": "15",
+    "pe": "none"
+   },
+   "readyBtn": {
+    "x": 374.4,
+    "y": 11,
+    "width": 211.2,
+    "height": 39,
+    "z": "auto",
+    "pe": "auto"
+   },
+   "prepDock": {
+    "x": 351.4,
+    "y": 11,
+    "width": 257.2,
+    "height": 89,
+    "z": "30",
+    "pe": "none"
+   },
+   "prepDockRow": {
+    "x": 351.4,
+    "y": 56,
+    "width": 257.2,
+    "height": 44,
+    "z": "auto",
+    "pe": "auto"
+   },
+   "weaponBar": {
+    "x": 451.4,
+    "y": 384.2,
+    "width": 57.3,
+    "height": 31,
+    "z": "auto",
+    "pe": "auto"
+   },
+   "keysHint": {
+    "x": 19.8,
+    "y": 416.6,
+    "width": 920.4,
+    "height": 18.6,
+    "z": "auto",
+    "pe": "none"
+   },
+   "msg": {
+    "x": 273.8,
+    "y": 105.4,
+    "width": 412.4,
+    "height": 31,
+    "z": "12",
+    "pe": "none"
+   },
+   "cornerTools": {
+    "x": 717.8,
+    "y": 7,
+    "width": 235.2,
+    "height": 44,
+    "z": "38",
+    "pe": "auto"
+   },
+   "tacticsButton": {
+    "x": 351.4,
+    "y": 56,
+    "width": 163.2,
+    "height": 44,
+    "z": "auto",
+    "pe": "auto"
+   },
+   "squadOrderBtn": {
+    "x": 520.6,
+    "y": 56,
+    "width": 88,
+    "height": 44,
+    "z": "auto",
+    "pe": "auto"
+   },
+   "webTools": {
+    "x": 734.1,
+    "y": 226.1,
+    "width": 206.9,
+    "height": 61,
+    "z": "35",
+    "pe": "auto"
+   },
+   "joyBase": {
+    "x": 0,
+    "y": 0,
+    "width": 0,
+    "height": 0,
+    "z": "auto",
+    "pe": "auto"
+   },
+   "vJ": {
+    "x": 0,
+    "y": 0,
+    "width": 0,
+    "height": 0,
+    "z": "auto",
+    "pe": "auto"
+   },
+   "vSPRINT": {
+    "x": 0,
+    "y": 0,
+    "width": 0,
+    "height": 0,
+    "z": "auto",
+    "pe": "auto"
+   }
+  },
+  "overlaps": [],
+  "centerBlocks": [
+   {
+    "id": "hudLeft",
+    "blockedPct": 9.32,
+    "box": [
+     10,
+     7,
+     246,
+     337.4
+    ]
+   },
+   {
+    "id": "prepDock",
+    "blockedPct": 7.86,
+    "box": [
+     351.4,
+     11,
+     257.2,
+     89
+    ]
+   },
+   {
+    "id": "msg",
+    "blockedPct": 6.02,
+    "box": [
+     273.8,
+     105.4,
+     412.4,
+     31
+    ]
+   },
+   {
+    "id": "prepDockRow",
+    "blockedPct": 5.33,
+    "box": [
+     351.4,
+     56,
+     257.2,
+     44
+    ]
+   },
+   {
+    "id": "hudRight",
+    "blockedPct": 5.18,
+    "box": [
+     722.1,
+     56.6,
+     230.9,
+     239.5
+    ]
+   },
+   {
+    "id": "tacticsButton",
+    "blockedPct": 3.38,
+    "box": [
+     351.4,
+     56,
+     163.2,
+     44
+    ]
+   },
+   {
+    "id": "hudTop",
+    "blockedPct": 3.02,
+    "box": [
+     10,
+     7,
+     246,
+     128.4
+    ]
+   },
+   {
+    "id": "interactHint",
+    "blockedPct": 2.76,
+    "box": [
+     371.2,
+     308.2,
+     217.5,
+     27
+    ]
+   },
+   {
+    "id": "squadOrderBtn",
+    "blockedPct": 1.82,
+    "box": [
+     520.6,
+     56,
+     88,
+     44
+    ]
+   },
+   {
+    "id": "readyBtn",
+    "blockedPct": 1.48,
+    "box": [
+     374.4,
+     11,
+     211.2,
+     39
+    ]
+   },
+   {
+    "id": "hint",
+    "blockedPct": 1.36,
+    "box": [
+     10,
+     259.4,
+     246,
+     45
+    ]
+   },
+   {
+    "id": "saveHealth",
+    "blockedPct": 1.02,
+    "box": [
+     10,
+     310.4,
+     246,
+     34
+    ]
+   },
+   {
+    "id": "webTools",
+    "blockedPct": 0.97,
+    "box": [
+     734.1,
+     226.1,
+     206.9,
+     61
+    ]
+   },
+   {
+    "id": "weaponBar",
+    "blockedPct": 0.53,
+    "box": [
+     451.4,
+     384.2,
+     57.3,
+     31
+    ]
+   },
+   {
+    "id": "cornerTools",
+    "blockedPct": 0.38,
+    "box": [
+     717.8,
+     7,
+     235.2,
+     44
+    ]
+   }
+  ],
+  "errors": [],
+  "taps": [
+   {
+    "id": "tacticsButton",
+    "hit": "tacticsButton",
+    "tapped": true
+   },
+   {
+    "id": "squadOrderBtn",
+    "hit": "squadOrderBtn",
+    "tapped": true
+   },
+   {
+    "id": "readyBtn",
+    "hit": "readyBtn",
+    "tapped": true
+   }
+  ]
+ },
+ "phone": {
+  "viewport": "844x390",
+  "device": "touch",
+  "stage": {
+   "logicalWidth": 960,
+   "logicalHeight": 444,
+   "rotated": false,
+   "scale": 0.879
+  },
+  "touchModeClass": true,
+  "state": "prep",
+  "boxes": {
+   "hudTop": {
+    "x": 10,
+    "y": 11.4,
+    "width": 212,
+    "height": 72,
+    "z": "auto",
+    "pe": "none"
+   },
+   "radar": {
+    "x": 10,
+    "y": 87.4,
+    "width": 84,
+    "height": 84,
+    "z": "auto",
+    "pe": "none"
+   },
+   "hudLeft": {
+    "x": 10,
+    "y": 11.4,
+    "width": 212,
+    "height": 236,
+    "z": "25",
+    "pe": "none"
+   },
+   "hudRight": {
+    "x": 798.6,
+    "y": 70.5,
+    "width": 150,
+    "height": 142.4,
+    "z": "auto",
+    "pe": "none"
+   },
+   "saveHealth": {
+    "x": 10,
+    "y": 219.4,
+    "width": 212,
+    "height": 28,
+    "z": "auto",
+    "pe": "auto"
+   },
+   "hint": {
+    "x": 10,
+    "y": 175.4,
+    "width": 212,
+    "height": 40,
+    "z": "auto",
+    "pe": "none"
+   },
+   "interactHint": {
+    "x": 371.2,
+    "y": 244.6,
+    "width": 217.5,
+    "height": 27,
+    "z": "15",
+    "pe": "none"
+   },
+   "readyBtn": {
+    "x": 360.2,
+    "y": 345.6,
+    "width": 239.5,
+    "height": 46,
+    "z": "auto",
+    "pe": "auto"
+   },
+   "prepDock": {
+    "x": 351.4,
+    "y": 289.5,
+    "width": 257.2,
+    "height": 102,
+    "z": "30",
+    "pe": "none"
+   },
+   "prepDockRow": {
+    "x": 351.4,
+    "y": 289.5,
+    "width": 257.2,
+    "height": 50,
+    "z": "auto",
+    "pe": "auto"
+   },
+   "weaponBar": {
+    "x": 232,
+    "y": 70.5,
+    "width": 554.6,
+    "height": 44,
+    "z": "26",
+    "pe": "auto"
+   },
+   "msg": {
+    "x": 308.2,
+    "y": 133.1,
+    "width": 343.7,
+    "height": 26,
+    "z": "12",
+    "pe": "none"
+   },
+   "cornerTools": {
+    "x": 876.6,
+    "y": 11.4,
+    "width": 72,
+    "height": 50,
+    "z": "38",
+    "pe": "auto"
+   },
+   "tacticsButton": {
+    "x": 351.4,
+    "y": 289.5,
+    "width": 163.2,
+    "height": 50,
+    "z": "auto",
+    "pe": "auto"
+   },
+   "squadOrderBtn": {
+    "x": 520.6,
+    "y": 289.5,
+    "width": 88,
+    "height": 50,
+    "z": "auto",
+    "pe": "auto"
+   },
+   "webTools": {
+    "x": 807.6,
+    "y": 205.9,
+    "width": 132,
+    "height": 0,
+    "z": "35",
+    "pe": "auto"
+   },
+   "joyBase": {
+    "x": 45.5,
+    "y": 278.7,
+    "width": 124,
+    "height": 124,
+    "z": "auto",
+    "pe": "auto"
+   },
+   "vJ": {
+    "x": 720.5,
+    "y": 344.7,
+    "width": 58,
+    "height": 58,
+    "z": "auto",
+    "pe": "auto"
+   },
+   "vSPRINT": {
+    "x": 720.5,
+    "y": 208.7,
+    "width": 58,
+    "height": 58,
+    "z": "auto",
+    "pe": "auto"
+   }
+  },
+  "overlaps": [],
+  "centerBlocks": [
+   {
+    "id": "prepDock",
+    "blockedPct": 12.21,
+    "box": [
+     351.4,
+     289.5,
+     257.2,
+     102
+    ]
+   },
+   {
+    "id": "weaponBar",
+    "blockedPct": 10.98,
+    "box": [
+     232,
+     70.5,
+     554.6,
+     44
+    ]
+   },
+   {
+    "id": "prepDockRow",
+    "blockedPct": 5.99,
+    "box": [
+     351.4,
+     289.5,
+     257.2,
+     50
+    ]
+   },
+   {
+    "id": "readyBtn",
+    "blockedPct": 5.13,
+    "box": [
+     360.2,
+     345.6,
+     239.5,
+     46
+    ]
+   },
+   {
+    "id": "msg",
+    "blockedPct": 4.16,
+    "box": [
+     308.2,
+     133.1,
+     343.7,
+     26
+    ]
+   },
+   {
+    "id": "tacticsButton",
+    "blockedPct": 3.8,
+    "box": [
+     351.4,
+     289.5,
+     163.2,
+     50
+    ]
+   },
+   {
+    "id": "hudLeft",
+    "blockedPct": 2.96,
+    "box": [
+     10,
+     11.4,
+     212,
+     236
+    ]
+   },
+   {
+    "id": "interactHint",
+    "blockedPct": 2.73,
+    "box": [
+     371.2,
+     244.6,
+     217.5,
+     27
+    ]
+   },
+   {
+    "id": "squadOrderBtn",
+    "blockedPct": 2.05,
+    "box": [
+     520.6,
+     289.5,
+     88,
+     50
+    ]
+   },
+   {
+    "id": "vJ",
+    "blockedPct": 1.28,
+    "box": [
+     720.5,
+     344.7,
+     58,
+     58
+    ]
+   },
+   {
+    "id": "vSPRINT",
+    "blockedPct": 1.28,
+    "box": [
+     720.5,
+     208.7,
+     58,
+     58
+    ]
+   },
+   {
+    "id": "hudTop",
+    "blockedPct": 0.67,
+    "box": [
+     10,
+     11.4,
+     212,
+     72
+    ]
+   },
+   {
+    "id": "hint",
+    "blockedPct": 0.56,
+    "box": [
+     10,
+     175.4,
+     212,
+     40
+    ]
+   },
+   {
+    "id": "saveHealth",
+    "blockedPct": 0.39,
+    "box": [
+     10,
+     219.4,
+     212,
+     28
+    ]
+   }
+  ],
+  "errors": [],
+  "taps": [
+   {
+    "id": "tacticsButton",
+    "hit": "tacticsButton",
+    "tapped": true
+   },
+   {
+    "id": "squadOrderBtn",
+    "hit": "squadOrderBtn",
+    "tapped": true
+   },
+   {
+    "id": "readyBtn",
+    "hit": "readyBtn",
+    "tapped": true
+   }
+  ]
+ },
+ "phoneCompact": {
+  "viewport": "800x390",
+  "device": "touch",
+  "stage": {
+   "logicalWidth": 960,
+   "logicalHeight": 468,
+   "rotated": false,
+   "scale": 0.833
+  },
+  "touchModeClass": true,
+  "state": "prep",
+  "boxes": {
+   "hudTop": {
+    "x": 10,
+    "y": 12,
+    "width": 212,
+    "height": 72,
+    "z": "auto",
+    "pe": "none"
+   },
+   "radar": {
+    "x": 10,
+    "y": 88,
+    "width": 84,
+    "height": 84,
+    "z": "auto",
+    "pe": "none"
+   },
+   "hudLeft": {
+    "x": 10,
+    "y": 12,
+    "width": 212,
+    "height": 236,
+    "z": "25",
+    "pe": "none"
+   },
+   "hudRight": {
+    "x": 798,
+    "y": 74.4,
+    "width": 150,
+    "height": 142.4,
+    "z": "auto",
+    "pe": "none"
+   },
+   "saveHealth": {
+    "x": 10,
+    "y": 220,
+    "width": 212,
+    "height": 28,
+    "z": "auto",
+    "pe": "auto"
+   },
+   "hint": {
+    "x": 10,
+    "y": 176,
+    "width": 212,
+    "height": 40,
+    "z": "auto",
+    "pe": "none"
+   },
+   "interactHint": {
+    "x": 371.3,
+    "y": 269,
+    "width": 217.5,
+    "height": 27,
+    "z": "15",
+    "pe": "none"
+   },
+   "readyBtn": {
+    "x": 360.2,
+    "y": 370,
+    "width": 239.5,
+    "height": 46,
+    "z": "auto",
+    "pe": "auto"
+   },
+   "prepDock": {
+    "x": 351.4,
+    "y": 311.2,
+    "width": 257.2,
+    "height": 104.8,
+    "z": "30",
+    "pe": "none"
+   },
+   "prepDockRow": {
+    "x": 351.4,
+    "y": 311.2,
+    "width": 257.2,
+    "height": 52.8,
+    "z": "auto",
+    "pe": "auto"
+   },
+   "weaponBar": {
+    "x": 232,
+    "y": 74.4,
+    "width": 554,
+    "height": 44,
+    "z": "26",
+    "pe": "auto"
+   },
+   "msg": {
+    "x": 308.2,
+    "y": 140.4,
+    "width": 343.7,
+    "height": 26,
+    "z": "12",
+    "pe": "none"
+   },
+   "cornerTools": {
+    "x": 876,
+    "y": 12,
+    "width": 72,
+    "height": 52.8,
+    "z": "38",
+    "pe": "auto"
+   },
+   "tacticsButton": {
+    "x": 351.4,
+    "y": 311.2,
+    "width": 163.2,
+    "height": 52.8,
+    "z": "auto",
+    "pe": "auto"
+   },
+   "squadOrderBtn": {
+    "x": 520.6,
+    "y": 311.2,
+    "width": 88,
+    "height": 52.8,
+    "z": "auto",
+    "pe": "auto"
+   },
+   "webTools": {
+    "x": 807,
+    "y": 209.8,
+    "width": 132,
+    "height": 0,
+    "z": "35",
+    "pe": "auto"
+   },
+   "joyBase": {
+    "x": 48,
+    "y": 300.8,
+    "width": 124,
+    "height": 124,
+    "z": "auto",
+    "pe": "auto"
+   },
+   "vJ": {
+    "x": 718,
+    "y": 366.8,
+    "width": 58,
+    "height": 58,
+    "z": "auto",
+    "pe": "auto"
+   },
+   "vSPRINT": {
+    "x": 718,
+    "y": 230.8,
+    "width": 58,
+    "height": 58,
+    "z": "auto",
+    "pe": "auto"
+   }
+  },
+  "overlaps": [],
+  "centerBlocks": [
+   {
+    "id": "prepDock",
+    "blockedPct": 11.9,
+    "box": [
+     351.4,
+     311.2,
+     257.2,
+     104.8
+    ]
+   },
+   {
+    "id": "weaponBar",
+    "blockedPct": 10.42,
+    "box": [
+     232,
+     74.4,
+     554,
+     44
+    ]
+   },
+   {
+    "id": "prepDockRow",
+    "blockedPct": 6,
+    "box": [
+     351.4,
+     311.2,
+     257.2,
+     52.8
+    ]
+   },
+   {
+    "id": "readyBtn",
+    "blockedPct": 4.87,
+    "box": [
+     360.2,
+     370,
+     239.5,
+     46
+    ]
+   },
+   {
+    "id": "msg",
+    "blockedPct": 3.95,
+    "box": [
+     308.2,
+     140.4,
+     343.7,
+     26
+    ]
+   },
+   {
+    "id": "tacticsButton",
+    "blockedPct": 3.81,
+    "box": [
+     351.4,
+     311.2,
+     163.2,
+     52.8
+    ]
+   },
+   {
+    "id": "hudLeft",
+    "blockedPct": 2.79,
+    "box": [
+     10,
+     12,
+     212,
+     236
+    ]
+   },
+   {
+    "id": "interactHint",
+    "blockedPct": 2.59,
+    "box": [
+     371.3,
+     269,
+     217.5,
+     27
+    ]
+   },
+   {
+    "id": "squadOrderBtn",
+    "blockedPct": 2.05,
+    "box": [
+     520.6,
+     311.2,
+     88,
+     52.8
+    ]
+   },
+   {
+    "id": "vJ",
+    "blockedPct": 1.28,
+    "box": [
+     718,
+     366.8,
+     58,
+     58
+    ]
+   },
+   {
+    "id": "vSPRINT",
+    "blockedPct": 1.28,
+    "box": [
+     718,
+     230.8,
+     58,
+     58
+    ]
+   },
+   {
+    "id": "hudTop",
+    "blockedPct": 0.62,
+    "box": [
+     10,
+     12,
+     212,
+     72
+    ]
+   },
+   {
+    "id": "hint",
+    "blockedPct": 0.53,
+    "box": [
+     10,
+     176,
+     212,
+     40
+    ]
+   },
+   {
+    "id": "saveHealth",
+    "blockedPct": 0.37,
+    "box": [
+     10,
+     220,
+     212,
+     28
+    ]
+   }
+  ],
+  "errors": [],
+  "taps": [
+   {
+    "id": "tacticsButton",
+    "hit": "tacticsButton",
+    "tapped": true
+   },
+   {
+    "id": "squadOrderBtn",
+    "hit": "squadOrderBtn",
+    "tapped": true
+   },
+   {
+    "id": "readyBtn",
+    "hit": "readyBtn",
+    "tapped": true
+   }
+  ]
+ },
+ "phonePortrait": {
+  "viewport": "390x844",
+  "device": "touch",
+  "stage": {
+   "logicalWidth": 960,
+   "logicalHeight": 444,
+   "rotated": true,
+   "scale": 0.879
+  },
+  "touchModeClass": true,
+  "state": "prep",
+  "boxes": {
+   "hudTop": {
+    "x": 10,
+    "y": 11.6,
+    "width": 212,
+    "height": 72,
+    "z": "auto",
+    "pe": "none"
+   },
+   "radar": {
+    "x": 10,
+    "y": 87.6,
+    "width": 84,
+    "height": 84,
+    "z": "auto",
+    "pe": "none"
+   },
+   "hudLeft": {
+    "x": 10,
+    "y": 11.6,
+    "width": 212,
+    "height": 236,
+    "z": "25",
+    "pe": "none"
+   },
+   "hudRight": {
+    "x": 798.6,
+    "y": 70.7,
+    "width": 150,
+    "height": 142.4,
+    "z": "auto",
+    "pe": "none"
+   },
+   "saveHealth": {
+    "x": 10,
+    "y": 219.6,
+    "width": 212,
+    "height": 28,
+    "z": "auto",
+    "pe": "auto"
+   },
+   "hint": {
+    "x": 10,
+    "y": 175.6,
+    "width": 212,
+    "height": 40,
+    "z": "auto",
+    "pe": "none"
+   },
+   "interactHint": {
+    "x": 371.3,
+    "y": 244.8,
+    "width": 217.5,
+    "height": 27,
+    "z": "15",
+    "pe": "none"
+   },
+   "readyBtn": {
+    "x": 360.2,
+    "y": 345.8,
+    "width": 239.5,
+    "height": 46,
+    "z": "auto",
+    "pe": "auto"
+   },
+   "prepDock": {
+    "x": 351.4,
+    "y": 289.7,
+    "width": 257.2,
+    "height": 102,
+    "z": "30",
+    "pe": "none"
+   },
+   "prepDockRow": {
+    "x": 351.4,
+    "y": 289.7,
+    "width": 257.2,
+    "height": 50,
+    "z": "auto",
+    "pe": "auto"
+   },
+   "weaponBar": {
+    "x": 232,
+    "y": 70.7,
+    "width": 554.6,
+    "height": 44,
+    "z": "26",
+    "pe": "auto"
+   },
+   "msg": {
+    "x": 308.2,
+    "y": 133.3,
+    "width": 343.7,
+    "height": 26,
+    "z": "12",
+    "pe": "none"
+   },
+   "cornerTools": {
+    "x": 876.6,
+    "y": 11.6,
+    "width": 72,
+    "height": 50,
+    "z": "38",
+    "pe": "auto"
+   },
+   "tacticsButton": {
+    "x": 351.4,
+    "y": 289.7,
+    "width": 163.2,
+    "height": 50,
+    "z": "auto",
+    "pe": "auto"
+   },
+   "squadOrderBtn": {
+    "x": 520.6,
+    "y": 289.7,
+    "width": 88,
+    "height": 50,
+    "z": "auto",
+    "pe": "auto"
+   },
+   "webTools": {
+    "x": 807.6,
+    "y": 206.1,
+    "width": 132,
+    "height": 0,
+    "z": "35",
+    "pe": "auto"
+   },
+   "joyBase": {
+    "x": 45.5,
+    "y": 278.9,
+    "width": 124,
+    "height": 124,
+    "z": "auto",
+    "pe": "auto"
+   },
+   "vJ": {
+    "x": 720.5,
+    "y": 344.9,
+    "width": 58,
+    "height": 58,
+    "z": "auto",
+    "pe": "auto"
+   },
+   "vSPRINT": {
+    "x": 720.5,
+    "y": 208.9,
+    "width": 58,
+    "height": 58,
+    "z": "auto",
+    "pe": "auto"
+   }
+  },
+  "overlaps": [],
+  "centerBlocks": [
+   {
+    "id": "prepDock",
+    "blockedPct": 12.21,
+    "box": [
+     351.4,
+     289.7,
+     257.2,
+     102
+    ]
+   },
+   {
+    "id": "weaponBar",
+    "blockedPct": 10.98,
+    "box": [
+     232,
+     70.7,
+     554.6,
+     44
+    ]
+   },
+   {
+    "id": "prepDockRow",
+    "blockedPct": 5.99,
+    "box": [
+     351.4,
+     289.7,
+     257.2,
+     50
+    ]
+   },
+   {
+    "id": "readyBtn",
+    "blockedPct": 5.13,
+    "box": [
+     360.2,
+     345.8,
+     239.5,
+     46
+    ]
+   },
+   {
+    "id": "msg",
+    "blockedPct": 4.16,
+    "box": [
+     308.2,
+     133.3,
+     343.7,
+     26
+    ]
+   },
+   {
+    "id": "tacticsButton",
+    "blockedPct": 3.8,
+    "box": [
+     351.4,
+     289.7,
+     163.2,
+     50
+    ]
+   },
+   {
+    "id": "hudLeft",
+    "blockedPct": 2.96,
+    "box": [
+     10,
+     11.6,
+     212,
+     236
+    ]
+   },
+   {
+    "id": "interactHint",
+    "blockedPct": 2.73,
+    "box": [
+     371.3,
+     244.8,
+     217.5,
+     27
+    ]
+   },
+   {
+    "id": "squadOrderBtn",
+    "blockedPct": 2.05,
+    "box": [
+     520.6,
+     289.7,
+     88,
+     50
+    ]
+   },
+   {
+    "id": "vJ",
+    "blockedPct": 1.28,
+    "box": [
+     720.5,
+     344.9,
+     58,
+     58
+    ]
+   },
+   {
+    "id": "vSPRINT",
+    "blockedPct": 1.28,
+    "box": [
+     720.5,
+     208.9,
+     58,
+     58
+    ]
+   },
+   {
+    "id": "hudTop",
+    "blockedPct": 0.67,
+    "box": [
+     10,
+     11.6,
+     212,
+     72
+    ]
+   },
+   {
+    "id": "hint",
+    "blockedPct": 0.56,
+    "box": [
+     10,
+     175.6,
+     212,
+     40
+    ]
+   },
+   {
+    "id": "saveHealth",
+    "blockedPct": 0.39,
+    "box": [
+     10,
+     219.6,
+     212,
+     28
+    ]
+   }
+  ],
+  "errors": [],
+  "taps": [
+   {
+    "id": "tacticsButton",
+    "hit": "tacticsButton",
+    "tapped": true
+   },
+   {
+    "id": "squadOrderBtn",
+    "hit": "squadOrderBtn",
+    "tapped": true
+   },
+   {
+    "id": "readyBtn",
+    "hit": "readyBtn",
+    "tapped": true
+   }
+  ]
+ },
+ "phoneTall": {
+  "viewport": "740x360",
+  "device": "touch",
+  "stage": {
+   "logicalWidth": 960,
+   "logicalHeight": 467,
+   "rotated": false,
+   "scale": 0.771
+  },
+  "touchModeClass": true,
+  "state": "prep",
+  "boxes": {
+   "hudTop": {
+    "x": 10,
+    "y": 13,
+    "width": 212,
+    "height": 72,
+    "z": "auto",
+    "pe": "none"
+   },
+   "radar": {
+    "x": 10,
+    "y": 89,
+    "width": 84,
+    "height": 84,
+    "z": "auto",
+    "pe": "none"
+   },
+   "hudLeft": {
+    "x": 10,
+    "y": 13,
+    "width": 212,
+    "height": 236,
+    "z": "25",
+    "pe": "none"
+   },
+   "hudRight": {
+    "x": 797,
+    "y": 80.4,
+    "width": 150,
+    "height": 142.4,
+    "z": "auto",
+    "pe": "none"
+   },
+   "saveHealth": {
+    "x": 10,
+    "y": 221,
+    "width": 212,
+    "height": 28,
+    "z": "auto",
+    "pe": "auto"
+   },
+   "hint": {
+    "x": 10,
+    "y": 177,
+    "width": 212,
+    "height": 40,
+    "z": "auto",
+    "pe": "none"
+   },
+   "interactHint": {
+    "x": 371.3,
+    "y": 268,
+    "width": 217.5,
+    "height": 27,
+    "z": "15",
+    "pe": "none"
+   },
+   "readyBtn": {
+    "x": 360.2,
+    "y": 369,
+    "width": 239.5,
+    "height": 46,
+    "z": "auto",
+    "pe": "auto"
+   },
+   "prepDock": {
+    "x": 351.4,
+    "y": 305.9,
+    "width": 257.2,
+    "height": 109.1,
+    "z": "30",
+    "pe": "none"
+   },
+   "prepDockRow": {
+    "x": 351.4,
+    "y": 305.9,
+    "width": 257.2,
+    "height": 57.1,
+    "z": "auto",
+    "pe": "auto"
+   },
+   "weaponBar": {
+    "x": 232,
+    "y": 80.4,
+    "width": 553,
+    "height": 44,
+    "z": "26",
+    "pe": "auto"
+   },
+   "msg": {
+    "x": 308.2,
+    "y": 140.1,
+    "width": 343.7,
+    "height": 26,
+    "z": "12",
+    "pe": "none"
+   },
+   "cornerTools": {
+    "x": 875,
+    "y": 13,
+    "width": 72,
+    "height": 57.1,
+    "z": "38",
+    "pe": "auto"
+   },
+   "tacticsButton": {
+    "x": 351.4,
+    "y": 305.9,
+    "width": 163.2,
+    "height": 57.1,
+    "z": "auto",
+    "pe": "auto"
+   },
+   "squadOrderBtn": {
+    "x": 520.6,
+    "y": 305.9,
+    "width": 88,
+    "height": 57.1,
+    "z": "auto",
+    "pe": "auto"
+   },
+   "webTools": {
+    "x": 806,
+    "y": 215.8,
+    "width": 132,
+    "height": 0,
+    "z": "35",
+    "pe": "auto"
+   },
+   "joyBase": {
+    "x": 51.9,
+    "y": 296.3,
+    "width": 124,
+    "height": 124,
+    "z": "auto",
+    "pe": "auto"
+   },
+   "vJ": {
+    "x": 714.1,
+    "y": 362.3,
+    "width": 58,
+    "height": 58,
+    "z": "auto",
+    "pe": "auto"
+   },
+   "vSPRINT": {
+    "x": 714.1,
+    "y": 226.3,
+    "width": 58,
+    "height": 58,
+    "z": "auto",
+    "pe": "auto"
+   }
+  },
+  "overlaps": [],
+  "centerBlocks": [
+   {
+    "id": "prepDock",
+    "blockedPct": 12.42,
+    "box": [
+     351.4,
+     305.9,
+     257.2,
+     109.1
+    ]
+   },
+   {
+    "id": "weaponBar",
+    "blockedPct": 10.44,
+    "box": [
+     232,
+     80.4,
+     553,
+     44
+    ]
+   },
+   {
+    "id": "prepDockRow",
+    "blockedPct": 6.5,
+    "box": [
+     351.4,
+     305.9,
+     257.2,
+     57.1
+    ]
+   },
+   {
+    "id": "readyBtn",
+    "blockedPct": 4.88,
+    "box": [
+     360.2,
+     369,
+     239.5,
+     46
+    ]
+   },
+   {
+    "id": "tacticsButton",
+    "blockedPct": 4.12,
+    "box": [
+     351.4,
+     305.9,
+     163.2,
+     57.1
+    ]
+   },
+   {
+    "id": "msg",
+    "blockedPct": 3.95,
+    "box": [
+     308.2,
+     140.1,
+     343.7,
+     26
+    ]
+   },
+   {
+    "id": "hudLeft",
+    "blockedPct": 2.81,
+    "box": [
+     10,
+     13,
+     212,
+     236
+    ]
+   },
+   {
+    "id": "interactHint",
+    "blockedPct": 2.6,
+    "box": [
+     371.3,
+     268,
+     217.5,
+     27
+    ]
+   },
+   {
+    "id": "squadOrderBtn",
+    "blockedPct": 2.22,
+    "box": [
+     520.6,
+     305.9,
+     88,
+     57.1
+    ]
+   },
+   {
+    "id": "vJ",
+    "blockedPct": 1.38,
+    "box": [
+     714.1,
+     362.3,
+     58,
+     58
+    ]
+   },
+   {
+    "id": "vSPRINT",
+    "blockedPct": 1.38,
+    "box": [
+     714.1,
+     226.3,
+     58,
+     58
+    ]
+   },
+   {
+    "id": "hudTop",
+    "blockedPct": 0.63,
+    "box": [
+     10,
+     13,
+     212,
+     72
+    ]
+   },
+   {
+    "id": "hint",
+    "blockedPct": 0.53,
+    "box": [
+     10,
+     177,
+     212,
+     40
+    ]
+   },
+   {
+    "id": "saveHealth",
+    "blockedPct": 0.37,
+    "box": [
+     10,
+     221,
+     212,
+     28
+    ]
+   }
+  ],
+  "errors": [],
+  "taps": [
+   {
+    "id": "tacticsButton",
+    "hit": "tacticsButton",
+    "tapped": true
+   },
+   {
+    "id": "squadOrderBtn",
+    "hit": "squadOrderBtn",
+    "tapped": true
+   },
+   {
+    "id": "readyBtn",
+    "hit": "readyBtn",
+    "tapped": true
+   }
+  ]
+ }
+}
