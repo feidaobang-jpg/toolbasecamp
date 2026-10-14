@@ -665,7 +665,7 @@
     },
     {
       "version": "web-look-keys-v0.38.1",
-      "status": "ready_pending_user_confirmation",
+      "status": "public_verified",
       "classification": "键位变更",
       "recorded_at": "2026-10-14T09:30:00+08:00",
       "summary": "Y/H 抬头低头；医疗 / 兵种支援 / 号令 / 直升机降低默认键 H→N，直升机升高只用 K。",
@@ -674,7 +674,8 @@
         {
           "bvid": "BV14hpL62EZ5",
           "change": "“新增H号令” → “新增N号令”",
-          "status": "pending_user_confirmation"
+          "status": "public_verified",
+          "verified_at": "2026-10-14T09:32:42+08:00"
         }
       ],
       "unaffected": [
@@ -687,7 +688,10 @@
       "record": "releases/web-look-keys-v0.38.1/handoff.json",
       "channels": [
         "bilibili"
-      ]
+      ],
+      "public_verified_at": "2026-10-14T09:32:42+08:00",
+      "user_confirmation": "用户 2026-10-14 在对话里回复“都做吧”",
+      "public_verification_record": "releases/web-look-keys-v0.38.1/bilibili-sync.json"
     }
   ],
   "comment_corrections": [
