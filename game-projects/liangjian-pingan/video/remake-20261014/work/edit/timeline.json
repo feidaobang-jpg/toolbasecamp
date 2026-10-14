@@ -1,0 +1,312 @@
+[
+  {
+    "segment": "01-hook",
+    "source": "full",
+    "source_in": 63.9,
+    "source_out": 69.9,
+    "in_seconds": 0,
+    "duration": 6,
+    "capture_mode": "realtime-automation",
+    "freeze_tail_seconds": 0
+  },
+  {
+    "segment": "01-hook",
+    "source": "full",
+    "source_in": 66.1,
+    "source_out": 69.6,
+    "in_seconds": 6,
+    "duration": 3.5,
+    "capture_mode": "realtime-automation",
+    "freeze_tail_seconds": 0
+  },
+  {
+    "segment": "01-hook",
+    "source": "mg",
+    "source_in": 24,
+    "source_out": 26.03333333333333,
+    "in_seconds": 9.5,
+    "duration": 2.033333333333333,
+    "capture_mode": "realtime-automation",
+    "freeze_tail_seconds": 1.7763568394002505e-15
+  },
+  {
+    "segment": "02-story",
+    "source": "full",
+    "source_in": 0.8,
+    "source_out": 5.8,
+    "in_seconds": 11.533333333333333,
+    "duration": 5,
+    "capture_mode": "realtime-automation",
+    "freeze_tail_seconds": 0
+  },
+  {
+    "segment": "02-story",
+    "source": "full",
+    "source_in": 25,
+    "source_out": 30,
+    "in_seconds": 16.53333333333333,
+    "duration": 5,
+    "capture_mode": "realtime-automation",
+    "freeze_tail_seconds": 0
+  },
+  {
+    "segment": "02-story",
+    "source": "full",
+    "source_in": 55,
+    "source_out": 59.13333333333333,
+    "in_seconds": 21.53333333333333,
+    "duration": 4.133333333333333,
+    "capture_mode": "realtime-automation",
+    "freeze_tail_seconds": 0
+  },
+  {
+    "segment": "03-outside",
+    "source": "full",
+    "source_in": 2,
+    "source_out": 7,
+    "in_seconds": 25.666666666666664,
+    "duration": 5,
+    "capture_mode": "realtime-automation",
+    "freeze_tail_seconds": 0
+  },
+  {
+    "segment": "03-outside",
+    "source": "full",
+    "source_in": 8,
+    "source_out": 13,
+    "in_seconds": 30.666666666666664,
+    "duration": 5,
+    "capture_mode": "realtime-automation",
+    "freeze_tail_seconds": 0
+  },
+  {
+    "segment": "03-outside",
+    "source": "full",
+    "source_in": 14,
+    "source_out": 16.8,
+    "in_seconds": 35.666666666666664,
+    "duration": 2.8000000000000007,
+    "capture_mode": "realtime-automation",
+    "freeze_tail_seconds": 0
+  },
+  {
+    "segment": "04-controls",
+    "source": "full",
+    "source_in": 11,
+    "source_out": 18,
+    "in_seconds": 38.46666666666667,
+    "duration": 7,
+    "capture_mode": "realtime-automation",
+    "freeze_tail_seconds": 0
+  },
+  {
+    "segment": "04-controls",
+    "source": "full",
+    "source_in": 71.5,
+    "source_out": 77.56666666666666,
+    "in_seconds": 45.46666666666667,
+    "duration": 6.066666666666666,
+    "capture_mode": "realtime-automation",
+    "freeze_tail_seconds": 3.552713678800501e-15
+  },
+  {
+    "segment": "05-design",
+    "source": "full",
+    "source_in": 20,
+    "source_out": 32.7,
+    "in_seconds": 51.53333333333333,
+    "duration": 12.7,
+    "capture_mode": "realtime-automation",
+    "freeze_tail_seconds": 0
+  },
+  {
+    "segment": "05b-mg",
+    "source": "mg",
+    "source_in": 20.6,
+    "source_out": 31.5,
+    "in_seconds": 64.23333333333333,
+    "duration": 10.9,
+    "capture_mode": "realtime-automation",
+    "freeze_tail_seconds": 1.7763568394002505e-15
+  },
+  {
+    "segment": "06-escort",
+    "source": "full",
+    "source_in": 27,
+    "source_out": 34,
+    "in_seconds": 75.13333333333334,
+    "duration": 7,
+    "capture_mode": "realtime-automation",
+    "freeze_tail_seconds": 0
+  },
+  {
+    "segment": "06-escort",
+    "source": "full",
+    "source_in": 36,
+    "source_out": 43.46666666666667,
+    "in_seconds": 82.13333333333334,
+    "duration": 7.466666666666667,
+    "capture_mode": "realtime-automation",
+    "freeze_tail_seconds": 0
+  },
+  {
+    "segment": "07-cannon",
+    "source": "full",
+    "source_in": 51.7,
+    "source_out": 56.7,
+    "in_seconds": 89.60000000000001,
+    "duration": 5,
+    "capture_mode": "realtime-automation",
+    "freeze_tail_seconds": 0
+  },
+  {
+    "segment": "07-cannon",
+    "source": "full",
+    "source_in": 56.2,
+    "source_out": 62.2,
+    "in_seconds": 94.60000000000001,
+    "duration": 6,
+    "capture_mode": "realtime-automation",
+    "freeze_tail_seconds": 0
+  },
+  {
+    "segment": "07-cannon",
+    "source": "full",
+    "source_in": 61.8,
+    "source_out": 65.6,
+    "in_seconds": 100.60000000000001,
+    "duration": 3.8000000000000007,
+    "capture_mode": "realtime-automation",
+    "freeze_tail_seconds": 3.552713678800501e-15
+  },
+  {
+    "segment": "08-collapse",
+    "source": "full",
+    "source_in": 64.4,
+    "source_out": 71.0,
+    "in_seconds": 104.4,
+    "duration": 6.6,
+    "capture_mode": "realtime-automation",
+    "freeze_tail_seconds": 5.329070518200751e-15
+  },
+  {
+    "segment": "08-collapse",
+    "source": "full",
+    "source_in": 71,
+    "source_out": 78,
+    "in_seconds": 111.0,
+    "duration": 7,
+    "capture_mode": "realtime-automation",
+    "freeze_tail_seconds": 0
+  },
+  {
+    "segment": "08-collapse",
+    "source": "full",
+    "source_in": 80,
+    "source_out": 80.86666666666667,
+    "in_seconds": 118.0,
+    "duration": 0.8666666666666671,
+    "capture_mode": "realtime-automation",
+    "freeze_tail_seconds": 0
+  },
+  {
+    "segment": "09-street",
+    "source": "street",
+    "source_in": 22,
+    "source_out": 26,
+    "in_seconds": 118.86666666666667,
+    "duration": 4,
+    "capture_mode": "realtime-automation",
+    "freeze_tail_seconds": 0
+  },
+  {
+    "segment": "09-street",
+    "source": "street",
+    "source_in": 30.8,
+    "source_out": 36.8,
+    "in_seconds": 122.86666666666667,
+    "duration": 6,
+    "capture_mode": "realtime-automation",
+    "freeze_tail_seconds": 3.552713678800501e-15
+  },
+  {
+    "segment": "09-street",
+    "source": "street",
+    "source_in": 35,
+    "source_out": 38.8,
+    "in_seconds": 128.86666666666667,
+    "duration": 3.8000000000000007,
+    "capture_mode": "realtime-automation",
+    "freeze_tail_seconds": 3.552713678800501e-15
+  },
+  {
+    "segment": "10-boss",
+    "source": "full",
+    "source_in": 374,
+    "source_out": 380,
+    "in_seconds": 132.66666666666669,
+    "duration": 6,
+    "capture_mode": "realtime-automation",
+    "freeze_tail_seconds": 0
+  },
+  {
+    "segment": "10-boss",
+    "source": "full",
+    "source_in": 396,
+    "source_out": 401,
+    "in_seconds": 138.66666666666669,
+    "duration": 5,
+    "capture_mode": "realtime-automation",
+    "freeze_tail_seconds": 0
+  },
+  {
+    "segment": "10-boss",
+    "source": "full",
+    "source_in": 408,
+    "source_out": 411.6,
+    "in_seconds": 143.66666666666669,
+    "duration": 3.5999999999999996,
+    "capture_mode": "realtime-automation",
+    "freeze_tail_seconds": 0
+  },
+  {
+    "segment": "11-result",
+    "source": "full",
+    "source_in": 426.7,
+    "source_out": 430.09999999999997,
+    "in_seconds": 147.26666666666668,
+    "duration": 3.4,
+    "capture_mode": "realtime-automation",
+    "freeze_tail_seconds": 2.2648549702353193e-14
+  },
+  {
+    "segment": "11-result",
+    "source": "full",
+    "source_in": 387.5,
+    "source_out": 392.3,
+    "in_seconds": 150.66666666666669,
+    "duration": 4.8,
+    "capture_mode": "realtime-automation",
+    "freeze_tail_seconds": 0
+  },
+  {
+    "segment": "11-result",
+    "source": "full",
+    "source_in": 428.5,
+    "source_out": 433.56666666666666,
+    "in_seconds": 155.46666666666667,
+    "duration": 5.066666666666668,
+    "capture_mode": "realtime-automation",
+    "freeze_tail_seconds": 5.329070518200751e-15
+  },
+  {
+    "segment": "12-ending",
+    "source": "full",
+    "source_in": 429.2,
+    "source_out": 436.5682780742645,
+    "in_seconds": 160.53333333333336,
+    "duration": 21.366666666666667,
+    "capture_mode": "realtime-automation",
+    "freeze_tail_seconds": 13.99838859240213
+  }
+]

@@ -1,0 +1,20 @@
+{
+  "task_id": "01a137f4-0430-7731-8313-96ed49bb705f-video01",
+  "phase": "awaiting_user_review",
+  "video_sha256": "eec2db8a7e8172fe12d732496ed9f79fd38ca22739c3e7981a43692ec93f1c9a",
+  "duration_seconds": 181.9,
+  "source_commit": "ce1f9bd1",
+  "artifact_directory": "D:/project/task-artifacts/liangjian-pingan-video-20261014",
+  "approval_event_id": "pingan-video-20261014-review-eec2db8a7e81",
+  "uploaded": false,
+  "account_write_locks_held": false,
+  "own_capture_processes_closed": true,
+  "next_action": "Wait for human approval of this hash, then Bilibili publication, Toy 43022175699968 binding, pinned comment, campaign/rewards quick check and push-stream application; no other platforms.",
+  "runtime_sha256": "ab29299d81d19414e5b88645e380de8fb74ef5084ab55f8292659d115c0b8d81",
+  "cleanup": {
+    "temporary_encodes_removed": true,
+    "own_browser_capture_closed": true,
+    "own_preview_service_stopped": true,
+    "worktree_retained_for_review": true
+  }
+}
