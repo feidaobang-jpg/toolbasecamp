@@ -3065,7 +3065,8 @@ function startPrep(){
   $('readyBtn').classList.remove('hidden');
   showMsg(levelName(),3);
   const tip=Game.level===1?'本章：'+chapterCfg().tip+' · ':'';
-  showHint(tip+keyBindings.label('O')+' 商店 · '+keyBindings.label('L')+' 建造 · '+keyBindings.label('R')+' 开战 · 守住基地');
+  const opening=currentWavePlan();
+  showHint(!Game.testMode&&opening.opening?opening.hint+' · '+keyBindings.label('O')+' 商店 · '+keyBindings.label('L')+' 建造 · '+keyBindings.label('R')+' 开战':tip+keyBindings.label('O')+' 商店 · '+keyBindings.label('L')+' 建造 · '+keyBindings.label('R')+' 开战 · 守住基地');
   if(collected)setTimeout(()=>showMsg('💰 战场金币已自动回收 +'+collected,2),900);
   autoSave();
 }
@@ -3384,7 +3385,7 @@ function placementCheck(kind,x,z,yaw){
   const gold=vsOn()?(versus.seatOf(player)?.gold||0):Game.gold;
   if(!place.free&&!Game.testMode&&gold<cfg.price)return '金币不足（需要 '+cfg.price+'）';
   if(x<WORLD.minX+3||x>WORLD.maxX-3||z<WORLD.minZ+3||z>WORLD.maxZ-3)return '超出地图边界';
-  if(Math.abs(x-gate.pos.x)<7.5&&Math.abs(z-gate.pos.z)<2.4)return '不能堵住城门';
+  if(Math.abs(x-gate.pos.x)<7.5&&Math.abs(z-gate.pos.z)<2.4)return '城门通道要留空：前后移动换位置';
   const pts=kind==='wall'?[-2.4,0,2.4].map(o=>[x+Math.cos(yaw)*o,z-Math.sin(yaw)*o]):[[x,z]];
   const r=kind==='wall'?.75:kind==='bunker'?2.4:1.3;
   for(const [px,pz] of pts){

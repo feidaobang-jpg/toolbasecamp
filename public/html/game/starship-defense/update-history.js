@@ -1,6 +1,9 @@
 // Player-facing notes travel with the same game package; no network or account required.
-export const GAME_VERSION='0.38.4';
+export const GAME_VERSION='0.38.5';
 export const UPDATE_HISTORY=[
+  {version:'0.38.5',date:'2026-10-14',title:'开局布防提示更清楚',changes:[
+    '前五波准备阶段直接提示本波布防方向，例如首次雇佣队友、西侧增援、酸液虫与防空；详细虫潮仍可点战术部署查看。',
+    '城门通道不能建造时提示前后移动换位置；保留防堵门规则、战斗数值和原有进度。']},
   {version:'0.38.4',date:'2026-10-14',title:'界面不再糊住战场',changes:[
     '战场中间清空：状态、小地图、本章提示与保存状态合并成左侧一竖栏，金币/分数/小队等读数留在右上，顶部一条放枪槽，底部一条放「战术部署 · 队友 · 开战」。',
     '手机上的「战术部署」「队友」按钮改进底部备战条，真正点得到（旧版被转视角的整屏拖拽层吞掉触摸）；0.38.2 的「右栏挪到动作键左侧」由本次布局取代。',

@@ -775,6 +775,13 @@
       ],
       "summary": "折叠入口与成熟度标记说明，原视频与当前试玩分开描述",
       "record": "game-projects/site-games/releases/mode-focus-20261014/bilibili-entrances.json"
+    },
+    {
+      "version": "web-opening-hints-v0.38.5",
+      "status": "pending_release",
+      "decision": "deferred_accumulating",
+      "summary": "前五波准备阶段布防建议直接可见，建造位置提示更清楚；数值不变",
+      "record": "releases/web-opening-hints-v0.38.5/handoff.json"
     }
   ],
   "comment_corrections": [
