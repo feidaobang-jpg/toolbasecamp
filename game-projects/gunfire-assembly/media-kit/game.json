@@ -2,7 +2,7 @@
   "game_id": "gunfire-assembly",
   "name": "枪火集结",
   "engine": "Three.js r152",
-  "current_version": "web-pingan-story-v0.2.3",
+  "current_version": "web-mode-focus-v0.2.4",
   "entrypoint": "public/html/game/gunfire-assembly/index.html",
   "release_intent": "web_demo",
   "development_model": "Composer",
@@ -14,7 +14,7 @@
   "notes": "从虫潮围城拆出的枪战模式大厅；首版含战地据点与抗战战役。网站与 Toy 已上线；相关视频简介已公开核验含枪火集结入口。 2026-10-14：抗战战役第三章平安县城整章换成重做版（pingan/ 独立页面），记录见 game-projects/liangjian-pingan/media-kit/。",
   "toy_public_verified_at": "2026-10-12T14:43:00.000Z",
   "bilibili_descriptions_verified_at": "2026-10-12T17:10:00+08:00",
-  "handoff": "releases/web-pingan-story-v0.2.3/handoff.json",
+  "handoff": "releases/web-mode-focus-v0.2.4/handoff.json",
   "channel_baseline_history": [
     {
       "at": "2026-10-12T12:31:12.320579+00:00",

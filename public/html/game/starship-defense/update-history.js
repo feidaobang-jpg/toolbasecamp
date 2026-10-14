@@ -1,6 +1,9 @@
 // Player-facing notes travel with the same game package; no network or account required.
-export const GAME_VERSION='0.38.2';
+export const GAME_VERSION='0.38.3';
 export const UPDATE_HISTORY=[
+  {version:'0.38.3',date:'2026-10-14',title:'聚焦基地防守，整理试玩入口',changes:[
+    '基地防守保留默认入口；银行、房车、虫族与酸液围场收进「其他玩法 · 测试版」，说明尚未完成本轮打磨。',
+    '自由测试移到「更多」。保留已有玩法、存档、继续游戏与文件备份；先打磨主模式，暂缓扩展新模式。']},
   {version:'0.38.2',date:'2026-10-14',title:'母皇不易秒杀 · 触屏右侧栏避让',changes:[
     '虫巢母皇出生后短时无敌、血量提高，避免刚进老巢就被激光几秒打掉；出洞中的虫子同样不受伤。',
     '手机触屏右下九键不再挡住右侧队友/战术/存档按钮，整栏挪到动作键左侧。',

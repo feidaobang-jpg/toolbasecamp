@@ -4342,6 +4342,7 @@ menuShell=mountMenuShell(stage);
 installMenuScroll(stage,toStage);
 for(const button of stage.querySelectorAll('[data-menu-panel]'))button.onclick=e=>{
   syncPauseOptions();$('btnSaveMenu').hidden=Game.state==='menu';
+  $('btnTest').hidden=Game.state!=='menu';
   openInfoPanel(button.dataset.menuPanel,e.currentTarget);
 };
 for(const button of stage.querySelectorAll('[data-menu-close]'))button.onclick=closeInfoPanel;
