@@ -40,4 +40,11 @@ const previous=(await otherToy.read()).current;await otherToy.write({...advanced
 assert.equal(JSON.parse(values[toy.deviceKey]).save.level,4,'other device cannot erase this device backup');assert((await toy.read()).backups.some(r=>r.save.level===4));
 await assert.rejects(toy.write(advanced,previous.revision),SaveConflict);
 values.chongchao_auto_v2='corrupt';await assert.rejects(toy.write(advanced,null),/格式异常/);assert.equal(values.chongchao_auto_v2,'corrupt','malformed cloud is preserved');
-console.log(JSON.stringify({passed:true,cases:26,checks:'legacy local slots, corrupt/missing recovery, quota failure, cloud dedup, cross-device conflicts, stale approval, old cloud retention, sandbox and network isolation, Toy per-device snapshots'}));
+// 心跳自动存档：notify=false 仍写盘并更新状态文字，但不回调 onStatus，因此不弹屏幕提示；异常写入仍提示。
+let statusCalls=0;const quiet=new LocalSaveStore({storage:memory(),prefix:'q_',validate,onStatus:()=>statusCalls++});
+assert(quiet.write('q_auto',initial,{rotate:false}));assert.equal(statusCalls,1,'默认写入仍要提示');
+assert(quiet.write('q_auto',advanced,{rotate:false,notify:false}));assert.equal(statusCalls,1,'静默写入不得再提示');
+assert.equal(quiet.status.startsWith('本地已保存'),true,'静默写入仍要更新状态文字，供存档面板读取');
+assert.deepEqual(quiet.read('q_auto'),advanced,'静默写入照常落盘');
+assert.equal(quiet.write('q_auto',{bad:1},{rotate:false,notify:false}),false);assert.equal(statusCalls,2,'保存失败即使在静默调用里也必须提示');
+console.log(JSON.stringify({passed:true,cases:27,checks:'legacy local slots, corrupt/missing recovery, quota failure, cloud dedup, cross-device conflicts, stale approval, old cloud retention, sandbox and network isolation, Toy per-device snapshots, silent heartbeat save keeps notifying on failure'}));

@@ -19,7 +19,8 @@ export class LocalSaveStore {
     }
     return null;
   }
-  write(key,d,{rotate=key===this.prefix+'auto'}={}){
+  // notify=false 用于每 30 秒的心跳自动存档：照常写盘并更新状态文字，但不把提示胶囊顶回屏幕上。
+  write(key,d,{rotate=key===this.prefix+'auto',notify=true}={}){
     if(!this.validate(d)){this.message('存档数据异常，未覆盖已有进度',false);return false;}
     try{
       if(!this.storage)throw Error('storage unavailable');
@@ -31,7 +32,9 @@ export class LocalSaveStore {
       }
       this.storage.setItem(key,raw);
       if(this.storage.getItem(key)!==raw)throw Error('storage verification failed');
-      this.message('本地已保存 · '+new Date(d.time).toLocaleTimeString('zh-CN',{timeZone:'Asia/Shanghai'}));return true;
+      this.status='本地已保存 · '+new Date(d.time).toLocaleTimeString('zh-CN',{timeZone:'Asia/Shanghai'});
+      if(notify)this.message(this.status);
+      return true;
     }catch{this.message('本地保存失败：存储不可用或空间不足，请立即导出备份',false);return false;}
   }
   backup(d){return !d||this.write(this.prefix+'cloud-backup',d,{rotate:false});}

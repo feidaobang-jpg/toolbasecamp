@@ -3566,13 +3566,14 @@ function migrateWeapons(d){
   return {weapons,cur,lv,refund,note};
 }
 function savePrefix(){return SAVE_PREFIX+(Game.testMode?'sandbox_':'');}
-function autoSave(){
+// opts.notify===false：静默写盘（每 30 秒心跳自动存档），不刷新屏幕上的保存提示胶囊。
+function autoSave(opts){const notify=opts?.notify!==false;
   if(zergOn())return; // 虫族模式是独立玩法，不覆盖战役自动档
   if(rvOn()){rvBreakout.save();return;}
   if(coopDriver?.config||vsOn()||versusBackup||Game.state==='menu'||Game.state==='over')return;
   const d=saveData();
   if(Game.testMode){try{localStorage.setItem(savePrefix()+'auto',JSON.stringify(d));}catch{showMsg('本地保存失败，请导出普通进度备份',3);}return;}
-  saveStore.write(SAVE_PREFIX+'auto',d);platformSave?.checkpoint(d);
+  saveStore.write(SAVE_PREFIX+'auto',d,{notify});platformSave?.checkpoint(d);
 }
 // 新局保留前一局，不让初始进度覆盖已有战役。
 function hasProgress(d){return !!(d&&!d.testMode&&(d.loop>1||d.chapter>1||d.level>1||d.gold>400||(d.weapons||[]).length>1||(d.vehiclesOwned||[]).length||d.squadCount));}
@@ -4173,7 +4174,8 @@ function loop(){
     if(Game.state==='battle')updWave(dt);
     AudioSys.bgm(dt,Game.state==='battle');
     updHUD(dt);
-    if(!Game.testMode&&(saveTimer-=dt)<=0){saveTimer=30;autoSave();}
+    // 心跳存档静默写盘：不弹提示，只在玩家可感知的节点（买兵/建塔/过关/手动存档）提示
+    if(!Game.testMode&&(saveTimer-=dt)<=0){saveTimer=30;autoSave({notify:false});}
   }else if(Game.state==='menu'){
     // 主菜单背景旋转镜头
     camYaw+=dt*.1;
