@@ -340,24 +340,17 @@ button::before,button::after{content:none!important}
 #vZ.aiming{background:#8b7948;color:#fff;outline:2px solid #ffdc86}
 #stage.versus-mode #msg{max-width:72%;font-size:18px;white-space:normal;text-align:center;background:#172725b8;border-radius:8px;padding:8px 12px}
 #stage.versus-mode .vs-clock small{font-size:9px}
-#stage.versus-mode.touch-mode,#stage.resistance-mode.touch-mode{--bf-size:max(58px,var(--corner-height));--bf-fire:max(76px,calc(var(--corner-height) + 18px));--bf-step:calc(var(--bf-size) + 10px)}
-#stage.versus-mode.touch-mode #touchUI .vbtn:not(#vC):not(#vP):not(#vJ),#stage.resistance-mode.touch-mode #touchUI .vbtn:not(#vC):not(#vP):not(#vJ){width:var(--bf-size);height:var(--bf-size);line-height:var(--bf-size)}
+#stage.versus-mode.touch-mode{--bf-size:max(58px,var(--corner-height));--bf-fire:max(76px,calc(var(--corner-height) + 18px));--bf-step:calc(var(--bf-size) + 10px)}
+#stage.versus-mode.touch-mode #touchUI .vbtn:not(#vC):not(#vP):not(#vJ){width:var(--bf-size);height:var(--bf-size);line-height:var(--bf-size)}
 /* 吃鸡式：射击键更大，换弹/举枪贴在射击键左侧列 */
-#stage.versus-mode.touch-mode #vJ,#stage.resistance-mode.touch-mode #vJ{width:var(--bf-fire);height:var(--bf-fire);line-height:var(--bf-fire);font-size:16px;right:calc(var(--touch-right) + var(--bf-step));bottom:var(--touch-bottom);z-index:28;border-radius:50%}
+#stage.versus-mode.touch-mode #vJ{width:var(--bf-fire);height:var(--bf-fire);line-height:var(--bf-fire);font-size:16px;right:calc(var(--touch-right) + var(--bf-step));bottom:var(--touch-bottom);z-index:28;border-radius:50%}
 #stage.versus-mode.touch-mode #vU,#stage.versus-mode.touch-mode #vSPRINT{right:calc(var(--touch-right) + var(--bf-step) * 2 + (var(--bf-fire) - var(--bf-size)))}
 #stage.versus-mode.touch-mode #vK,#stage.versus-mode.touch-mode #vI,#stage.versus-mode.touch-mode #vH{right:calc(var(--touch-right) + var(--bf-step))}
-#stage.versus-mode.touch-mode #vR,#stage.versus-mode.touch-mode #vZ,#stage.resistance-mode.touch-mode #vR,#stage.resistance-mode.touch-mode #vZ{right:calc(var(--touch-right) + var(--bf-step) * 2 + (var(--bf-fire) - var(--bf-size)));width:var(--bf-size);height:var(--bf-size);line-height:var(--bf-size)}
-#stage.versus-mode.touch-mode #vR,#stage.resistance-mode.touch-mode #vR{bottom:var(--touch-bottom)}
-#stage.versus-mode.touch-mode #vZ,#stage.resistance-mode.touch-mode #vZ{bottom:calc(var(--touch-bottom) + var(--bf-step))}
+#stage.versus-mode.touch-mode #vR,#stage.versus-mode.touch-mode #vZ{right:calc(var(--touch-right) + var(--bf-step) * 2 + (var(--bf-fire) - var(--bf-size)));width:var(--bf-size);height:var(--bf-size);line-height:var(--bf-size)}
+#stage.versus-mode.touch-mode #vR{bottom:var(--touch-bottom)}
+#stage.versus-mode.touch-mode #vZ{bottom:calc(var(--touch-bottom) + var(--bf-step))}
 #stage.versus-mode.touch-mode #vU,#stage.versus-mode.touch-mode #vI,#stage.versus-mode.touch-mode #vO{bottom:calc(var(--touch-bottom) + var(--bf-step))}
 #stage.versus-mode.touch-mode #vSPRINT,#stage.versus-mode.touch-mode #vH,#stage.versus-mode.touch-mode #vX{bottom:calc(var(--touch-bottom) + var(--bf-step) * 2)}
-#stage.resistance-mode.touch-mode #vU,#stage.resistance-mode.touch-mode #vI,#stage.resistance-mode.touch-mode #vO,#stage.resistance-mode.touch-mode #vL,#stage.resistance-mode.touch-mode #vH{display:block!important}
-#stage.resistance-mode.touch-mode #vK,#stage.resistance-mode.touch-mode #vI,#stage.resistance-mode.touch-mode #vH{right:calc(var(--touch-right) + var(--bf-step) * 2 + (var(--bf-fire) - var(--bf-size)))}
-#stage.resistance-mode.touch-mode #vU{right:calc(var(--touch-right) + var(--bf-step) * 3 + (var(--bf-fire) - var(--bf-size)));bottom:calc(var(--touch-bottom) + var(--bf-step))}
-#stage.resistance-mode.touch-mode #vO,#stage.resistance-mode.touch-mode #vL{right:calc(var(--touch-right) + var(--bf-step) * 3 + (var(--bf-fire) - var(--bf-size)))}
-#stage.resistance-mode.touch-mode #vL{bottom:var(--touch-bottom)}
-#stage.resistance-mode.touch-mode #vO{bottom:calc(var(--touch-bottom) + var(--bf-step) * 2)}
-#stage.resistance-mode.touch-mode #vH{bottom:calc(var(--touch-bottom) + var(--bf-step) * 2)}
 #vR.need-reload,#vL.need-reload{outline:3px solid #ffdc86;animation:reloadPulse .7s ease infinite}
 @keyframes reloadPulse{50%{filter:brightness(1.4)}}
 #stage.versus-mode.touch-mode #vsPanel{right:calc(var(--touch-right) + var(--bf-step) * 2 + var(--bf-fire) + 12px);max-width:55%;max-height:calc(100% - 70px)}
@@ -549,16 +542,12 @@ html,body{overscroll-behavior:none}
   <div id="menuMain" class="overlay menu gunfire-lobby" data-gunfire-lobby="1">
     <header class="mainHeader"><h1>枪火集结</h1><span id="gameVersion" aria-label="当前游戏版本"></span></header>
     <p class="subtitle">枪战模式大厅</p>
-    <p class="small lobbyLead">推荐先玩亮剑战役重做版：苍云岭抓舌头、两发炮弹端指挥部，平安县城操炮攻城；越肩 / 第一人称射击、接管机枪。</p>
+    <p class="small lobbyLead">推荐先玩抗战战役（亮剑三章）：苍云岭两发炮弹端指挥部，李家坡挖交通壕、三千六百颗手榴弹砸进环形工事，平安县城操炮攻城；越肩 / 第一人称射击、接管机枪。</p>
     <section aria-label="模式列表">
       <div class="lobbyGrid" id="lobbyModes">
         <button type="button" class="lobbyCard featured" id="btnPingan">
-          <strong>亮剑战役 · 重做版</strong>
-          <span>推荐体验 · 苍云岭、平安县城两章，从第一章进，菜单里可换章、继续进度</span>
-        </button>
-        <button type="button" class="lobbyCard" id="btnResistance">
-          <strong>抗战战役 · 章节选择</strong>
-          <span>苍云岭、平安县城已重做；李家坡为早期体验</span>
+          <strong>抗战战役 · 亮剑三章</strong>
+          <span>推荐体验 · 苍云岭、李家坡、平安县城三章全部重做，进去后在菜单里选章、继续进度</span>
         </button>
       </div>
       <details id="earlyGunfire"><summary tabindex="0">其他玩法 · 早期体验</summary><button type="button" class="lobbyCard" id="btnVersus"><strong>战地模式 · 据点争夺</strong><span>尚未完成本轮打磨 · 可电脑 / 好友对战</span></button></details>
@@ -608,8 +597,8 @@ html,body{overscroll-behavior:none}
   <section id="helpPanel" class="panel hidden infoPanel" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
     <header class="infoHeader"><h3 id="helpTitle">❔ 玩法说明</h3><button id="helpClose" class="closeX" aria-label="关闭玩法说明">×</button></header>
     <div class="small helpText" tabindex="0" role="region" aria-label="玩法内容">
-      <p>《枪火集结》推荐先玩「亮剑战役 · 重做版」（苍云岭、平安县城两章），可从大厅直接进入章节菜单。抗战战役另有李家坡一章早期体验；战地据点争夺收在「其他玩法 · 早期体验」中。早期内容尚未完成本轮打磨，原有进度保留。</p>
-      <p>操作基调：手动瞄准、有限弹匣、空仓须手动换弹、举枪。步行战地/抗战固定偏第一人称枪感；具体键位进入模式后可看模式说明，也可在「操作设置」改键。</p>
+      <p>《枪火集结》推荐先玩「抗战战役 · 亮剑三章」（苍云岭、李家坡、平安县城，全部重做），可从大厅直接进入章节菜单；战地据点争夺收在「其他玩法 · 早期体验」中。早期内容尚未完成本轮打磨，原有进度保留。</p>
+      <p>操作基调：手动瞄准、有限弹匣、空仓须手动换弹、举枪。战地步行固定偏第一人称枪感，抗战战役是越肩第三人称 / 第一人称两个视角；具体键位进入模式后可看模式说明，也可在「操作设置」改键。</p>
       <p class="desktop-help">电脑通用：WASD 移动，鼠标/拖动或 Q/E 转视角，J/左键射击，Z/右键举枪，R 手动换弹（打空不会自动装填），U 手雷，N 医疗，Y / H 抬头低头，C 切换视角，Esc/P 暂停。</p>
       <p class="touch-help">手机对照吃鸡习惯：左下摇杆移动，屏幕空白处拖动瞄准；按住右侧大红「射击」可一边开火一边拖枪；「举枪」精瞄，「换弹」空仓必点；跳跃/手雷/互动在射击键旁。</p>
       <p class="touch-help">手机通用：左下摇杆移动，空白处拖动瞄准，右侧射击/跳跃/互动等；右上可切换视角与打开菜单。</p>
@@ -762,7 +751,7 @@ html,body{overscroll-behavior:none}
   </div>
 </div>
 <script src="./boot.js?v=mobile12"></script>
-<script defer src="./game.compat.js?v=cangyunling-030" onerror="window.__ccBootError('游戏资源下载失败')"></script>
+<script defer src="./game.compat.js?v=lijiapo-040" onerror="window.__ccBootError('游戏资源下载失败')"></script>
 <script src="../../../js/game/thumb-preview.js"></script>
 <script type="module">
 // 内联自 /js/game/landscape-typing.js：Toy/TapTap 包不含站点共享目录，外链模块会缺失

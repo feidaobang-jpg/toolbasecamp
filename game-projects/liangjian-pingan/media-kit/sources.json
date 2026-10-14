@@ -69,5 +69,21 @@
   "source_type": "procedural",
   "tool": "Claude Opus 5.5 编写的程序化低模",
   "notes": "原创造型与布局；没有使用电视剧画面或演员肖像"
+ },
+ {
+  "id": "voice-lijiapo",
+  "use": "李家坡 19 句喊话",
+  "runtime": "public/html/game/gunfire-assembly/liangjian/assets/voice/ljp_*.mp3",
+  "source_type": "third-party-unlicensed",
+  "tool": "ffmpeg 截取电视剧《亮剑》第 3、4 集原声（B站 BV19T421k7HA、BV1er421M7Ys）",
+  "notes": "用户 2026-10-14 同意下载使用；未取得授权；来源与时间点见 assets/voice.json 的 lijiapo"
+ },
+ {
+  "id": "lijiapo-world",
+  "use": "李家坡场景（山坡地形、交通壕、碉堡、环形工事、指挥所）、人物（山崎、孔捷）、铁锹",
+  "runtime": "public/html/game/gunfire-assembly/liangjian/js/chapters/lijiapo-world.js、js/models.js",
+  "source_type": "procedural",
+  "tool": "Claude Opus 5.5 编写的程序化低模",
+  "notes": "原创造型与布局；没有使用电视剧画面或演员肖像"
  }
 ]

@@ -111,24 +111,33 @@ export class Fx {
     this.burst(big ? 26 : 12, () => { const a = rand(TAU), sp = rand(2, big ? 13 : 8); this.spawn({ x, y: y + 0.3, z, vx: Math.cos(a) * sp, vy: rand(3, big ? 14 : 9), vz: Math.sin(a) * sp, life: rand(0.4, 0.9), s0: rand(0.25, 0.5), s1: 0, g: 16, c0: 0xffd27a, c1: 0xb8401a }); });
     this.burst(big ? 16 : 8, () => this.spawn({ x: x + rand(-r * 0.4, r * 0.4), y: y + rand(0.2, 1.2), z: z + rand(-r * 0.4, r * 0.4), vx: rand(-1.5, 1.5), vy: rand(1.5, 4.5), vz: rand(-1.5, 1.5), life: rand(1.2, 2.6), s0: rand(0.8, 1.3), s1: rand(2.4, big ? 4.6 : 3.2), drag: 1.2, c0: 0x3a342e, c1: 0x9a948c, spin: rand(-0.8, 0.8), soft: true }));
     this.burst(big ? 14 : 7, () => { const a = rand(TAU), sp = rand(3, 9); this.spawn({ x, y: y + 0.2, z, vx: Math.cos(a) * sp, vy: rand(4, 10), vz: Math.sin(a) * sp, life: rand(0.8, 1.6), s0: rand(0.12, 0.3), s1: 0.1, g: 22, bounce: 0.3, c0: 0x6d5a3e }); });
-    if (y < 0.6) { const s = this.scorch[this.scorchI++ % this.scorch.length]; s.visible = true; s.position.set(x, 0.03, z); s.scale.setScalar(r * 0.42); }
+    const gy = this.hgt ? this.hgt(x, z) : 0;
+    if (y - gy < 0.6) { const s = this.scorch[this.scorchI++ % this.scorch.length]; s.visible = true; s.position.set(x, gy + 0.03, z); s.scale.setScalar(r * 0.42); this.tilt(s, x, z); }
   }
 
+  // 有地形的章节：平放的圈、盘按脚下坡面倾斜（平地章节不动）
+  tilt(m, x, z) {
+    if (!this.hgt) return;
+    const h = this.hgt, dx = (h(x + 0.6, z) - h(x - 0.6, z)) / 1.2, dz = (h(x, z + 0.6) - h(x, z - 0.6)) / 1.2;
+    m.rotation.set(-Math.atan(dz), 0, Math.atan(dx));
+  }
   ring(x, y, z, r, dur, color = 0xffffff, mode = 1) {
     const k = this.rings.find((q) => !q.m.visible) || this.rings[0];
-    k.m.visible = true; k.m.position.set(x, y, z); k.m.material.color.set(color);
+    k.m.visible = true; k.m.position.set(x, y, z); k.m.material.color.set(color); this.tilt(k.m, x, z);
     k.t = 0; k.d = dur; k.r = r; k.mode = mode;   // mode 1：向外扩散；mode 2：预警（向内收缩）
     return k;
   }
   // 地面预警：红色圆盘逐渐填满，结束时由调用方触发爆炸
-  warn(x, z, r, dur, color = 0xff3b2a) {
+  warn(x, z, r, dur, color = 0xff3b2a, y = this.hgt ? this.hgt(x, z) : 0) {
     const k = this.discs.find((q) => !q.m.visible) || this.discs[0];
-    k.m.visible = true; k.m.position.set(x, 0.05, z); k.m.material.color.set(color); k.t = 0; k.d = dur; k.r = r;
-    this.ring(x, 0.07, z, r, dur, color, 2);
+    k.m.visible = true; k.m.position.set(x, y + 0.05, z); k.m.material.color.set(color); k.t = 0; k.d = dur; k.r = r; this.tilt(k.m, x, z);
+    this.ring(x, y + 0.07, z, r, dur, color, 2);
   }
-  strip(x, z, yaw, len, width, dur) {
+  strip(x, z, yaw, len, width, dur, y = this.hgt ? this.hgt(x, z) : 0) {
     const k = this.strips.find((q) => !q.m.visible) || this.strips[0];
-    k.m.visible = true; k.m.position.set(x, 0.06, z); k.m.rotation.y = yaw; k.m.scale.set(width, 1, len); k.t = 0; k.d = dur;
+    // 坡上：预警条沿着朝向的坡度抬起或压低
+    const pitch = this.hgt ? Math.atan2(this.hgt(x - Math.sin(yaw) * len, z - Math.cos(yaw) * len) - y, len) : 0;
+    k.m.visible = true; k.m.position.set(x, y + 0.06, z); k.m.rotation.set(pitch, yaw, 0, 'YXZ'); k.m.scale.set(width, 1, len); k.t = 0; k.d = dur;
     return k;
   }
 
@@ -153,7 +162,8 @@ export class Fx {
       p.vy -= p.g * dt;
       if (p.drag) { const k = Math.max(0, 1 - p.drag * dt); p.vx *= k; p.vz *= k; p.vy *= (p.g ? 1 : k); }
       p.x += p.vx * dt; p.y += p.vy * dt; p.z += p.vz * dt;
-      if (p.y < 0.05 && p.vy < 0) { if (p.bounce) { p.y = 0.05; p.vy = -p.vy * p.bounce; p.vx *= 0.6; p.vz *= 0.6; } else if (p.g) { p.y = 0.05; p.vy = 0; p.vx = 0; p.vz = 0; } }
+      const fl = this.hgt && (p.g || p.bounce) ? this.hgt(p.x, p.z) + 0.05 : 0.05;
+      if (p.y < fl && p.vy < 0) { if (p.bounce) { p.y = fl; p.vy = -p.vy * p.bounce; p.vx *= 0.6; p.vz *= 0.6; } else if (p.g) { p.y = fl; p.vy = 0; p.vx = 0; p.vz = 0; } }
       p.rx += p.spin * dt; p.ry += p.spin * 0.7 * dt;
       const t = p.life / p.max;
       // 烟团先胀大，最后三成寿命缩回去，看起来像散掉

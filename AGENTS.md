@@ -194,17 +194,17 @@ Toy 自动同步的既有操作授权保留，改为**实时**节奏（用户202
 - 这两个模式不读取也不改写玩家保存的瞄准方式、射击方式和战役视角偏好。联机战地由房主按客人的朝向、俯仰和镜头距离还原准星，只用服务端已放行的输入字段。
 - 实现与验收见 `game-projects/starship-defense/media-kit/releases/web-fps-rules-v0.34.0/notes.md`，回归用 `verify-fps-rules.cjs` 与 `verify-fps-rules-online.cjs`。
 
-## 枪火集结 · 亮剑战役是重做版（苍云岭、平安县城；用户2026-10-14）
+## 枪火集结 · 亮剑战役是重做版（三章；用户2026-10-14）
 
-抗战战役按原作顺序是第一章苍云岭、第二章李家坡、第三章平安县城。苍云岭和平安县城已整章换成重做版，放在同包内的「亮剑战役」页面；李家坡还是 `resistance-campaign.js` 里的旧版，等用户试玩苍云岭后再重做。旧的「骑兵连 · 冲锋突围」章节已按用户选择删除（2026-10-14，枪火集结 0.3.0），不要加回。不要把重做版改回旧实现，也不要按上一节的“步行固定第一人称、不用鼠标锁定”去“纠正”它们。
+抗战战役按原作顺序是第一章苍云岭、第二章李家坡、第三章平安县城，三章都已整章换成重做版，放在同包内的「亮剑战役」页面。枪火集结 0.4.0 起旧的抗战战役（`resistance-campaign.js`、`resistance-ui.js`、`resistance-assets.js`、章节选择、旧李家坡）已删除，大厅只留「抗战战役 · 亮剑三章」一个入口（`#btnPingan`）直达 `liangjian/index.html`。旧的「骑兵连 · 冲锋突围」章节也已按用户选择删除。不要把重做版改回旧实现、不要加回旧章节选择，也不要按上一节的“步行固定第一人称、不用鼠标锁定”去“纠正”它们。
 
-- 位置：`public/html/game/gunfire-assembly/liangjian/`，`?ch=cangyunling` / `?ch=pingan` 选章，菜单里也能换章（换章重新载入）。引擎 `js/game.js` 与章节 `js/chapters/<章>*.js` 拆开，章节差异走 `game.js` 末尾的“章节钩子”。存档前缀 `lj_campaign_v1_`：设置共用，`cp_<章>`、`best_<章>`、`ending_<章>` 按章分开，第一次打开时搬旧的 `lj_pingan_v1_`。旧地址 `pingan/index.html` 只剩跳转页。
-- 枪火集结 `resistance-campaign.js` 的 `start()` 对标了 `remake` 的章节（第一、三章）跳到 `./liangjian/index.html?ch=<章>`；存档 schema 2，读到 schema 1 旧存档时换算（旧李家坡→第二章、旧骑兵连→苍云岭、旧第三章→平安县城）。重做版主菜单有“返回大厅”回到 `../index.html`。
-- 操作按 game-maker `references/shooter-controls.md`：越肩第三人称 + 第一人称两个视角、手动瞄准带轻度吸附、可跳跃；J 开火、K 跳、U 手榴弹、I 互动（上炮 / 接管机枪 / 抓俘虏 / 离开，F 为别名）、O / Z 开镜、R 换弹、Q/E 与 Y/H 转视角；亮剑 L（鼠标手 V）、骑兵连 N（鼠标手 X）每章都有。电脑端默认鼠标接管（锁定），被拒绝时自动退回按住拖动。打掉机枪手后阵地机枪可以接管。
-- 苍云岭（v0.6.0，用户 2026-10-14 选定）：坚守山头（转移进度）→ 抓舌头（枪打倒不死、炸死换人）→ 送炮前出五百米（望远镜、楚云飞）→ 两发炮弹（亲手瞄、没有落点预览、带往右约五米的风偏、柱子报偏差）→ 任何一发打中＝原作突围，两发都偏＝坂田 Boss 后突围；结局存 `ending_cangyunling`。平安县城（v0.5.0 / 枪火集结 0.2.3）：城楼秀芹过场与双结局（`ending_pingan`），飘屏弹幕已按用户选择删除，不要加回。
-- 原声：两章喊话都截自电视剧《亮剑》（用户同意下载 B站片段使用，未取得授权；来源见 `game-projects/liangjian-pingan/media-kit/assets/voice.json`）。语音清单 `liangjian/assets/voice/index.json` 按章节分组，每章只加载自己那一组。下载新片段前先列出 BV、时长、大小与用途给用户确认。不要把原声换回合成，除非用户要求或 Toy 因此退回。
+- 位置：`public/html/game/gunfire-assembly/liangjian/`，`?ch=cangyunling|lijiapo|pingan` 选章，不带参数落在上次玩的章节（新玩家第一章），菜单里也能换章（换章重新载入）。引擎 `js/game.js` 与章节 `js/chapters/<章>*.js` 拆开，章节差异走 `game.js` 末尾的“章节钩子”（含地形 `world.hgt`、`setLight`、`heroCover` / `allyCover`）。存档前缀 `lj_campaign_v1_`：设置共用，`cp_<章>`、`best_<章>`、`ending_<章>` 按章分开，第一次打开时搬旧的 `lj_pingan_v1_`。旧地址 `pingan/index.html` 只剩跳转页。重做版主菜单有“返回大厅”回到 `../index.html`。
+- 网站上枪火集结和虫潮围城同域，`chongchao-resistance-checkpoint-v1` 是虫潮抗战的存档键；枪火集结不再读写它，不要再拿它做跳转或迁移。
+- 操作按 game-maker `references/shooter-controls.md`：越肩第三人称 + 第一人称两个视角、手动瞄准带轻度吸附、可跳跃；J 开火、K 跳、U 手榴弹（李家坡手榴弹雨阶段是“全营投弹”）、I 互动（上炮 / 接管机枪 / 抓俘虏 / 挖壕 / 离开，F 为别名）、O / Z 开镜、R 换弹、Q/E 与 Y/H 转视角；亮剑 L（鼠标手 V）、骑兵连 N（鼠标手 X）每章都有。电脑端默认鼠标接管（锁定），被拒绝时自动退回按住拖动。打掉机枪手后阵地机枪可以接管。战友给主角让路，不会把主角挤开。
+- 苍云岭（v0.6.0）：坚守山头 → 抓舌头 → 送炮前出五百米 → 两发炮弹（风偏、柱子报偏差）→ 打中＝原作突围，两发都偏＝坂田 Boss；结局存 `ending_cangyunling`。李家坡（v0.7.0，用户选定）：强攻受挫（侧翼拔两个外围火力点）→ 夜里挖交通壕（I 开挖、照明弹、夜袭、掷弹筒）→ 拂晓手榴弹雨（两分钟三千六百颗、炸碉堡）→ 张大彪突击队 → 决战山崎（炸哑射击孔、格子弹、拼刀、战友不打他）；真实山坡、按阶段换光，没有分支结局。平安县城（v0.5.0）：城楼秀芹过场与双结局（`ending_pingan`），飘屏弹幕已按用户选择删除，不要加回。
+- 原声：三章喊话都截自电视剧《亮剑》（用户同意下载 B站片段使用，未取得授权；来源见 `game-projects/liangjian-pingan/media-kit/assets/voice.json`）。语音清单 `liangjian/assets/voice/index.json` 按章节分组，每章只加载自己那一组。下载新片段前先列出 BV、时长、大小与用途给用户确认。不要把原声换回合成，除非用户要求或 Toy 因此退回。局内原声用章节的 `vo()` 排队，过场开始时掐掉排队的。
 - 枪火集结与虫潮围城的“医疗 / 兵种支援 / 直升机降低”默认键都已从 H 改为 N，直升机升高只留 K，Y / H 为抬头 / 低头（两款的 `key-bindings.js` 是同一份；枪火集结 0.2.0、虫潮围城 0.38.1）。玩家自己改过的键保留，新默认键与玩家自定义键冲突时只挪新键。提示文字一律用 `keyBindings.label()` 跟随当前键位；回归用 `game-projects/starship-defense/verify-look-keys.cjs`。
-- 构建：`node game-projects/gunfire-assembly/build-compat.mjs` 同时生成大厅与亮剑战役两个兼容包；`build-toy.mjs` 把 `liangjian/` 的入口、样式、兼容包与全部语音、以及 `pingan/index.html` 跳转页打进同一个 Toy 包。验收脚本在 `game-projects/liangjian-pingan/qa/`：苍云岭 `cy-story.cjs`、`cy-playthrough.cjs`（`ROUTE=hit|hit2|miss`）、`cy-scenes.cjs`；平安县城 `story.cjs`、`playthrough.cjs`（`ROUTE=rescue`）；两章共用 `interact.cjs`、`views.cjs`、`options.cjs`、`mobile.cjs`（`LJ_CH=cangyunling` 测苍云岭）；枪火集结章节 `gunfire-chapters.cjs`。各版记录见 `game-projects/liangjian-pingan/media-kit/releases/` 与 `game-projects/gunfire-assembly/media-kit/releases/web-*/`。
+- 构建：`node game-projects/gunfire-assembly/build-compat.mjs` 同时生成大厅与亮剑战役两个兼容包；`build-toy.mjs` 把 `liangjian/` 的入口、样式、兼容包与全部语音、以及 `pingan/index.html` 跳转页打进同一个 Toy 包。验收脚本在 `game-projects/liangjian-pingan/qa/`：苍云岭 `cy-story.cjs`、`cy-playthrough.cjs`（`ROUTE=hit|hit2|miss`）、`cy-scenes.cjs`；李家坡 `ljp-story.cjs`、`ljp-playthrough.cjs`、`ljp-scenes.cjs`；平安县城 `story.cjs`、`playthrough.cjs`（`ROUTE=rescue`）；三章共用 `interact.cjs`、`views.cjs`、`options.cjs`、`mobile.cjs`（`LJ_CH=cangyunling|lijiapo`）；枪火集结大厅 `gunfire-chapters.cjs`。各版记录见 `game-projects/liangjian-pingan/media-kit/releases/` 与 `game-projects/gunfire-assembly/media-kit/releases/web-*/`。
 
 ## 2026-10-06 右上按钮布局补充
 
@@ -217,7 +217,7 @@ Toy 自动同步的既有操作授权保留，改为**实时**节奏（用户202
 - **每款 3D 游戏默认 4 个视角，上限 4 个**，每个都要是看法明显不同的：① 最接近原作 / 玩法默认的视角；② 一个换了观察方式的全局或战术视角（俯视、斜视、高位，按玩法取一个，没有价值可以不要）；③ 正视（主角或载具身后，看向前进方向）；④ 第一人称（有主角或载具时）。无主角的棋盘类按玩法取 3 个左右，不虚构第一人称。
 - **不再提供只差距离或俯仰的相似预设**：近景 / 远景、高位 / 低位各来一档这类做法取消，距离微调交给自动取景、拖动和 Q/E。从头顶看不出高低的跳台玩法不放俯视。判断办法：同一站位并排截图，缩到约 280px 看不出差别的就合并；新增第 5 个视角前先问用户。
 - 精简视角时换算玩家已保存的视角选择（只换算一次并记下版本），被去掉的并入最接近的保留视角，不能让旧存档落到另一种观察方式上；保留视角的序号能不动就不动，测试与录制脚本里写死的序号、数量一并更新。
-- 当前基线（2026-10-12，C 键循环顺序）：赤色要塞＝斜俯视 / 俯视 / 低位正视 / 第一人称；坦克大战＝斜俯视 / 正俯视 / 正视 / 第一人称；超级玛丽＝侧视 / 斜视 / 正视 / 第一人称；恐龙快打＝侧视 / 斜视 / 正视 / 第一人称；虫潮围城＝近身跟随 / 高位跟随 / 战术俯视 / 第一人称（骑乘在前两档间切换）。枪火集结与虫潮枪战规则不变：步行固定第一人称，载具两档跟随（枪火集结抗战战役的苍云岭、平安县城自 2026-10-14 起是重做版，越肩第三人称 / 第一人称，见「枪火集结 · 亮剑战役是重做版」）。
+- 当前基线（2026-10-12，C 键循环顺序）：赤色要塞＝斜俯视 / 俯视 / 低位正视 / 第一人称；坦克大战＝斜俯视 / 正俯视 / 正视 / 第一人称；超级玛丽＝侧视 / 斜视 / 正视 / 第一人称；恐龙快打＝侧视 / 斜视 / 正视 / 第一人称；虫潮围城＝近身跟随 / 高位跟随 / 战术俯视 / 第一人称（骑乘在前两档间切换）。枪火集结与虫潮枪战规则不变：步行固定第一人称，载具两档跟随（枪火集结抗战战役三章自 2026-10-14 起都是重做版，越肩第三人称 / 第一人称，见「枪火集结 · 亮剑战役是重做版」）。
 - **电脑端矮窗口的标题菜单**：笔记本 1366×768、1280×720 去掉浏览器工具栏后只剩约 580～700 高，标题菜单在 1366×768、1280×720、1366×625、1280×580 下都要不滚动就能看全（选项排两列、收紧行高，不靠缩小到看不清）；更矮才允许滚动且首尾可达。手机横屏 compact 与竖屏旋转布局另按既有规则。验收逐个控件检查是否在画面内，不只看一张截图。
 - 记录与验证见 `game-projects/site-games/releases/views-menu-20261012/notes.md`。
 

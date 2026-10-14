@@ -164,7 +164,7 @@ const layoutScript = (ids) => {
       check(`${tag}：摇杆右推＝向右平移`, (d.x - fdrag.x) * rgt[0] + (d.z - fdrag.z) * rgt[1] > 1.2, { moved: [(d.x - fdrag.x).toFixed(2), (d.z - fdrag.z).toFixed(2)] });
       await T.end(); await step(page, 6);
       const e0 = await gs(page); await step(page, 12); const e1 = await gs(page);
-      check(`${tag}：松手后停止移动、停止开火`, Math.abs(e1.x - e0.x) < 0.05 && Math.abs(e1.z - e0.z) < 0.05 && e1.mag === e0.mag, null);
+      check(`${tag}：松手后停止移动、停止开火`, Math.abs(e1.x - e0.x) < 0.05 && Math.abs(e1.z - e0.z) < 0.05 && e1.mag === e0.mag, { e0: [e0.x, e0.z, e0.mag, e0.reloadT], e1: [e1.x, e1.z, e1.mag, e1.reloadT] });
       // 浮动摇杆：手指落在左下区域别处，摇杆跟到手指下面
       await cleanField(page);
       const zone = await page.evaluate(() => { const r = document.getElementById('joy-zone').getBoundingClientRect(); return [r.left + r.width * 0.62, r.top + r.height * 0.3]; });
@@ -217,26 +217,42 @@ const layoutScript = (ids) => {
       check(`${tag}：打开“左手开火键”后左侧多一个开火键，可用且不挤占其他控件`, lay2.n === BTN_IDS.length + 1 && !lay2.off.length && !lay2.over.length && !lay2.hudOver.length && p1.bullets > 0, { lay2, bullets: p1.bullets });
       await shot(page, `play-${w}x${h}.png`);
       await page.evaluate(() => { __lj.app.cycle('leftFire', 1); });
-      // 操炮键
-      // 平安县城在第三阶段操意大利炮（8 发）；苍云岭在第四阶段操迫击炮（2 发，出膛后镜头跟着炮弹飞完才能离开炮位）
-      const cy = CH === 'cangyunling';
-      if (cy) await cleanField(page, 4, -5.6, -49.8); else await cleanField(page, 3, 0.5, 28);
-      await step(page, 4);
-      const useVis = await page.evaluate(() => ({ hidden: document.getElementById('act-use').hidden, text: document.querySelector('#act-use span').textContent, prompt: document.getElementById('prompt').hidden }));
-      const layU = await page.evaluate(layoutScript, BTN_IDS.concat(['act-use']));
-      await tapBtn('#act-use'); const mn = await gs(page);
-      const useText2 = await page.evaluate(() => document.querySelector('#act-use span').textContent);
-      // 操炮时：摇杆右推转炮口、开火键开炮
-      const [jx2, jy2] = await center(page, '#joy-base');
-      const cy0 = await page.evaluate(() => __lj.game.cannon.aimYaw);
-      await T.down(1, jx2, jy2); await T.move(1, jx2 + right[0] * 25, jy2 + right[1] * 25); await T.move(1, jx2 + right[0] * 50, jy2 + right[1] * 50); await step(page, 20); await T.end(); await step(page, 3);
-      const cy1 = await page.evaluate(() => __lj.game.cannon.aimYaw);
-      await T.down(5, fx, fy); await step(page, 4); await T.end(); await step(page, 4);
-      const sh = await page.evaluate(() => __lj.game.cannon.shells);
-      await shot(page, `cannon-${w}x${h}.png`);
-      if (cy) { for (let k = 0; k < 30 && (await page.evaluate(() => !!__lj.game.shellCam)); k++) await step(page, 30); await page.evaluate(() => { const g = __lj.game; if (g.scn) g.endScene(true); }); await step(page, 3); }
-      await tapBtn('#act-use'); const lv = await gs(page);
-      check(`${tag}：炮位旁出现“操炮”键（不出现键盘提示），点击上炮；摇杆转炮口、开火键开炮；再点“离开炮位”`, !useVis.hidden && useVis.text === '操炮' && useVis.prompt && mn.manned && useText2 === '离开炮位' && cy1 < cy0 - (cy ? 0.05 : 0.1) && sh === (cy ? 1 : 7) && !lv.manned && !layU.off.length && !layU.over.length, { useVis, manned: mn.manned, useText2, cy0, cy1, sh, layU });
+      // 互动键：李家坡第二阶段在壕头“挖壕 / 停手”；其余两章是操炮
+      if (CH === 'lijiapo') {
+        await cleanField(page, 2, 0, 41.6);
+        await page.evaluate(() => { __lj.game.flareT = 999; });
+        await step(page, 4);
+        const useVis = await page.evaluate(() => ({ hidden: document.getElementById('act-use').hidden, text: document.querySelector('#act-use span').textContent, prompt: document.getElementById('prompt').hidden }));
+        const layU = await page.evaluate(layoutScript, BTN_IDS.concat(['act-use']));
+        const dug0 = await page.evaluate(() => __lj.game.world.trench.dug);
+        await tapBtn('#act-use'); await step(page, 90);
+        const d1 = await page.evaluate(() => ({ digging: __lj.game.digging, dug: __lj.game.world.trench.dug, text: document.querySelector('#act-use span').textContent }));
+        await tapBtn('#act-use'); await step(page, 3);
+        const d2 = await page.evaluate(() => __lj.game.digging);
+        check(`${tag}：壕头出现“挖壕”键（不出现键盘提示），点一下开挖、键变成“停手”，再点停手`, !useVis.hidden && useVis.text === '挖壕' && useVis.prompt && d1.digging && d1.dug > dug0 + 1 && d1.text === '停手' && !d2 && !layU.off.length && !layU.over.length, { useVis, dug0, d1, d2, layU });
+        await shot(page, `dig-${w}x${h}.png`);
+      } else {
+        // 操炮键
+        // 平安县城在第三阶段操意大利炮（8 发）；苍云岭在第四阶段操迫击炮（2 发，出膛后镜头跟着炮弹飞完才能离开炮位）
+        const cy = CH === 'cangyunling';
+        if (cy) await cleanField(page, 4, -5.6, -49.8); else await cleanField(page, 3, 0.5, 28);
+        await step(page, 4);
+        const useVis = await page.evaluate(() => ({ hidden: document.getElementById('act-use').hidden, text: document.querySelector('#act-use span').textContent, prompt: document.getElementById('prompt').hidden }));
+        const layU = await page.evaluate(layoutScript, BTN_IDS.concat(['act-use']));
+        await tapBtn('#act-use'); const mn = await gs(page);
+        const useText2 = await page.evaluate(() => document.querySelector('#act-use span').textContent);
+        // 操炮时：摇杆右推转炮口、开火键开炮
+        const [jx2, jy2] = await center(page, '#joy-base');
+        const cy0 = await page.evaluate(() => __lj.game.cannon.aimYaw);
+        await T.down(1, jx2, jy2); await T.move(1, jx2 + right[0] * 25, jy2 + right[1] * 25); await T.move(1, jx2 + right[0] * 50, jy2 + right[1] * 50); await step(page, 20); await T.end(); await step(page, 3);
+        const cy1 = await page.evaluate(() => __lj.game.cannon.aimYaw);
+        await T.down(5, fx, fy); await step(page, 4); await T.end(); await step(page, 4);
+        const sh = await page.evaluate(() => __lj.game.cannon.shells);
+        await shot(page, `cannon-${w}x${h}.png`);
+        if (cy) { for (let k = 0; k < 30 && (await page.evaluate(() => !!__lj.game.shellCam)); k++) await step(page, 30); await page.evaluate(() => { const g = __lj.game; if (g.scn) g.endScene(true); }); await step(page, 3); }
+        await tapBtn('#act-use'); const lv = await gs(page);
+        check(`${tag}：炮位旁出现“操炮”键（不出现键盘提示），点击上炮；摇杆转炮口、开火键开炮；再点“离开炮位”`, !useVis.hidden && useVis.text === '操炮' && useVis.prompt && mn.manned && useText2 === '离开炮位' && cy1 < cy0 - (cy ? 0.05 : 0.1) && sh === (cy ? 1 : 7) && !lv.manned && !layU.off.length && !layU.over.length, { useVis, manned: mn.manned, useText2, cy0, cy1, sh, layU });
+      }
       // 右上角：切换人称（按下即触发）、暂停
       await cleanField(page, 1);
       const [vx, vy] = await center(page, '#btn-view');
