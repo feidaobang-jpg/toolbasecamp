@@ -1,11 +1,12 @@
-// 声音：全部用 WebAudio 合成（原创），可选加载本机合成的喊话语音
-const VOICES = ['kaipao', 'yidalipao', 'lashanglai', 'qibinglian', 'liangjian', 'jingrui', 'fuyu', 'tiancai', 'yongzhesheng', 'chong'];
+// 声音：音效与鼓点军乐用 WebAudio 合成（原创）；喊话多数截自电视剧《亮剑》原声，片源里没有的几句是本机合成。
+// 语音清单在 assets/voice/index.json，来源与时间点见 game-projects/liangjian-pingan/media-kit/assets/voice.json
 
 export class GameAudio {
   constructor() {
     this.ctx = null;
     this.volume = 0.8;
     this.voices = {};
+    this.speaking = new Set();
     this.level = 0;
     this.musicOn = false;
     this.nextStep = 0;
@@ -38,8 +39,8 @@ export class GameAudio {
     // 先读清单，只取实际存在的语音，没有就只显示字幕
     let list = [];
     try { const r = await fetch('assets/voice/index.json'); if (r.ok) list = await r.json(); } catch (e) { /* 忽略 */ }
-    for (const id of VOICES) {
-      if (!list.includes(id)) continue;
+    for (const id of list) {
+      if (!/^[a-z0-9_]+$/.test(id)) continue;
       try {
         const r = await fetch('assets/voice/' + id + '.mp3');
         if (!r.ok) continue;
@@ -176,8 +177,11 @@ export class GameAudio {
     const s = c.createBufferSource(); s.buffer = b;
     const g = c.createGain(); g.gain.value = vol;
     s.connect(g); g.connect(this.vox); s.start();
+    this.speaking.add(s); s.onended = () => this.speaking.delete(s);
     return true;
   }
+  // 跳过剧情、重开时把还没说完的台词掐掉
+  stopVoices() { for (const s of this.speaking) { try { s.stop(); } catch (e) { /* 已经播完 */ } } this.speaking.clear(); }
 
   // ---- 背景鼓点与军乐（原创程序化），用 AudioContext 时钟排程，暂停即冻结 ----
   setMusic(level) { this.level = level; this.musicOn = level >= 0; }

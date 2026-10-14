@@ -5,14 +5,13 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" content="#2a231b">
 <title>亮剑：攻打平安县城</title>
-<link rel="stylesheet" href="style.css?v=0.4.0">
+<link rel="stylesheet" href="style.css?v=0.5.0">
 </head>
 <body>
 <div id="stage">
   <canvas id="gl" aria-label="游戏画面"></canvas>
   <div id="look" aria-hidden="true"></div>
   <div id="vignette" aria-hidden="true"></div>
-  <div id="danmaku" aria-hidden="true"></div>
   <div id="labels" aria-hidden="true"></div>
 
   <div id="hud" hidden>
@@ -69,6 +68,6 @@ window.addEventListener('error', function (e) {
   if (b) { b.hidden = false; b.onclick = function () { location.reload(); }; }
 }, true);
 </script>
-<script defer src="game.compat.js?v=0.4.0"></script>
+<script defer src="game.compat.js?v=0.5.0"></script>
 </body>
 </html>

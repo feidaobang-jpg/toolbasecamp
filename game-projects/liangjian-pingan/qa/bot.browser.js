@@ -102,6 +102,7 @@ window.__installBot = function () {
       const threat = nearest(alive((e) => e.y < 2 && e.active && dist(e.x, e.z, c.x, c.z) < 28));
       if (threat) { goTo(threat.x, threat.z, t ? 11 : 4, dt); if (!t) lookAlong(threat.x, threat.z); } else { goTo(c.x + 3, c.z + 2.5, 1.5, dt); if (!t) lookAlong(c.x, c.z - 30); }
     } else if (p === 3) {
+      if (window.__route === 'rescue' && g.flags.choice && !g.flags.ending && !c.manned) { set('KeyJ', false); goTo(0, -21, 0.3, dt); lookAlong(0, -40); return; }
       if (!c.manned) {
         set('KeyJ', false);
         const d = goTo(c.x + 0.4, c.z + 2.2, 0.8, dt);
@@ -111,6 +112,8 @@ window.__installBot = function () {
       }
       steer(0, 0, false);
       const w = g.world;
+      // 城楼抉择：走改写结局时离开炮位，从轰开的城门冲进去
+      if (window.__route === 'rescue' && g.flags.choice && !g.flags.ending) { set('KeyJ', false); if (c.manned) tap('KeyI'); return; }
       let type = null, ref = null;
       const b = w.bunkers.find((k) => k.alive);
       if (b) { type = 'bunker'; ref = b; } else if (w.gate.alive) type = 'gate'; else if (w.tower.alive) type = 'tower';

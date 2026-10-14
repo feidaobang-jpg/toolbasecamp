@@ -20,6 +20,46 @@ QA = GAME / 'qa'
 AUTO = '（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）'
 
 SPECS = {
+    'v0.5.0': {
+        'base': 'v0.4.0',
+        'shots': [
+            ('hostage', 'qa/story-hostage-tower.png', '城楼过场：山本押着秀芹站在城楼前檐下，两侧卫兵'),
+            ('classic-collapse', 'qa/story-classic-collapse.png', '原作结局：朝城楼开炮，城楼塌'),
+            ('rescue-boss', 'qa/story-rescue-boss.png', '改写结局的决战：秀芹绑在院子右侧的木桩上'),
+            ('rescue-free', 'qa/story-rescue-free.png', '改写结局：打赢后给秀芹松绑'),
+            ('view-tp', 'qa/scene-field-tp.png', '越肩第三人称（沿用）'),
+            ('touch-play', 'qa/play-844x390.png', '手机横屏布局（触控模拟）'),
+            ('menu', 'qa/menu-1280x720.png', '主菜单：选项里不再有弹幕'),
+        ],
+        'video_desc': '实时运行的脚本录像（{view}，无声音，不是真人操作）',
+        'features': [
+            {'id': 'hostage', 'desc': '城门轰开后的城楼过场：山本押着秀芹，四句原声对白，可跳过', 'status': 'implemented', 'evidence_ids': ['hostage']},
+            {'id': 'endings', 'desc': '双结局：朝城楼开炮（原作）或冲进城门救秀芹（改写）；结算写明结局；第四、五阶段直接开局沿用上次结局', 'status': 'implemented', 'evidence_ids': ['classic-collapse', 'rescue-boss', 'rescue-free']},
+            {'id': 'voice', 'desc': '20 句喊话：17 句电视剧原声、3 句合成', 'status': 'implemented', 'evidence_ids': []},
+        ],
+        'changes': [
+            {'id': 'hostage-endings', 'feature_ids': ['hostage', 'endings'], 'before': '轰开城门后直接瞄准城楼开炮，没有秀芹', 'after': '城楼过场 + 抉择：原作结局（开炮，城楼塌，山本带伤）或改写结局（冲进去，城楼不塌，决战救下秀芹）', 'user_visible': '第三阶段结尾多一场戏和一次选择；第四、五阶段台词与决战随结局变化', 'evidence_ids': ['hostage', 'classic-collapse', 'rescue-boss', 'rescue-free'], 'verification': 'automated-pass; human-play not-run'},
+            {'id': 'original-voice', 'feature_ids': ['voice'], 'before': '十句喊话全是本机合成', 'after': '17 句换成电视剧原声（来源见 media-kit/assets/voice.json），3 句保留合成', 'user_visible': '喊话是原片声音', 'evidence_ids': [], 'verification': '20 条都能下载解码；听感 not-run'},
+            {'id': 'no-danmaku', 'feature_ids': [], 'before': '飘屏弹幕吐槽，选项可关', 'after': '弹幕与它的选项删除', 'user_visible': '画面上方不再飘字', 'evidence_ids': ['menu'], 'verification': 'options.cjs 断言弹幕层、选项、接口都不存在'},
+            {'id': 'old-ch3-removed', 'feature_ids': [], 'before': '枪火集结里旧第三章代码不可达但仍在包里', 'after': '删除；第三章卡片与旧存档“继续”都进重做版', 'user_visible': '无（包更小）', 'evidence_ids': [], 'verification': 'gunfire-chapters.cjs'},
+        ],
+        'bugs': [
+            {'id': 'rescue-gate-blocked', 'desc': '“城楼没塌不许进门洞”的限制把改写路线堵死', 'repro': 'ROUTE=rescue node qa/playthrough.cjs 1 std：卡在门洞前 15 分钟超时', 'fix': '只在城楼抉择期间放行', 'before_media_ids': [], 'after_media_ids': ['rescue-boss'], 'verification': 'playthrough rescue 通关；story.cjs 断言抉择前门洞仍封'},
+            {'id': 'danmaku-strip-dangling', 'desc': '按行删弹幕调用后留下悬空的 if，构建报错', 'repro': 'node game-projects/gunfire-assembly/build-compat.mjs', 'fix': '删掉残句', 'before_media_ids': [], 'after_media_ids': [], 'verification': '构建通过'},
+        ],
+        'bugs_gap': '两处都在发布前发现，没有留修复前的画面',
+        'qa': lambda r: [
+            {'what': '城楼过场、四句原声顺序、跳过、两条结局的抉择与后果、结算、结局记忆、语音清单', 'method': 'qa/story.cjs（场景前置用状态捷径，抉择用真实按键）', 'result': r['story'], 'evidence': 'qa/out-story.json'},
+            {'what': '自动通关：原作路线三档 + 改写路线标准档', 'method': 'qa/playthrough.cjs（ROUTE=rescue 走改写），确定性步进', 'result': {'classic': r['plays'], 'rescue': r['rescue']}, 'evidence': 'qa/out-playthrough-p1-*.json'},
+            {'what': '机枪接管、手榴弹、亮剑、骑兵连、上炮、鼠标接管、第三章跳转与键位（沿用）', 'method': 'qa/interact.cjs', 'result': r['interact'], 'evidence': 'qa/out-interact.json'},
+            {'what': '两视角、射击、跳跃、街垒、操炮（沿用）', 'method': 'qa/views.cjs', 'result': r['views'], 'evidence': 'qa/out-views.json'},
+            {'what': '双端布局（沿用）', 'method': 'qa/mobile.cjs，CDP 触控模拟，不是真机', 'result': r['mobile'], 'evidence': 'qa/out-mobile.json'},
+            {'what': '选项（弹幕已去掉）、命数耐久、暂停与声音、隐私', 'method': 'qa/options.cjs', 'result': r['options'], 'evidence': 'qa/out-options.json'},
+            {'what': '删旧第三章后枪火集结第一、二章与第三章跳转', 'method': 'qa/gunfire-chapters.cjs', 'result': r['gunfire'], 'evidence': 'qa/out-gunfire-chapters.json'},
+        ],
+        'untested': ['真人试玩（过场节奏、抉择是否看得懂、两条结局的难度）', '原声听感（截取点、音量是否一致）', '手机真机', '整局录像重录', '帧时间重测'],
+        'readiness': {'overview': 'partial', 'update': 'partial', 'gaps': ['没有这一版的整局录像与带声音的实机素材', '原声未试听', '手机真机未测']},
+    },
     'v0.4.0': {
         'base': 'v0.3.0',
         'shots': [
@@ -235,7 +275,7 @@ def load(name):
 def passed(d):
     if not d:
         return None
-    rs = [r for r in d['results'] if not r['name'].startswith('（记录）')]   # 环境记录行不算断言
+    rs = [r for r in (d.get('results') or d.get('checks') or []) if not r['name'].startswith('（记录）')]   # 环境记录行不算断言
     return f"{sum(1 for r in rs if r['ok'])}/{len(rs)}"
 
 
@@ -299,6 +339,8 @@ def main():
     results = {
         'views': passed(load('out-views.json')), 'mobile': passed(load('out-mobile.json')), 'options': passed(load('out-options.json')), 'interact': passed(load('out-interact.json')),
         'plays': {a: (None if not d else {'finished': d['finished'], 'game_seconds': d['gameSeconds'], 'phases': d['phases'], 'deaths': (d.get('final') or {}).get('deaths'), 'hurt': (d.get('final') or {}).get('hurt'), 'kills': (d.get('final') or {}).get('kills'), 'score': (d.get('final') or {}).get('score'), 'errors': d['errors']}) for a, d in plays.items()},
+        'story': passed(load('out-story.json')), 'gunfire': passed(load('out-gunfire-chapters.json')),
+        'rescue': (lambda d: None if not d else {'finished': d['finished'], 'ending': d.get('ending'), 'game_seconds': d['gameSeconds'], 'phases': d['phases'], 'errors': d['errors']})(load('out-playthrough-p1-std-rescue.json')),
         'perf': None if not perf else [{'name': r['name'], 'renderer': r['env']['renderer'], 'dpr': r['env']['dpr'], 'samples': [{k: s[k] for k in ('phase', 'view', 'avgFps', 'medianMs', 'p95Ms', 'maxMs', 'over50ms', 'avgCalls', 'avgTris', 'canvas', 'quality')} for s in r['samples']]} for r in perf['runs']],
     }
 

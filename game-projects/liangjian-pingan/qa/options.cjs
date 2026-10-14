@@ -11,7 +11,7 @@ const clean = (page, phase = 1) => page.evaluate((p) => { const g = __lj.game; g
 (async () => {
   const { browser, ctx, page, errors } = await open();
   // ---------- 主菜单每个选项：点一下切到下一个值，显示同步，刷新后保留 ----------
-  const opts = ['startPhase', 'lives', 'armor', 'view', 'quality', 'volume', 'danmaku', 'touchKeys', 'fps', 'aimSens', 'mouseAim', 'leftFire'];
+  const opts = ['startPhase', 'lives', 'armor', 'view', 'quality', 'volume', 'touchKeys', 'fps', 'aimSens', 'mouseAim', 'leftFire'];
   const before = await page.evaluate(() => Object.assign({}, __lj.app.s));
   for (const k of opts) {
     const r = await page.evaluate((key) => { const b = document.querySelector(`#menu .btn[data-opt="${key}"]`); const t0 = b.querySelector('.ov').textContent; b.click(); return { t0, t1: b.querySelector('.ov').textContent, v: __lj.app.s[key], rect: b.getBoundingClientRect().height }; }, k);
@@ -35,7 +35,7 @@ const clean = (page, phase = 1) => page.evaluate((p) => { const g = __lj.game; g
   }
   check('旧存档视角换算：旧第一人称→第一人称，其余旧视角→第三人称；新存档不再换算', mig.old3.view === 1 && mig.old1.view === 0 && mig.old2.view === 0 && mig.new1.view === 1 && /第一人称/.test(mig.old3.name) && /第三人称/.test(mig.old1.name), mig);
   // 恢复默认
-  await page.evaluate(() => { const a = __lj.app; a.noAutoPause = true; Object.assign(a.s, { startPhase: 1, lives: 'inf', armor: 'std', view: 0, quality: 'auto', volume: 80, danmaku: true, touchKeys: 'auto', fps: false, mode: 'auto', aimSens: 'mid', mouseAim: 'drag', leftFire: false }); a.save(); a.applyQuality(); a.applyMode(); a.audio.setVolume(0.8); });
+  await page.evaluate(() => { const a = __lj.app; a.noAutoPause = true; Object.assign(a.s, { startPhase: 1, lives: 'inf', armor: 'std', view: 0, quality: 'auto', volume: 80, touchKeys: 'auto', fps: false, mode: 'auto', aimSens: 'mid', mouseAim: 'drag', leftFire: false }); a.save(); a.applyQuality(); a.applyMode(); a.audio.setVolume(0.8); });
 
   // ---------- 声音：开局、暂停冻结、继续续播、暂停后重开仍有声 ----------
   await start(page);
@@ -136,14 +136,14 @@ const clean = (page, phase = 1) => page.evaluate((p) => { const g = __lj.game; g
   check('演示局不计最高分并在结算注明', best0.best === '1' && /演示局/.test(best0.total), best0);
   await page.evaluate(() => { __lj.app.demo = false; localStorage.removeItem('lj_pingan_v1_best'); __lj.app.toMenu(); });
 
-  // ---------- 画质 / 帧率 / 弹幕 ----------
+  // ---------- 画质 / 帧率；弹幕已去掉 ----------
   await page.evaluate(() => { __lj.app.start(false); });
   const q = await page.evaluate(() => { const a = __lj.app, out = {}; for (const v of ['high', 'low', 'auto']) { a.s.quality = v; a.applyQuality(); __lj.step(2, true); out[v] = { shadow: a.renderer.shadowMap.enabled, sun: a.game.sun.castShadow, pr: a.renderer.getPixelRatio(), actual: a.actualQuality(), label: document.querySelector('#pause .btn[data-opt="quality"] .ov').textContent }; } return out; });
   check('画质：高＝有阴影，流畅＝关阴影，自动显示当前实际档位', q.high.shadow && q.high.sun && !q.low.shadow && !q.low.sun && /自动（(高|流畅)）/.test(q.auto.label), q);
   const fps = await page.evaluate(() => { const a = __lj.app; a.cycle('fps', 1); __lj.step(40, true); const on = { hidden: document.getElementById('fps').hidden, text: document.getElementById('fps').textContent }; a.cycle('fps', 1); __lj.step(2, true); return { on, offHidden: document.getElementById('fps').hidden }; });
   check('帧率显示：开时角落出现读数，关时消失', !fps.on.hidden && /FPS/.test(fps.on.text) && fps.offHidden, fps);
-  const dm = await page.evaluate(() => { const a = __lj.app; a.ui.danmaku(['测试一', '测试二']); const n1 = document.querySelectorAll('#danmaku span').length; a.cycle('danmaku', 1); const n2 = document.querySelectorAll('#danmaku span').length; a.ui.danmaku(['测试三']); const n3 = document.querySelectorAll('#danmaku span').length; a.cycle('danmaku', 1); return { n1, n2, n3 }; });
-  check('弹幕：开时出现，关掉立即清空且不再出现', dm.n1 >= 2 && dm.n2 === 0 && dm.n3 === 0, dm);
+  const dm = await page.evaluate(() => ({ el: !!document.getElementById('danmaku'), btn: !!document.querySelector('[data-opt="danmaku"]'), api: typeof __lj.app.ui.danmaku, key: 'danmaku' in __lj.app.s }));
+  check('弹幕已去掉：没有弹幕层、没有弹幕选项（v0.5.0）', !dm.el && !dm.btn && dm.api === 'undefined' && !dm.key, dm);
 
   // ---------- 起始阶段直达 / 继续 ----------
   for (let p = 1; p <= 5; p++) {

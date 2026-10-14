@@ -4288,7 +4288,7 @@ resistanceCampaign=createResistanceCampaign({Game,Input,AudioSys,camera,get play
   rideView(next=false){Input.releaseMouseLook();const riding=camMode==='third';camMode='third';camView=riding&&next?(camView===0?1:0):camView>1?0:camView;camPitch=0;camState.init=false;Input.resetLook();syncViewLabels();return CAMERA_VIEWS[camView].name;},
   restoreView(v){if(!v)return;camMode=v.mode;camView=v.index;camYaw=v.yaw;camPitch=v.pitch;camState.init=false;Input.resetLook();syncViewLabels();},
   setLook(yaw,pitch){camYaw=yaw;camPitch=pitch;Input.resetLook();},
-  cannonLook(){camPitch=clamp(camPitch,-.10,.50);},syncLabels:syncKeyLabels,quit:()=>$('btnQuit').click(),
+  syncLabels:syncKeyLabels,quit:()=>$('btnQuit').click(),
   faceForward:()=>{camYaw=0;camPitch=0;camState.init=false;lookControl.clear();pitchControl.clear();Input.resetLook();},
   prepare(){if(rvOn())rvBreakout.stop();if(vsOn()||versusBackup)exitVersus();coopDriver?.leave();clearCoopHumans();Game.coop=false;closePanels();hideConfirm();cancelPlacement(true);viewModel.visible=false;}
 });

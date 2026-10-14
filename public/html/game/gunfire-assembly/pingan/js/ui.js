@@ -1,4 +1,4 @@
-// 界面：战斗信息、弹幕、字幕、菜单（主菜单 / 暂停 / 结算）与键盘导航
+// 界面：战斗信息、字幕、菜单（主菜单 / 暂停 / 结算）与键盘导航
 import { clamp, fmtTime } from './util.js';
 
 const $ = (id) => document.getElementById(id);
@@ -15,7 +15,6 @@ const OPTS = {
   view: { label: '视角', where: 'mp', fmt: (v) => VIEW_NAMES[v] },
   quality: { label: '画质', where: 'mp', fmt: (v, app) => (v === 'auto' ? '自动（' + (app.actualQuality() === 'high' ? '高' : '流畅') + '）' : v === 'high' ? '高' : '流畅') },
   volume: { label: '音量', where: 'mp', fmt: (v) => (v === 0 ? '静音' : v + '%') },
-  danmaku: { label: '弹幕', where: 'mp', fmt: (v) => (v ? '开' : '关') },
   touchKeys: { label: '触屏按键', where: 'm', fmt: (v) => ({ auto: '自动', show: '显示', hide: '隐藏' }[v]) },
   fps: { label: '帧率显示', where: 'mp', fmt: (v) => (v ? '开' : '关') },
   aimSens: { label: '瞄准灵敏度', where: 'mp', fmt: (v) => ({ low: '低', mid: '中', high: '高' }[v]) },
@@ -28,7 +27,7 @@ export class UI {
   constructor(app) {
     this.app = app;
     this.hud = $('hud'); this.touch = $('touch');
-    this.dm = []; this.dmRows = []; this.dlgQ = []; this.dlgT = 0; this.stampT = 0; this.stampD = 0; this.toastT = 0;
+    this.dlgQ = []; this.dlgT = 0; this.stampT = 0; this.stampD = 0; this.toastT = 0;
     this.labels = {};
     this.cache = {};
     this.active = null;
@@ -124,7 +123,7 @@ export class UI {
     // 紧凑横屏：开始按钮并到标题同一行，省出高度
     if (compact) this.head.appendChild(this.startRow);
     else this.menuPanel.insertBefore(this.startRow, this.menuPanel.children[1]);
-    this.maxDm = compact ? 10 : 22;
+    this.compact = compact;
   }
 
   refresh() {
@@ -318,36 +317,14 @@ export class UI {
     const s = $('stamp');
     s.textContent = text; s.className = cls; s.hidden = false;
     // 字数多就按比例缩小，保证整句落在画面里
-    const w = this.app.size()[0], base = this.maxDm <= 10 ? 64 : 110;
+    const w = this.app.size()[0], base = this.compact ? 64 : 110;
     s.style.fontSize = Math.round(Math.min(base, (w * 0.8) / (text.length * 1.12))) + 'px';
     this.stampT = 0; this.stampD = dur;
   }
   toast(text, dur = 2.4) { const t = $('toast'); t.textContent = text; t.hidden = false; this.toastT = dur; }
 
-  // 弹幕：可传一条或多条
-  danmaku(texts, cls = '') {
-    if (!this.app.get('danmaku')) return;
-    const box = $('danmaku');
-    const w = this.app.size()[0], h = box.clientHeight || 120;
-    const rowH = this.maxDm <= 10 ? 22 : 30;
-    const rows = Math.max(2, Math.floor(h / rowH));
-    for (const t of [].concat(texts)) {
-      if (this.dm.length >= this.maxDm) break;
-      const s = el('span', cls); s.textContent = t;
-      box.appendChild(s);
-      // 选最空的一行
-      let best = 0, bestX = Infinity;
-      for (let r = 0; r < rows; r++) { const x = this.dmRows[r] || 0; if (x < bestX) { bestX = x; best = r; } }
-      const x = Math.max(w + 20, (this.dmRows[best] || 0) + 40) + Math.random() * 120;
-      const item = { el: s, x, y: best * rowH, w: t.length * (this.maxDm <= 10 ? 16 : 21) + 20, v: 150 + Math.random() * 90, row: best };
-      this.dmRows[best] = x + item.w;
-      this.dm.push(item);
-      s.style.transform = `translate(${x}px,${item.y}px)`;
-    }
-  }
+  clearDialog() { this.dlgQ.length = 0; this.dlgT = 0; $('dialog').hidden = true; }
   clearTransient() {
-    for (const d of this.dm) d.el.remove();
-    this.dm.length = 0; this.dmRows.length = 0;
     this.dlgQ.length = 0; this.dlgT = 0; $('dialog').hidden = true;
     $('stamp').hidden = true; this.stampD = 0;
     $('toast').hidden = true; this.toastT = 0;
@@ -358,16 +335,6 @@ export class UI {
 
   // 按游戏时间推进的动效（暂停时不走）
   update(dt) {
-    // 弹幕
-    if (this.dm.length) {
-      for (let r = 0; r < this.dmRows.length; r++) if (this.dmRows[r]) this.dmRows[r] = Math.max(0, this.dmRows[r] - 200 * dt);
-      for (let i = this.dm.length - 1; i >= 0; i--) {
-        const d = this.dm[i];
-        d.x -= d.v * dt;
-        if (d.x < -d.w - 40) { d.el.remove(); this.dm.splice(i, 1); continue; }
-        d.el.style.transform = `translate(${d.x.toFixed(1)}px,${d.y}px)`;
-      }
-    }
     // 字幕
     const dlg = $('dialog');
     if (this.dlgT > 0) { this.dlgT -= dt; if (this.dlgT <= 0) dlg.hidden = true; }
@@ -393,7 +360,7 @@ export class UI {
   }
 
   result(d) {
-    this.resTitle.textContent = d.win ? '平安县城，拿下了！' : '攻城受挫';
+    this.resTitle.textContent = d.win ? (d.title || '平安县城，拿下了！') : '攻城受挫';
     this.resRank.textContent = d.win ? '评价：' + d.rank : '命数用尽';
     this.resQuote.innerHTML = d.quote;
     this.resStats.innerHTML = d.rows.map(([k, v]) => `<div><span>${k}</span><b>${v}</b></div>`).join('');

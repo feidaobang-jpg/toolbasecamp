@@ -56,6 +56,8 @@ export function spawnPhase(g, n) {
   } else if (n === 5) {
     const b = E('boss', L.bossPos.x, L.bossPos.z, { group: 'boss' });
     b.active = true; b.state = 'walk'; b.cd = 1.2; b.stage = 1; b.r = 0.55; b.strafe = 1; b.inv = 0;
+    // 原作结局：山本在城楼上挨了那一炮，带伤进决战；救人那条路他毫发无伤
+    if (g.flags.ending !== 'rescue') b.hp = Math.round(b.maxHp * 0.8);
     g.boss = b;
   }
 }
@@ -314,7 +316,7 @@ export function updateBoss(g, u, dt) {
   u.stT -= dt;
   const frac = u.hp / u.maxHp;
   if (u.stage === 1 && frac < 0.62) { u.stage = 2; summon(g, '特工队，给我上！'); }
-  if (u.stage === 2 && frac < 0.32) { u.stage = 3; summon(g, '大日本帝国的武士，不会输！'); g.ui.danmaku(['山本急了', '他急了他急了', '二阶段'], 'red'); }
+  if (u.stage === 2 && frac < 0.32) { u.stage = 3; summon(g, '大日本帝国的武士，不会输！'); }
   const fast = u.stage >= 3;
   switch (u.state) {
     case 'walk': {
@@ -364,7 +366,7 @@ export function updateBoss(g, u, dt) {
         u.hitDone = true;
         if (h.dashT > 0) { g.tryClash(u); break; }
         // 刀锋贴地横扫：跳起来就躲过去了
-        if (h.y > 0.7) { g.addScore(150); g.stats.dodges = (g.stats.dodges || 0) + 1; if (!g.flags.jumpDodge) { g.flags.jumpDodge = 1; g.ui.toast('跳过去了！山本的突进扑了个空', 2.2); g.ui.danmaku(['跳得好', '山本：？', '这也行'], ''); } }
+        if (h.y > 0.7) { g.addScore(150); g.stats.dodges = (g.stats.dodges || 0) + 1; if (!g.flags.jumpDodge) { g.flags.jumpDodge = 1; g.ui.toast('跳过去了！山本的突进扑了个空', 2.2); } }
         else g.hurtHero(2, u.x, u.z);
       }
       if (u.left <= 0 || moved < sp * dt * 0.3) {

@@ -1,6 +1,10 @@
 // Player-facing notes travel with the same game package; no network or account required.
-export const GAME_VERSION='0.2.2';
+export const GAME_VERSION='0.2.3';
 export const UPDATE_HISTORY=[
+  {version:'0.2.3',date:'2026-10-14',title:'平安县城：城楼上的秀芹',changes:[
+    '城门轰开后，山本把秀芹押上城楼：可以按原作朝城楼开炮，也可以离开炮位、从城门冲进去救人，两种结局；剧情过场按开火键或空格可以跳过。',
+    '李云龙、秀芹、山本、张大彪的喊话改用电视剧《亮剑》原声片段（“二营长，你他娘的意大利炮呢”“开炮”等），片源里没有的几句保留合成语音。',
+    '去掉飘过屏幕的弹幕和它的开关。']},
   {version:'0.2.2',date:'2026-10-14',title:'平安县城：亮剑与骑兵连回归',changes:[
     '抗战第三章「平安县城」加回两个技能：亮剑突进（L，鼠标手 V）和骑兵连冲锋（N，鼠标手 X）；亮剑撞上山本的拔刀突进可以拼刀。阵地机枪、I 互动、U 手榴弹不变。',
     '战地等模式底部的操作提示补上 Q/E 转视角、Y/H 抬头低头。']},

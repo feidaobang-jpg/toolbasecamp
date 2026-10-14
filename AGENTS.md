@@ -198,10 +198,11 @@ Toy 自动同步的既有操作授权保留，改为**实时**节奏（用户202
 
 抗战战役第三章「平安县城 · 开炮」已整章换成重做版，不要改回旧实现，也不要按上一节的“步行固定第一人称、不用鼠标锁定”去“纠正”它。
 
-- 位置：`public/html/game/gunfire-assembly/pingan/`，同包内的独立页面，自带菜单、设置与进度（存档前缀 `lj_pingan_v1_`）。`resistance-campaign.js` 的 `start()` 在选第三章、继续旧的第三章进度或第二章点“下一章”时跳到 `./pingan/index.html`；旧的第三章代码暂留在文件里但已不可达，清理须单独安排。重做版主菜单有“返回大厅”回到 `../index.html`。
+- 位置：`public/html/game/gunfire-assembly/pingan/`，同包内的独立页面，自带菜单、设置与进度（存档前缀 `lj_pingan_v1_`）。`resistance-campaign.js` 的 `start()` 在选第三章、继续旧的第三章进度或第二章点“下一章”时跳到 `./pingan/index.html`；旧的第三章实现已在 2026-10-14（枪火集结 0.2.3）删除。重做版主菜单有“返回大厅”回到 `../index.html`。
 - 操作按 game-maker `references/shooter-controls.md`：越肩第三人称 + 第一人称两个视角、手动瞄准带轻度吸附、可跳跃；键位与枪火集结其余模式对齐——J 开火、K 跳、U 手榴弹、I 互动（上炮 / 接管机枪 / 离开，F 为别名）、O / Z 开镜、R 换弹、Q/E 与 Y/H 转视角；两个技能是亮剑 L（鼠标手 V）、骑兵连 N（鼠标手 X）。电脑端默认鼠标接管（锁定），被浏览器或外壳拒绝时自动退回按住拖动。亮剑、骑兵连和与山本“拼刀”在 2026-10-14 凌晨按用户要求去掉过（v0.3.0），当天上午用户又要求加回（v0.4.0 / 枪火集结 0.2.2），现在都在；不要再当成“已去掉”处理。打掉机枪手后阵地机枪可以接管。
+- 剧情（v0.5.0 / 枪火集结 0.2.3，用户 2026-10-14 选定）：城门轰开后有秀芹被押上城楼的过场（可跳过），之后双结局——朝城楼开炮＝原作，离开炮位冲进城门＝改写（救下秀芹）；结局存在 `lj_pingan_v1_ending`。喊话 20 句里 17 句是电视剧《亮剑》原声（用户同意下载 B站片段使用，未取得授权，来源见 `game-projects/liangjian-pingan/media-kit/assets/voice.json`），3 句合成。飘屏弹幕已按用户选择删除，不要加回；不要把原声换回合成，除非用户要求或 Toy 因此退回。
 - 枪火集结与虫潮围城的“医疗 / 兵种支援 / 直升机降低”默认键都已从 H 改为 N，直升机升高只留 K，Y / H 为抬头 / 低头（两款的 `key-bindings.js` 是同一份；枪火集结 0.2.0、虫潮围城 0.38.1，用户 2026-10-14 点名）。玩家自己改过的键保留，新默认键与玩家自定义键冲突时只挪新键。提示文字一律用 `keyBindings.label()` 跟随当前键位，不要再写死字母；回归用 `game-projects/starship-defense/verify-look-keys.cjs`。两款的底部操作提示都写成“Q/E 转视角 · Y/H 抬头低头”。
-- 构建：`node game-projects/gunfire-assembly/build-compat.mjs` 同时生成大厅与重做版两个兼容包；`build-toy.mjs` 把 `pingan/` 的入口、样式、兼容包与语音打进同一个 Toy 包。验收脚本在 `game-projects/liangjian-pingan/qa/`，记录见 `game-projects/gunfire-assembly/media-kit/releases/web-pingan-remake-v0.2.0/`。
+- 构建：`node game-projects/gunfire-assembly/build-compat.mjs` 同时生成大厅与重做版两个兼容包；`build-toy.mjs` 把 `pingan/` 的入口、样式、兼容包与语音打进同一个 Toy 包。验收脚本在 `game-projects/liangjian-pingan/qa/`（剧情与双结局 `story.cjs`，两条路线自动通关 `playthrough.cjs` 加 `ROUTE=rescue`，枪火集结第一、二章 `gunfire-chapters.cjs`），各版记录见 `game-projects/liangjian-pingan/media-kit/releases/` 与 `game-projects/gunfire-assembly/media-kit/releases/web-pingan-*/`。
 
 ## 2026-10-06 右上按钮布局补充
 
