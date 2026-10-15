@@ -13,7 +13,9 @@ const out=process.env.QA_OUTPUT||path.join(__dirname,'media-kit/releases/web-dif
   await page.goto(url);let game=page;
   if(process.env.TOY_PREVIEW==='1'){await page.locator('iframe').first().waitFor();game=await (await page.locator('iframe').first().elementHandle()).contentFrame();}
   await game.goto(game.url()+(game.url().includes('?')?'&':'?')+'qa=1');await game.waitForFunction(()=>window.__gameQA&&window.__ccReady);
-  const press=async selector=>mobile?game.locator(selector==='#menuButton'?'#vP':selector).tap():game.locator(selector).click();
+   // 0.39.0 键位 v2 后电脑端默认鼠标接管：指针锁定时画布会吞掉 HUD 按钮的点击，真实玩家按 Esc 解锁再点，脚本照做。
+ const press=async selector=>{if(!mobile&&await game.evaluate(()=>!!document.pointerLockElement)){await game.evaluate(()=>document.exitPointerLock&&document.exitPointerLock());await game.waitForTimeout(120);}
+  return mobile?game.locator(selector==='#menuButton'?'#vP':selector).tap():game.locator(selector).click();};
   const difficulty=[];
   for(const id of ['casual','normal','hard']){
    await press('[data-campaign-difficulty="'+id+'"]');

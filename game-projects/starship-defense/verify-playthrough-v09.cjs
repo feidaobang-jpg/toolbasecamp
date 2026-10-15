@@ -26,7 +26,8 @@ const scenarios=[
     if(u.weapons){g.weapons=u.weapons;g.curWeapon=u.cur;g.weaponLv=u.lv;g.hpBonus=u.hpBonus;g.squadCount=u.squad;}
     q.startPrep();q.player.reset(g.cls);q.player.pos.set(0,5,-14);q.player.mesh.position.copy(q.player.pos);q.setCamYaw(0);q.player.yaw=0;},s);
   await p.waitForTimeout(300);
-  await p.keyboard.press('KeyR');await p.waitForTimeout(200);
+  // 开战键按当前绑定取：键位 v2（0.39.0）后是 X，R 只剩换弹；不再写死，免得机器人卡在准备阶段判成失败
+  await p.keyboard.press(await p.evaluate(()=>__gameQA.keyBindings.code('WAVE')));await p.waitForTimeout(200);
   const t0=Date.now();let res=null,deaths=0,lastDead=false;
   await p.keyboard.down('KeyJ');
   while(Date.now()-t0<240000){
@@ -53,5 +54,5 @@ const scenarios=[
  }
  await b.close();
  const merged=[...prior.filter(r=>!out.some(o=>o.scenario===r.scenario)),...out];
- fs.writeFileSync(path.join(release,'playthrough.json'),JSON.stringify({version:process.env.RELEASE||'web-arsenal-build-v0.9.1',method:'Playwright keyboard bot (J held, rebound [ / ] turn to nearest bug, N medkit, U grenades, stays by the gate); setup hooks only set chapter/gear and the two look keys before R; fight runs in real time without damage or kill hooks',runs:merged},null,1));
+ fs.writeFileSync(path.join(release,'playthrough.json'),JSON.stringify({version:process.env.RELEASE||'web-arsenal-build-v0.9.1',method:'Playwright keyboard bot (J held, rebound [ / ] turn to nearest bug, N medkit, U grenades, stays by the gate); setup hooks only set chapter/gear and the two look keys before the wave key; fight runs in real time without damage or kill hooks',runs:merged},null,1));
 })().catch(e=>{console.error(e);process.exit(1);});
