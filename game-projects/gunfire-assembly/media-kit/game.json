@@ -3,7 +3,7 @@
   "name": "枪火集结",
   "engine": "Three.js r152",
   "current_version": "web-liangjian-v0.8.1",
-  "entrypoint": "public/html/game/gunfire-assembly/index.html",
+  "entrypoint": "game-projects/gunfire-assembly/game/index.html",
   "release_intent": "web_demo",
   "development_model": "Composer",
   "publication_status": "website_live_toy_published",

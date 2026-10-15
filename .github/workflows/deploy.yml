@@ -112,8 +112,12 @@ jobs:
           # Bust CSS/JS cache in HTML via UTF-8-safe Python (perl -pi under LANG=C corrupts CJK).
           VER="$VER" python3 deploy/bust-html-cache.py
           grep -q 'recipe-ingredient-tags' public/html/life/ai-recipe.html
+          # 2026-10-15 起虫潮围城、枪火集结只做 B站 Toy，源码移到 game-projects/<游戏>/game/；服务器上的旧网站页
+          # 冻结在最后一次部署的版本，排除后 --delete 不会删它们（旧入口与存档何时下线另按明确任务处理）。
           rsync -avz --delete \
             --exclude 'data/nbcheck/*.json' \
+            --exclude '/html/game/starship-defense/' \
+            --exclude '/html/game/gunfire-assembly/' \
             -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new" \
             public/ \
             "${DO_USER}@${DO_HOST}:/var/www/toolbasecamp/"

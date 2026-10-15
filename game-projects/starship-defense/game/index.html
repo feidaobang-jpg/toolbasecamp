@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <link rel="icon" href="./icon.svg" type="image/svg+xml">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>枪火集结</title>
-<link rel="stylesheet" href="../../../css/base.css?v=rescue180">
-<link rel="stylesheet" href="./combat-controls.css?v=layout191">
+<title>虫潮围城</title>
+<link rel="stylesheet" href="./shared/base.css?v=rescue180">
+<link rel="stylesheet" href="./combat-controls.css?v=fire0373">
 <style>
 /* ---------- 结构 ---------- */
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;touch-action:none;}
@@ -17,9 +17,14 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:"Mi
 .hidden{display:none!important;}
 #assetLoad{position:absolute;left:0;top:0;right:0;bottom:0;z-index:100;display:grid;place-content:center;font-size:19px;text-align:center;padding:30px}
 #hud{pointer-events:none;}
-#hudTop{position:absolute;left:10px;top:10px;font-size:12px;line-height:1.6;padding:8px 11px;min-width:196px;max-width:240px}
+/* 左侧信息栏：状态、小地图、保存胶囊、本章提示竖着排，谁也不再压到战场中间（用户2026-10-14） */
+#hudLeft{position:absolute;left:10px;top:var(--corner-top,10px);z-index:25;display:flex;flex-direction:column;align-items:stretch;gap:6px;width:246px;pointer-events:none;}
+#hud.hidden~#hudLeft{display:none;}
+#hudTop{font-size:12px;line-height:1.55;padding:8px 11px}
+.barLine{display:flex;align-items:center;gap:7px}
+.barLine>span:first-child{flex:0 0 auto}
 #hudRight{position:absolute;right:10px;top:10px;text-align:right;font-size:12px;line-height:1.6;padding:8px 11px;max-width:250px}
-#hpBarWrap,#baseBarWrap{width:172px;height:8px;border-radius:5px;overflow:hidden;margin:3px 0}
+#hpBarWrap,#baseBarWrap{flex:1 1 auto;width:auto;max-width:172px;height:8px;border-radius:5px;overflow:hidden;margin:0}
 #hpBar,#baseBar{height:100%;width:100%}
 #hpBarWrap.low{animation:lowhp .6s steps(2) infinite}
 @keyframes lowhp{50%{outline:2px solid #ff4b4b}}
@@ -36,9 +41,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:"Mi
 .touch-mode .difficulty-options .tb-btn{min-height:58px;min-width:104px;font-size:18px}
 #difficultyHint{margin-top:8px}
 .rescue-actions button[aria-pressed="true"]{outline:2px solid #fff;outline-offset:2px}
-#radar{position:absolute;left:10px;top:150px;width:112px;height:112px}
+#radar{width:112px;height:112px;align-self:flex-start}
 #msg{position:absolute;left:50%;top:24%;transform:translateX(-50%);font-size:24px;text-align:center;white-space:nowrap;z-index:12}
-#hint{position:absolute;left:50%;bottom:66px;transform:translateX(-50%);font-size:11px;text-align:center;max-width:620px;padding:6px 14px;border-radius:8px;pointer-events:none}
+#hint{font-size:11px;text-align:left;line-height:1.5;padding:6px 9px;border-radius:8px;pointer-events:none}
 #interactHint{position:absolute;left:50%;bottom:104px;transform:translateX(-50%);font-size:13px;border-radius:9px;padding:4px 14px;max-width:600px;text-align:center;white-space:normal;z-index:15;pointer-events:none}
 #keysHint{position:absolute;left:50%;transform:translateX(-50%);bottom:4px;font-size:9px;line-height:1.4;padding:3px 10px;border-radius:6px;white-space:nowrap}
 #weaponBar{position:absolute;left:50%;bottom:24px;transform:translateX(-50%);display:flex;gap:4px;pointer-events:auto;max-width:720px;flex-wrap:wrap;justify-content:center}
@@ -54,8 +59,13 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:"Mi
 #screenFx.heal{background:radial-gradient(ellipse at center,rgba(0,255,120,0) 60%,rgba(60,255,150,.4) 100%)}
 .dmgNum{position:absolute;left:0;top:0;font-weight:900;font-size:14px;color:#fff;text-shadow:0 1px 0 #000,1px 0 0 #000,-1px 0 0 #000,0 -1px 0 #000;will-change:transform}
 .dmgNum.big{font-size:19px;color:#ffd84d}
-#readyBtn{position:absolute;left:50%;top:14px;transform:translateX(-50%);pointer-events:auto;font-size:14px;cursor:pointer;padding:9px 18px;font-weight:bold;z-index:30}
-#readyBtn:active{transform:translateX(-50%) scale(.95);}
+/* 备战条：开战 + 战术部署 + 队友指令合成一个入口；桌面顶部居中，触屏底部居中（在触控层之上，手机才点得到） */
+#prepDock{position:absolute;left:50%;top:calc(var(--corner-top,10px) + 4px);transform:translateX(-50%);z-index:30;display:flex;flex-direction:column-reverse;align-items:center;gap:6px;pointer-events:none}
+#hud.hidden~#prepDock{display:none}
+#prepDockRow{display:flex;align-items:stretch;gap:6px}
+#prepDock>*{pointer-events:auto}
+#readyBtn{font-size:14px;cursor:pointer;padding:9px 18px;font-weight:bold;border-radius:8px}
+#readyBtn:active{transform:scale(.95);}
 #placeBar{position:absolute;left:50%;bottom:64px;transform:translateX(-50%);pointer-events:auto;z-index:30;padding:8px 14px;border-radius:10px;text-align:center;font-size:13px;min-width:380px}
 #placeBar .small{font-size:10px;max-width:none;margin:2px 0}#placeBar .btnRow{justify-content:center;margin:4px 0 0}#placeBar .mbtn{font-size:12px;padding:6px 12px}
 #placeState{color:#5dff9d;font-weight:bold}#placeState.bad{color:#ff6b6b}
@@ -82,18 +92,28 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:"Mi
 #vI{right:28px;bottom:100px}#vH{right:102px;bottom:106px}#vX{right:172px;bottom:88px}
 #vO{right:24px;bottom:172px}#vL{right:78px;bottom:172px}#vC{right:132px;bottom:172px}#vP{right:186px;bottom:172px}
 .touch-mode #keysHint{display:none}
-.touch-mode #weaponBar{bottom:auto;top:58px;max-width:520px;z-index:26}
+/* 触屏：武器栏挪到左栏与右上经济面板之间的顶部条带，不再和别的提示叠在中间 */
+.touch-mode #weaponBar{bottom:auto;top:calc(var(--corner-top,10px) + var(--corner-height,44px) + var(--corner-gap,8px));left:232px;right:calc(var(--corner-right,10px) + 162px);transform:none;width:auto;max-width:none;z-index:26;justify-content:flex-start}
 .touch-mode #weaponBar .wslot{min-height:44px;font-size:12px;padding:8px 11px 8px 9px}
-.touch-mode #hint{bottom:auto;top:116px;max-width:470px;font-size:10px;padding:5px 9px}
-/* 曲面屏/手势返回会吞掉贴边触摸：触屏把开战按钮放进底部安全带，建造条出现时暂避 */
-.touch-mode #readyBtn{top:auto;bottom:calc(env(safe-area-inset-bottom,0px) + 56px);min-height:44px;padding:12px 26px;font-size:15px}
-.touch-mode.placing #readyBtn{display:none}
-.touch-mode #interactHint{bottom:154px;left:42%}
-.touch-mode #radar{top:144px;width:92px;height:92px}
-.touch-mode #webTools{top:10px;right:auto;left:236px;max-width:none}
-.touch-mode #webTools .mbtn:not(#fullBtn):not(#sandboxBtn){display:none}
+/* 曲面屏/手势返回会吞掉贴边触摸：触屏把备战条放进底部安全带，建造条出现时暂避 */
+.touch-mode #prepDock{top:auto;bottom:calc(env(safe-area-inset-bottom,0px) + 52px);width:auto;max-width:min(560px,86%);flex-direction:column}
+.touch-mode #prepDockRow{width:auto;max-width:100%}
+.touch-mode #tacticsButton{flex:0 1 auto}
+.touch-mode #readyBtn{min-height:44px;padding:12px 26px;font-size:15px}
+.touch-mode.placing #prepDock{display:none}
+.touch-mode #interactHint{bottom:172px}
+.touch-mode #radar{width:84px;height:84px}
+.touch-mode #hudLeft{width:212px;gap:4px}
 .touch-mode #hudTop,.touch-mode #hudRight{font-size:10px;line-height:1.45;padding:6px 8px}
-.touch-mode #hudTop{min-width:0;max-width:210px}.touch-mode #hpBarWrap,.touch-mode #baseBarWrap{width:150px}
+.touch-mode #hudTop{min-width:0;max-width:none}
+.touch-mode #hpBarWrap,.touch-mode #baseBarWrap{max-width:120px}
+.touch-mode #hint{font-size:10px;padding:5px 8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.touch-mode #hudLeft .save-health{font-size:10px!important;min-height:28px;padding:4px 8px}
+/* 手机左栏要让开左下摇杆：距离引导和「一切正常」的安抚话不常驻，报警时才占位（小地图已带方向） */
+.touch-mode:not(.versus-mode) #baseGuide{display:none}
+.touch-mode #baseAlert.calm{display:none}
+/* 触屏右上角已有暂停菜单，网页功能按钮不在 HUD 里重复占位 */
+.touch-mode #webTools .mbtn:not(#fullBtn):not(#sandboxBtn){display:none}
 .touch-mode .panel{max-height:94%;width:92%!important}
 .touch-mode .shopGrid{grid-template-columns:repeat(3,1fr)}
 .touch-mode #msg{top:30%;font-size:20px}
@@ -183,6 +203,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:"Mi
 .theme-dark #joyBase{background:#0e1e30;border:2px solid #8cc8f0;box-shadow:0 2px 10px rgba(0,0,0,.5)}
 .theme-dark #joyKnob{background:#fff6df;border:2px solid #785a28;box-shadow:0 2px 6px rgba(0,0,0,.45)}
 
+#keySchemes{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:6px 0}
+#keySchemes button{text-align:left;min-height:52px;display:flex;flex-direction:column;gap:3px}#keySchemes button .small{font-weight:normal;font-size:11px;line-height:1.35;max-width:none;margin:0}
+#keySchemes button.on{outline:2px solid #ffe066}
 #keyGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:8px 0}
 #keyGrid button{text-align:left;min-height:42px;font-size:13px}
 .operation-card{display:block;width:100%;text-align:left;white-space:normal;margin:12px 0;min-height:54px}
@@ -209,20 +232,6 @@ html,body,#stage,.menu,.menu *,.panel,.panel *{touch-action:pan-x pan-y}
 button::before,button::after{content:none!important}
 [data-device-mode][aria-pressed="true"]{background:#ffe09a!important;color:#24372c!important;border:2px solid #ffbe36!important;box-shadow:inset 0 0 0 1px #b57519;font-weight:900}
 
-/* 暂停菜单统一奶油色复刻系（电脑/手机共用），亮场景下清晰；金色为选中/焦点反馈 */
-.theme-dark #menuPause{background:linear-gradient(180deg,#f7ead0,#ecdbb6);color:#33452f}
-.theme-dark #menuPause h2{color:#2f4a34;text-shadow:none}
-.theme-dark #menuPause .small{color:#6b5a3e}
-#menuPause label{color:#3a2f1c}
-.theme-dark #menuPause .mbtn{color:#3a2f1c;background:#fff6df;border:2px solid #785a28;border-radius:10px;text-shadow:none;box-shadow:0 2px 5px rgba(90,70,40,.22)}
-.theme-dark #menuPause .mbtn:hover{filter:brightness(1.04)}
-.theme-dark #menuPause .mbtn.green{color:#fff6df;background:#3f8f4f;border-color:#2c6b39}
-.theme-dark #menuPause .mbtn.red{color:#fff6df;background:#b0453a;border-color:#8a3128}
-#menuPause .tb-btn{color:#3a2f1c;background:#fff6df;border:2px solid #785a28;border-radius:9999px}
-#menuPause .tb-btn:hover{background:#f4e4c2}
-#menuPause :focus{outline:3px solid #2f7d3f!important;outline-offset:2px;box-shadow:0 0 10px rgba(47,125,63,.5)}
-#menuPause .rescue-actions button[aria-pressed="true"]{outline:2px solid #2f7d3f;outline-offset:2px}
-
 /* Arcade rows: U I O directly above J K L; utilities remain separate. */
 #touchUI .vbtn:not(#vC):not(#vP){width:58px;height:58px;line-height:56px;font-size:12px}
 #vJ{right:calc(var(--touch-right,40px) + 136px);bottom:var(--touch-bottom,36px)}#vK{right:calc(var(--touch-right,40px) + 68px);bottom:var(--touch-bottom,36px)}#vL{right:var(--touch-right,40px);bottom:var(--touch-bottom,36px)}
@@ -232,14 +241,16 @@ button::before,button::after{content:none!important}
 #cornerTools{position:absolute;top:var(--corner-top);right:var(--corner-right);z-index:35;display:flex;gap:var(--corner-gap);align-items:center}
 #cornerTools .mbtn,#vC,#vP{height:var(--corner-height);min-width:72px;white-space:nowrap;line-height:normal;display:flex;align-items:center;justify-content:center;padding:0 12px;border-radius:14px;background:#0e1e30;border:2px solid #8cc8f0;color:#fff6df;font:800 13px "Microsoft YaHei",sans-serif;text-shadow:0 1px 2px #000;box-shadow:0 2px 8px rgba(0,0,0,.45)}
 .touch-mode #cornerTools #menuButton,.touch-mode #cornerTools #personBtn{display:none}
+.touch-mode #cornerTools #autoFireBtn{position:absolute;right:0;top:calc(var(--corner-height) + 6px);height:30px;min-width:0;font-size:12px;padding:0 10px}
 #vC,#vP{top:var(--corner-top);bottom:auto}#vC{right:calc(var(--corner-right) + 144px + 2 * var(--corner-gap));width:86px}#vP{right:calc(var(--corner-right) + 72px + var(--corner-gap));width:72px}#cornerTools #fullBtn{width:72px}
 #hudRight{right:var(--corner-right);top:calc(var(--corner-top) + var(--corner-height) + var(--corner-gap))}
 
-.touch-mode #hudRight{top:64px;font-size:9px;line-height:1.35;max-width:140px}
+/* 触屏只把经济读数留在右上角（切换视角那一行的正下方，动作键顶部之上）；命令按钮改进底部备战条。 */
+.touch-mode #hudRight{top:calc(var(--corner-top,10px) + var(--corner-height,44px) + var(--corner-gap,8px));right:var(--corner-right);font-size:9px;line-height:1.35;max-width:150px;max-height:230px;overflow:hidden}
 /* 战术信息集中在主动打开的面板，战斗时只留一个入口。 */
-/* 右面板统一对齐：战术入口撑满面板宽，功能按钮走等宽两列网格，避免左靠/右靠/换行参差。 */
-#tacticsButton{pointer-events:auto;display:block;box-sizing:border-box;width:100%;margin-top:5px;max-width:100%;min-height:44px;padding:5px 9px;font-size:11px;white-space:normal;text-align:left}
-#squadOrderBtn{pointer-events:auto;display:block;box-sizing:border-box;width:100%;margin-top:5px;max-width:100%;min-height:44px;padding:5px 9px;font-size:11px;white-space:normal;text-align:left}
+/* 备战条里的两个入口按钮等宽排一行，文字完整可读。 */
+#tacticsButton{box-sizing:border-box;min-height:44px;padding:5px 10px;font-size:11px;white-space:normal;text-align:left;max-width:230px}
+#squadOrderBtn{box-sizing:border-box;min-height:44px;padding:5px 10px;font-size:11px;white-space:normal;text-align:left}
 #tacticsPanel{width:660px;max-height:88%;overflow-y:auto;z-index:60;background:#132432;color:#edf6f8;border:1px solid #7397a4;touch-action:pan-y}
 #tacticsPanel .small{max-width:none;text-align:left;white-space:pre-line;margin:5px 0;color:#d5e3e9}
 #tacticsPanel h3{padding-right:36px;margin-bottom:8px}
@@ -258,8 +269,12 @@ button::before,button::after{content:none!important}
 #cloudChoices{max-width:100%;padding:8px}
 .mbtn[data-author-home]{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;min-height:44px;box-sizing:border-box}
 .saveAuto{display:block;padding:8px}.saveAuto input{width:20px;height:20px;vertical-align:middle}
-#localHistory{display:flex;flex-wrap:wrap;gap:8px}.save-health{position:absolute;left:50%;top:64px;transform:translateX(-50%);display:block;max-width:220px;min-height:44px;padding:6px 10px;font-size:12px!important;text-align:center;white-space:normal;pointer-events:auto;z-index:30;transition:opacity .35s}.save-health:active{transform:translateX(-50%) scale(.95)}.save-health.faded{opacity:0;pointer-events:none}#hud.hidden~#saveHealth{display:none}
+#localHistory{display:flex;flex-wrap:wrap;gap:8px}.save-health{display:block;width:100%;box-sizing:border-box;max-width:none;min-height:34px;padding:5px 9px;font-size:11px!important;text-align:left;white-space:normal;pointer-events:auto;transition:opacity .35s}.save-health:active{transform:scale(.97)}
+/* 淡出后把胶囊的高度也收掉：手机左栏竖着排，常驻空位会顶到左下摇杆 */
+.save-health.faded{opacity:0;pointer-events:none;max-height:0;min-height:0;padding-top:0;padding-bottom:0;border-width:0;overflow:hidden;transition:opacity .35s,max-height .12s linear .35s,min-height .12s linear .35s,padding .12s linear .35s,border-width .12s linear .35s}
+.touch-mode #hudLeft .save-health.faded{min-height:0;padding:0}
 #saveNotice{font-size:11px;max-width:700px}
+.zerg-mode .campaign-only{display:none!important}
 
 /* ===== 虫潮对战（1 对 1 到 4 对 4） ===== */
 .versus-only{display:none!important}
@@ -318,6 +333,8 @@ button::before,button::after{content:none!important}
 #bfFlags{position:absolute;top:78px;left:50%;transform:translateX(-50%);display:flex;gap:8px;pointer-events:none;font-size:12px}
 #bfFlags span{background:#253331e8;border-bottom:3px solid;padding:5px 9px;white-space:nowrap}
 #stage.versus-mode #hudRight{top:118px;right:12px;max-width:270px}
+/* 备战条只服务主战役：战地/银行的对战入口在指挥面板里，别在顶部和战况条叠一层空壳 */
+#stage.versus-mode #prepDock{display:none!important}
 #stage.versus-mode #vsTop{top:12px;max-width:calc(100% - 550px)}
 #stage.versus-mode #vsEco{white-space:pre-line;font-size:11px}
 #stage.versus-mode .vs-clock small{max-width:150px}
@@ -332,32 +349,26 @@ button::before,button::after{content:none!important}
 #stage.versus-mode.touch-mode #vsPhase{display:none}
 #stage.versus-mode.touch-mode #bfFlags{top:64px;font-size:10px;gap:4px}
 #stage.versus-mode.touch-mode #bfFlags span{padding:3px 6px}
-#stage.versus-mode.touch-mode #hudRight{top:94px;max-width:230px}
+#stage.versus-mode.touch-mode #hudRight{top:94px;right:calc(var(--touch-right,40px) + var(--bf-step,68px) * 3 + var(--bf-size,58px) + 12px);max-width:200px}
 #stage.versus-mode.touch-mode #vsEco{font-size:10px}
 #stage.versus-mode #vR{right:calc(var(--touch-right,40px) + 204px);bottom:var(--touch-bottom,36px)}
 #stage.versus-mode #vZ{right:calc(var(--touch-right,40px) + 204px);bottom:calc(var(--touch-bottom,36px) + 68px)}
 #vZ.aiming{background:#8b7948;color:#fff;outline:2px solid #ffdc86}
 #stage.versus-mode #msg{max-width:72%;font-size:18px;white-space:normal;text-align:center;background:#172725b8;border-radius:8px;padding:8px 12px}
 #stage.versus-mode .vs-clock small{font-size:9px}
-#stage.versus-mode.touch-mode{--bf-size:max(58px,var(--corner-height));--bf-fire:max(76px,calc(var(--corner-height) + 18px));--bf-step:calc(var(--bf-size) + 10px)}
-#stage.versus-mode.touch-mode #touchUI .vbtn:not(#vC):not(#vP):not(#vJ){width:var(--bf-size);height:var(--bf-size);line-height:var(--bf-size)}
-/* 吃鸡式：射击键更大，换弹/举枪贴在射击键左侧列 */
-#stage.versus-mode.touch-mode #vJ{width:var(--bf-fire);height:var(--bf-fire);line-height:var(--bf-fire);font-size:16px;right:calc(var(--touch-right) + var(--bf-step));bottom:var(--touch-bottom);z-index:28;border-radius:50%}
-#stage.versus-mode.touch-mode #vU,#stage.versus-mode.touch-mode #vSPRINT{right:calc(var(--touch-right) + var(--bf-step) * 2 + (var(--bf-fire) - var(--bf-size)))}
+#stage.versus-mode.touch-mode{--bf-size:max(58px,var(--corner-height));--bf-step:calc(var(--bf-size) + 10px)}
+#stage.versus-mode.touch-mode #touchUI .vbtn:not(#vC):not(#vP){width:var(--bf-size);height:var(--bf-size);line-height:var(--bf-size)}
+#stage.versus-mode.touch-mode #vJ,#stage.versus-mode.touch-mode #vU,#stage.versus-mode.touch-mode #vSPRINT{right:calc(var(--touch-right) + var(--bf-step) * 2)}
 #stage.versus-mode.touch-mode #vK,#stage.versus-mode.touch-mode #vI,#stage.versus-mode.touch-mode #vH{right:calc(var(--touch-right) + var(--bf-step))}
-#stage.versus-mode.touch-mode #vR,#stage.versus-mode.touch-mode #vZ{right:calc(var(--touch-right) + var(--bf-step) * 2 + (var(--bf-fire) - var(--bf-size)));width:var(--bf-size);height:var(--bf-size);line-height:var(--bf-size)}
-#stage.versus-mode.touch-mode #vR{bottom:var(--touch-bottom)}
-#stage.versus-mode.touch-mode #vZ{bottom:calc(var(--touch-bottom) + var(--bf-step))}
-#stage.versus-mode.touch-mode #vU,#stage.versus-mode.touch-mode #vI,#stage.versus-mode.touch-mode #vO{bottom:calc(var(--touch-bottom) + var(--bf-step))}
+#stage.versus-mode.touch-mode #vR,#stage.versus-mode.touch-mode #vZ{right:calc(var(--touch-right) + var(--bf-step) * 3)}
+#stage.versus-mode.touch-mode #vU,#stage.versus-mode.touch-mode #vI,#stage.versus-mode.touch-mode #vO,#stage.versus-mode.touch-mode #vZ{bottom:calc(var(--touch-bottom) + var(--bf-step))}
 #stage.versus-mode.touch-mode #vSPRINT,#stage.versus-mode.touch-mode #vH,#stage.versus-mode.touch-mode #vX{bottom:calc(var(--touch-bottom) + var(--bf-step) * 2)}
-#vR.need-reload,#vL.need-reload{outline:3px solid #ffdc86;animation:reloadPulse .7s ease infinite}
-@keyframes reloadPulse{50%{filter:brightness(1.4)}}
-#stage.versus-mode.touch-mode #vsPanel{right:calc(var(--touch-right) + var(--bf-step) * 2 + var(--bf-fire) + 12px);max-width:55%;max-height:calc(100% - 70px)}
+#stage.versus-mode.touch-mode #vsPanel{right:calc(var(--touch-right) + var(--bf-step) * 3 + var(--bf-size) + 12px);max-width:55%;max-height:calc(100% - 70px)}
 #stage.versus-mode.touch-mode #vsPanel .vs-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 #stage.versus-mode.touch-mode #vsPanel button{min-height:var(--corner-height)}
-/* 战地手机：顶部直选枪槽，避免只能轮切或开商店 */
+/* 战地手机：顶部直选枪槽，避免只能轮切或开商店。战地右上角是装备读数，枪槽仍居中，不套用主战役的顶部左对齐条带 */
 #stage.versus-mode #weaponBar{bottom:auto;top:112px;z-index:26;max-width:min(640px,72%)}
-#stage.versus-mode.touch-mode #weaponBar{display:flex;top:96px;max-width:min(560px,78%);gap:6px}
+#stage.versus-mode.touch-mode #weaponBar{display:flex;top:96px;max-width:min(560px,78%);gap:6px;left:50%;right:auto;transform:translateX(-50%);width:auto;justify-content:center}
 #stage.versus-mode.touch-mode #weaponBar .wslot{min-height:44px;font-size:12px;padding:8px 12px}
 #stage.versus-mode.touch-mode{--bf-corner:max(72px,var(--corner-height))}
 #stage.versus-mode.touch-mode #vP,#stage.versus-mode.touch-mode #cornerTools #fullBtn{width:var(--bf-corner);min-width:var(--corner-height)}
@@ -374,55 +385,6 @@ html,body{overscroll-behavior:none}
 .menu{overflow-x:hidden;overscroll-behavior:contain;scrollbar-width:thin}
 .menu>*{flex-shrink:0;max-width:100%;min-width:0}
 .menu .btnRow{max-width:100%;min-width:0}
-#menuMain{padding:10px 24px;gap:6px}
-.mainHeader{display:flex;align-items:center;justify-content:space-between;width:100%;padding-right:90px;gap:12px}
-#menuMain .mainHeader h1{margin:0;font-size:30px;letter-spacing:3px}
-#gameVersion{font-size:13px;color:#bcd5e4;white-space:nowrap}
-.mainColumns{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;width:100%}
-.mainColumns section{min-width:0}
-#menuMain h2{margin:3px 0;font-size:16px;line-height:1.3}
-#menuMain .btnRow{margin:3px 0}
-#menuMain #classRow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-#menuMain .classCard{width:auto;min-width:0;padding:6px;font-size:10px;line-height:1.35}
-#menuMain .classCard b{display:block;font-size:17px}
-.classRole{display:none}
-#menuMain #startRow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
-#menuMain #startRow .coop-entry{word-break:keep-all;overflow-wrap:normal}
-#menuMain #modeRow{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-#menuMain .mbtn,#menuMain .coop-entry{margin:0;min-width:0;min-height:44px;padding:6px 8px;font-size:13px;line-height:1.25;white-space:normal;overflow-wrap:anywhere}
-#menuMain .difficulty-options{margin:3px 0;gap:8px}
-#menuMain .difficulty-options .tb-btn{min-height:44px;padding:6px 14px;font-size:15px}
-#menuMain .small{font-size:11px;line-height:1.5;max-width:100%;overflow-wrap:anywhere}
-#menuMain #difficultyHint{display:none}
-.mainModeNote{margin-top:8px}
-.mainSettings{width:100%;margin-top:auto}
-#menuMain.gunfire-lobby{padding:12px 28px;gap:8px;align-items:stretch}
-#menuMain.gunfire-lobby .mainHeader{padding-right:12px;justify-content:flex-start;align-items:baseline;gap:14px}   /* 版本号跟在标题后面，不再被右上角按钮压住 */
-#menuMain.gunfire-lobby .mainHeader h1{font-size:36px;letter-spacing:6px;color:#ffe09a}
-#menuMain.gunfire-lobby .subtitle{color:#9ec4d8;letter-spacing:8px;margin:0 0 4px}
-#menuMain.gunfire-lobby .lobbyLead{max-width:820px;color:#c5d7e4;margin:0 0 4px}
-.lobbyGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;width:100%}
-.lobbyCard{display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;min-height:96px;padding:12px 16px;border-radius:12px;border:1px solid #6f8ea3;background:linear-gradient(160deg,#1a3142,#243f52);color:#eef6fb;cursor:pointer;font:inherit;box-shadow:0 6px 0 #0f1c26}
-.lobbyCard strong{font-size:20px;letter-spacing:1px;color:#ffe9b0}
-.lobbyCard span{font-size:13px;line-height:1.55;color:#b9cfe0}
-.lobbyCard:hover,.lobbyCard:focus-visible{outline:3px solid #ffe066;outline-offset:2px;transform:translateY(-2px)}
-.lobbyCard.featured{border-color:#e9c26e;background:linear-gradient(160deg,#304348,#344939)}
-#earlyGunfire{margin-top:12px;border-top:1px solid #516976}
-#earlyGunfire summary{min-height:44px;padding:10px 4px;cursor:pointer;color:#b9cbd4;font-size:15px;line-height:1.5}
-#earlyGunfire summary:focus-visible{outline:3px solid #e9c26e;outline-offset:-3px}
-#earlyGunfire .lobbyCard{width:100%;min-height:70px;box-shadow:none}
-#menuMain.gunfire-lobby #settingsRow{display:flex;flex-wrap:wrap;gap:8px;grid-template-columns:none}
-#menuMain.gunfire-lobby #settingsRow a,#menuMain.gunfire-lobby #settingsRow .mbtn{width:auto;min-width:120px;text-align:center;display:flex;align-items:center;justify-content:center}
-.touch-mode #menuMain.gunfire-lobby .lobbyGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-.touch-mode #menuMain.gunfire-lobby .lobbyCard{min-height:var(--corner-height,72px);padding:12px 14px}
-.touch-mode #menuMain.gunfire-lobby .lobbyCard strong{font-size:17px}
-.touch-mode #menuMain.gunfire-lobby .lobbyCard span{font-size:12px}
-#menuMain #settingsRow{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
-#menuMain #settingsRow a{width:auto;text-align:center;display:flex;align-items:center;justify-content:center}
-.touch-mode #menuMain .classStats{display:none}
-.touch-mode #menuMain .classRole{display:block;margin-top:4px;font-size:12px}
-.touch-mode #menuMain .classCard{min-height:var(--corner-height,44px)}
-.touch-mode #menuMain .mbtn,.touch-mode #menuMain .coop-entry,.touch-mode #menuMain .difficulty-options .tb-btn{min-height:var(--corner-height,44px);font-size:14px}
 .infoPanel{width:740px;max-width:94%;max-height:90%;padding:14px 18px;overflow-x:hidden;overscroll-behavior:contain;scrollbar-width:thin}
 .infoHeader{position:sticky;top:-14px;margin:-14px -18px 10px;padding:14px 44px 10px 18px;background:#132432;z-index:2}
 .infoHeader h3{margin:0;text-align:left}
@@ -434,29 +396,19 @@ html,body{overscroll-behavior:none}
 .infoHeader .closeX{width:var(--corner-height,44px);min-height:var(--corner-height,44px);top:4px}
 .helpText p{margin:10px 0;line-height:1.7}
 .touch-help{display:none}.touch-mode .touch-help{display:block}.touch-mode .desktop-help{display:none}
-.touch-mode #menuPause{justify-content:flex-start}
+
 
 </style>
+<link rel="stylesheet" href="./menu.css?v=menu0380">
 </head>
 <body>
 <div id="stage">
   <canvas id="c3d"></canvas>
 <div id="assetLoad" role="status">正在部署前哨基地…</div>
-<div id="cornerTools"><button id="personBtn" class="mbtn">第三人称</button><button class="mbtn" id="menuButton" aria-label="打开游戏菜单，P 或 Esc">暂停 P</button><button id="fullBtn" class="mbtn">全屏 F</button></div>
+<div id="cornerTools"><button id="autoFireBtn" class="mbtn" aria-pressed="true">自动射击：开</button><button id="personBtn" class="mbtn">第三人称</button><button class="mbtn" id="menuButton" aria-label="打开游戏菜单，P 或 Esc">暂停 P</button><button id="fullBtn" class="mbtn">全屏 F</button></div>
 
   <!-- HUD -->
   <div id="hud" class="overlay hidden">
-    <div id="hudTop">
-      <div id="statLine" class="campaign-only">周目1 第1章 第1关</div>
-      <div id="environmentName" class="campaign-only" style="color:#9fc8db;font-size:10px;letter-spacing:.5px">荒漠 · 白天 · 第 1–3 章</div>
-      <div>❤ 生命 <span id="hpTxt"></span></div>
-      <div id="hpBarWrap"><div id="hpBar"></div></div>
-      <div class="campaign-only">🏰 基地 <span id="baseTxt"></span></div>
-      <div id="baseBarWrap" class="campaign-only"><div id="baseBar"></div></div>
-      <div id="baseGuide"></div>
-      <div id="baseAlert" class="campaign-only" role="status">基地耐久归零即失败</div>
-    </div>
-    <canvas id="radar" width="224" height="224" aria-label="小地图"></canvas>
     <div id="hudRight">
       <div class="campaign-only">💰 金币 <span id="goldTxt">0</span></div>
       <div id="vsEco" class="versus-only" role="status"></div>
@@ -467,8 +419,6 @@ html,body{overscroll-behavior:none}
       <div id="squadTxt" class="campaign-only"></div>
       <div id="hiveTxt" class="campaign-only"></div>
       <div id="waveTxt" class="campaign-only" style="white-space:pre-line"></div>
-      <button class="mbtn campaign-only" id="squadOrderBtn">队友：跟随我</button>
-      <button class="mbtn campaign-only" id="tacticsButton">下一波 · 战术部署</button>
       <div id="webTools"><button class="mbtn campaign-only" id="opsButton">⚑ 副本</button><button class="mbtn campaign-only" id="platformBtn">☁ 存档/排行</button><button id="sandboxBtn" class="mbtn hidden">🧪 测试台 T</button><button id="muteBtn" class="mbtn">声音 M</button></div>
     </div>
     <div id="vsTop" class="versus-only" aria-label="对战状态">
@@ -481,16 +431,32 @@ html,body{overscroll-behavior:none}
     <div id="dmgLayer"></div>
     <div id="screenFx"></div>
     <div id="msg" class="hidden"></div>
-    <div id="hint" class="hidden"></div>
     <div id="interactHint" class="hidden"></div>
     <div id="weaponBar" aria-label="武器栏"></div>
     <div id="keysHint">WASD移动 · 鼠标转视角 · 左键射击 · 按住Shift跑步 · 空格跳跃 · F互动(门/载具) · E医疗包 · G手雷 · 直升机 空格升 / C降 · 1-6/Q/滚轮换枪 · V切换视角 · B商店 · T建造 · X开战 · P/Esc暂停</div>
   </div>
-  <!-- 放置工具栏与触控层同级，避免视角区域遮挡按钮。 -->
-    <!-- 保存状态提示同样提到触控层之上，手机上才能点它打开档案站；显隐跟随 #hud。 -->
-    <!-- 开战按钮也必须在触控层之上：#hud(z10) 低于 #touchUI(z20)，留在 hud 内会被全屏视角拖拽层吞掉触摸。 -->
-    <button id="readyBtn" class="hidden">✅ 准备完毕，开战！（X）</button>
+  <!-- 虫族战况面板必须在 #hud 之外：虫族开局会隐藏战役 HUD，面板要能独立显示。 -->
+  <div id="zergHud" class="hidden" aria-label="虫族战况"></div>
+  <!-- 左侧信息栏（状态 / 小地图 / 本章提示 / 保存胶囊）与备战条都放在 #hud 之后：
+       一是用 #hud.hidden~ 跟随战役 HUD 显隐，二是高于 #touchUI(z20) 触屏才点得到保存胶囊。 -->
+  <div id="hudLeft">
+    <div id="hudTop">
+      <div id="statLine" class="campaign-only">周目1 第1章 第1关</div>
+      <div id="environmentName" class="campaign-only" style="color:#9fc8db;font-size:10px;letter-spacing:.5px">荒漠 · 白天 · 第 1–3 章</div>
+      <div class="barLine"><span>❤ 生命 <span id="hpTxt"></span></span><div id="hpBarWrap"><div id="hpBar"></div></div></div>
+      <div class="barLine campaign-only"><span>🏰 基地 <span id="baseTxt"></span></span><div id="baseBarWrap"><div id="baseBar"></div></div></div>
+      <div id="baseGuide"></div>
+      <div id="baseAlert" class="campaign-only" role="status">基地耐久归零即失败</div>
+    </div>
+    <canvas id="radar" width="224" height="224" aria-label="小地图"></canvas>
+    <div id="hint" class="hidden"></div>
     <button class="mbtn save-health campaign-only" id="saveHealth" aria-label="查看保存状态"></button>
+  </div>
+  <div id="prepDock">
+    <div id="prepDockRow"><button class="mbtn campaign-only" id="tacticsButton">下一波 · 战术部署</button><button class="mbtn campaign-only" id="squadOrderBtn">队友：跟随我</button></div>
+    <button id="readyBtn" class="hidden">✅ 准备完毕，开战！（X）</button>
+  </div>
+  <!-- 放置工具栏与触控层同级，避免视角区域遮挡按钮。 -->
     <section id="vsPanel" class="hidden" aria-label="对战指挥面板">
       <div class="vs-head">
         <div class="vs-tabs" role="tablist" aria-label="面板分页"><button type="button" role="tab" data-vstab="units">兵种</button><button type="button" role="tab" data-vstab="build">部署 L</button><button type="button" role="tab" data-vstab="weapons">装备 O</button><button type="button" role="tab" data-vstab="team" id="vsTeamTab" class="hidden">战况 T</button></div>
@@ -528,65 +494,78 @@ html,body{overscroll-behavior:none}
 
   <section id="keyPanel" class="panel hidden" aria-label="操作设置">
     <button id="keysClose" class="closeX" aria-label="关闭操作设置">×</button><h3>⌨ 操作设置</h3>
-    <p class="small">选一项后按新键；Esc 取消改绑。Enter、Esc、Tab 保留给菜单；键位保存在当前设备。</p>
+    <div class="desktop-help"><h4>电脑键位方案</h4><div id="keySchemes"></div></div>
+    <p class="small">先选一套方案，再点下面某一项、按新键即可改；新键已被占用时两项自动互换。Esc 取消改绑，Enter、Esc 保留给菜单；两套方案的改键各自保存在当前设备。</p>
     <div id="keyStatus" role="status"></div><button id="keysReset" class="mbtn">恢复默认键位</button><div id="keyGrid"></div>
   </section>
   <section id="operationsPanel" class="panel hidden" aria-label="副本任务">
     <button id="opsClose" class="closeX" aria-label="关闭副本列表">×</button><h3>⚑ 前哨副本 · 9 项行动</h3>
     <p id="operationsInfo" class="small"></p><div id="operationsList"></div>
   </section>
-  <!-- 枪火集结：打开即大厅，选模式进入 -->
-  <div id="menuMain" class="overlay menu gunfire-lobby" data-gunfire-lobby="1">
-    <header class="mainHeader"><h1>枪火集结</h1><span id="gameVersion" aria-label="当前游戏版本"></span></header>
-    <p class="subtitle">枪战模式大厅</p>
-    <p class="small lobbyLead">推荐先玩抗战战役（亮剑三章）：苍云岭两发炮弹端指挥部，李家坡挖交通壕、三千六百颗手榴弹砸进环形工事，平安县城操炮攻城；越肩 / 第一人称射击、接管机枪。</p>
-    <section aria-label="模式列表">
-      <div class="lobbyGrid" id="lobbyModes">
-        <button type="button" class="lobbyCard featured" id="btnPingan">
-          <strong>抗战战役 · 亮剑三章</strong>
-          <span>推荐体验 · 苍云岭、李家坡、平安县城三章全部重做，进去后在菜单里选章、继续进度</span>
-        </button>
-      </div>
-      <details id="earlyGunfire"><summary tabindex="0">其他玩法 · 早期体验</summary><button type="button" class="lobbyCard" id="btnVersus"><strong>战地模式 · 据点争夺</strong><span>尚未完成本轮打磨 · 可电脑 / 好友对战</span></button></details>
-      <p class="small mainModeNote">早期内容保留试玩与原有进度，后续逐项打磨。</p>
-    </section>
-    <nav class="mainSettings" aria-label="设置与说明">
-      <div class="btnRow" id="settingsRow">
-        <button class="mbtn" id="keysMenu">⌨ 操作设置</button>
-        <a class="mbtn" href="https://www.bilibili.com/toy/chongchao-qianshao/index.html">🐛 虫潮围城</a>
-        <a class="mbtn" data-author-home href="https://space.bilibili.com/16214353" target="_blank" rel="noopener noreferrer">作者B站主页</a>
-        <button class="mbtn" id="updatesMenu">📋 更新日志</button>
-        <button class="mbtn" id="helpMenu">❔ 玩法说明</button>
-      </div>
-    </nav>
-    <!-- 兼容旧脚本的隐藏钩子（本游戏大厅不展示守城流程） -->
-    <div id="legacyCampaignHooks" class="hidden" aria-hidden="true">
-      <div id="classRow">
-        <div class="classCard sel" tabindex="-1" data-c="gunner"><b>机枪兵</b></div>
-        <div class="classCard" tabindex="-1" data-c="rifle"><b>火枪兵</b></div>
-        <div class="classCard" tabindex="-1" data-c="medic"><b>医疗兵</b></div>
-      </div>
-      <div class="btnRow" id="startRow">
-        <button class="mbtn" id="btnContinue">继续</button>
-        <button class="mbtn" id="btnStart">开始</button>
-      </div>
-      <div class="btnRow" id="modeRow">
-        <button class="mbtn" id="btnBankVersus">银行塔防</button>
-        <button class="mbtn" id="btnTest">自由测试</button>
-      </div>
-      <p id="saveNotice"></p>
-      <p id="difficultyHint"></p>
-      <button id="btnLoadMenu">读档</button>
-      <button id="btnPlatformMenu">存档</button>
-      <button id="daylightMain">地表</button>
-      <div class="rescue-actions difficulty-options" role="group" aria-labelledby="difficultyTitle">
-        <button type="button" class="tb-btn" data-campaign-difficulty="casual" aria-pressed="false">休闲</button>
-        <button type="button" class="tb-btn" data-campaign-difficulty="normal" aria-pressed="true">普通</button>
-        <button type="button" class="tb-btn" data-campaign-difficulty="hard" aria-pressed="false">困难</button>
-      </div>
-      <h2 id="difficultyTitle">难度</h2>
+  <!-- 标题、模式列表、配置与固定操作区各自分工，矮屏只滚动内容。 -->
+  <div id="menuMain" class="overlay menu">
+    <header class="mainHeader"><div class="menuBrand"><h1>虫潮围城</h1><span id="gameVersion" aria-label="当前游戏版本"></span></div>
+      <nav class="menuTools" aria-label="常用功能"><button class="mbtn" data-menu-panel="menuSavePanel">存档</button><button class="mbtn" data-menu-panel="menuSettingsPanel">设置</button><button class="mbtn" data-menu-panel="menuMorePanel">更多</button></nav>
+    </header>
+    <div class="mainColumns">
+      <section class="mainModes" aria-label="模式选择"><h2>选择模式</h2><div class="modeScroll" data-menu-scroll>
+    <div class="lobbyGrid btnRow" id="modeRow">
+      <button type="button" class="lobbyCard mode-sel" id="btnCampaign" data-mode="campaign" aria-pressed="true">
+        <strong>基地防守 · 主模式</strong>
+        <span>打怪攒钱 · 造塔雇队友 · 守住前哨（默认）</span>
+      </button>
+      <button type="button" class="lobbyCard" id="btnBankVersus" data-mode="bank">
+        <strong>银行塔防对战</strong>
+        <span>升级银行 · 派兵造塔 · 可电脑/好友对战</span>
+      </button>
+    </div>
+    <details id="earlyModes"><summary tabindex="0">其他玩法 · 测试版</summary><p class="earlyNote">尚未完成本轮打磨，可自愿体验。原有进度保留。</p><div id="earlyModeList"></div></details>
+      </div></section>
+      <section class="mainWorkspace" aria-labelledby="modeTitle">
+        <div class="modeContent" data-menu-scroll>
+          <div class="modeHeading"><p id="modeTag"></p><h2 id="modeTitle">基地防守</h2></div>
+          <p id="modeDescription"></p>
+          <p id="modeStatus" class="earlyNote" hidden>测试版 · 尚未完成本轮打磨，玩法与难度仍待完善。</p>
+          <section id="campaignConfig" aria-label="基地防守设置"><h3>选择前哨守卫</h3>
+    <div class="btnRow" id="classRow">
+      <div class="classCard sel" tabindex="0" role="button" data-c="gunner"><b>机枪兵</b><span class="classStats"><br>机枪伤害 +25%<br>受到伤害 −15%<br>生命 120 · 持续守线</span><span class="classRole">持续守线</span></div>
+      <div class="classCard" tabindex="0" role="button" data-c="rifle"><b>火枪兵</b><span class="classStats"><br>霰弹伤害 +30%<br>移动速度 10.5<br>生命 100 · 近战突围</span><span class="classRole">近战突围</span></div>
+      <div class="classCard" tabindex="0" role="button" data-c="medic"><b>医疗兵</b><span class="classStats"><br>自身每秒回血 4<br>12 米内队友每秒回血 4<br>生命 90 · 小队续航</span><span class="classRole">小队续航</span></div>
+    </div>
+    <h2 id="difficultyTitle">战役难度</h2>
+    <div class="rescue-actions difficulty-options" role="group" aria-labelledby="difficultyTitle">
+      <button type="button" class="tb-btn" data-campaign-difficulty="casual" aria-pressed="false">休闲</button>
+      <button type="button" class="tb-btn" data-campaign-difficulty="normal" aria-pressed="true">普通</button>
+      <button type="button" class="tb-btn" data-campaign-difficulty="hard" aria-pressed="false">困难</button>
+    </div>
+        <p id="saveNotice" class="small" role="status"></p>
+        <p class="small" id="difficultyHint" role="status">普通保留现有守线节奏。仅用于新游戏；继续和读档沿用存档难度。</p>
+          </section>
+        </div>
+        <div class="mainLaunch">
+          <div class="btnRow" id="startRow"><button class="mbtn" id="btnContinue">继续上次</button><button class="mbtn green" id="btnStart">开始新游戏</button></div>
+          <div id="modeActionRow" class="hidden"><button class="mbtn green" id="btnModeStart">开始</button></div>
+        </div>
+      </section>
     </div>
   </div>
+  <section id="menuSettingsPanel" class="panel menuDialog hidden" role="dialog" aria-modal="true" aria-labelledby="menuSettingsTitle">
+    <header class="infoHeader"><h3 id="menuSettingsTitle">游戏设置</h3><button class="closeX" data-menu-close aria-label="关闭设置">×</button></header>
+    <p class="small" id="deviceModeCaption">操作模式 · 立即生效，保留本局进度</p>
+    <div class="rescue-actions" role="group" aria-labelledby="deviceModeCaption"><button class="tb-btn" data-device-mode="desktop">电脑键鼠</button><button class="tb-btn" data-device-mode="touch">手机触屏</button><button class="tb-btn" data-device-mode="auto">自动识别</button></div>
+    <div class="dialogGrid"><button class="mbtn" id="keysMenu">射击、瞄准与按键</button><button class="mbtn touch-help" id="touchLayoutSettings">调整手机按键位置</button><button class="mbtn" id="muteBtnMenu">声音</button><button class="mbtn" id="daylightMain">地表：白天</button></div>
+  </section>
+  <section id="menuSavePanel" class="panel menuDialog hidden" role="dialog" aria-modal="true" aria-labelledby="menuSaveTitle">
+    <header class="infoHeader"><h3 id="menuSaveTitle">存档与恢复</h3><button class="closeX" data-menu-close aria-label="关闭存档菜单">×</button></header>
+    <p class="small">基地防守进度自动保存在本机，也可手动存档、读取或导出文件备份。房车进度从房车模式继续。</p>
+    <div class="dialogGrid"><button class="mbtn campaign-only" id="btnSaveMenu">保存当前进度</button><button class="mbtn" id="btnLoadMenu">读取本地存档</button><button class="mbtn" id="btnPlatformMenu">备份、恢复与云档</button></div>
+    <p class="small">单机与文件备份无需登录；Toy 云存档仅在主动使用时连接账号。</p>
+  </section>
+  <section id="menuMorePanel" class="panel menuDialog hidden" role="dialog" aria-modal="true" aria-labelledby="menuMoreTitle">
+    <header class="infoHeader"><h3 id="menuMoreTitle">更多</h3><button class="closeX" data-menu-close aria-label="关闭更多菜单">×</button></header>
+    <div class="dialogGrid"><button class="mbtn" id="helpMenu">玩法说明</button><button class="mbtn" id="updatesMenu">更新日志</button><button type="button" class="mbtn" id="btnTest" data-mode="test"><strong>自由测试</strong><span hidden>无限资源 · 试用武器与建造</span></button><a class="mbtn" data-author-home href="https://space.bilibili.com/16214353" target="_blank" rel="noopener noreferrer">作者B站主页</a></div>
+  </section>
+
   <section id="updatesPanel" class="panel hidden infoPanel" role="dialog" aria-modal="true" aria-labelledby="updatesTitle">
     <header class="infoHeader"><h3 id="updatesTitle">📋 更新日志</h3><button id="updatesClose" class="closeX" aria-label="关闭更新日志">×</button></header>
     <p class="small" id="updatesVersion"></p><div id="updatesList" tabindex="0" role="region" aria-label="更新内容"></div>
@@ -594,38 +573,33 @@ html,body{overscroll-behavior:none}
   <section id="helpPanel" class="panel hidden infoPanel" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
     <header class="infoHeader"><h3 id="helpTitle">❔ 玩法说明</h3><button id="helpClose" class="closeX" aria-label="关闭玩法说明">×</button></header>
     <div class="small helpText" tabindex="0" role="region" aria-label="玩法内容">
-      <p>《枪火集结》推荐先玩「抗战战役 · 亮剑三章」（苍云岭、李家坡、平安县城，全部重做），可从大厅直接进入章节菜单；战地据点争夺收在「其他玩法 · 早期体验」中。早期内容尚未完成本轮打磨，原有进度保留。</p>
-      <p>操作基调：手动瞄准、有限弹匣、空仓须手动换弹、举枪。战地步行固定偏第一人称枪感，抗战战役是越肩第三人称 / 第一人称两个视角；具体键位进入模式后可看模式说明，也可在「操作设置」改键。</p>
-      <p class="desktop-help">电脑通用（默认鼠标接管）：WASD 移动，鼠标转视角，左键射击，右键举枪，Shift 跑步，空格跳跃，R 手动换弹（打空不会自动装填），G 手雷，F 互动，E 医疗，V 切换视角，Esc/P 暂停；键位可在「操作设置」里改。</p>
-      <p class="touch-help">手机对照吃鸡习惯：左下摇杆移动，屏幕空白处拖动瞄准；按住右侧大红「射击」可一边开火一边拖枪；「举枪」精瞄，「换弹」空仓必点；跳跃/手雷/互动在射击键旁。</p>
-      <p class="touch-help">手机通用：左下摇杆移动，空白处拖动瞄准，右侧射击/跳跃/互动等；右上可切换视角与打开菜单。</p>
-      <p>基地防守、银行塔防、房车与虫族仍在《虫潮围城》。可从本大厅设置栏返回虫潮。</p>
+      <p>前哨守卫：机枪兵生命 120、机枪伤害 +25%、受到伤害 −15%；火枪兵生命 100、霰弹伤害 +30%、移动速度 10.5；医疗兵生命 90，自身与 12 米内队友每秒恢复 4 点生命。</p>
+      <p>基地防守：打怪攒钱，买枪强化、造炮塔、雇最多12名队友，守住基地。基地耐久归零即失败；玩家阵亡会复活，基地损伤保留。难度只用于新游戏，继续和读档沿用存档难度。</p>
+      <p class="desktop-help">电脑有两套键位，在「操作设置」里切换，每套都能自己改键。左手键盘 + 右手鼠标（默认）：WASD / 方向键移动，鼠标转视角，左键射击，Shift 跑步，空格跳跃，F 互动，E 医疗，G 手雷，Q / 滚轮换枪，V 切换视角，B 商店，T 建造，X 开战，Tab 战况 / 测试台，P/Esc 暂停。双手全键盘（老键位）：WASD 移动，Q/E 转视角，Y/H 抬头低头，J 射击，K 跳跃，U 手雷，I 互动，N 医疗，X 换枪，C 切换视角，O 商店，L 建造，R 开战 / 换弹，T 战况 / 测试台。菜单可用方向键、Tab 和回车操作。</p>
+      <p class="touch-help">手机：左下摇杆移动，右侧空白处拖动转视角；右侧按钮可跳跃、跑步、互动、用医疗包和投掷手雷，商店、建造、换枪也有独立按钮。右上「切换视角」和「菜单」随时可用。</p>
+      <p>电脑和手机默认自动瞄准、自动射击；在设置的「射击、瞄准与按键」中可改为按住射击或点击开关连射，也可分别选择瞄准方式。手雷、医疗和技能仍需主动使用；房车自动射击只对已追击的敌人生效。</p>
+      <p>基地防守、房车和自由测试可无限投掷手雷，每3秒一次。</p>
+      <p>母皇：早杀可减少本章后续虫潮35%，每次通关额外领补给；晚杀保留更多虫群掉落。「队友集合 / 载具救援」各冷却20秒并保留血量，在虫洞内救援时载具停在洞口。</p>
+      <p>城门：玩家和队友靠近自动开门，队友通过后自动关门，也可用互动手动开关。看小地图和基地方向提示找家；载具被打坏下关自动修好，进度自动保存。</p>
+      <p>建造与小队：最多64座设施；队友可拾金币与血包，商店可升级队友武器和护甲。9个副本随章节解锁，每个副本三档难度分别领奖。</p>
+      <p>地表白天 / 夜晚可在主菜单或暂停菜单切换并保存；进入虫洞自动开启手电，跟随视角照亮前路，不耗电。主菜单默认基地防守；银行、房车、虫族与酸液围场收在「其他玩法 · 测试版」，自由测试在「更多」中。「继续上次」继续基地防守，其他玩法从各自入口继续。</p>
     </div>
   </section>
 
-  <!-- 暂停 -->
+  <!-- 同一游戏的暂停与主菜单共享深色面板、按钮与焦点反馈。 -->
   <div id="menuPause" class="overlay menu hidden">
-    <h2>游戏暂停</h2>
-    <p class="small" id="deviceModeCaption">操作模式 · 切换立即生效，保留本局进度</p>
-    <div class="rescue-actions" role="group" aria-labelledby="deviceModeCaption"><button class="tb-btn" data-device-mode="desktop">电脑键鼠</button><button class="tb-btn" data-device-mode="touch">手机触屏</button><button class="tb-btn" data-device-mode="auto">自动识别</button></div>
-    <div class="btnRow">
-      <button class="mbtn green" id="btnResume">▶ 继续游戏</button>
-      <button class="mbtn campaign-only" id="btnSaveMenu">💾 存档</button>
-      <button class="mbtn campaign-only" id="btnLoadMenu2">📂 读档</button>
-      <button class="mbtn" id="btnRestartLv">🔄 重开本关</button>
-      <button class="mbtn red versus-only" id="vsSurrender">🏳 投降</button>
-      <button class="mbtn red" id="btnQuit">🏠 回主菜单</button>
+    <header class="pauseHeader"><h2>游戏暂停</h2><p class="small">准备好后，继续守住防线。</p></header>
+    <div class="pauseColumns" data-menu-scroll>
+      <section class="pauseCard"><h3>本局操作</h3><div class="dialogGrid">
+        <button class="mbtn green" id="btnResume">继续游戏</button><button class="mbtn" data-menu-panel="menuSettingsPanel">游戏设置</button>
+        <button class="mbtn campaign-only" data-menu-panel="menuSavePanel">存档与恢复</button><button class="mbtn" id="btnRestartLv">重开本关</button>
+        <button class="mbtn red versus-only" id="vsSurrender">投降</button><button class="mbtn red" id="btnQuit">回主菜单</button>
+        <button class="mbtn" data-menu-panel="menuMorePanel">说明与更多</button><button class="mbtn touch-help" id="touchLayoutPause">调整手机按键位置</button>
+      </div></section>
+      <section class="pauseCard campaign-only"><h3>小队与战术</h3><p class="small" id="squadTaskHint"></p><div class="dialogGrid">
+        <button class="mbtn" id="squadOrderPause">队友：跟随我</button><button class="mbtn" id="tacticsPause">战术部署 / 虫潮预告</button><button class="mbtn" id="opsPause">副本任务</button>
+      </div></section>
     </div>
-    <p class="small campaign-only" id="squadTaskHint">队友默认跟随出击，基地告急时自动回防；可随时一键切换全队「跟随/守家」。</p>
-    <div class="btnRow campaign-only"><button class="mbtn" id="squadOrderPause">队友：跟随我</button><button class="mbtn" id="tacticsPause">战术部署 / 虫潮预告</button></div>
-    <div class="btnRow optRow">
-      <button class="mbtn" id="daylightPause">地表：白天</button>
-      <button class="mbtn" id="muteBtnMenu">声音</button>
-      <button class="mbtn" id="keysPause">⌨ 操作设置</button>
-      <button class="mbtn" id="updatesPause">📋 更新日志</button>
-      <button class="mbtn campaign-only" id="opsPause">⚑ 副本</button>
-      <button class="mbtn campaign-only" id="platformBtnMenu">☁ 存档/排行</button>
-      </div>
   </div>
 
   <div id="vsMenu" class="overlay menu hidden" role="dialog" aria-modal="true" aria-labelledby="vsMenuTitle">
@@ -636,7 +610,7 @@ html,body{overscroll-behavior:none}
     <div class="btnRow"><button class="mbtn green" data-vs-ai="easy">对战电脑 · 简单</button><button class="mbtn green" data-vs-ai="normal">对战电脑 · 普通</button><button class="mbtn green" data-vs-ai="hard">对战电脑 · 困难</button></div>
     <div class="btnRow"><button class="mbtn" id="vsOnline">👥 好友对战（联机，最多 8 人，空位电脑补）</button><button class="mbtn" id="vsMenuBack">← 返回</button></div>
     <p class="small" id="vsRecordTxt" role="status"></p>
-    <div class="small vs-rules">射击：按住左键 / 转视角：鼠标接管（未接管时右键拖动） / 举枪：右键或 Z / 装备：B / 部署：T / 战况：Tab / 换弹：R（空仓不会自动装填） / 支援：E / 上下车：F / 跑步：Shift。手机：左摇杆移动，空白处拖视角，按住射击可继续拖枪；右侧有举枪与换弹键。双方各有8名电脑步兵与越野车、坦克、装甲车、直升机；备用弹药无限。联机由房主计算战局，中途加入接手电脑座位。</div>
+    <div class="small vs-rules">射击：按住左键 / 转视角：鼠标接管（未接管时右键拖动） / 举枪：右键或 Z / 装备：B / 部署：T / 战况：Tab / 换弹：R / 支援：E / 上下车：F / 跑步：Shift。手机使用同名按钮，按住射击键可继续拖动瞄准。双方各有8名电脑步兵与越野车、坦克、装甲车、直升机；弹匣打空自动换弹，备用弹药无限。联机由房主计算战局，中途加入接手电脑座位。</div>
   </div>
   <div id="vsResult" class="overlay menu hidden" role="dialog" aria-modal="true" aria-labelledby="vsResultTitle">
     <h2 id="vsResultTitle"></h2>
@@ -652,6 +626,7 @@ html,body{overscroll-behavior:none}
     <h3 id="tacticsTitle">战术部署</h3>
     <div class="tactical-brief"><strong id="tacticsWaveTitle"></strong><p class="small" id="tacticsWaveInfo"></p><p class="small" id="tacticsWaveHint"></p><p class="small" id="tacticsSupply"></p></div>
     <p class="small" id="tacticsOrderHint"></p>
+    <p class="small" id="tacticsChapterTip" aria-label="本章提示与规则"></p>
     <p class="small" id="lastBattleReport" aria-label="上一关战报"></p>
   </section>
   <!-- 结束 -->
@@ -708,7 +683,7 @@ html,body{overscroll-behavior:none}
     </div>
     <div class="btnRow"><button id="test-selected" class="mbtn green">召唤所选虫群</button><button id="test-showcase" class="mbtn">全类型混战</button><button id="test-clear" class="mbtn">清理虫群</button><button class="mbtn" data-test-claim="squad">补齐12人小队</button></div>
     <div class="btnRow"><button id="test-auto" class="mbtn green">暂停自动虫潮</button><button id="test-reset" class="mbtn">重置测试场景</button><button id="test-normal" class="mbtn">返回普通模式</button></div>
-    <p class="small">同屏最多 48 只虫、12 名队友、64 座防御设施；载具重复领取会直接驾驶已有车辆。数量限制用来保持流畅，资源与使用次数无限。T / Esc 关闭，Tab 与回车操作。</p>
+    <p class="small">同屏虫子上限按设备给（电脑 144 只 · 手机 80 只 · 联机 72 只），另有 12 名队友、64 座防御设施；载具重复领取会直接驾驶已有车辆。数量限制用来保持流畅，资源与使用次数无限。T / Esc 关闭，Tab 与回车操作。</p>
   </div>
   <section id="platformPanel" class="panel hidden" aria-label="存档、排行与作者" style="width:680px;max-height:90%;">
     <button class="closeX" id="platformClose" aria-label="关闭档案站">×</button>
@@ -748,8 +723,8 @@ html,body{overscroll-behavior:none}
   </div>
 </div>
 <script src="./boot.js?v=mobile12"></script>
-<script defer src="./game.compat.js?v=run082" onerror="window.__ccBootError('游戏资源下载失败')"></script>
-<script src="../../../js/game/thumb-preview.js"></script>
+<script defer src="./game.compat.js?v=110537a16d81" onerror="window.__ccBootError('游戏资源下载失败')"></script>
+
 <script type="module">
 // 内联自 /js/game/landscape-typing.js：Toy/TapTap 包不含站点共享目录，外链模块会缺失
 (function(){
@@ -777,5 +752,5 @@ document.addEventListener('focusin',(e)=>{
 });
 })();
 </script>
-<script defer src="../../../js/game/author-home.js?v=1"></script>
+<script defer src="./shared/author-home.js?v=1"></script>
 </body></html>

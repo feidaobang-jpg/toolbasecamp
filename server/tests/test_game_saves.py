@@ -91,7 +91,7 @@ def test_legacy_and_large_second_third_loop_saves():
 
 
 def test_game_catalogs_remain_compatible_with_cloud_saves():
-    source=(Path(__file__).resolve().parents[2]/'public/html/game/starship-defense/game.js').read_text(encoding='utf-8')
+    source=(Path(__file__).resolve().parents[2]/'game-projects/starship-defense/game/game.js').read_text(encoding='utf-8')
     def keys(name):
         catalog=re.search(r'const '+name+r'=\{(.*?)\};',source,re.S).group(1)
         return set(re.findall(r'\b([a-zA-Z]\w*):\s*\{',catalog))

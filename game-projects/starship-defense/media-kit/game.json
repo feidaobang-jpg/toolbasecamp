@@ -11,7 +11,7 @@
   "name": "虫潮围城",
   "engine": "Three.js r152",
   "current_version": "web-stance-v0.40.0",
-  "entrypoint": "public/html/game/starship-defense/index.html",
+  "entrypoint": "game-projects/starship-defense/game/index.html",
   "build_command": "cd game-projects/starship-defense && npm ci && npm run build; python build-toy.py",
   "release_intent": "web_demo",
   "development_model": "Codex（抗战战役、战地据点模式）；历史版本工具见各 release",
@@ -471,18 +471,18 @@
     "date": "2026-10-10",
     "reason": "用户决定不再做无人直播，相关代码、公网入口与版本记录整体移除",
     "removed": [
-      "public/html/game/starship-defense/live.html",
-      "public/html/game/starship-defense/live.css",
-      "public/html/game/starship-defense/live-console.html",
-      "public/html/game/starship-defense/live-console.js",
-      "public/html/game/starship-defense/live-controller.js",
-      "public/html/game/starship-defense/live-host.js",
-      "public/html/game/starship-defense/live-rules.js",
+      "game-projects/starship-defense/game/live.html",
+      "game-projects/starship-defense/game/live.css",
+      "game-projects/starship-defense/game/live-console.html",
+      "game-projects/starship-defense/game/live-console.js",
+      "game-projects/starship-defense/game/live-controller.js",
+      "game-projects/starship-defense/game/live-host.js",
+      "game-projects/starship-defense/game/live-rules.js",
       "game-projects/starship-defense/live",
       "game-projects/starship-defense/media-kit/releases/live-v0.1.0"
     ],
     "code_refs_removed_from": [
-      "public/html/game/starship-defense/game.js",
+      "game-projects/starship-defense/game/game.js",
       "game-projects/starship-defense/build-taptap.mjs"
     ],
     "normal_gameplay_changed": false,
@@ -1052,7 +1052,7 @@
   "versus": {
     "version": "web-three-lanes-v0.31.0",
     "design": "design/three-lanes-v0.31.md",
-    "module": "public/html/game/starship-defense/versus.js",
+    "module": "game-projects/starship-defense/game/versus.js",
     "server": "server/coop_lobby.py：mode=versus，size 1–4（上限 2×size），diff，每人 team，pick 消息",
     "record_key": "chongchao-versus-record-v1（1 对 1 沿用原键，多人键名加 -2/-3/-4）",
     "qa": [
@@ -1138,7 +1138,7 @@
   "current_development_tool": "Codex",
   "rv_town": {
     "version": "web-three-lanes-v0.31.0",
-    "module": "public/html/game/starship-defense/rv-town.js",
+    "module": "game-projects/starship-defense/game/rv-town.js",
     "single_player": true,
     "zombie_count": 36,
     "infection_zones": 6
@@ -1597,7 +1597,7 @@
   "zerg_mode": {
     "version": "web-zerg-v0.36.0",
     "entry": "虫族模式 · 攻陷人类要塞",
-    "module": "public/html/game/starship-defense/zerg-mode.js",
+    "module": "game-projects/starship-defense/game/zerg-mode.js",
     "single_player": true,
     "phases": [
       "拔除三处哨站",

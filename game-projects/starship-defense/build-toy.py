@@ -6,7 +6,7 @@ import shutil
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[2]
-SOURCE = ROOT / 'public/html/game/starship-defense'
+SOURCE = Path(__file__).resolve().parent / 'game'
 OUT = ROOT / 'dist/toy/chongchao-qianshao'
 PACKAGE = OUT / 'package'
 GAME = json.loads((Path(__file__).parent / 'media-kit/game.json').read_text('utf-8'))
@@ -28,11 +28,10 @@ def build():
         dest.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source, dest)
     text = (PACKAGE / 'index.html').read_text('utf-8')
-    text = text.replace('../../../js/game/author-home.js', './author-home.js')
-    shutil.copy2(ROOT / 'public/js/game/author-home.js', PACKAGE / 'author-home.js')
-    text = text.replace('../../../css/base.css', './base.css')
-    shutil.copy2(ROOT / 'public/css/base.css', PACKAGE / 'base.css')
-    text = text.replace('<script src="../../../js/game/thumb-preview.js"></script>', '')
+    text = text.replace('./shared/author-home.js', './author-home.js')
+    shutil.copy2(SOURCE / 'shared/author-home.js', PACKAGE / 'author-home.js')
+    text = text.replace('./shared/base.css', './base.css')
+    shutil.copy2(SOURCE / 'shared/base.css', PACKAGE / 'base.css')
     (PACKAGE / 'index.html').write_text(text, 'utf-8')
     bundled = (PACKAGE / 'game.compat.js').read_text('utf-8')
     if '"sst_save_"' not in bundled:
@@ -47,7 +46,7 @@ def build():
             z.write(PACKAGE / rel, str(rel).replace('\\', '/'))
     manifest = {
         'title': GAME['name'], 'slug': 'chongchao-qianshao',
-        'version': VERSION, 'source': str(SOURCE.relative_to(ROOT)),
+        'version': VERSION, 'source': SOURCE.relative_to(ROOT).as_posix(),
         'zip_sha256': hashlib.sha256(archive.read_bytes()).hexdigest(),
         'files': {str(p.relative_to(SOURCE)).replace('\\', '/'): hashlib.sha256((PACKAGE / p.relative_to(SOURCE)).read_bytes()).hexdigest() for p in runtime_files},
         'status': 'built_not_submitted', 'published_toy_unchanged': True,

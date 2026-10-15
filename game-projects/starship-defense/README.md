@@ -60,7 +60,7 @@
 - 操作：R 出兵面板（1-9 派兵、0 升级银行）、Z 路线、L 建造、O 买枪；手机「出兵」「建造」「商店」按钮打开同一面板。面板不暂停战斗。
 - 对战不读写单机存档和排行榜；退出时恢复战役状态。本地战绩（对电脑各难度胜负）存 `chongchao-versus-record-v1`。
 
-代码：玩法在 `public/html/game/starship-defense/versus.js`，接入在 `game.js`「虫潮对战」段；服务器 `server/coop_lobby.py` 为虫潮房间保留 `mode`，对战房间上限 2 人。
+代码：玩法在 `game-projects/starship-defense/game/versus.js`，接入在 `game.js`「虫潮对战」段；服务器 `server/coop_lobby.py` 为虫潮房间保留 `mode`，对战房间上限 2 人。
 
 验证：
 - `verify-versus.cjs`：真实按键/点击完整流程、规则（无友伤、英雄受伤 ×0.8、英雄打建筑 ×0.6、赏金）、炮塔开火、结算与再来一局、暂停菜单、退出恢复（单机自动存档不变）、电脑满负载帧时间、手机横竖屏视口（30 项）。
@@ -136,7 +136,7 @@
 
 ## 启动与验证
 
-入口 public/html/game/starship-defense/index.html。旧 starship_defense.html 重定向仍可用。
+入口 game-projects/starship-defense/game/index.html（2026-10-15 移出网站部署目录 public/，只打 Toy 包；网站旧页冻结在服务器上）。
 
 使用 HTTP 服务：Python -m http.server 8765 --bind 127.0.0.1 --directory public。
 GAME_URL 指向测试入口，GAME_VERSION=web-fortress-v0.6.0 后运行 verify-web.cjs；verify-fortress.cjs 验证本版激光/碰撞/无敌/存档与混合虫潮移动压力。?qa=1 才暴露自动化钩子。脚本使用本机已安装 Playwright 和 Edge。

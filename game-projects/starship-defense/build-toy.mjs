@@ -7,7 +7,7 @@ import {fileURLToPath} from 'node:url';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, '..', '..');
-const SOURCE = path.join(ROOT, 'public/html/game/starship-defense');
+const SOURCE = path.join(HERE, 'game');
 const OUT = path.join(ROOT, 'dist/toy/chongchao-qianshao');
 const PACKAGE = path.join(OUT, 'package');
 const GAME = JSON.parse(fs.readFileSync(path.join(HERE, 'media-kit/game.json'), 'utf-8'));
@@ -52,13 +52,12 @@ export function build() {
   for (const name of RUNTIME_FILES) {
     const dest = path.join(PACKAGE, name);
     fs.mkdirSync(path.dirname(dest), {recursive: true});
-    fs.copyFileSync(name === 'base.css' ? path.join(ROOT, 'public/css/base.css') : name === 'author-home.js' ? path.join(ROOT, 'public/js/game/author-home.js') : path.join(SOURCE, name), dest);
+    fs.copyFileSync(name === 'base.css' ? path.join(SOURCE, 'shared/base.css') : name === 'author-home.js' ? path.join(SOURCE, 'shared/author-home.js') : path.join(SOURCE, name), dest);
   }
   const indexPath = path.join(PACKAGE, 'index.html');
   let text = fs.readFileSync(indexPath, 'utf-8');
-  text = text.replaceAll('../../../js/game/author-home.js', './author-home.js');
-  text = text.replaceAll('../../../css/base.css', './base.css');
-  text = text.replace('<script src="../../../js/game/thumb-preview.js"></script>', '');
+  text = text.replaceAll('./shared/author-home.js', './author-home.js');
+  text = text.replaceAll('./shared/base.css', './base.css');
   fs.writeFileSync(indexPath, text, 'utf-8');
   const compatPath = path.join(PACKAGE, 'game.compat.js');
   const bundled = fs.readFileSync(compatPath, 'utf-8');

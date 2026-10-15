@@ -7,7 +7,7 @@ import {fileURLToPath} from 'node:url';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, '..', '..');
-const SOURCE = path.join(ROOT, 'public/html/game/gunfire-assembly');
+const SOURCE = path.join(HERE, 'game');
 const OUT = path.join(ROOT, 'dist/toy/feidao-gunfire');
 const PACKAGE = path.join(OUT, 'package');
 const GAME = JSON.parse(fs.readFileSync(path.join(HERE, 'media-kit/game.json'), 'utf-8'));
@@ -62,8 +62,8 @@ export function build() {
   for (const name of RUNTIME_FILES) {
     const dest = path.join(PACKAGE, name);
     fs.mkdirSync(path.dirname(dest), {recursive: true});
-    const src = name === 'base.css' ? path.join(ROOT, 'public/css/base.css')
-      : name === 'author-home.js' ? path.join(ROOT, 'public/js/game/author-home.js')
+    const src = name === 'base.css' ? path.join(SOURCE, 'shared/base.css')
+      : name === 'author-home.js' ? path.join(SOURCE, 'shared/author-home.js')
       : path.join(SOURCE, name);
     fs.copyFileSync(src, dest);
   }
@@ -74,9 +74,8 @@ export function build() {
   fs.writeFileSync(voiceIndex, JSON.stringify(voices), 'utf-8');
   const indexPath = path.join(PACKAGE, 'index.html');
   let text = fs.readFileSync(indexPath, 'utf-8');
-  text = text.replaceAll('../../../js/game/author-home.js', './author-home.js');
-  text = text.replaceAll('../../../css/base.css', './base.css');
-  text = text.replace(/<script[^>]*thumb-preview\.js[^>]*><\/script>/g, '');
+  text = text.replaceAll('./shared/author-home.js', './author-home.js');
+  text = text.replaceAll('./shared/base.css', './base.css');
   // Toy 包内没有虫潮目录，也不允许跳作者网站；去掉大厅里的虫潮入口。
   text = text.replace(/<a class="mbtn" href="\.\.\/starship-defense\/index\.html">[^<]*<\/a>/g, '');
   fs.writeFileSync(indexPath, text, 'utf-8');

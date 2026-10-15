@@ -70,7 +70,7 @@ alwaysApply: false
 
 抗战战役按原作顺序是第一章苍云岭、第二章李家坡、第三章平安县城，三章都已整章换成重做版，放在同包内的「亮剑战役」页面。枪火集结 0.4.0 起旧的抗战战役（`resistance-campaign.js`、`resistance-ui.js`、`resistance-assets.js`、章节选择、旧李家坡）已删除，大厅只留「抗战战役 · 亮剑三章」一个入口（`#btnPingan`）直达 `liangjian/index.html`。旧的「骑兵连 · 冲锋突围」章节也已按用户选择删除。不要把重做版改回旧实现、不要加回旧章节选择，也不要按上一节的“步行固定第一人称、不用鼠标锁定”去“纠正”它们。
 
-- 位置：`public/html/game/gunfire-assembly/liangjian/`，`?ch=cangyunling|lijiapo|pingan` 选章，不带参数落在上次玩的章节（新玩家第一章），菜单里也能换章（换章重新载入）。引擎 `js/game.js` 与章节 `js/chapters/<章>*.js` 拆开，章节差异走 `game.js` 末尾的“章节钩子”（含地形 `world.hgt`、`setLight`、`heroCover` / `allyCover`）。存档前缀 `lj_campaign_v1_`：设置共用，`cp_<章>`、`best_<章>`、`ending_<章>` 按章分开，第一次打开时搬旧的 `lj_pingan_v1_`。旧地址 `pingan/index.html` 只剩跳转页。重做版主菜单有“返回大厅”回到 `../index.html`。
+- 位置：`game-projects/gunfire-assembly/game/liangjian/`，`?ch=cangyunling|lijiapo|pingan` 选章，不带参数落在上次玩的章节（新玩家第一章），菜单里也能换章（换章重新载入）。引擎 `js/game.js` 与章节 `js/chapters/<章>*.js` 拆开，章节差异走 `game.js` 末尾的“章节钩子”（含地形 `world.hgt`、`setLight`、`heroCover` / `allyCover`）。存档前缀 `lj_campaign_v1_`：设置共用，`cp_<章>`、`best_<章>`、`ending_<章>` 按章分开，第一次打开时搬旧的 `lj_pingan_v1_`。旧地址 `pingan/index.html` 只剩跳转页。重做版主菜单有“返回大厅”回到 `../index.html`。
 - 网站上枪火集结和虫潮围城同域，`chongchao-resistance-checkpoint-v1` 是虫潮抗战的存档键；枪火集结不再读写它，不要再拿它做跳转或迁移。
 - 操作按 game-maker `references/shooter-controls.md`：越肩第三人称 + 第一人称两个视角、手动瞄准带轻度吸附、可跳跃。电脑键位按「电脑键位 v2」：鼠标接管（被拒绝时按住拖动），左键开火、右键开镜、按住 Shift 往前跑（开火优先、开镜 / 换弹跑不起来）、C 蹲下 / Z 趴下（再按站起，跳或 Shift 往前也站起）、空格跳、R 换弹、G 手榴弹（李家坡手榴弹雨阶段是“全营投弹”）、F 互动（上炮 / 接管机枪 / 抓俘虏 / 挖壕 / 离开）、Q 拔刀 / 收刀、V 切换人称；键盘转视角取消，旧键 J/K/U/I/L/O 只作不显示的别名。
 - 拔刀近战（枪火集结 0.6.0，用户 2026-10-14 要求“亮剑改成拔刀挥砍、近身战，敌我加入格挡，参考天国拯救 2，太复杂就简单挥砍”，取简化版）：刀在手时左键轻砍（三刀一套）、按住蓄力重砍（破防、踉跄）、右键格挡（不掉血、被震退），刀砍到前 0.25 秒内按下格挡＝弹开（对军官是踉跄，对山本 / 山崎 / 坂田的突进或连砍就是拼刀）；拿刀的鬼子军官和 Boss 正对着时会格开轻砍并反砍。刀在手不能开枪、开镜；蹲 / 趴先收刀。旧的“亮剑突进”和 tryClash 已删。
