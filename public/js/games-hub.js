@@ -207,19 +207,7 @@
             if (gameKey) mainLink.setAttribute('data-tb-track', 'game.play.toy.' + gameKey);
             while (card.firstChild) mainLink.appendChild(card.firstChild);
             card.appendChild(mainLink);
-
-            var actions = document.createElement('div');
-            actions.className = 'hub-game-actions action-row';
-            var playLink = document.createElement('a');
-            playLink.className = 'tb-btn';
-            playLink.href = playUrl;
-            playLink.textContent = playLabel;
-            playLink.setAttribute('aria-label', label + ' · ' + playLabel);
-            playLink.target = '_blank';
-            playLink.rel = 'noopener noreferrer';
-            if (gameKey) playLink.setAttribute('data-tb-track', 'game.play.toy.' + gameKey);
-            actions.appendChild(playLink);
-            card.appendChild(actions);
+            // 整张卡片已经是 Toy 入口，不再重复渲染指向同一地址的「B 站玩」按钮。
         }
         return card;
     }
