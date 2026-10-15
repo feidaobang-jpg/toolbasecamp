@@ -18,8 +18,9 @@ const BASE_FILES = ['index.html', 'boot.js', 'game.compat.js', 'combat-controls.
 // 抗战战役「亮剑战役」重做版（第一章苍云岭、第三章平安县城）：同包内的独立页面（入口、样式、兼容包与按章节分组的原声语音）；
 // pingan/index.html 只剩一个跳转页，照顾旧链接
 const LIANGJIAN_FILES = ['liangjian/index.html', 'liangjian/style.css', 'liangjian/game.compat.js', 'pingan/index.html',
-  ...fs.readdirSync(path.join(SOURCE, 'liangjian/assets/voice')).sort().map(n => 'liangjian/assets/voice/' + n),
-  ...fs.readdirSync(path.join(SOURCE, 'liangjian/assets/bgm')).sort().map(n => 'liangjian/assets/bgm/' + n)];   // 原版配乐
+  ...fs.readdirSync(path.join(SOURCE, 'liangjian/assets/voice')).sort().map(n => 'liangjian/assets/voice/' + n)];
+// 电视剧原版配乐（liangjian/assets/bgm）只放网站：2026-10-15 带配乐的 0.8.0 包被 Toy 以“内容审核未通过”退回，
+// Toy 包不带配乐，游戏找不到配乐文件时自动退回原来的合成鼓点
 const RUNTIME_FILES = [...BASE_FILES, ...LIANGJIAN_FILES];
 const sha256 = p => createHash('sha256').update(fs.readFileSync(p)).digest('hex');
 
