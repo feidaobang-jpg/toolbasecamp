@@ -79,7 +79,8 @@ alwaysApply: false
 - 苍云岭（v0.6.0）：坚守山头 → 抓舌头 → 送炮前出五百米 → 两发炮弹（风偏、柱子报偏差）→ 打中＝原作突围，两发都偏＝坂田 Boss；结局存 `ending_cangyunling`。李家坡（v0.7.0，用户选定）：强攻受挫（侧翼拔两个外围火力点）→ 夜里挖交通壕（F 互动开挖、照明弹、夜袭、掷弹筒）→ 拂晓手榴弹雨（两分钟三千六百颗、炸碉堡）→ 张大彪突击队 → 决战山崎（炸哑射击孔、格子弹、拼刀、战友不打他）；真实山坡、按阶段换光，没有分支结局。平安县城（v0.5.0）：城楼秀芹过场与双结局（`ending_pingan`），飘屏弹幕已按用户选择删除，不要加回。
 - 原声：三章喊话都截自电视剧《亮剑》（用户同意下载 B站片段使用，未取得授权；来源见 `game-projects/liangjian-pingan/media-kit/assets/voice.json`）。语音清单 `liangjian/assets/voice/index.json` 按章节分组，每章只加载自己那一组。下载新片段前先列出 BV、时长、大小与用途给用户确认。不要把原声换回合成，除非用户要求或 Toy 因此退回。局内原声用章节的 `vo()` 排队，过场开始时掐掉排队的。
 - 两款的默认键位以「电脑键位 v2」为准（2026-10-14 的“医疗改 N、Y/H 抬头低头”已被替代）。`key-bindings.js` 两款同一份；提示文字一律用 `keyBindings.label()` 跟随当前键位。
-- 构建：`node game-projects/gunfire-assembly/build-compat.mjs` 同时生成大厅与亮剑战役两个兼容包；`build-toy.mjs` 把 `liangjian/` 的入口、样式、兼容包与全部语音、以及 `pingan/index.html` 跳转页打进同一个 Toy 包。
+- 构建：`node game-projects/gunfire-assembly/build-compat.mjs` 同时生成大厅与亮剑战役两个兼容包；`build-toy.mjs` 把 `liangjian/` 的入口、样式、兼容包、电视剧原声语音以及 `pingan/index.html` 跳转页打进同一个 Toy 包。
+- Toy 包声音合规（用户 2026-10-15 定，先保 Toy 过审，网站暂不管）：Toy 只带电视剧原声台词（0.4.0～0.7.0 带着都过审），**不带**电视剧原版配乐（`liangjian/assets/bgm`，Toy 里退回合成鼓点）和本机合成台词（`l_*.mp3`、`lines.json`，语音清单里的 `l_*` 也删掉，Toy 里只显示字幕）；Toy 更新记录也不点名电视剧曲目。依据：带配乐 / 合成台词的 0.8.x 包被“内容审核未通过”在 1～2 分钟内退回，去掉后 0.8.1 通过（平台未给具体原因）。`build-toy.mjs` 已固定这样打包，不要加回；以后给 Toy 新增声音素材前先问用户。网站上的配乐与合成台词保留现状，等用户另行决定。
 
 ## 2026-10-06 右上按钮布局补充
 
