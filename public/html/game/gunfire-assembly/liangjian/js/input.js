@@ -1,22 +1,22 @@
 // 输入（枪战类布局）：键盘、鼠标瞄准、触屏浮动摇杆 / 滑屏瞄准 / 功能键，统一映射成动作状态
 // 键位 v2（2026-10，与《虫潮围城》《枪火集结》其余模式一致，参考 CS / 电脑版吃鸡）：电脑端默认鼠标接管（锁定），被拒绝时按住拖动；
-// 左键开火、右键或 Z 开镜；WASD 移动、按住 Shift 跑、空格跳、R 换弹、G 手榴弹、F 互动（上炮 / 上机枪 / 离开）、Q 亮剑、E 骑兵连、V 切换人称（main.js）
-// 旧键 J 开火、K 跳、U 手榴弹、I 互动、L 亮剑、N 骑兵连、O 开镜不再显示但仍可用；键盘转视角（Q/E、Y/H）取消
+// 左键开火、右键开镜（刀在手时左键挥刀、右键格挡）；WASD 移动、按住 Shift 跑、C 蹲下、Z 趴下、空格跳、R 换弹、G 手榴弹、F 互动（上炮 / 上机枪 / 离开）、Q 拔刀 / 收刀、V 切换人称（main.js）
+// 旧键 J 开火、K 跳、U 手榴弹、I 互动、L 拔刀、O 开镜不再显示但仍可用；键盘转视角（Q/E、Y/H）取消；骑兵连技能已去掉（2026-10-15）
 import { clamp } from './util.js';
 
-const HOLD_KEYS = { KeyJ: 'fire', KeyZ: 'ads', KeyO: 'ads', ShiftLeft: 'sprint', ShiftRight: 'sprint' };
-const EDGE_KEYS = { Space: 'jump', KeyK: 'jump', KeyR: 'reload', KeyG: 'nade', KeyU: 'nade', KeyF: 'use', KeyI: 'use', KeyQ: 'dash', KeyL: 'dash', KeyE: 'cav', KeyN: 'cav' };
+const HOLD_KEYS = { KeyJ: 'fire', KeyO: 'ads', ShiftLeft: 'sprint', ShiftRight: 'sprint' };
+const EDGE_KEYS = { Space: 'jump', KeyK: 'jump', KeyR: 'reload', KeyG: 'nade', KeyU: 'nade', KeyF: 'use', KeyI: 'use', KeyQ: 'blade', KeyL: 'blade', KeyC: 'crouch', KeyZ: 'prone' };
 const OTHER_KEYS = ['KeyW', 'KeyA', 'KeyS', 'KeyD', 'ArrowUp', 'ArrowLeft', 'ArrowDown', 'ArrowRight'];
-const EDGES = ['jump', 'reload', 'nade', 'dash', 'cav', 'use', 'fire'];
+const EDGES = ['jump', 'reload', 'nade', 'blade', 'crouch', 'prone', 'stance', 'use', 'fire'];
 
 export class Input {
   constructor(stage, hooks) {
     this.stage = stage;
     this.hooks = hooks;         // { rotated(), size(), toLogical(x,y), onDevice(kind), onEdge(name), mouseAim(), onLockLost(), onLockFail(silent) }
     this.keys = new Set();
-    this.src = { fireKey: false, fireMouse: false, fireTouch: 0, adsKey: false, adsMouse: false, sprintKey: false };
+    this.src = { fireKey: false, fireMouse: false, fireTouch: 0, adsKey: false, adsMouse: false, sprintKey: false, rmb: false, adsTouch: false };   // rmb / adsTouch：按着右键 / 触屏开镜键（刀在手时是格挡）
     this.adsToggle = false;     // 触屏开镜键、未锁定时右键单击：点一下切换
-    this.held = { fire: false, ads: false, sprint: false };
+    this.held = { fire: false, ads: false, sprint: false, block: false };
     this.edges = {};
     for (const e of EDGES) this.edges[e] = false;
     this.move = { x: 0, y: 0 };
@@ -86,6 +86,7 @@ export class Input {
         if (el._pid === undefined || (e && e.pointerId !== el._pid)) return;
         el._pid = undefined; el.classList.remove('down');
         if (fire) this.src.fireTouch = Math.max(0, this.src.fireTouch - 1);
+        if (a === 'ads') this.src.adsTouch = false;
         this._sync();
       };
       el.addEventListener('pointerdown', (e) => {
@@ -96,7 +97,7 @@ export class Input {
         if (e.pointerType === 'touch') this.hooks.onDevice('touch');
         el.classList.add('down');
         if (fire) { this.src.fireTouch++; this.edges.fire = true; }
-        else if (a === 'ads') { this.adsToggle = !this.adsToggle; }
+        else if (a === 'ads') { this.adsToggle = !this.adsToggle; this.src.adsTouch = true; }
         else this.edges[a] = true;
         this._sync();
         this.hooks.onEdge(a);
@@ -122,6 +123,7 @@ export class Input {
       if (d.mouse) {
         if (d.button === 0) this.src.fireMouse = false;
         if (d.button === 2) {
+          this.src.rmb = false;
           if (this.locked) this.src.adsMouse = false;
           else if (d.moved < 5 && performance.now() - d.t0 < 320) this.adsToggle = !this.adsToggle;
         }
@@ -139,7 +141,7 @@ export class Input {
       if (!mouse) this.hooks.onDevice('touch');
       if (mouse) {
         if (e.button === 0) { this.src.fireMouse = true; this.edges.fire = true; }
-        if (e.button === 2 && this.locked) this.src.adsMouse = true;
+        if (e.button === 2) { this.src.rmb = true; if (this.locked) this.src.adsMouse = true; }
         if (this.hooks.mouseAim() === 'lock' && !this.locked) this.requestLock();
       }
       this._sync();
@@ -163,19 +165,19 @@ export class Input {
     document.addEventListener('mousedown', (e) => {
       if (!this.locked) return;
       if (e.button === 0) { this.src.fireMouse = true; this.edges.fire = true; }
-      if (e.button === 2) this.src.adsMouse = true;
+      if (e.button === 2) this.src.adsMouse = this.src.rmb = true;
       this._sync();
     });
     document.addEventListener('mouseup', (e) => {
       if (!this.locked) return;
       if (e.button === 0) this.src.fireMouse = false;
-      if (e.button === 2) this.src.adsMouse = false;
+      if (e.button === 2) this.src.adsMouse = this.src.rmb = false;
       this._sync();
     });
     document.addEventListener('pointerlockchange', () => {
       const was = this.locked;
       this.locked = document.pointerLockElement === this.stage;
-      if (was && !this.locked) { this.src.adsMouse = false; this.src.fireMouse = false; this._sync(); this.hooks.onLockLost(); }
+      if (was && !this.locked) { this.src.adsMouse = false; this.src.fireMouse = false; this.src.rmb = false; this._sync(); this.hooks.onLockLost(); }
     });
     document.addEventListener('pointerlockerror', () => { this.locked = false; this.hooks.onLockFail(this._lockSilent); });
   }
@@ -195,6 +197,7 @@ export class Input {
     this.held.fire = this.src.fireKey || this.src.fireMouse || this.src.fireTouch > 0;
     this.held.ads = this.src.adsKey || this.src.adsMouse || this.adsToggle;
     this.held.sprint = this.src.sprintKey;
+    this.held.block = this.src.rmb || this.src.adsKey || this.src.adsTouch;
     const b = this.btns['act-ads'];
     if (b) b.classList.toggle('on', this.adsToggle);
   }
@@ -214,7 +217,7 @@ export class Input {
       this.keys.delete(code);
       const hk = HOLD_KEYS[code];
       if (hk === 'fire') this.src.fireKey = false;
-      if (hk === 'ads') this.src.adsKey = this.keys.has('KeyZ') || this.keys.has('KeyO');
+      if (hk === 'ads') this.src.adsKey = this.keys.has('KeyO');
       if (hk === 'sprint') this.src.sprintKey = this.keys.has('ShiftLeft') || this.keys.has('ShiftRight');
     }
     this._sync();
@@ -238,7 +241,7 @@ export class Input {
   clear() {
     this.keys.clear();
     for (const e of EDGES) this.edges[e] = false;
-    this.src.fireKey = this.src.fireMouse = this.src.adsKey = this.src.adsMouse = this.src.sprintKey = false; this.src.fireTouch = 0;
+    this.src.fireKey = this.src.fireMouse = this.src.adsKey = this.src.adsMouse = this.src.sprintKey = this.src.rmb = this.src.adsTouch = false; this.src.fireTouch = 0;
     this.adsToggle = false;
     for (const id in this.btns) { this.btns[id]._pid = undefined; this.btns[id].classList.remove('down'); }
     this._joyEnd();

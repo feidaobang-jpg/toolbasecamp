@@ -1,5 +1,5 @@
 {
- "at": "2026-10-14T23:29:47.307Z",
+ "at": "2026-10-15T00:16:21.907Z",
  "note": "触屏为 Edge 无头浏览器的触控模拟，不是手机真机",
  "results": [
   {
@@ -155,7 +155,7 @@
     "s0": {
      "x": 0,
      "y": 0,
-     "z": 92,
+     "z": 67,
      "yaw": 0,
      "pitch": 0,
      "bullets": 0,
@@ -168,8 +168,6 @@
       390
      ],
      "nades": 3,
-     "dashCd": 0,
-     "cavCd": 0,
      "mag": 20,
      "reloadT": 0,
      "ads": false,
@@ -204,7 +202,7 @@
    "detail": {
     "x": 0,
     "y": 0,
-    "z": 92,
+    "z": 67,
     "yaw": 0,
     "pitch": 0,
     "bullets": 0,
@@ -217,8 +215,6 @@
      390
     ],
     "nades": 3,
-    "dashCd": 0,
-    "cavCd": 0,
     "mag": 20,
     "reloadT": 0,
     "ads": false,
@@ -389,8 +385,8 @@
     "manned": true,
     "useText2": "离开炮位",
     "cy0": 0,
-    "cy1": -0.20000000000000004,
-    "sh": 7,
+    "cy1": -0.06000000000000002,
+    "sh": 1,
     "layU": {
      "n": 12,
      "off": [],
@@ -462,7 +458,7 @@
     "s0": {
      "x": 0,
      "y": 0,
-     "z": 92,
+     "z": 67,
      "yaw": 0,
      "pitch": 0,
      "bullets": 0,
@@ -475,8 +471,6 @@
       346
      ],
      "nades": 3,
-     "dashCd": 0,
-     "cavCd": 0,
      "mag": 20,
      "reloadT": 0,
      "ads": false,
@@ -511,7 +505,7 @@
    "detail": {
     "x": 0,
     "y": 0,
-    "z": 92,
+    "z": 67,
     "yaw": 0,
     "pitch": 0,
     "bullets": 0,
@@ -524,8 +518,6 @@
      346
     ],
     "nades": 3,
-    "dashCd": 0,
-    "cavCd": 0,
     "mag": 20,
     "reloadT": 0,
     "ads": false,
@@ -696,8 +688,8 @@
     "manned": true,
     "useText2": "离开炮位",
     "cy0": 0,
-    "cy1": -0.20000000000000004,
-    "sh": 7,
+    "cy1": -0.06000000000000002,
+    "sh": 1,
     "layU": {
      "n": 12,
      "off": [],
@@ -755,7 +747,7 @@
     "s0": {
      "x": 0,
      "y": 0,
-     "z": 92,
+     "z": 67,
      "yaw": 0,
      "pitch": 0,
      "bullets": 0,
@@ -768,8 +760,6 @@
       390
      ],
      "nades": 3,
-     "dashCd": 0,
-     "cavCd": 0,
      "mag": 20,
      "reloadT": 0,
      "ads": false,
@@ -805,7 +795,7 @@
     "s0": {
      "x": 0,
      "y": 0,
-     "z": 92,
+     "z": 67,
      "yaw": 0,
      "pitch": 0,
      "bullets": 0,
@@ -818,8 +808,6 @@
       360
      ],
      "nades": 3,
-     "dashCd": 0,
-     "cavCd": 0,
      "mag": 20,
      "reloadT": 0,
      "ads": false,
@@ -861,7 +849,7 @@
     "s0": {
      "x": 0,
      "y": 0,
-     "z": 92,
+     "z": 67,
      "yaw": 0,
      "pitch": 0,
      "bullets": 0,
@@ -874,8 +862,6 @@
       320
      ],
      "nades": 3,
-     "dashCd": 0,
-     "cavCd": 0,
      "mag": 20,
      "reloadT": 0,
      "ads": false,
@@ -917,7 +903,7 @@
     "s0": {
      "x": 0,
      "y": 0,
-     "z": 92,
+     "z": 67,
      "yaw": 0,
      "pitch": 0,
      "bullets": 0,
@@ -930,8 +916,6 @@
       390
      ],
      "nades": 3,
-     "dashCd": 0,
-     "cavCd": 0,
      "mag": 20,
      "reloadT": 0,
      "ads": false,
@@ -966,7 +950,7 @@
    "detail": {
     "x": 0,
     "y": 0,
-    "z": 92,
+    "z": 67,
     "yaw": 0,
     "pitch": 0,
     "bullets": 0,
@@ -979,8 +963,6 @@
      390
     ],
     "nades": 3,
-    "dashCd": 0,
-    "cavCd": 0,
     "mag": 20,
     "reloadT": 0,
     "ads": false,
@@ -1012,7 +994,7 @@
    "name": "手机 390×844：边移动边按开火（多点触控）",
    "ok": true,
    "detail": {
-    "bullets": 2,
+    "bullets": 1,
     "dz": "-1.25"
    }
   },
@@ -1151,8 +1133,8 @@
     "manned": true,
     "useText2": "离开炮位",
     "cy0": 0,
-    "cy1": -0.20000000000000004,
-    "sh": 7,
+    "cy1": -0.06000000000000002,
+    "sh": 1,
     "layU": {
      "n": 12,
      "off": [],
@@ -1210,7 +1192,7 @@
     "s0": {
      "x": 0,
      "y": 0,
-     "z": 92,
+     "z": 67,
      "yaw": 0,
      "pitch": 0,
      "bullets": 0,
@@ -1223,8 +1205,6 @@
       360
      ],
      "nades": 3,
-     "dashCd": 0,
-     "cavCd": 0,
      "mag": 20,
      "reloadT": 0,
      "ads": false,
@@ -1266,7 +1246,7 @@
     "s0": {
      "x": 0,
      "y": 0,
-     "z": 92,
+     "z": 67,
      "yaw": 0,
      "pitch": 0,
      "bullets": 0,
@@ -1279,8 +1259,6 @@
       375
      ],
      "nades": 3,
-     "dashCd": 0,
-     "cavCd": 0,
      "mag": 20,
      "reloadT": 0,
      "ads": false,

@@ -94,7 +94,6 @@ export class LijiapoGame extends Game {
   mgSpots() { return [['PL', L.postL, 1], ['PR', L.postR, 1]]; }
   advanceFormation() { return this.phase === 1 || this.phase >= 4; }
   updateBossUnit(u, dt) { updateYamazaki(this, u, dt); }
-  cavalryBlocked() { return this.phase === 3 && !this.flags.p3done ? '骑兵连在坡下等着：手榴弹扔完再冲' : null; }
   respawnPoint() {
     const p = this.phase, tr = this.world.trench;
     const tp = (t) => { const q = tr.pointAt(clamp(t, 0.5, tr.total)); return [q.x, q.z]; };
@@ -335,7 +334,7 @@ export class LijiapoGame extends Game {
         this.fx.sparks(u.x - dx * 0.4, u.y + 1.45, u.z - dz * 0.4, 4, 0xffffff);
         if (this.t - (this.deflT || -9) > 0.22) { this.deflT = this.t; this.sfxAt('clang', u.x, u.z, 0.45); }
         this.stats.deflect++;
-        if (!this.flags.deflTip && this.stats.deflect >= 5) { this.flags.deflTip = 1; this.ui.toast('山崎的刀把子弹都格开了：等他出刀落空、收刀喘气（血条闪）再打，或者他突刺时按 Q 亮剑拼刀', 5); }
+        if (!this.flags.deflTip && this.stats.deflect >= 5) { this.flags.deflTip = 1; this.ui.toast(this.app.isTouch() ? '山崎的刀把子弹都格开了：等他出刀落空、收刀喘气（血条闪）再打；或者拔刀，他刀到的一瞬间按格挡，弹开就是拼刀' : '山崎的刀把子弹都格开了：等他出刀落空、收刀喘气（血条闪）再打；或者 Q 拔刀，他刀到的一瞬间按右键格挡，弹开就是拼刀', 5); }
         return;
       }
       if (kind === 'blast') dmg *= 0.5;
@@ -407,7 +406,7 @@ export class LijiapoGame extends Game {
   updateDigging(dt) {
     const h = this.hero, inp = this.input, w = this.world, tr = w.trench;
     const q = tr.pointAt(tr.dug);
-    if (this.digging && (!h.alive || this.cut > 0 || h.mg || Math.hypot(inp.move.x, inp.move.y) > 0.25 || inp.held.fire || h.dashT > 0 || tr.dug >= tr.total)) this.digging = false;
+    if (this.digging && (!h.alive || this.cut > 0 || h.mg || Math.hypot(inp.move.x, inp.move.y) > 0.25 || inp.held.fire || h.blade || h.stance || tr.dug >= tr.total)) this.digging = false;
     let rate = 0;
     if (this.digging) {
       rate += 0.9; this.stats.heroDug += 0.9 * dt;
@@ -849,7 +848,7 @@ export class LijiapoGame extends Game {
     ui.say('山崎', '混蛋，攻击！', { foe: true, dur: 3.5 });
     this.playScene(11.9, [[8.2, () => { ui.stamp('山崎出来了！', 1.4, 'red'); this.cutCam = { px: d.x + 1.2, py: y + 1.8, pz: d.z + 3.2, lx: b.x, ly: y + 1.7, lz: b.z }; }]], () => {
       this.sub = 'boss';
-      this.after(0.8, () => ui.toast('山崎的刀能格开子弹：等他出刀落空、收刀喘气（血条闪）时再打；他突刺时按 Q 亮剑和他拼刀', 6));
+      this.after(0.8, () => ui.toast(this.app.isTouch() ? '山崎的刀能格开子弹：等他出刀落空、收刀喘气（血条闪）时再打；或者拔刀和他拼：刀到的一瞬间按格挡就能弹开' : '山崎的刀能格开子弹：等他出刀落空、收刀喘气（血条闪）时再打；或者 Q 拔刀和他拼：刀到的一瞬间按右键格挡就能弹开', 6));
     });
   }
   updateFinal() {
@@ -893,7 +892,7 @@ export class LijiapoGame extends Game {
       rows: [
         ['用时', fmtTime(this.t)], ['歼敌', s.kills], ['交通壕', s.p2T ? '挖了 ' + fmtTime(s.p2T) + '（亲手挖 ' + Math.round(s.heroDug) + ' 米）' : '—'],
         ['手榴弹雨', s.volleys ? s.volleys + ' 轮 · ' + s.volleys * PER_VOLLEY + ' 颗' + (s.bunkerHelp ? ' · 张大彪补了 ' + s.bunkerHelp + ' 个碉堡' : ' · 三个碉堡全炸了') : '—'],
-        ['射击孔', s.ports + ' / 4'], ['拼刀成功', s.clash], ['子弹被山崎格开', s.deflect], ['骑兵连出击', s.cav], ['阵亡', s.deaths], ['受击', s.hurt], ['爆头', s.heads],
+        ['射击孔', s.ports + ' / 4'], ['拼刀成功', s.clash], ['弹开', s.parry], ['子弹被山崎格开', s.deflect], ['阵亡', s.deaths], ['受击', s.hurt], ['爆头', s.heads],
         ['规则', (this.app.get('lives') === 'inf' ? '无限命' : '经典 3 命') + ' · ' + ({ std: '标准', easy: '宽松', one: '一发' }[this.app.get('armor')])],
       ],
     });

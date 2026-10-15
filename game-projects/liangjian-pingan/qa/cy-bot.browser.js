@@ -38,7 +38,7 @@ window.__installCyBot = function () {
     inp._look((-ey * 0.4 / 3.0) * w, (-ep * 0.4 / 2.4) * w, 'mouse');
     return Math.hypot(ey, ep);
   }
-  // 选目标开火；noBoom=true 时不扔手榴弹、不亮剑、不叫骑兵（抓舌头时怕把军曹弄死）
+  // 选目标开火；noBoom=true 时不扔手榴弹（抓舌头时怕把军曹弄死）
   function combat(dt, only, noBoom) {
     const h = g.hero;
     S.nadeT -= dt; S.tgtT -= dt;
@@ -61,8 +61,6 @@ window.__installCyBot = function () {
     const d = dist(h.x, h.z, t.x, t.z);
     if (!noBoom) {
       if (S.nadeT <= 0 && h.nades > 0 && d < 20 && d > 7 && err < 0.2) { tap('KeyU'); S.nadeT = 2.4; }
-      if (h.dashCd <= 0 && t.type !== 'boss' && d < 5 && err < 0.4) tap('KeyL');
-      if (h.cavCd <= 0 && err < 0.5 && alive((e) => e.active && dist(e.x, e.z, h.x, h.z) < 40).length >= 4) tap('KeyN');
     }
     return t;
   }
@@ -162,7 +160,7 @@ window.__installCyBot = function () {
         if (b.state === 'dashTele') {
           const side = (h.x - b.x) * (-b.dz) + (h.z - b.z) * b.dx > 0 ? 1 : -1;
           mx = -b.dz * side; mz = b.dx * side;
-          if (b.stT < 0.16 && d < 9) { const r = Math.random(); if (r < 0.4 && h.dashCd <= 0) { steer(dx / d, dz / d, true); tap('KeyL'); return; } else if (r < 0.7) tap('KeyK'); }
+          if (b.stT < 0.16 && d < 9) { const r = Math.random(); if (r < 0.7) tap('KeyK'); }
         }
         // 别贴着帐篷和山坡
         if (h.z < -126) mz += 1; if (h.z > -98) mz -= 1;

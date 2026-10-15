@@ -1,4 +1,4 @@
-// 互动与接入（键位 v2）：兼容包能跑、F 接管机枪 / 上炮（旧键 I 仍可用）、G 手榴弹、Q 亮剑、E 骑兵连、默认鼠标接管下左键开火、设置换算、枪火集结跳转
+// 互动与接入（键位 v2）：兼容包能跑、F 接管机枪 / 上炮（旧键 I 仍可用）、G 手榴弹、Q 拔刀、C 蹲 / Z 趴、默认鼠标接管下左键开火、设置换算、枪火集结跳转（骑兵连技能 v0.9.0 去掉）
 const { open, start, BASE } = require('./lib.cjs');
 const out = [];
 const check = (name, ok, detail) => { out.push({ name, ok: !!ok, detail }); console.log((ok ? 'PASS ' : 'FAIL ') + name + (ok ? '' : '  ' + JSON.stringify(detail))); };
@@ -45,17 +45,16 @@ const check = (name, ok, detail) => { out.push({ name, ok: !!ok, detail }); cons
   await page.keyboard.press('KeyU'); await step(3);
   const n2 = await page.evaluate(() => __lj.game.hero.nades);
   check('G 扔手榴弹，旧键 U 也能扔', n1 === n0 - 1 && n2 === n1 - 1, { n0, n1, n2 });
-  // 亮剑 Q、骑兵连 E
+  // 拔刀 Q、姿势 C（v0.9.0 起；骑兵连技能去掉）
   await page.evaluate(() => { const g = __lj.game; g.reset(1, false); g.cut = 0; g.timers.length = 0; for (const e of g.enemies) { e.alive = false; e.deadT = 9; } g.place(g.hero, 0, 70); g.cam.yaw = 0; __lj.step(4, true); });
-  const z0 = await page.evaluate(() => __lj.game.hero.z);
   await page.keyboard.press('KeyQ'); await step(20);
-  const d1 = await page.evaluate(() => ({ z: __lj.game.hero.z, cd: __lj.game.hero.dashCd }));
+  const bl = await page.evaluate(() => ({ blade: __lj.game.hero.blade }));
+  await page.keyboard.press('KeyC'); await step(20);
+  const cr = await page.evaluate(() => ({ stance: __lj.game.hero.stance, blade: __lj.game.hero.blade }));
   await page.keyboard.press('KeyE'); await step(6);
-  const cv = await page.evaluate(() => ({ riders: __lj.game.riders.length, cd: __lj.game.hero.cavCd, cav: __lj.game.stats.cav }));
-  const skills = await page.evaluate(() => ({ chips: [...document.querySelectorAll('#skills div')].map((d) => d.textContent), dash: !!document.getElementById('act-dash'), cav: !!document.getElementById('act-cav') }));
-  check('Q 亮剑向前突进并进入冷却', z0 - d1.z > 3 && d1.cd > 0, { z0, d1 });
-  check('E 叫骑兵连：五骑出场并进入冷却', cv.riders === 5 && cv.cd > 0 && cv.cav === 1, cv);
-  check('状态条四项：开火 左键、手榴弹 G、亮剑 Q、骑兵连 E；触屏有对应按键', skills.chips.length === 4 && /^左键/.test(skills.chips[0]) && /^G手榴弹/.test(skills.chips[1]) && /^Q亮剑/.test(skills.chips[2]) && /^E骑兵连/.test(skills.chips[3]) && skills.dash && skills.cav, skills);
+  const skills = await page.evaluate(() => ({ chips: [...document.querySelectorAll('#skills div')].map((d) => d.textContent), blade: !!document.getElementById('act-blade'), stance: !!document.getElementById('act-stance'), cav: !!document.getElementById('act-cav') }));
+  check('Q 拔刀；拔着刀按 C 蹲下会先收刀', bl.blade && cr.stance === 1 && !cr.blade, { bl, cr });
+  check('状态条四项：开火 左键、手榴弹 G、拔刀 Q、姿势 C；触屏有拔刀键和姿势键，没有骑兵连', skills.chips.length === 4 && /^左键/.test(skills.chips[0]) && /^G手榴弹/.test(skills.chips[1]) && /^Q拔刀/.test(skills.chips[2]) && /^C蹲着/.test(skills.chips[3]) && skills.blade && skills.stance && !skills.cav, skills);
 
   // ---- 上炮 F（旧键 I 仍可用）----
   await page.evaluate(() => { const g = __lj.game; g.reset(3, false); g.cut = 0; g.timers.length = 0; for (const b of g.world.bunkers) b.cd = 999; g.place(g.hero, g.cannon.x + 0.5, g.cannon.z + 2.4); __lj.step(6, true); });

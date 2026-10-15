@@ -209,10 +209,10 @@ Toy 自动同步的既有操作授权保留，改为**实时**节奏（用户202
 
 用户要求虫潮和枪火所有模式电脑端默认鼠标接管、右手键全挪到左手附近，参考 CS / 电脑版吃鸡。本节对这两款替代上文“切换视角保留 C 键”“Q/E 转视角”“J/K/U/I 方阵的键盘字母”在**电脑端**的说法；触屏按钮的位置、方阵与图标不变。
 
-- 默认键：鼠标转视角（默认接管 / 锁定，被浏览器或外壳拒绝时退回按住拖动，「操作设置 · 电脑鼠标」可改成按住拖动）、左键射击 / 放置、右键举枪 / 开镜（Z 同）、WASD 移动、按住 Shift 跑、空格跳 / 直升机升高、C 蹲下 / 直升机降低、F 互动 / 上下载具、G 手雷、E 医疗 / 兵种支援、Q 换枪、R 换弹 / 出兵、V 切换视角、B 商店、T 建造、X 开始虫潮、Tab 战况 / 队伍 / 测试台、P/Esc 暂停、M 声音、数字键武器栏。亮剑战役里 Q 是亮剑、E 是骑兵连。
+- 默认键：鼠标转视角（默认接管 / 锁定，被浏览器或外壳拒绝时退回按住拖动，「操作设置 · 电脑鼠标」可改成按住拖动）、左键射击 / 放置、右键举枪 / 开镜（Z 同）、WASD 移动、按住 Shift 跑、空格跳 / 直升机升高、C 蹲下 / 直升机降低、F 互动 / 上下载具、G 手雷、E 医疗 / 兵种支援、Q 换枪、R 换弹 / 出兵、V 切换视角、B 商店、T 建造、X 开始虫潮、Tab 战况 / 队伍 / 测试台、P/Esc 暂停、M 声音、数字键武器栏。亮剑战役里 Q 是拔刀 / 收刀（刀在手时左键砍、右键格挡）、C 蹲、Z 趴，E 不用（骑兵连技能 2026-10-15 去掉）。
 - 键盘转视角（Q/E、Y/H）默认不占键，大厅两款仍可在键位设置里自己绑；亮剑页没有键位设置，直接取消。旧键 J/K/U/I/N/O/L 没被占用、对应动作也没改过时仍可用，但不再出现在任何提示里。
 - 键位存档 `chongchao-keybindings-v2`（两款共用），旧 v1 自定义不沿用，第一次进局提示一次。所有提示跟随当前键位，改默认键时按各种写法搜全。
-- 实现与验收见 `game-projects/starship-defense/media-kit/releases/web-keys-v2/notes.md`，回归索引 KEYS-V2-018。蹲下 / 趴下、拔刀近战等新动作按后续批次加入时沿用本节键位（C 蹲、Z 趴的分配以届时实现为准，先改本节再改代码）。
+- 实现与验收见 `game-projects/starship-defense/media-kit/releases/web-keys-v2/notes.md`，回归索引 KEYS-V2-018。亮剑页的蹲 / 趴、拔刀近战已按本节实现（枪火集结 0.6.0，见下节）；战地加蹲 / 趴时同样用 C 蹲、Z 趴，届时 Z 从“举枪”别名里拿出来（举枪只留右键）。
 
 ## 枪火集结 · 亮剑战役是重做版（三章；用户2026-10-14）
 
@@ -220,10 +220,13 @@ Toy 自动同步的既有操作授权保留，改为**实时**节奏（用户202
 
 - 位置：`public/html/game/gunfire-assembly/liangjian/`，`?ch=cangyunling|lijiapo|pingan` 选章，不带参数落在上次玩的章节（新玩家第一章），菜单里也能换章（换章重新载入）。引擎 `js/game.js` 与章节 `js/chapters/<章>*.js` 拆开，章节差异走 `game.js` 末尾的“章节钩子”（含地形 `world.hgt`、`setLight`、`heroCover` / `allyCover`）。存档前缀 `lj_campaign_v1_`：设置共用，`cp_<章>`、`best_<章>`、`ending_<章>` 按章分开，第一次打开时搬旧的 `lj_pingan_v1_`。旧地址 `pingan/index.html` 只剩跳转页。重做版主菜单有“返回大厅”回到 `../index.html`。
 - 网站上枪火集结和虫潮围城同域，`chongchao-resistance-checkpoint-v1` 是虫潮抗战的存档键；枪火集结不再读写它，不要再拿它做跳转或迁移。
-- 操作按 game-maker `references/shooter-controls.md`：越肩第三人称 + 第一人称两个视角、手动瞄准带轻度吸附、可跳跃。电脑键位按「电脑键位 v2」：鼠标接管（被拒绝时按住拖动），左键开火、右键或 Z 开镜、按住 Shift 往前跑（开火优先、开镜 / 换弹跑不起来）、空格跳、R 换弹、G 手榴弹（李家坡手榴弹雨阶段是“全营投弹”）、F 互动（上炮 / 接管机枪 / 抓俘虏 / 挖壕 / 离开）、Q 亮剑、E 骑兵连、V 切换人称；键盘转视角取消，旧键 J/K/U/I/L/N/O 只作不显示的别名。打掉机枪手后阵地机枪可以接管。战友给主角让路，不会把主角挤开。
+- 操作按 game-maker `references/shooter-controls.md`：越肩第三人称 + 第一人称两个视角、手动瞄准带轻度吸附、可跳跃。电脑键位按「电脑键位 v2」：鼠标接管（被拒绝时按住拖动），左键开火、右键开镜、按住 Shift 往前跑（开火优先、开镜 / 换弹跑不起来）、C 蹲下 / Z 趴下（再按站起，跳或 Shift 往前也站起）、空格跳、R 换弹、G 手榴弹（李家坡手榴弹雨阶段是“全营投弹”）、F 互动（上炮 / 接管机枪 / 抓俘虏 / 挖壕 / 离开）、Q 拔刀 / 收刀、V 切换人称；键盘转视角取消，旧键 J/K/U/I/L/O 只作不显示的别名。
+- 拔刀近战（枪火集结 0.6.0，用户 2026-10-14 要求“亮剑改成拔刀挥砍、近身战，敌我加入格挡，参考天国拯救 2，太复杂就简单挥砍”，取简化版）：刀在手时左键轻砍（三刀一套）、按住蓄力重砍（破防、踉跄）、右键格挡（不掉血、被震退），刀砍到前 0.25 秒内按下格挡＝弹开（对军官是踉跄，对山本 / 山崎 / 坂田的突进或连砍就是拼刀）；拿刀的鬼子军官和 Boss 正对着时会格开轻砍并反砍。刀在手不能开枪、开镜；蹲 / 趴先收刀。旧的“亮剑突进”和 tryClash 已删。
+- 蹲 / 趴：子弹按姿势身高判定（站 2.05、蹲 1.4、趴 0.62 米，趴下身体沿朝向摊开判定），敌人瞄胸口高度随姿势降低、射界也按这个高度算；趴下躲大半手榴弹破片；速度蹲 0.55、趴 0.25；镜头蹲低 0.5、趴低 1.2 米。手机多一个“姿势”键（站→蹲→趴轮换），拔刀后开火键变“挥刀”、开镜键变按住“格挡”。
+- 骑兵连技能 2026-10-15 去掉，只在剧情里出现（孙德胜的台词与原声保留，`buildRider` 模型和 `qibinglian` 语音没删）。不要加回技能键。打掉机枪手后阵地机枪可以接管。战友给主角让路，不会把主角挤开。
 - 苍云岭（v0.6.0）：坚守山头 → 抓舌头 → 送炮前出五百米 → 两发炮弹（风偏、柱子报偏差）→ 打中＝原作突围，两发都偏＝坂田 Boss；结局存 `ending_cangyunling`。李家坡（v0.7.0，用户选定）：强攻受挫（侧翼拔两个外围火力点）→ 夜里挖交通壕（I 开挖、照明弹、夜袭、掷弹筒）→ 拂晓手榴弹雨（两分钟三千六百颗、炸碉堡）→ 张大彪突击队 → 决战山崎（炸哑射击孔、格子弹、拼刀、战友不打他）；真实山坡、按阶段换光，没有分支结局。平安县城（v0.5.0）：城楼秀芹过场与双结局（`ending_pingan`），飘屏弹幕已按用户选择删除，不要加回。
 - 原声：三章喊话都截自电视剧《亮剑》（用户同意下载 B站片段使用，未取得授权；来源见 `game-projects/liangjian-pingan/media-kit/assets/voice.json`）。语音清单 `liangjian/assets/voice/index.json` 按章节分组，每章只加载自己那一组。下载新片段前先列出 BV、时长、大小与用途给用户确认。不要把原声换回合成，除非用户要求或 Toy 因此退回。局内原声用章节的 `vo()` 排队，过场开始时掐掉排队的。
-- 两款的默认键位以「电脑键位 v2」为准（2026-10-14 的“医疗改 N、Y/H 抬头低头”已被替代）。`key-bindings.js` 两款同一份；提示文字一律用 `keyBindings.label()` 跟随当前键位，回归用 `game-projects/starship-defense/verify-keys-v2.cjs`。
+- 两款的默认键位以「电脑键位 v2」为准（2026-10-14 的“医疗改 N、Y/H 抬头低头”已被替代）。`key-bindings.js` 两款同一份；提示文字一律用 `keyBindings.label()` 跟随当前键位，回归用 `game-projects/starship-defense/verify-keys-v2.cjs`；拔刀与蹲趴用 `game-projects/liangjian-pingan/qa/melee.cjs`。
 - 构建：`node game-projects/gunfire-assembly/build-compat.mjs` 同时生成大厅与亮剑战役两个兼容包；`build-toy.mjs` 把 `liangjian/` 的入口、样式、兼容包与全部语音、以及 `pingan/index.html` 跳转页打进同一个 Toy 包。验收脚本在 `game-projects/liangjian-pingan/qa/`：苍云岭 `cy-story.cjs`、`cy-playthrough.cjs`（`ROUTE=hit|hit2|miss`）、`cy-scenes.cjs`；李家坡 `ljp-story.cjs`、`ljp-playthrough.cjs`、`ljp-scenes.cjs`；平安县城 `story.cjs`、`playthrough.cjs`（`ROUTE=rescue`）；三章共用 `interact.cjs`、`views.cjs`、`options.cjs`、`mobile.cjs`（`LJ_CH=cangyunling|lijiapo`）；枪火集结大厅 `gunfire-chapters.cjs`。各版记录见 `game-projects/liangjian-pingan/media-kit/releases/` 与 `game-projects/gunfire-assembly/media-kit/releases/web-*/`。
 
 ## 2026-10-06 右上按钮布局补充

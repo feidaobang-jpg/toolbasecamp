@@ -144,6 +144,7 @@ class App {
     this.pr = Math.min(window.devicePixelRatio || 1, q === 'high' ? 2 : 1.25);
     this.renderer.setPixelRatio(this.pr);
     this.game.scene.traverse((o) => { if (o.material) { const ms = Array.isArray(o.material) ? o.material : [o.material]; for (const m of ms) m.needsUpdate = true; } });
+    this.game.warmShaders();
     this.ui.refresh();
   }
   checkpoint() { const c = store.get('cp_' + this.chapter.id); return c >= 2 && c <= 5 ? c : 0; }
@@ -228,7 +229,7 @@ class App {
     this.engageLock();
     if (this.keysNotice && !this.isTouch()) {
       this.keysNotice = false; store.set('keys2', 1);
-      this.game.after(0.6, () => this.ui.toast('键位换了（和 CS、吃鸡类似）：左键开火、右键开镜、Shift 跑、F 互动、G 手榴弹、Q 亮剑、E 骑兵连、V 切换人称', 7));
+      this.game.after(0.6, () => this.ui.toast('键位换了（和 CS、吃鸡类似）：左键开火、右键开镜、Shift 跑、C 蹲、Z 趴、F 互动、G 手榴弹、Q 拔刀、V 切换人称', 7));
     }
   }
   pause() {

@@ -1,9 +1,9 @@
-// 亮剑战役共用引擎：主角、视角、枪弹、手榴弹、亮剑、骑兵连、阵地机枪、火炮 / 迫击炮、过场与战斗界面。
+// 亮剑战役共用引擎：主角（枪、拔刀近战、蹲下 / 趴下）、视角、枪弹、手榴弹、阵地机枪、火炮 / 迫击炮、过场与战斗界面。
 // 各章（chapters/*.js）继承 Game，实现场景、阶段流程、敌人配置、剧情和结算；章节差异都走下面“章节钩子”一节的方法。
 import * as THREE from '../vendor/three.module.js';
 import { TAU, DEG, clamp, lerp, damp, angDiff, angStep, fwdX, fwdZ, rightX, rightZ, yawTo, dist, dist2, rand, pick, reseed, segPointD2, segRect, fmtTime } from './util.js';
 import { resolveCircle, groundAt, pointBlocked, losBlocked } from './world-kit.js';
-import { MAT, buildSoldier, poseSoldier, muzzleWorld, setSoldierMat, buildCannon, buildMG, buildRider, buildViewGun, buildBroadsword, buildMedkit, buildCrate } from './models.js';
+import { MAT, buildSoldier, poseSoldier, muzzleWorld, setSoldierMat, buildCannon, buildMG, buildViewGun, buildBroadsword, buildMedkit, buildCrate } from './models.js';
 import { Geo } from './geo.js';
 import { Fx } from './fx.js';
 import { DEF, updateEnemy, updateAlly, wakeGroup } from './ai.js';
@@ -18,9 +18,16 @@ const MG_BELT = 100;                                    // 阵地机枪一条弹
 const ARMOR = { std: 5, easy: 8, one: 1 };
 const SENS = { low: 0.7, mid: 1, high: 1.4 };
 const JUMP_V = 8.2, GRAVITY = 26, AIR_SPEED = 0.85;    // 起跳约 1.3 米；滞空短一点、空中略慢，容易落在箱子上
+// 姿势：站 / 蹲 / 趴的身高（子弹打主角时按这个高度算）、移动速度倍数，以及镜头（眼睛）比站着低多少
+const STANCE_TOP = [2.05, 1.4, 0.62], STANCE_SPEED = [1, 0.55, 0.25];
+const CROUCH_DROP = 0.5, PRONE_DROP = 1.2;
+// 近战：轻砍 / 重砍（按住蓄力）的出刀时机、伤害与攻击范围；刚按下格挡 PARRY_WIN 秒内挡住＝弹开
+const SWING = { light: { dur: 0.4, hitAt: 0.15, reach: 2.6, cone: 60 * DEG, dmg: 2, boss: 4, max: 2, lunge: 0.6 }, heavy: { dur: 0.62, hitAt: 0.26, reach: 3.0, cone: 72 * DEG, dmg: 5, boss: 12, max: 3, lunge: 2.2 } };
+const HEAVY_HOLD = 0.32, HEAVY_AUTO = 0.75, PARRY_WIN = 0.25;
 const MAG_SOFT = 4.2 * DEG, MAG_MOUSE = 2.2 * DEG;     // 子弹吸附角：触屏 / 按键转视角略大，鼠标略小
 const FRICTION_ANG = 7.5 * DEG, PULL_ANG = 5 * DEG;    // 准星减速与开火牵引的范围（只对触屏 / 按键生效）
 const _v = new THREE.Vector3(), _v2 = new THREE.Vector3(), _v3 = new THREE.Vector3();
+const DOWN = new THREE.Vector3(0, -1, 0);   // 大刀模型的刀身朝向（刀柄在原点，刀身朝 -y）
 
 export class Game {
   constructor(app) {
@@ -43,7 +50,7 @@ export class Game {
     this.fx = new Fx(scene);
     this.fx.hgt = this.world.hgt || null;
     this.units = []; this.enemies = []; this.allies = [];
-    this.bullets = []; this.nades = []; this.shells = []; this.mortars = []; this.riders = []; this.mgs = []; this.pickups = []; this.timers = []; this.cast = [];
+    this.bullets = []; this.nades = []; this.shells = []; this.mortars = []; this.mgs = []; this.pickups = []; this.timers = []; this.cast = [];
     this.cam = { yaw: 0, pitch: 0, pendYaw: 0, pendPitch: 0, view: 0, clip: 1, F: new THREE.Vector3(0, 1.5, 90), turning: false, orbitT: 0 };
     this.mode = 'title';
     this.t = 0; this.phase = 1; this.cut = 0; this.cutCam = null;
@@ -83,6 +90,15 @@ export class Game {
     const ng = new Geo(); ng.cyl(0.09, 0.2, 0, 0, 0, 0x3a3a34, 6, 1, 0, 0, 0, 0); ng.box(0.04, 0.3, 0.04, 0, -0.24, 0, 0x8a6a40, 0, 0, 0, 0);
     this.nadeGeo = ng.build(MAT.vc).geometry;
     this.sword = buildBroadsword(); this.sword.visible = false;
+    // 手腕：刀挂在手上，能单独立起来（原来是顺着手臂直出去）
+    this.swordPivot = new THREE.Group(); this.swordPivot.position.set(0, -0.6, 0);
+    this.sword.position.set(0, 0.62, 0); this.swordPivot.add(this.sword);
+    // 第一人称拿在手里的大刀（挂在镜头上，和第一人称的枪一样）
+    this.viewSword = new THREE.Group();
+    // 刀模型的原点在肩膀、刀柄在 -0.6 处：套一层转轴，让刀柄落在转轴原点上，转刀时刀柄不动
+    const vs = buildBroadsword(); vs.castShadow = false; vs.scale.setScalar(0.62); vs.position.y = 0.6 * 0.62;
+    const vp = new THREE.Group(); vp.add(vs); this.viewSword.add(vp); this.viewSword.blade = vp;
+    this.viewSword.visible = false; this.camera.add(this.viewSword);
     this.medGeo = buildMedkit().geometry; this.crateGeo = buildCrate().geometry;
     this.smokeT = 0;
     this.chapterProps();
@@ -93,6 +109,16 @@ export class Game {
     this.sun.castShadow = q === 'high';
     this.fx.scale = q === 'high' ? 1 : 0.5;
   }
+  // 预编译着色器：爆炸火球、冲击波圈、预警条、炮弹、废墟这些平时藏着，第一次露面时才编译。
+  // 有的电脑（Windows 上的部分浏览器）编译一次要几十到几百毫秒，开第一炮时画面会顿一下；载入和换画质时先统一编好
+  warmShaders() {
+    const shown = [], tmp = [new THREE.Mesh(this.shellGeo, MAT.vc), new THREE.Mesh(this.nadeGeo, MAT.vc)];
+    for (const m of tmp) this.scene.add(m);
+    this.scene.traverse((o) => { if (!o.visible) { o.visible = true; shown.push(o); } });
+    try { this.app.renderer.compile(this.scene, this.camera); } catch (e) { /* 编不了就留到第一次显示时再编 */ }
+    for (const o of shown) o.visible = false;
+    for (const m of tmp) this.scene.remove(m);
+  }
 
   // ---------- 开局 / 重置 ----------
   clearDynamic() {
@@ -100,10 +126,9 @@ export class Game {
     for (const n of this.nades) this.scene.remove(n.mesh);
     for (const s of this.shells) this.scene.remove(s.mesh);
     for (const m of this.mortars) if (m.mesh) this.scene.remove(m.mesh);
-    for (const r of this.riders) this.scene.remove(r.model.root);
     for (const p of this.pickups) this.scene.remove(p.mesh);
     this.units.length = this.enemies.length = this.allies.length = 0;
-    this.bullets.length = this.nades.length = this.shells.length = this.mortars.length = this.riders.length = this.pickups.length = this.timers.length = 0;
+    this.bullets.length = this.nades.length = this.shells.length = this.mortars.length = this.pickups.length = this.timers.length = 0;
     this.fx.clearWarnings();
     this.ui.clearTransient();
     this.boss = null; this.advYaw = 0; this.sortieT = 9;
@@ -116,7 +141,7 @@ export class Game {
     this.clearDynamic();
     const a = this.app;
     this.t = 0; this.cut = 0; this.cutCam = null; this.over = false; this.slow = 1;
-    this.stats = { kills: 0, elites: 0, genius: 0, clash: 0, loot: 0, deaths: 0, hurt: 0, meds: 0, retries: 0, shells: 0, cav: 0, heads: 0, jumps: 0, startPhase, demo: !!a.get('demo') };
+    this.stats = { kills: 0, elites: 0, genius: 0, clash: 0, parry: 0, blocks: 0, cuts: 0, loot: 0, deaths: 0, hurt: 0, meds: 0, retries: 0, shells: 0, heads: 0, jumps: 0, startPhase, demo: !!a.get('demo') };
     this.score = 0;
     this.lives = a.get('lives') === 'inf' ? Infinity : 3;
     this.flags = {};
@@ -126,8 +151,8 @@ export class Game {
     const st = this.startPos();
     const model = buildSoldier('hero');
     this.scene.add(model.root);
-    model.armR.add(this.sword);
-    const h = (this.hero = { kind: 'player', type: 'hero', x: st.x, z: st.z, y: 0, vy: 0, onGround: true, coyote: 0, yaw: 0, hp: maxHp, maxHp, alive: true, inv: 0, model, walk: 0, moving: 0, aim: 0, ads: false, fireCd: 0, weapon: this.startWeapon(startPhase), mag: 20, magMax: 20, reloadT: 0, nades: 3, nadeMax: 3, nadeT: 0, dashT: 0, dashCd: 0, dashX: 0, dashZ: -1, dashHit: new Set(), swordT: 0, cavCd: 0, deadT: 0, r: 0.45, flashT: 0, vx: 0, vz: 0, slash: -1, hurtT: 0 });
+    model.armR.add(this.swordPivot);
+    const h = (this.hero = { kind: 'player', type: 'hero', x: st.x, z: st.z, y: 0, vy: 0, onGround: true, coyote: 0, yaw: 0, hp: maxHp, maxHp, alive: true, inv: 0, model, walk: 0, moving: 0, aim: 0, ads: false, fireCd: 0, weapon: this.startWeapon(startPhase), mag: 20, magMax: 20, reloadT: 0, nades: 3, nadeMax: 3, nadeT: 0, blade: false, bladeK: 0, atk: null, combo: 0, comboT: 0, charge: -1, queued: false, block: false, blockT: 9, stagger: 0, stance: 0, crouchK: 0, proneK: 0, sprint: false, deadT: 0, r: 0.45, flashT: 0, vx: 0, vz: 0, slash: -1, hurtT: 0 });
     this.aim = { x: 0, y: 1, z: 0, fx: 0, fy: 0, fz: -1, dist: 30, target: null, near: null, nearAng: 9, nearDYaw: 0, nearDPitch: 0 };
     this.hitT = 0; this.hitKind = 0; this.headT = 0;
     if (h.weapon === 'lmg') { h.magMax = h.mag = 40; }
@@ -228,7 +253,6 @@ export class Game {
     this.updateNades(dt);
     this.updateShells(dt);
     this.updateMortars(dt);
-    this.updateRiders(dt);
     this.updatePickups(dt);
     this.updatePhase(dt);
     this.updateChapter(dt);
@@ -314,17 +338,17 @@ export class Game {
   updateHero(dt) {
     const h = this.hero, inp = this.input, c = this.cam, can = this.cannon, ui = this.ui;
     h.inv = Math.max(0, h.inv - dt); h.hurtT = Math.max(0, h.hurtT - dt); h.flashT = Math.max(0, h.flashT - dt);
-    h.dashCd = Math.max(0, h.dashCd - dt); h.cavCd = Math.max(0, h.cavCd - dt); h.swordT = Math.max(0, h.swordT - dt);
+    h.stagger = Math.max(0, h.stagger - dt);
     this.hitT = Math.max(0, this.hitT - dt); this.headT = Math.max(0, this.headT - dt);
     if (h.nades < h.nadeMax) { h.nadeT += dt; if (h.nadeT >= 12) { h.nadeT = 0; h.nades++; } }
-    const drain = () => { for (const e of ['fire', 'jump', 'reload', 'nade', 'dash', 'cav', 'use']) inp.take(e); };
+    const drain = () => { for (const e of ['fire', 'jump', 'reload', 'nade', 'blade', 'crouch', 'prone', 'stance', 'use']) inp.take(e); };
     if (!h.alive) {
-      h.deadT += dt; h.moving = 0; h.ads = false; h.mg = null;
+      h.deadT += dt; h.moving = 0; h.ads = false; h.mg = null; h.atk = null; h.block = false;
       if (h.deadT > 1.8 && !this.over) this.respawn();
       drain(); ui.setUse(null);
       return;
     }
-    if (this.cut > 0) { h.moving = 0; h.ads = false; h.aim = damp(h.aim, 0, 10, dt); ui.setPrompt(null); ui.setUse(null); drain(); return; }
+    if (this.cut > 0) { h.moving = 0; h.ads = false; h.atk = null; h.charge = -1; h.block = false; h.aim = damp(h.aim, 0, 10, dt); ui.setPrompt(null); ui.setUse(null); drain(); return; }
     // 互动键（I / F）：炮位旁上炮、阵地里接管机枪，再按一次离开
     let use = inp.take('use');
     if (can.manned) {
@@ -346,38 +370,45 @@ export class Game {
     if (gun && use) { this.manMG(gun); drain(); return; }
     if (extra && use) { extra.act(); drain(); return; }
 
-    h.ads = inp.held.ads && h.dashT <= 0 && h.reloadT <= 0;
+    // 拔刀（Q）：刀在手时左键砍、按住蓄力重砍，右键格挡；再按 Q 收刀
+    if (inp.take('blade')) this.toggleBlade();
+    h.bladeK = damp(h.bladeK, h.blade ? 1 : 0, 12, dt);
+    // 姿势：C 蹲下 / 站起，Z 趴下 / 站起；触屏“姿势”键站→蹲→趴轮换
+    if (inp.take('crouch')) this.setStance(h.stance === 1 ? 0 : 1);
+    if (inp.take('prone')) this.setStance(h.stance === 2 ? 0 : 2);
+    if (inp.take('stance')) this.setStance((h.stance + 1) % 3);
     const mv = inp.move, yaw = c.yaw, fp = c.view === 1;
-    // 按住 Shift 跑：只往前（含斜前）跑得动；开火、开镜、换弹时跑不起来，开火优先
-    h.sprint = inp.held.sprint && mv.y > 0.3 && !h.ads && !inp.held.fire && h.reloadT <= 0;
+    // 蹲着、趴着按 Shift 往前跑：先站起来
+    if (h.stance && inp.held.sprint && mv.y > 0.3) this.setStance(0);
+    h.crouchK = damp(h.crouchK, h.stance === 1 ? 1 : 0, 12, dt);
+    h.proneK = damp(h.proneK, h.stance === 2 ? 1 : 0, 7, dt);
+    if (h.blade && inp.adsToggle) { inp.adsToggle = false; inp._sync(); }
+    h.ads = !h.blade && inp.held.ads && h.reloadT <= 0;
+    // 格挡：刀在手、没在出刀、没被震住；记下按下格挡多久了（刚按下的一瞬间挡住＝弹开）
+    const blocking = h.blade && h.bladeK > 0.85 && inp.held.block && !h.atk && h.stagger <= 0;
+    if (blocking && !h.block) h.blockT = 0; else h.blockT += dt;
+    h.block = blocking;
+    // 按住 Shift 跑：只往前（含斜前）跑得动；开火、开镜、换弹、出刀、格挡时跑不起来，开火优先
+    h.sprint = inp.held.sprint && mv.y > 0.3 && !h.ads && !inp.held.fire && h.reloadT <= 0 && !h.stance && !h.block && !h.atk;
     const wx = rightX(yaw) * mv.x + fwdX(yaw) * mv.y, wz = rightZ(yaw) * mv.x + fwdZ(yaw) * mv.y;
     const mag = Math.min(1, Math.hypot(mv.x, mv.y));
     const ox = h.x, oz = h.z;
-    if (h.dashT > 0) {
-      h.dashT -= dt;
-      const sp = 34;
-      h.x += h.dashX * sp * dt; h.z += h.dashZ * sp * dt;
-      if (rand() < 0.9) this.fx.spawn({ x: h.x, y: h.y + 1.0, z: h.z, life: 0.2, s0: 0.26, s1: 0.04, c0: 0xdfe9ff, c1: 0x6f9fdc, spin: 0 });
-      for (const e of this.enemies) {
-        if (!e.alive || Math.abs(e.y - h.y) > 1.8 || h.dashHit.has(e)) continue;
-        if (segPointD2(ox, oz, h.x, h.z, e.x, e.z) < 1.9 * 1.9) {
-          h.dashHit.add(e);
-          if (e.type === 'boss' && this.tryClash(e)) continue;
-          this.hurtUnit(e, e.type === 'boss' ? 8 : 6, h.dashX, h.dashZ, 'blade');
-          this.audio.play('slash'); this.fx.sparks(e.x, e.y + 1.2, e.z, 8, 0xffffff);
-        }
-      }
-      if (h.dashT <= 0) h.inv = Math.max(h.inv, 0.3);
-    } else if (mag > 0.01) {
-      const sp = 6.3 * (h.sprint ? 1.45 : h.ads ? 0.6 : inp.held.fire ? 0.85 : 1) * (h.onGround ? 1 : AIR_SPEED);
+    if (mag > 0.01) {
+      const k = h.stagger > 0 ? 0.2 : h.sprint ? 1.45 : h.stance ? STANCE_SPEED[h.stance] : h.atk ? 0.35 : h.block ? 0.55 : h.ads ? 0.6 : inp.held.fire && !h.blade ? 0.85 : 1;
+      const sp = 6.3 * k * (h.onGround ? 1 : AIR_SPEED);
       h.x += wx * sp * dt; h.z += wz * sp * dt;
     }
+    // 出刀时往前带一步（重砍带得多）；贴着敌人了就不再往前，免得冲过头砍到空气
+    if (h.atk && h.atk.t < h.atk.hitAt + 0.04 && !this.foeAhead(1.3)) { const s = h.atk.lunge / (h.atk.hitAt + 0.04); h.x += fwdX(h.yaw) * s * dt; h.z += fwdZ(h.yaw) * s * dt; }
     resolveCircle(this.world, h, h.r, h.y, true);
     this.heroBounds(h);
-    // 跳跃、下落与落地：只有从上面落下才能站到箱子、沙袋、土台上
+    // 跳跃、下落与落地：只有从上面落下才能站到箱子、沙袋、土台上；蹲着、趴着按跳是站起来
     const prevY = h.y;
     h.coyote = h.onGround ? 0.1 : Math.max(0, h.coyote - dt);
-    if (inp.take('jump') && h.coyote > 0 && h.dashT <= 0) { h.vy = JUMP_V; h.onGround = false; h.coyote = 0; this.stats.jumps++; this.audio.play('jump', 0.7); }
+    if (inp.take('jump')) {
+      if (h.stance) this.setStance(0);
+      else if (h.coyote > 0 && !h.atk && h.stagger <= 0) { h.vy = JUMP_V; h.onGround = false; h.coyote = 0; this.stats.jumps++; this.audio.play('jump', 0.7); }
+    }
     h.vy -= GRAVITY * dt;
     h.y += h.vy * dt;
     const gnd = groundAt(this.world, h.x, h.z, prevY);
@@ -386,24 +417,25 @@ export class Game {
       h.y = gnd; h.vy = 0; h.onGround = true;
     } else h.onGround = false;
     h.vx = (h.x - ox) / Math.max(dt, 1e-4); h.vz = (h.z - oz) / Math.max(dt, 1e-4);
-    h.moving = damp(h.moving, h.dashT > 0 ? 1 : h.onGround ? mag : 0.25, 14, dt);
-    if (mag > 0.01 && h.onGround) h.walk += dt * (4 + 8 * mag) * (h.sprint ? 1.35 : 1);
+    h.moving = damp(h.moving, h.onGround ? mag : 0.25, 14, dt);
+    if (mag > 0.01 && h.onGround) h.walk += dt * (4 + 8 * mag) * (h.sprint ? 1.35 : h.stance === 2 ? 0.6 : 1);
     // 身体跟着瞄准方向（枪战类：平移时不转身）
-    const faceYaw = h.dashT > 0 ? yawTo(h.dashX, h.dashZ) : c.yaw;
-    h.yaw = fp ? faceYaw : angStep(h.yaw, faceYaw, 16 * dt);
+    h.yaw = fp ? c.yaw : angStep(h.yaw, c.yaw, 16 * dt);
 
     this.computeAim();
-    // 开火只在按住时；打空自动换弹，也可以手动换
+    // 开火只在按住时；打空自动换弹，也可以手动换。刀在手时左键是挥刀
     h.fireCd -= dt;
-    const firing = inp.held.fire; inp.take('fire');
+    const press = inp.take('fire');
+    const firing = inp.held.fire && !h.blade;
     const wantReload = inp.take('reload');
-    if (h.reloadT > 0) { h.reloadT -= dt; if (h.reloadT <= 0) h.mag = h.magMax; }
-    else if ((wantReload && h.mag < h.magMax) || h.mag <= 0) this.startReload();
-    h.aim = damp(h.aim, firing || h.ads || h.fireCd > -0.6 ? 1 : 0, 16, dt);
-    if (firing && !h.sprint && h.fireCd <= 0 && h.reloadT <= 0 && h.dashT <= 0 && h.mag > 0) this.heroShoot();
+    if (!h.blade) {
+      if (h.reloadT > 0) { h.reloadT -= dt; if (h.reloadT <= 0) h.mag = h.magMax; }
+      else if ((wantReload && h.mag < h.magMax) || h.mag <= 0) this.startReload();
+    }
+    h.aim = damp(h.aim, !h.blade && (firing || h.ads || h.fireCd > -0.6) ? 1 : 0, 16, dt);
+    if (firing && !h.sprint && h.fireCd <= 0 && h.reloadT <= 0 && h.mag > 0) this.heroShoot();
+    this.updateMelee(dt, press);
     if (inp.take('nade')) this.throwNade();
-    if (inp.take('dash')) this.startDash(wx, wz, mag);
-    if (inp.take('cav')) this.callCavalry();
   }
   startReload() { const h = this.hero; h.reloadT = h.weapon === 'lmg' ? 1.6 : 1.1; this.audio.play('reload'); }
 
@@ -493,78 +525,141 @@ export class Game {
     this.audio.play('throw');
     h.slash = 0.36;
   }
-  startDash(wx, wz, mag) {
-    const h = this.hero, c = this.cam;
-    if (h.dashCd > 0 || h.dashT > 0) return;
-    // 有方向输入就朝那边突进，否则朝准星方向
-    let dx = fwdX(c.yaw), dz = fwdZ(c.yaw);
-    if (mag > 0.1) { const l = Math.hypot(wx, wz) || 1; dx = wx / l; dz = wz / l; }
-    h.dashX = dx; h.dashZ = dz; h.dashT = 0.3; h.dashCd = 7; h.dashHit.clear(); h.inv = Math.max(h.inv, 0.5); h.swordT = 0.9; h.slash = 0;
-    this.audio.play('unsheathe'); this.audio.voice('liangjian', 0.9);
-    this.ui.stamp('亮剑！', 0.8);
+  // ---------- 拔刀近战 ----------
+  toggleBlade() {
+    const h = this.hero;
+    if (h.atk || h.mg || this.cannon.manned) return;
+    h.blade = !h.blade; h.charge = -1; h.block = false; h.queued = false;
+    if (!h.blade) { this.audio.play('reload', 0.4); return; }
+    if (h.stance) h.stance = 0;     // 拔刀就站起来
+    h.reloadT = 0;
+    this.audio.play('unsheathe');
+    if (!this.flags.bladeVoice) { this.flags.bladeVoice = 1; this.audio.voice('liangjian', 0.9); this.ui.stamp('亮剑！', 0.8); }
+    if (!this.flags.bladeTip) {
+      this.flags.bladeTip = 1;
+      this.ui.toast(this.app.isTouch() ? '拔刀了：点“挥刀”连砍，按住蓄力重砍（能破防）；按住“格挡”挡刀，刀砍到的一瞬间按下＝弹开。再点“收刀”换回枪'
+        : '拔刀了：左键连砍，按住左键蓄力重砍（能破防）；右键格挡，刀砍到的一瞬间按下＝弹开。Q 收刀换回枪', 6);
+    }
   }
-  tryClash(b) {
-    // 山本突进（或起手）时亮剑撞上：拼刀
-    if (b.state !== 'dash' && b.state !== 'dashTele') return false;
-    b.state = 'stun'; b.stT = 2.8;
-    this.hero.dashT = 0; this.hero.inv = Math.max(this.hero.inv, 1.0);
-    this.hurtUnit(b, 7, 0, 0, 'blade');
-    this.stats.clash++; this.addScore(400);
-    const mx = (b.x + this.hero.x) / 2, mz = (b.z + this.hero.z) / 2;
-    const gy = this.groundY(mx, mz);
-    this.fx.sparks(mx, gy + 1.4, mz, 26, 0xffffff); this.fx.ring(mx, gy + 0.1, mz, 5, 0.4, 0xffffff, 1);
-    this.fx.clearWarnings();
-    this.audio.play('clang');
-    this.ui.stamp('狭路相逢勇者胜！', 1.5);
+  setStance(s) {
+    const h = this.hero;
+    if (s === h.stance || h.mg || this.cannon.manned) return;
+    if (s === 2 && !h.onGround) return;
+    if (s && h.blade) { h.blade = false; h.atk = null; h.charge = -1; h.block = false; }   // 蹲下、趴下就收刀
+    if (s === 2 || h.stance === 2) this.audio.play('thud', 0.25);
+    h.stance = s;
+  }
+  // 左键：轻砍，挥刀途中再按接下一刀（三刀一套）；按住超过 HEAVY_HOLD 秒松手（或蓄满）是重砍
+  updateMelee(dt, press) {
+    const h = this.hero, inp = this.input;
+    h.comboT = Math.max(0, h.comboT - dt);
+    if (!h.blade || h.bladeK < 0.85) { h.atk = null; h.charge = -1; return; }
+    const a = h.atk;
+    if (a) {
+      a.t += dt;
+      if (!a.hitDone && a.t >= a.hitAt) { a.hitDone = true; this.meleeStrike(a); }
+      if (press && a.kind === 'light' && a.t > a.hitAt * 0.6) h.queued = true;
+      if (a.t >= a.dur) { h.atk = null; h.comboT = 0.45; if (h.queued) { h.queued = false; this.startSwing('light'); } }
+      return;
+    }
+    if (h.block || h.stagger > 0) { h.charge = -1; return; }
+    if (press) h.charge = 0;
+    if (h.charge < 0) return;
+    if (inp.held.fire) { h.charge += dt; if (h.charge >= HEAVY_AUTO) { h.charge = -1; this.startSwing('heavy'); } }
+    else { const heavy = h.charge >= HEAVY_HOLD; h.charge = -1; this.startSwing(heavy ? 'heavy' : 'light'); }
+  }
+  startSwing(kind) {
+    const h = this.hero, s = SWING[kind];
+    h.combo = kind === 'light' && h.comboT > 0 ? (h.combo + 1) % 3 : 0;
+    h.atk = { kind, t: 0, dur: s.dur, hitAt: s.hitAt, hitDone: false, lunge: s.lunge, dir: kind === 'heavy' ? 0 : [1, -1, 0][h.combo] };
+    this.audio.play('swing', kind === 'heavy' ? 1 : 0.7);
+  }
+  // 出刀那一下：身前扇面里最近的几个敌人（隔着墙砍不到）
+  meleeStrike(a) {
+    const h = this.hero, s = SWING[a.kind], heavy = a.kind === 'heavy';
+    const fx = fwdX(h.yaw), fz = fwdZ(h.yaw), cosA = Math.cos(s.cone);
+    const hits = [];
+    for (const e of this.enemies) {
+      if (!e.alive || Math.abs(e.y - h.y) > 1.6) continue;
+      const dx = e.x - h.x, dz = e.z - h.z, d = Math.hypot(dx, dz);
+      if (d > s.reach + e.r || (d > 0.9 && (dx * fx + dz * fz) / d < cosA)) continue;   // 贴身的不管朝向都砍得到
+      if (losBlocked(this.world, h.x, h.z, e.x, e.z, 1.2, h.y + 1.2, e.y + 1.2)) continue;
+      hits.push([d, e]);
+    }
+    hits.sort((p, q) => p[0] - q[0]);
+    let landed = false;
+    for (const [, e] of hits.slice(0, s.max)) {
+      if (this.enemyGuard(e, heavy)) { landed = true; continue; }
+      landed = true;
+      const was = e.alive;
+      this.hurtUnit(e, e.type === 'boss' ? s.boss : s.dmg, fx, fz, 'blade');
+      if (was && !e.alive) this.stats.cuts++;
+      if (heavy && e.alive && e.type !== 'boss' && e.type !== 'mg') { e.stagT = 0.8; e.x += fx * 0.7; e.z += fz * 0.7; resolveCircle(this.world, e, e.r, e.y); }
+      this.fx.sparks(e.x, e.y + 1.2, e.z, heavy ? 12 : 7, 0xffffff);
+    }
+    if (landed) this.audio.play('slash', heavy ? 1 : 0.8);
+  }
+  foeAhead(r) {
+    const h = this.hero, fx = fwdX(h.yaw), fz = fwdZ(h.yaw);
+    for (const e of this.enemies) {
+      if (!e.alive || Math.abs(e.y - h.y) > 1.6) continue;
+      const dx = e.x - h.x, dz = e.z - h.z, d = Math.hypot(dx, dz);
+      if (d < r + e.r && dx * fx + dz * fz > 0.3 * d) return true;
+    }
+    return false;
+  }
+  // 拿刀的敌人（军官、Boss）正对着主角、手上没在出刀时会格开轻砍；重砍破防
+  enemyGuard(e, heavy) {
+    const h = this.hero;
+    let p = 0;
+    if (e.type === 'officer') p = e.slash < 0 && !(e.stagT > 0) ? 0.35 : 0;
+    else if (e.type === 'boss') p = this.bossGuards(e) ? 0.7 : 0;
+    if (!p || Math.abs(angDiff(e.yaw, yawTo(h.x - e.x, h.z - e.z))) > 1.1) return false;
+    const mx = (e.x + h.x) / 2, mz = (e.z + h.z) / 2, gy = this.groundY(mx, mz);
+    if (heavy) {
+      this.fx.sparks(mx, gy + 1.4, mz, 14, 0xffe9a8); this.audio.play('clang', 0.8);
+      if (e.type === 'boss') { e.state = 'stun'; e.stT = Math.max(e.stT || 0, 1.0); } else e.stagT = 1.0;
+      if (!this.flags.breakTip) { this.flags.breakTip = 1; this.ui.stamp('破防！', 0.9); }
+      return false;
+    }
+    if (rand() > p) return false;
+    this.fx.sparks(mx, gy + 1.4, mz, 8, 0xffe9a8); this.audio.play('clang', 0.6);
+    h.stagger = Math.max(h.stagger, 0.22);
+    if (e.type === 'officer') e.stT = Math.min(e.stT, 0.2);   // 格开就马上反砍
+    if (!this.flags.guardTip) { this.flags.guardTip = 1; this.ui.toast(this.app.isTouch() ? '被格开了：按住挥刀键蓄力重砍能破防' : '被格开了：按住左键蓄力重砍能破防', 3); }
     return true;
   }
-  callCavalry() {
+  bossGuards(e) { return e.guard !== undefined ? e.guard : e.state === 'walk' || e.state === 'cover'; }
+  // 敌人的刀砍到主角：刀在手、正对着、按着格挡就挡住（不掉血，被震退）；刚按下格挡的一瞬间挡住＝弹开（拼刀），对方硬直
+  bladeDefend(u, kind) {
     const h = this.hero;
-    if (h.cavCd > 0) { this.ui.toast('骑兵连正在整队（' + Math.ceil(h.cavCd) + ' 秒）', 1.2); return; }
-    const why = this.cavalryBlocked();
-    if (why) { this.ui.toast(why, 1.6); return; }
-    h.cavCd = 45; this.stats.cav++;
-    const inCity = this.cavalryStraight(h);
-    const yaw = inCity ? 0 : this.cam.yaw;
-    const fx_ = fwdX(yaw), fz_ = fwdZ(yaw), rx = rightX(yaw), rz = rightZ(yaw);
-    // 五骑分列两侧冲过去，中间留出主角和镜头的位置
-    const lanes = inCity ? [-5.6, -3.6, -1.9, 2.3, 4.6] : [-8.2, -5.2, -2.4, 2.8, 5.8];
-    for (let i = 0; i < 5; i++) {
-      const off = lanes[i];
-      const model = buildRider();
-      const x = (inCity ? 0 : h.x) + rx * off - fx_ * (24 + Math.abs(i - 2) * 2.5), z = h.z + rz * off - fz_ * (24 + Math.abs(i - 2) * 2.5);
-      model.root.rotation.y = yaw; model.root.position.set(x, this.groundY(x, z), z);
-      this.scene.add(model.root);
-      this.riders.push({ model, x, z, fx: fx_, fz: fz_, d: 0, hit: new Set(), t: rand(TAU), hop: 0 });
+    if (!h.alive || !h.block) return null;
+    if (Math.abs(angDiff(h.yaw, yawTo(u.x - h.x, u.z - h.z))) > 1.3) return null;   // 侧后方挡不住
+    const mx = (u.x + h.x) / 2, mz = (u.z + h.z) / 2, gy = this.groundY(mx, mz), boss = u.type === 'boss';
+    if (h.blockT < PARRY_WIN) {
+      h.inv = Math.max(h.inv, 0.35); this.stats.parry++;
+      this.fx.sparks(mx, gy + 1.4, mz, boss ? 26 : 14, 0xffffff); this.fx.ring(mx, gy + 0.1, mz, boss ? 5 : 3, 0.4, 0xffffff, 1);
+      this.audio.play('clang');
+      if (boss) {
+        u.state = 'stun'; u.stT = kind === 'dash' ? 2.8 : 1.6; u.combo = 0;
+        this.hurtUnit(u, kind === 'dash' ? 7 : 3, 0, 0, 'blade');
+        this.stats.clash++; this.addScore(400); this.fx.clearWarnings();
+        this.ui.stamp('狭路相逢勇者胜！', 1.5);
+      } else { u.stagT = 1.4; u.slash = -1; this.addScore(120); this.ui.stamp('弹开！', 0.7); }
+      return 'parry';
     }
-    this.audio.voice('qibinglian'); this.audio.play('bugle', 0.7);
-    this.ui.say('孙德胜', '骑兵连——进攻！', { now: true });
-    this.ui.stamp('骑兵连，进攻！', 1.5);
+    const kb = kind === 'dash' ? 1.8 : 0.6, l = Math.hypot(h.x - u.x, h.z - u.z) || 1;
+    h.x += ((h.x - u.x) / l) * kb; h.z += ((h.z - u.z) / l) * kb; resolveCircle(this.world, h, h.r, h.y, true);
+    h.stagger = Math.max(h.stagger, kind === 'dash' ? 0.45 : 0.2);
+    this.fx.sparks(mx, gy + 1.4, mz, 8, 0xffe9a8); this.audio.play('clang', 0.55);
+    this.stats.blocks++;
+    return 'block';
   }
-  updateRiders(dt) {
-    this.hoofT = (this.hoofT || 0) - dt;
-    if (this.riders.length && this.hoofT <= 0) { this.hoofT = 0.11; this.audio.play('hoof', 0.5); }
-    for (let i = this.riders.length - 1; i >= 0; i--) {
-      const r = this.riders[i];
-      const sp = 18;
-      r.x += r.fx * sp * dt; r.z += r.fz * sp * dt; r.d += sp * dt; r.t += dt * 16;
-      // 遇到矮障碍就跃过去
-      const rg = this.groundY(r.x, r.z);
-      const blocked = pointBlocked(this.world, r.x + r.fx * 1.5, rg + 0.5, r.z + r.fz * 1.5);
-      const bh = blocked ? blocked.h - (blocked.base || 0) : 0;
-      r.hop = damp(r.hop, blocked && bh < 3 ? 1.5 : 0, 9, dt);
-      if (blocked && bh >= 3) r.d = 999;
-      r.model.root.position.set(r.x, rg + r.hop + Math.abs(Math.sin(r.t)) * 0.16, r.z);
-      r.model.root.rotation.x = Math.sin(r.t) * 0.05;
-      r.model.legs.forEach((l, k) => { l.rotation.x = Math.sin(r.t + (k < 2 ? 0 : Math.PI) + (k % 2) * 0.6) * 0.9; });
-      r.model.rider.armR.rotation.x = 2.5 + Math.sin(r.t * 0.5) * 0.5;
-      if (rand() < dt * 14) this.fx.dust(r.x, rg + 0.1, r.z, 1);
-      for (const e of this.enemies) {
-        if (!e.alive || e.y - rg > 2 || r.hit.has(e)) continue;
-        if (dist2(e.x, e.z, r.x, r.z) < 2.0 * 2.0) { r.hit.add(e); this.hurtUnit(e, e.type === 'boss' ? 3 : 5, r.fx, r.fz, 'blade'); this.audio.play('slash', 0.7); this.fx.sparks(e.x, 1.3, e.z, 6, 0xffffff); }
-      }
-      if (r.d > 78) { this.scene.remove(r.model.root); this.riders.splice(i, 1); }
-    }
+  // 姿势相关：主角身高（子弹判定）、胸口高度（敌人瞄哪儿、看不看得见）
+  heroTop() { const h = this.hero; return lerp(lerp(STANCE_TOP[0], STANCE_TOP[1], h.crouchK), STANCE_TOP[2], h.proneK); }
+  aimY(t) {
+    if (t !== this.hero) return (t.y || 0) + (t === this.cannon ? 0.9 : 1.1);
+    const h = this.hero; return h.y + lerp(lerp(1.1, 0.75, h.crouchK), 0.3, h.proneK);
   }
 
   // ---------- 阵地机枪：打掉机枪手后可以接管，枪身跟着准星转 ----------
@@ -591,6 +686,7 @@ export class Game {
   manMG(m) {
     const h = this.hero;
     h.mg = m; h.x = m.x; h.z = m.z; h.y = m.gy || 0; h.vy = 0; h.onGround = true; h.moving = 0; h.ads = false;
+    h.blade = false; h.atk = null; h.block = false; h.stance = 0;
     this.ui.setPrompt(null);
     this.audio.play('uiok');
     if (!this.flags.mgTip) { this.flags.mgTip = 1; this.ui.toast(this.app.isTouch() ? '滑屏瞄准，按住开火键扫射；点“离开机枪”下来' : '转动准星瞄准，按住左键扫射；再按 F 下来', 5); }
@@ -607,8 +703,7 @@ export class Game {
     else if ((wantReload && m.ammo < MG_BELT) || m.ammo <= 0) { m.reload = 2.2; this.audio.play('reload'); }
     h.aim = damp(h.aim, 1, 16, dt);
     if (firing && m.cd <= 0 && m.reload <= 0 && m.ammo > 0) this.shootMG(m);
-    for (const e of ['jump', 'nade', 'dash']) inp.take(e);
-    if (inp.take('cav')) this.callCavalry();
+    for (const e of ['jump', 'nade', 'blade', 'crouch', 'prone', 'stance']) inp.take(e);
     const fx = fwdX(c.yaw), fz = fwdZ(c.yaw);
     m.model.root.position.set(m.x + fx * 0.8, (m.gy || 0) + 1.05, m.z + fz * 0.8);
     m.model.root.rotation.set(c.pitch, c.yaw, 0);
@@ -636,6 +731,7 @@ export class Game {
     const c = this.cannon, h = this.hero;
     c.manned = true; c.fireLock = true; this.cam.yaw = c.aimYaw; this.cam.pendYaw = 0; this.cam.pendPitch = 0; this.cam.pitch = 0;
     h.x = c.x + 0.9; h.z = c.z + 1.7; h.y = this.groundY(h.x, h.z); h.vy = 0; h.onGround = true; h.yaw = 0; h.moving = 0; h.aim = 0; h.ads = false;
+    h.blade = false; h.atk = null; h.block = false; h.stance = 0;
     this.ui.setPrompt(null);
     this.audio.play('uiok');
     if (!this.flags.manned) { this.flags.manned = 1; this.ui.toast(this.app.isTouch() ? this.gunCfg.tipTouch : this.gunCfg.tip, 7); }
@@ -660,8 +756,7 @@ export class Game {
       if (c.shells > 0) this.fireCannon();
       else if (!this.flags.noShell || this.t - this.flags.noShell > 2) { this.flags.noShell = this.t; this.ui.toast(g.noShell, 1.8); }
     }
-    for (const e of ['jump', 'reload', 'nade', 'dash']) inp.take(e);
-    if (inp.take('cav')) this.callCavalry();
+    for (const e of ['jump', 'reload', 'nade', 'blade', 'crouch', 'prone', 'stance']) inp.take(e);
     // 弹道预览（迫击炮这类不给预览的，只按柱子报的数自己调）
     const pre = this.simShell(c.aimYaw, c.elev, !!g.preview);
     this.arc.visible = !!g.preview; this.aimRing.visible = !!g.preview;
@@ -819,7 +914,7 @@ export class Game {
         } else {
           if (h.alive) {
             const rr = h.r + 0.1;
-            if (segPointD2(b.x, b.z, nx, nz, h.x, h.z) < rr * rr && my < h.y + 2.05 && my > h.y - 0.1) { if (this.heroCover(b)) fx.sparks(nx - b.dx * 0.6, ny, nz - b.dz * 0.6, 3, 0xffe2a0); else this.hurtHero(b.dmg, b.x - b.dx, b.z - b.dz); dead = true; }
+            if (this.heroHitXZ(b.x, b.z, nx, nz, rr) && my < h.y + this.heroTop() && my > h.y - 0.1) { if (this.heroCover(b)) fx.sparks(nx - b.dx * 0.6, ny, nz - b.dz * 0.6, 3, 0xffe2a0); else this.hurtHero(b.dmg, b.x - b.dx, b.z - b.dz); dead = true; }
           }
           if (!dead) for (const a of this.allies) {
             if (!a.alive || a.down > 0) continue;
@@ -840,6 +935,14 @@ export class Game {
     fx.endTracers();
   }
 
+  // 子弹横向是否碰到主角：趴着时身体沿朝向摊开（头前脚后），按三段判定
+  heroHitXZ(x0, z0, x1, z1, rr) {
+    const h = this.hero;
+    if (h.proneK < 0.5) return segPointD2(x0, z0, x1, z1, h.x, h.z) < rr * rr;
+    const fx = fwdX(h.yaw), fz = fwdZ(h.yaw), r2 = 0.38 * 0.38;
+    for (const k of [-0.75, 0, 0.75]) if (segPointD2(x0, z0, x1, z1, h.x + fx * k, h.z + fz * k) < r2) return true;
+    return false;
+  }
   updateNades(dt) {
     for (let i = this.nades.length - 1; i >= 0; i--) {
       const n = this.nades[i];
@@ -862,7 +965,7 @@ export class Game {
       for (const e of this.enemies) { if (!e.alive || e.y - gy > 2) continue; const d = dist(e.x, e.z, x, z); if (d < r) this.hurtUnit(e, d < r * 0.5 ? dmg : 2, e.x - x, e.z - z, 'blast'); }
     } else {
       const h = this.hero;
-      if (h.alive && dist(h.x, h.z, x, z) < r && h.y - gy < 2.6 && !(this.cannon.manned)) this.hurtHero(2, x, z);
+      if (h.alive && dist(h.x, h.z, x, z) < r * (h.proneK > 0.5 ? 0.55 : 1) && h.y - gy < 2.6 && !(this.cannon.manned)) this.hurtHero(2, x, z);   // 趴下躲破片：只有很近才伤到
       for (const a of this.allies) if (a.alive && a.down <= 0 && dist(a.x, a.z, x, z) < r) this.hurtUnit(a, 3, a.x - x, a.z - z, 'blast');
       const c = this.cannon;
       if (c.visible && c.alive && this.gunExposed() && dist(c.x, c.z, x, z) < r + 1) this.hurtCannon(4);
@@ -945,7 +1048,8 @@ export class Game {
     const h = this.hero;
     if (this.lives !== Infinity && this.lives <= 0) return;
     const [x, z] = this.respawnPoint();
-    h.alive = true; h.hp = h.maxHp; h.inv = 2.6; h.deadT = 0; h.nades = h.nadeMax; h.mag = h.magMax; h.reloadT = 0; h.dashT = 0; h.mg = null;
+    h.alive = true; h.hp = h.maxHp; h.inv = 2.6; h.deadT = 0; h.nades = h.nadeMax; h.mag = h.magMax; h.reloadT = 0; h.mg = null;
+    h.blade = false; h.bladeK = 0; h.atk = null; h.charge = -1; h.block = false; h.stagger = 0; h.stance = 0; h.crouchK = 0; h.proneK = 0;
     this.place(h, x, z);
     this.bullets = this.bullets.filter((b) => b.team === 0 || dist2(b.x, b.z, x, z) > 30 * 30);
     for (const e of this.enemies) if (e.alive) { e.stT = Math.max(e.stT, 1.6); if (e.type === 'boss') { e.state = 'walk'; e.cd = 2; } }
@@ -1006,7 +1110,7 @@ export class Game {
         if (d2 >= rr * rr || d2 < 1e-6) continue;
         const d = Math.sqrt(d2), push = (rr - d) * 0.5, nx = dx / d, nz = dz / d;
         // 战友给主角让路：主角不会被自己人挤开
-        const fa = a.hold || a.type === 'mg' || (a === this.hero && (this.cannon.manned || a.mg || a.dashT > 0 || b.kind === 'ally')), fb = b.hold || b.type === 'mg' || (b === this.hero && a.kind === 'ally');
+        const fa = a.hold || a.type === 'mg' || (a === this.hero && (this.cannon.manned || a.mg || b.kind === 'ally')), fb = b.hold || b.type === 'mg' || (b === this.hero && a.kind === 'ally');
         const pa = fb ? push * 2 : push, pb = fa ? push * 2 : push;
         if (!fa) { a.x -= nx * pa; a.z -= nz * pa; }
         if (!fb) { b.x += nx * pb; b.z += nz * pb; }
@@ -1018,25 +1122,36 @@ export class Game {
   poseHero(dt) {
     const h = this.hero, m = h.model;
     if (h.slash >= 0 && dt) { h.slash += dt * 2.6; if (h.slash > 1) h.slash = -1; }
-    const blade = h.swordT > 0;
+    const blade = h.bladeK > 0.05;
     this.sword.visible = blade;
+    if (m.back) m.back.visible = !blade;   // 刀拔出来了，背上就空了
     const pitch = h.aim > 0.3 && !this.cannon.manned ? this.cam.pitch : 0;
-    poseSoldier(m, { walk: h.walk, moving: h.moving, aim: blade ? 0 : h.aim, pitch, carry: blade ? 'blade' : 'side', slash: blade || h.slash >= 0 ? (h.slash >= 0 ? h.slash : 0.9) : -1, cheer: this.flags.won ? this.t : 0 });
-    m.root.position.set(h.x, h.y, h.z);
+    const a = h.atk;
+    poseSoldier(m, { walk: h.walk, moving: h.moving, aim: blade ? 0 : h.aim, pitch, carry: blade ? 'blade' : 'side', slash: !blade && h.slash >= 0 ? h.slash : -1, cheer: this.flags.won ? this.t : 0,
+      crouch: h.crouchK * (1 - h.proneK), prone: h.proneK });
+    if (m.armGeo) m.armR.geometry = blade ? m.armGeo.bare : m.armGeo.gun;
+    if (blade) this.poseBlade(m, h, a);
+    // 趴下：整个人向前放倒，身体中段落在主角位置上
+    const pk = h.proneK, fx = fwdX(h.yaw), fz = fwdZ(h.yaw);
+    m.root.rotation.x = -Math.PI / 2 * pk;
+    m.root.position.set(h.x - fx * 1.0 * pk, h.y + 0.17 * pk, h.z - fz * 1.0 * pk);
     m.root.rotation.y = h.yaw;
     m.root.updateMatrixWorld(true);
   }
   poseAll(dt) {
     const h = this.hero, fp = this.cam.view === 1;
     // 主角
-    if (h.alive) { h.model.root.rotation.x = 0; this.poseHero(dt); }
+    if (h.alive) this.poseHero(dt);
     else { const k = Math.min(1, h.deadT / 0.45); h.model.root.rotation.x = k * 1.45; h.model.root.position.set(h.x, h.y + 0.05, h.z); }
     const blink = h.inv > 0 && h.alive && Math.floor(this.t * 14) % 2 === 0 && h.hurtT <= 0;
     const tooClose = !fp && this.cam.camDist < 1.15 && this.cut <= 0 && !this.cannon.manned;   // 镜头被墙顶到贴脸时先不画主角
     h.model.root.visible = !(fp && this.cut <= 0 && h.alive) && !blink && !tooClose;
     setSoldierMat(h.model, h.flashT > 0 ? (h.hurtT > 0 ? MAT.hurt : MAT.flash) : MAT.vc);
     h.model.flash.visible = h.alive && h.fireCd > (h.weapon === 'lmg' ? 0.06 : 0.13);
-    this.viewGun.group.visible = fp && this.cut <= 0 && h.alive && !this.cannon.manned && this.mode === 'play';
+    const fpOn = fp && this.cut <= 0 && h.alive && !this.cannon.manned && this.mode === 'play';
+    this.viewGun.group.visible = fpOn && h.bladeK < 0.5;
+    this.viewSword.visible = fpOn && h.bladeK >= 0.5;
+    if (this.viewSword.visible) this.poseViewSword();
     if (this.viewGun.group.visible) {
       const kick = Math.max(0, h.fireCd) * 0.5, ak = this.cam.adsK || 0;
       this.viewGun.group.position.set(0.25 - 0.2 * ak, -0.21 + 0.06 * ak + Math.sin(h.walk) * 0.008 * h.moving, -0.6 + kick * 0.6);
@@ -1084,6 +1199,42 @@ export class Game {
     if (this.demoRing.visible) this.demoRing.position.set(h.x, groundAt(this.world, h.x, h.z, h.y) + 0.08, h.z);
   }
 
+  // 第三人称拿刀：架刀时右手在身前、刀尖斜朝前上；格挡把刀竖在身前；出刀先举后劈（三刀一套：右上斜劈、左上斜劈、正劈）；蓄力把刀举到脑后
+  poseBlade(m, h, a) {
+    let rx = 0.8, rz = -0.15, wx = 1.55, tw = 0;
+    if (h.block) { rx = 1.2; rz = 0.6; wx = 1.45; }
+    else if (a) {
+      const k = a.t / a.dur, d = a.dir, s = k < 0.3 ? 0 : Math.min(1, (k - 0.3) / 0.25);
+      rx = k < 0.3 ? 2.3 + (k / 0.3) * 0.8 : 3.1 - s * 2.4;
+      rz = d ? -0.9 * d + 1.6 * d * s : -0.12;
+      wx = a.kind === 'heavy' ? 0.15 : 0.35;
+      tw = d ? 0.35 * d * (1 - 2 * s) : 0;
+    } else if (h.charge >= 0) { const c = Math.min(1, h.charge / HEAVY_AUTO); rx = 0.8 + c * 2.35; wx = 1.55 - c * 1.35; rz = -0.15 - c * 0.15; }
+    m.armR.rotation.set(rx, 0, rz);
+    this.swordPivot.rotation.set(wx, 0, 0);
+    m.body.rotation.y = tw;
+    if (h.block) m.armL.rotation.set(1.15, 0, 0.35);
+  }
+  // 第一人称的大刀：按“手的位置 + 刀身朝向”摆。架刀时刀尖斜指左前上方；格挡把刀横在胸前；
+  // 出刀先抬到起手位，再划到对角下方（三刀一套：右上→左下、左上→右下、头顶→正下），然后收回；蓄力时举过头
+  poseViewSword() {
+    const h = this.hero, g = this.viewSword, a = h.atk;
+    const bob = Math.sin(h.walk) * 0.012 * h.moving;
+    const IDLE = [0.3, -0.34 + bob, -0.5, -0.25, 0.75, -0.6];
+    const mix = (A, B, k) => A.map((v, i) => v + (B[i] - v) * k), ease = (k) => k * k * (3 - 2 * k);
+    let P = IDLE;
+    if (h.block) P = [0.2, -0.16, -0.45, -1, 0.12, -0.18];
+    else if (a) {
+      const [S, E] = a.dir === 0 ? [[0.12, 0.16, -0.38, -0.1, 0.9, 0.35], [0.02, -0.42, -0.55, 0, -0.55, -0.85]]
+        : a.dir > 0 ? [[0.36, 0.14, -0.42, 0.5, 0.8, -0.3], [-0.22, -0.38, -0.5, -0.6, -0.6, -0.5]]
+          : [[-0.3, 0.14, -0.42, -0.5, 0.8, -0.3], [0.3, -0.38, -0.5, 0.6, -0.6, -0.5]];
+      const k = a.t / a.dur;
+      P = k < 0.3 ? mix(IDLE, S, ease(k / 0.3)) : k < 0.55 ? mix(S, E, ease((k - 0.3) / 0.25)) : mix(E, IDLE, ease((k - 0.55) / 0.45));
+    } else if (h.charge >= 0) P = mix(IDLE, [0.18, 0.12, -0.36, -0.15, 0.85, 0.5], Math.min(1, h.charge / HEAVY_AUTO));
+    g.position.set(P[0], P[1], P[2]);
+    g.blade.quaternion.setFromUnitVectors(DOWN, _v.set(P[3], P[4], P[5]).normalize());
+  }
+
   // ---------- 镜头 ----------
   moveSun(x, z) {
     const sx = Math.round(x / 2) * 2, sz = Math.round(z / 2) * 2;
@@ -1118,7 +1269,8 @@ export class Game {
     } else {
       const cp = Math.cos(c.pitch), fx = fwdX(c.yaw) * cp, fy = Math.sin(c.pitch), fz = fwdZ(c.yaw) * cp;
       if (view === 1) {
-        cam.position.set(h.x + fwdX(c.yaw) * 0.14, h.y + 1.62 * h.model.scale, h.z + fwdZ(c.yaw) * 0.14);
+        const drop = CROUCH_DROP * h.crouchK * (1 - h.proneK) + PRONE_DROP * h.proneK, fwd = 0.14 + 0.75 * h.proneK;
+        cam.position.set(h.x + fwdX(c.yaw) * fwd, h.y + 1.62 * h.model.scale - drop, h.z + fwdZ(c.yaw) * fwd);
         c.camDist = 9; c.clip = 1;
       } else {
         // 越肩第三人称：以右肩为轴，准星在画面正中；右肩贴墙时把轴收回身体
@@ -1127,7 +1279,8 @@ export class Game {
         c.shoulder = damp(c.shoulder === undefined ? 0.7 : c.shoulder, want, 12, dt);
         // 接管机枪时人在沙袋围子里：镜头抬高、贴近，从沙袋上方看出去，免得被正面沙袋挡住
         const onGun = !!h.mg;
-        const px = h.x + rx * c.shoulder, py = c.gy + (onGun ? 2.35 : 1.95) + (h.y - c.gy) * 0.4, pz = h.z + rz * c.shoulder;
+        const drop = onGun ? 0 : CROUCH_DROP * h.crouchK * (1 - h.proneK) + PRONE_DROP * h.proneK;
+        const px = h.x + rx * c.shoulder, py = c.gy + (onGun ? 2.35 : 1.95) - drop + (h.y - c.gy) * 0.4, pz = h.z + rz * c.shoulder;
         const d = onGun ? 1.5 : lerp(v.dist, 3.1, adsK);
         const cx = px - fx * d, cy = py - fy * d, cz = pz - fz * d;
         let clip = 1;
@@ -1223,15 +1376,17 @@ export class Game {
     // 动作键状态（触屏按钮与电脑右下角的状态条共用）
     if (c.manned) ui.setAction('fire', this.gunCfg.fireLabel, c.shells > 0 ? (c.reload > 0 ? '装填' : '×' + c.shells) : '等炮弹', c.reload > 0 || c.shells <= 0, '左键');
     else if (h.mg) ui.setAction('fire', touch ? '开火' : '重机枪', h.mg.reload > 0 ? '换弹' : h.mg.ammo + '/' + MG_BELT, h.mg.reload > 0, '左键');
+    else if (h.blade) ui.setAction('fire', touch ? '挥刀' : '大刀', h.atk ? (h.atk.kind === 'heavy' ? '重砍' : '连砍') : h.charge >= HEAVY_HOLD ? '蓄力' : h.block ? '格挡' : '按住重砍', false, '左键');
     else ui.setAction('fire', touch ? '开火' : h.weapon === 'lmg' ? '歪把子' : '驳壳枪', h.reloadT > 0 ? '换弹' : h.mag + '/' + h.magMax, h.reloadT > 0, '左键');
     ui.setAction('nade', '手榴弹', '×' + h.nades, h.nades <= 0 || c.manned || !!h.mg, 'G');
-    ui.setAction('dash', '亮剑', c.manned ? '操炮中' : h.mg ? '机枪上' : h.dashCd > 0 ? Math.ceil(h.dashCd) + '秒' : '', h.dashCd > 0 || c.manned || !!h.mg, 'Q');
-    const cavNo = !!this.cavalryBlocked();
-    ui.setAction('cav', '骑兵连', cavNo ? '进不来' : h.cavCd > 0 ? Math.ceil(h.cavCd) + '秒' : '', h.cavCd > 0 || cavNo, 'E');
+    ui.setAction('blade', h.blade ? '收刀' : '拔刀', c.manned ? '操炮中' : h.mg ? '机枪上' : '', c.manned || !!h.mg, 'Q');
+    ui.setAction('stance', ['站着', '蹲着', '趴着'][h.stance], touch ? '换姿势' : '', c.manned || !!h.mg, 'C');
+    ui.setAction('ads', h.blade ? '格挡' : '开镜', '', false, '右键');
     ui.setKeyHint(c.manned
       ? this.gunCfg.keyHint
       : h.mg ? '鼠标 瞄准　左键 扫射　<kbd>R</kbd> 换弹链　<kbd>F</kbd> 离开机枪　<kbd>V</kbd> 切换人称'
-      : '<kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移动　<kbd>Shift</kbd> 跑　<kbd>空格</kbd> 跳　左键 开火　右键 开镜　<kbd>R</kbd> 换弹　<kbd>F</kbd> 互动　<kbd>V</kbd> 切换人称　<kbd>Esc</kbd> 暂停');
+      : h.blade ? '左键 挥刀（按住蓄力重砍）　右键 格挡（刀到时按＝弹开）　<kbd>Q</kbd> 收刀　<kbd>Shift</kbd> 跑　<kbd>空格</kbd> 跳　<kbd>V</kbd> 切换人称　<kbd>Esc</kbd> 暂停'
+      : '<kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移动　<kbd>Shift</kbd> 跑　<kbd>C</kbd> 蹲　<kbd>Z</kbd> 趴　<kbd>空格</kbd> 跳　左键 开火　右键 开镜　<kbd>Q</kbd> 拔刀　<kbd>R</kbd> 换弹　<kbd>F</kbd> 互动　<kbd>V</kbd> 切换人称　<kbd>Esc</kbd> 暂停');
     // 目标指示
     const [w, hgt] = this.app.size();
     const o = this._o || (this._o = {});
@@ -1296,8 +1451,6 @@ export class Game {
   heroBounds() {}
   gunUsable() { return false; }
   useOption() { return null; }
-  cavalryBlocked() { return null; }
-  cavalryStraight() { return false; }
   mgSpots() { return []; }
   gunAimInfo(pre) { return [`仰角 <b>${Math.round(this.cannon.elev / DEG)}°</b>　炮弹 <b>${this.cannon.shells}</b>`, false]; }
   gunTargetHit() { return null; }

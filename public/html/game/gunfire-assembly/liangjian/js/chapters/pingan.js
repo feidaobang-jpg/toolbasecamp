@@ -60,8 +60,6 @@ export class PinganGame extends Game {
     }
   }
   gunUsable() { return this.phase === 3; }
-  cavalryBlocked() { return this.phase === 5 ? '院子太窄，骑兵连冲不进来' : null; }
-  cavalryStraight(h) { return h.z < -23; }
   mgSpots() { return [['A', L.nestA], ['B', L.nestB], ['S', L.streetNest]]; }
   gunAimInfo(pre) {
     const c = this.cannon;
@@ -182,7 +180,7 @@ export class PinganGame extends Game {
       this.place(h, L.start.x, L.start.z);
       ui.say('李云龙', '传我命令：全团集合，打平安县城！');
       ui.say('张大彪', '一营听令，跟团长上！');
-      this.after(4.5, () => ui.toast(this.app.isTouch() ? '准星对着敌人开火，靠近会吸附，打头加倍；机枪阵地正面打不穿，绕到侧面、跳进去，或者扔手榴弹、叫骑兵连。打掉机枪手，机枪就归你用' : '准星对着敌人开火，靠近会吸附，打头加倍；机枪阵地正面打不穿——绕到侧面、跳进去，或者用手榴弹（G）、骑兵连（E）。打掉机枪手，机枪就归你用（F）', 7));
+      this.after(4.5, () => ui.toast(this.app.isTouch() ? '准星对着敌人开火，靠近会吸附，打头加倍；机枪阵地正面打不穿，绕到侧面、跳进去，或者扔手榴弹、叫骑兵连。打掉机枪手，机枪就归你用' : '准星对着敌人开火，靠近会吸附，打头加倍；机枪阵地正面打不穿——绕到侧面、跳进去，或者用手榴弹（G）。打掉机枪手，机枪就归你用（F）', 7));
     } else if (n === 2) {
       if (fresh) this.place(h, 2, 84);
       c.visible = true; c.placed = false; c.x = L.cannonStart.x; c.z = L.cannonStart.z; c.hp = c.maxHp;

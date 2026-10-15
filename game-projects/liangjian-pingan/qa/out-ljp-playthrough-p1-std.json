@@ -1,89 +1,88 @@
 {
- "at": "2026-10-14T23:31:48.705Z",
+ "at": "2026-10-15T00:17:10.746Z",
  "startPhase": 1,
  "armor": "std",
  "finished": true,
- "gameSeconds": 381.5,
- "wallSeconds": 8,
+ "gameSeconds": 435.4,
+ "wallSeconds": 9,
  "phases": [
   {
    "phase": 1,
-   "seconds": 64.7,
+   "seconds": 62.5,
    "deaths": 0,
-   "hurt": 3
+   "hurt": 2
   },
   {
    "phase": 2,
-   "seconds": 182,
-   "deaths": 7,
-   "hurt": 24
+   "seconds": 202.3,
+   "deaths": 8,
+   "hurt": 27
   },
   {
    "phase": 3,
-   "seconds": 37.5,
+   "seconds": 40.5,
    "deaths": 1,
-   "hurt": 5
-  },
-  {
-   "phase": 4,
-   "seconds": 26,
-   "deaths": 0,
    "hurt": 4
   },
   {
-   "phase": 5,
-   "seconds": 71.3,
+   "phase": 4,
+   "seconds": 28,
    "deaths": 0,
-   "hurt": 1
+   "hurt": 5
+  },
+  {
+   "phase": 5,
+   "seconds": 102.2,
+   "deaths": 1,
+   "hurt": 5
   }
  ],
  "hurtBy": {
-  "p1:bullet": 3,
+  "p1:bullet": 2,
   "p2:bullet": 9,
-  "p2:blast": 28,
-  "p3:bullet": 2,
-  "p3:blast": 5,
+  "p2:blast": 35,
+  "p3:blast": 6,
+  "p3:bullet": 1,
+  "p4:hc (http://localhost:8795/h": 1,
   "p4:bullet": 4,
-  "p5:bullet": 1
+  "p5:bullet": 3,
+  "p5:hc (http://localhost:8795/h": 1,
+  "p5:Ec (http://localhost:8795/h": 1
  },
  "final": {
   "state": "result",
   "phase": 5,
   "sub": "boss",
-  "t": 381.533333333315,
-  "deaths": 8,
-  "hurt": 37,
+  "t": 435.44999999993263,
+  "deaths": 10,
+  "hurt": 43,
   "kills": 79,
   "hp": 5,
-  "hx": 13.4,
-  "hz": -46.5,
+  "hx": -4.9,
+  "hz": -53.5,
   "dug": 75,
   "lit": 0,
   "digging": 0,
-  "volleys": 3,
-  "grenades": 2520,
+  "volleys": 4,
+  "grenades": 2160,
   "bunkers": 0,
   "ports": 0,
   "won": 1,
   "boss": 0,
   "bstate": "recover",
-  "deflect": 0,
-  "clash": 4,
+  "deflect": 6,
+  "clash": 0,
   "enemies": 0,
-  "score": 36047
+  "score": 33756
  },
  "result": {
   "title": "李家坡拿下来了！",
   "rank": "评价：独立团的老兵",
-  "total": "战功合计 33647　最高 33647",
-  "stats": "用时6:21歼敌79交通壕挖了 2:35（亲手挖 55 米）手榴弹雨3 轮 · 1080 颗 · 三个碉堡全炸了射击孔4 / 4拼刀成功4子弹被山崎格开0骑兵连出击5阵亡8受击37爆头18规则无限命 · 标准",
+  "total": "战功合计 30756　最高 30756",
+  "stats": "用时7:15歼敌79交通壕挖了 2:55（亲手挖 54 米）手榴弹雨4 轮 · 1440 颗 · 三个碉堡全炸了射击孔4 / 4拼刀成功0弹开0子弹被山崎格开6阵亡10受击43爆头34规则无限命 · 标准",
   "hidden": false
  },
  "voices": [
-  "liangjian",
-  "liangjian",
-  "liangjian",
-  "liangjian",
   "ljp_candi"
  ],
  "errors": []

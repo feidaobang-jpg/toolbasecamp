@@ -114,8 +114,8 @@ body.touch-on #fps { bottom: auto; top: calc(var(--sat) + 100px); }
 #act-ads.on { background: linear-gradient(180deg, #f0d277, #b98a2a); color: #2a231b; border-color: #fff3d6; }
 #act-reload { --s: 54; --r: 196; --b: 22; }
 #act-nade { --s: 54; --r: 104; --b: 160; background: linear-gradient(180deg, #6f7a44, #4a5230); }
-#act-dash { --s: 54; --r: 196; --b: 96; background: linear-gradient(180deg, #d8ac42, #986b25); }
-#act-cav { --s: 54; --r: 26; --b: 174; background: linear-gradient(180deg, #4f8fc9, #2f5f96); }
+#act-blade { --s: 54; --r: 196; --b: 96; background: linear-gradient(180deg, #d8ac42, #986b25); }
+#act-stance { --s: 54; --r: 26; --b: 174; background: linear-gradient(180deg, #7d8a6a, #4f5a40); }
 #act-use { --s: 60; --r: 194; --b: 164; background: linear-gradient(180deg, #c83a2c, #7f1712); border-color: #ffd84a; }
 #stage.compact #touch { --u: 1px; }
 body.touch-on #boss { bottom: auto; top: calc(var(--sat) + 62px); }

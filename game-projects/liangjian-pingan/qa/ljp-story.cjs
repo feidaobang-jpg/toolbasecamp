@@ -186,11 +186,17 @@ const check = (name, ok, info) => { results.push({ name, ok: !!ok, info }); cons
   const g2 = await page.evaluate(() => ({ hp: __lj.game.boss.hp }));
   check('山崎架着刀时子弹全被格开（不掉血），收刀喘气时子弹打得进去（伤害 ×1.5）', g1.hp === b0 && g1.deflect >= 6 && g2.hp < b0 - 4, { b0, g1, g2 });
   // 拼刀
-  await page.evaluate(() => { const g = __lj.game, b = g.boss, h = g.hero; b.hp = 120; b.state = 'walk'; b.cd = 99; g.place(h, b.x, b.z + 4); g.cam.yaw = 0; h.dashCd = 0; b.state = 'dashTele'; b.stT = 5; b.dx = 0; b.dz = 1; });
-  await key('KeyQ');
-  await step(0.3);
+  await key('KeyQ');   // 拔刀
+  await page.evaluate(() => {
+    const g = __lj.game, b = g.boss, h = g.hero, i = g.input;
+    b.hp = 120; b.state = 'walk'; b.cd = 99; g.place(h, b.x, b.z + 4); g.cam.yaw = 0; h.yaw = 0;
+    b.state = 'dashTele'; b.stT = 0.3; b.dx = 0; b.dz = 1; b.dashLen = 8; b.hitDone = false;
+    // 突刺冲到跟前前一瞬间按右键格挡＝拼刀
+    for (let f = 0; f < 90 && !b.hitDone; f++) { if (!i.src.rmb && b.state === 'dash' && Math.hypot(h.x - b.x, h.z - b.z) < 3.5) { i.src.rmb = true; i._sync(); } __lj.step(1, false); }
+    __lj.step(2, false); i.src.rmb = false; i._sync();
+  });
   const cl = await page.evaluate(() => ({ state: __lj.game.boss.state, clash: __lj.game.stats.clash, hp: __lj.game.boss.hp }));
-  check('山崎突刺时亮剑撞上去：拼刀，山崎被震住（stun）掉血', cl.state === 'stun' && cl.clash === 1 && cl.hp < 120, cl);
+  check('山崎突刺时拔刀，刀到前一瞬间格挡：拼刀，山崎被震住（stun）掉血', cl.state === 'stun' && cl.clash === 1 && cl.hp < 120, cl);
   const ally = await page.evaluate(() => { const g = __lj.game; return g.allies.filter((a) => a.target === g.boss).length; });
   await step(1);
   const ally2 = await page.evaluate(() => { const g = __lj.game; return g.allies.filter((a) => a.target === g.boss).length; });
