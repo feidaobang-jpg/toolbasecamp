@@ -19,7 +19,9 @@ const BASE_FILES = ['index.html', 'boot.js', 'game.compat.js', 'combat-controls.
 // 抗战战役「亮剑战役」重做版（第一章苍云岭、第三章平安县城）：同包内的独立页面（入口、样式、兼容包与按章节分组的原声语音）；
 // pingan/index.html 只剩一个跳转页，照顾旧链接
 const LIANGJIAN_FILES = ['liangjian/index.html', 'liangjian/style.css', 'liangjian/game.compat.js', 'pingan/index.html',
-  ...fs.readdirSync(path.join(SOURCE, 'liangjian/assets/voice')).sort().map(n => 'liangjian/assets/voice/' + n)];
+  ...fs.readdirSync(path.join(SOURCE, 'liangjian/assets/voice')).sort().filter(n => !/^l_|^lines\.json$/.test(n)).map(n => 'liangjian/assets/voice/' + n)];
+// 本机合成的 124 句台词（l_*.mp3 与 lines.json）同样只放网站：2026-10-15 去掉配乐和更新记录里的曲目后 0.8.x 仍被
+// “内容审核未通过”秒拒，这批合成语音是剩下的新增素材；Toy 包里缺这些文件时游戏只显示字幕
 // 电视剧原版配乐（liangjian/assets/bgm）只放网站：2026-10-15 带配乐的 0.8.0 包被 Toy 以“内容审核未通过”退回，
 // Toy 包不带配乐，游戏找不到配乐文件时自动退回原来的合成鼓点
 const RUNTIME_FILES = [...BASE_FILES, ...LIANGJIAN_FILES];
@@ -65,6 +67,11 @@ export function build() {
       : path.join(SOURCE, name);
     fs.copyFileSync(src, dest);
   }
+  // 语音清单也去掉合成台词（l_*）：2026-10-15 只删文件、清单仍列着它们的包同样被退回，清单回到只有原声的包通过
+  const voiceIndex = path.join(PACKAGE, 'liangjian/assets/voice/index.json');
+  const voices = JSON.parse(fs.readFileSync(voiceIndex, 'utf-8'));
+  for (const ch of Object.keys(voices)) voices[ch] = voices[ch].filter(id => !id.startsWith('l_'));
+  fs.writeFileSync(voiceIndex, JSON.stringify(voices), 'utf-8');
   const indexPath = path.join(PACKAGE, 'index.html');
   let text = fs.readFileSync(indexPath, 'utf-8');
   text = text.replaceAll('../../../js/game/author-home.js', './author-home.js');
