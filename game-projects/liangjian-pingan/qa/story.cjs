@@ -45,7 +45,7 @@ const check = (name, ok, detail) => { out.push({ name, ok: !!ok, detail }); cons
   // 上炮：走到炮旁按 I
   await page.evaluate(() => { const g = __lj.game, c = g.cannon; g.place(g.hero, c.x + 0.4, c.z + 2.2); });
   await step(0.3);
-  await press('KeyI');
+  await press('KeyF');
   // 瞄准用捷径：在正前方找出落在城楼上的仰角区间，取中间值（手动转炮口瞄准由 playthrough 的自动操作覆盖）
   const elev = await page.evaluate(() => { const g = __lj.game, c = g.cannon, ok = []; for (let e = 0.03; e < 0.7; e += 0.002) if (g.simShell(0, e, false).type === 'tower') ok.push(e); if (!ok.length) return { manned: c.manned, e: null }; g.cam.yaw = 0; c.aimYaw = 0; c.elev = ok[ok.length >> 1]; return { manned: c.manned, e: +c.elev.toFixed(3), n: ok.length, hit: g.simShell(0, c.elev, false).type }; });
   await step(0.3, true);

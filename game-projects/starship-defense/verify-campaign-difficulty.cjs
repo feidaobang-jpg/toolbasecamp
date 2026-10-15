@@ -40,7 +40,7 @@ const out=process.env.QA_OUTPUT||path.join(__dirname,'media-kit/releases/web-dif
    await press('#saveClose');await press('#btnQuit');
   }
   const [easy,normal,hard]=difficulty;
-  // 0.38.8 起虫潮规模×3（campaign-difficulty.js 的 SWARM_SCALE），出怪间隔按 √3 收紧
+  // 0.39.1 起虫潮规模×3（campaign-difficulty.js 的 SWARM_SCALE），出怪间隔按 √3 收紧
   const swarm=3;
   assert.equal(normal.hp,30);assert.equal(normal.damage,8);assert.equal(normal.gold,12);assert.equal(normal.baseHp,2000);assert.equal(normal.wave,11*swarm);assert.ok(Math.abs(normal.interval-2.05/Math.sqrt(swarm))<1e-10);
   assert.ok(easy.hp<normal.hp&&easy.damage<normal.damage&&easy.baseHp>normal.baseHp&&easy.interval>normal.interval);

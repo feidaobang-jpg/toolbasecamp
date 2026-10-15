@@ -79,19 +79,19 @@ export function createRVBreakout(a){
     s.rv=a.spawnVehicle('rv');s.rv.cfg={...RV_CFG};s.rv.mesh.position.set(pos.x,0,pos.z);configure();s.rv.hp=clamp(d?.hp||s.rv.maxHp,1,s.rv.maxHp);a.updHPBar(s.rv.bar,s.rv.hp/s.rv.maxHp);a.enterVehicle(s.rv);player.pos.copy(s.rv.mesh.position);spawnResidents();
     s.art=createRVAtmosphere(T,{scene,...a.artContext,skyObjects:s.sky});renderFrame(0);
     a.faceForward();a.stage.classList.add('rv-mode');['menuMain','menuPause','menuOver','rvMenu','rvResult'].forEach(id=>$(id).classList.add('hidden'));$('rvHUD').classList.remove('hidden');$('rvMap').classList.remove('hidden');a.showHUD();a.showHint(null);
-    $('btnRestartLv').textContent='🔄 重开城镇探索';s.keyHint=$('keysHint').textContent;$('keysHint').textContent='WASD 驾驶/移动 · J 射击 · I 上下车/搜索 · O 地图与设施 · '+(a.keyLabel?a.keyLabel('H'):'N')+' 医疗 · U 手雷 · K 跳跃 · C 视角 · Q/E 转头 · Esc 暂停';
-    save();a.showMsg(a.isTouch()?'街道自由通行；点设施查看地图和服务':'街道自由通行；O 查看地图和设施服务',5);hud();
+    $('btnRestartLv').textContent='🔄 重开城镇探索';s.keyHint=$('keysHint').textContent;$('keysHint').textContent='WASD 驾驶/移动 · 鼠标转视角 · 左键射击 · '+a.keyLabel('I')+' 上下车/搜索 · '+a.keyLabel('O')+' 地图与设施 · '+a.keyLabel('H')+' 医疗 · '+a.keyLabel('U')+' 手雷 · '+a.keyLabel('K')+' 跳跃 · '+a.keyLabel('C')+' 视角 · Esc 暂停';
+    save();a.showMsg(a.isTouch()?'街道自由通行；点设施查看地图和服务':'街道自由通行；'+a.keyLabel('O')+' 查看地图和设施服务',5);hud();
   }
   function configure(){s.rv.maxHp=RV_CFG.hp+s.armor*200;s.rv.cfg.dmg=RV_CFG.dmg*(1+s.gun*.35);s.rv.cfg.speed=s.fuel>0?RV_CFG.speed:3;Game.weaponLv.lmg=s.gear;Game.weaponLv.shotgun=s.gear;}
   function renderFrame(dt){if(s.active&&s.rv)s.art?.update(dt,s.rv,a.visuals.quality);}
   function blocked(x,z,r=.8){return s.town?s.town.blocked(x,z,r):false;}
   function atSite(){if(!s.rv||player.dead)return null;const p=s.rv.mesh.position;if(!player.inVehicle&&distance(player.pos,p)>12)return null;return RV_SITES.find(n=>distance(p,n)<10.5)||null;}
   function interaction(){
-    if(player.inVehicle)return {kind:'exit',label:'下车',tip:a.isTouch()?'下车搜索；设施按钮可在车内使用':'I 下车搜索；O 地图与设施服务'};
+    if(player.inVehicle)return {kind:'exit',label:'下车',tip:a.isTouch()?'下车搜索；设施按钮可在车内使用':a.keyLabel('I')+' 下车搜索；'+a.keyLabel('O')+' 地图与设施服务'};
     const i=RV_ZONES.findIndex((n,i)=>!s.looted[i]&&distance(player.pos,n)<4.2);
     if(i>=0)return {kind:'rv-search',label:s.search?'取消搜索':'搜索',tip:s.search?'搜索中，离开箱子将中断':'搜索4秒：110零件、罐头、医疗包'};
-    const v=s.rv;if(!v.dead&&!(v.noEnter>0)&&distance(player.pos,v.mesh.position)<5)return {kind:'vehicle',vehicle:v,label:'驾驶',tip:a.isTouch()?'点互动驾驶房车':'I 驾驶房车'};
-    return {kind:'none',label:'互动',tip:a.isTouch()?'靠近物资箱搜索；设施查看地图':'靠近物资箱 I 搜索；O 查看地图'};
+    const v=s.rv;if(!v.dead&&!(v.noEnter>0)&&distance(player.pos,v.mesh.position)<5)return {kind:'vehicle',vehicle:v,label:'驾驶',tip:a.isTouch()?'点互动驾驶房车':a.keyLabel('I')+' 驾驶房车'};
+    return {kind:'none',label:'互动',tip:a.isTouch()?'靠近物资箱搜索；设施查看地图':'靠近物资箱 '+a.keyLabel('I')+' 搜索；'+a.keyLabel('O')+' 查看地图'};
   }
   function interact(){if(s.search){s.search=null;return;}const zone=RV_ZONES.findIndex((n,i)=>!s.looted[i]&&distance(player.pos,n)<4.2);if(zone>=0&&!player.inVehicle){s.search={zone,t:0};a.showMsg('搜索物资中，可射击；离开箱子会中断',2);}}
   function panel(){if(s.over)return;a.Input.reset();$('rvPanel').classList.remove('hidden');a.setPanel(true);panelInfo();}
@@ -162,8 +162,8 @@ export function createRVBreakout(a){
   function hud(){
     if(!s.active)return;const v=s.rv,site=atSite(),dest=RV_SITES.find(n=>n.id===s.destination);
     $('rvStatus').textContent='耐久 '+Math.max(0,Math.ceil(v.hp))+'/'+v.maxHp+' · 燃料 '+Math.ceil(s.fuel)+'%';$('rvFill').style.width=clamp(v.hp/v.maxHp*100,0,100)+'%';
-    $('rvObjective').textContent=site?site.name+' · '+(a.isTouch()?'点设施办理':'O 办理服务'):'导航 '+dest.name+' · '+Math.ceil(distance(v.mesh.position,dest))+'米';
-    $('rvAction').textContent=s.job?'设施作业 '+Math.ceil(s.job.t)+'/'+s.job.duration+'秒':s.search?'搜索物资 '+Math.ceil(s.search.t)+'/4秒':s.fuel<=0?'无油，可低速挪车至加油站':a.isTouch()?'互动上下车/搜索 · 设施查看地图':'I 上下车/搜索 · O 地图与设施';
+    $('rvObjective').textContent=site?site.name+' · '+(a.isTouch()?'点设施办理':a.keyLabel('O')+' 办理服务'):'导航 '+dest.name+' · '+Math.ceil(distance(v.mesh.position,dest))+'米';
+    $('rvAction').textContent=s.job?'设施作业 '+Math.ceil(s.job.t)+'/'+s.job.duration+'秒':s.search?'搜索物资 '+Math.ceil(s.search.t)+'/4秒':s.fuel<=0?'无油，可低速挪车至加油站':a.isTouch()?'互动上下车/搜索 · 设施查看地图':a.keyLabel('I')+' 上下车/搜索 · '+a.keyLabel('O')+' 地图与设施';
     $('rvResources').textContent='零件 '+Math.floor(s.scrap)+' · 搜索 '+s.looted.filter(Boolean).length+'/6区 · 人员 '+Math.ceil(player.hp)+'/'+player.maxHp+' · 罐头 '+s.food+' · 医疗包 '+Game.items.medkit;
     $('vO').textContent='设施';if(s.mapT<=0){s.mapT=.15;drawMap();}
   }

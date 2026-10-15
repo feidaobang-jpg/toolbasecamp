@@ -1,5 +1,5 @@
 {
- "version": "web-swarm-scale-v0.38.8",
+ "version": "web-swarm-scale-v0.39.1",
  "method": "Playwright keyboard bot (J held, Q/E turn to nearest bug, H heal, U grenades, stays by the gate); setup hooks only set chapter/gear before R; fight runs in real time without damage hooks",
  "runs": [
   {

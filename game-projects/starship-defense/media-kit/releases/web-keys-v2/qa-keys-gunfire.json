@@ -1,0 +1,103 @@
+{
+ "at": "2026-10-14T23:33:30.634Z",
+ "url": "http://127.0.0.1:8795/html/game/gunfire-assembly/index.html",
+ "results": {
+  "默认键位：左键射击、空格跳、Shift 跑、C 蹲、F 互动、G 手雷、E 医疗、Q 换枪、B 商店、T 建造、X 开战、R 换弹、Tab 战况、V 视角；键盘转视角与全屏不占键；绑定的键互不重复": {
+   "ok": true,
+   "detail": {
+    "map": {
+     "J": "",
+     "K": "Space",
+     "SPRINT": "ShiftLeft",
+     "CROUCH": "KeyC",
+     "I": "KeyF",
+     "U": "KeyG",
+     "H": "KeyE",
+     "X": "KeyQ",
+     "O": "KeyB",
+     "L": "KeyT",
+     "WAVE": "KeyX",
+     "R": "KeyR",
+     "T": "Tab",
+     "C": "KeyV",
+     "Z": "KeyZ",
+     "Q": "",
+     "E": "",
+     "LOOKUP": "",
+     "LOOKDOWN": "",
+     "F": "",
+     "P": "KeyP"
+    },
+    "J": "左键",
+    "uniq": true
+   }
+  },
+  "旧版（v1）的自定义键不沿用；新版里改键会保存、冲突会拒绝、可恢复默认": {
+   "ok": true,
+   "detail": {
+    "old": {
+     "O": "KeyB",
+     "H": "KeyE"
+    },
+    "err": "",
+    "kept": "KeyN",
+    "clash": "N 已用于「商店」，请先修改该项",
+    "reset": "KeyB",
+    "tab": "Tab 已用于「战况 / 队伍 / 测试台」，请先修改该项",
+    "legacy": "J,K,U,I,H,O,L",
+    "taken": "H"
+   }
+  },
+  "旧键 J/K/U/I/N/O/L 不显示但仍可用（射击、跳、手雷、互动、医疗、商店、建造）": {
+   "ok": true,
+   "detail": {
+    "old": {
+     "O": "KeyB",
+     "H": "KeyE"
+    },
+    "err": "",
+    "kept": "KeyN",
+    "clash": "N 已用于「商店」，请先修改该项",
+    "reset": "KeyB",
+    "tab": "Tab 已用于「战况 / 队伍 / 测试台」，请先修改该项",
+    "legacy": "J,K,U,I,H,O,L",
+    "taken": "H"
+   }
+  },
+  "战地模式点画面接管鼠标": {
+   "ok": true,
+   "detail": {
+    "lock": "c3d",
+    "battle": true,
+    "hint": "WASD移动 · 鼠标转视角 · 按住左键射击 · 右键或Z举枪 · 左Shift跑步 · R换弹 · B装备 · T部署 · Tab战况 · E兵种支援 · F上/下载具 · G手雷 · 空格跳跃 · V载具视角 · Esc暂停"
+   }
+  },
+  "战地操作提示：鼠标转视角、按住左键射击、右键或 Z 举枪、左Shift 跑步、R 换弹、B 装备、T 部署、Tab 战况、E 兵种支援、F 上下载具、G 手雷、空格跳跃、V 载具视角": {
+   "ok": true,
+   "detail": "WASD移动 · 鼠标转视角 · 按住左键射击 · 右键或Z举枪 · 左Shift跑步 · R换弹 · B装备 · T部署 · Tab战况 · E兵种支援 · F上/下载具 · G手雷 · 空格跳跃 · V载具视角 · Esc暂停"
+  },
+  "Tab 打开战况，再按 Tab 关上": {
+   "ok": true,
+   "detail": {
+    "team": true,
+    "team2": true
+   }
+  },
+  "Z 举枪（和右键一样）": {
+   "ok": true,
+   "detail": true
+  },
+  "B 打开装备面板": {
+   "ok": true,
+   "detail": true
+  },
+  "选“按住画面拖动”后战地里点画面不接管": {
+   "ok": true,
+   "detail": null
+  },
+  "没有脚本报错": {
+   "ok": true,
+   "detail": []
+  }
+ }
+}

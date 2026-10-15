@@ -19,6 +19,9 @@ const scenarios=[
   const p=await (await b.newContext({viewport:{width:1280,height:720}})).newPage();const errors=[];p.on('pageerror',e=>errors.push(e.message));
   await p.goto(url+'?qa=1');await p.waitForFunction(()=>window.__gameQA);await p.waitForTimeout(400);
   await p.keyboard.press('Enter');await p.waitForTimeout(400);
+  // 键位 v2（0.39.0）后电脑端默认用鼠标转视角，Q/E 不再占键。机器人仍按键盘转视角跑真实对局，
+  // 所以开局前只把「左转/右转视角」绑到未占用的 [ 与 ]；不碰战斗数值、伤害与击杀钩子。
+  const look=await p.evaluate(()=>{const q=__gameQA,err=q.keyBindings.bind('Q','BracketLeft')||q.keyBindings.bind('E','BracketRight');if(err)throw new Error('绑定转视角键失败：'+err);return {left:'BracketLeft',right:'BracketRight'};});
   await p.evaluate(s=>{const q=__gameQA,g=q.Game;g.chapter=s.chapter;g.level=s.level;const u=s.setup;
     if(u.weapons){g.weapons=u.weapons;g.curWeapon=u.cur;g.weaponLv=u.lv;g.hpBonus=u.hpBonus;g.squadCount=u.squad;}
     q.startPrep();q.player.reset(g.cls);q.player.pos.set(0,5,-14);q.player.mesh.position.copy(q.player.pos);q.setCamYaw(0);q.player.yaw=0;},s);
@@ -34,21 +37,21 @@ const scenarios=[
     if(st.dead&&!lastDead)deaths++;lastDead=st.dead;
     if(st.state==='prep'&&(st.level!==s.level||st.chapter!==s.chapter)){res={won:true,seconds:Math.round((Date.now()-t0)/1000),baseHp:st.base,deaths};break;}
     if(st.state==='over'){res={won:false,seconds:Math.round((Date.now()-t0)/1000),baseHp:0,deaths,reason:'base destroyed'};break;}
-    // Steering: turn the camera (Q/E) toward the nearest bug; stay near the gate; heal with H.
+    // Steering: turn the camera with the rebound look keys (default Q/E are free in 键位 v2); stay near the gate; medkit via legacy N, grenade via legacy U.
     const want=Math.atan2(st.nx,st.nz);let diff=Math.atan2(Math.sin(want-st.yaw),Math.cos(want-st.yaw));
-    for(const k of ['KeyQ','KeyE','KeyW','KeyS','KeyA','KeyD'])await p.keyboard.up(k);
-    if(st.nd<60&&Math.abs(diff)>.25)await p.keyboard.down(diff>0?'KeyQ':'KeyE');
+    for(const k of [look.left,look.right,'KeyW','KeyS','KeyA','KeyD'])await p.keyboard.up(k);
+    if(st.nd<60&&Math.abs(diff)>.25)await p.keyboard.down(diff>0?look.left:look.right);
     if(st.nd<6)await p.keyboard.down('KeyS');else if(st.nd>26&&st.nd<60&&st.pz<10)await p.keyboard.down('KeyW');
     if(st.pz>12)await p.keyboard.down('KeyS');
     if(st.hp>0&&st.hp<45&&st.medkit>0)await p.keyboard.press('KeyN');
     if(st.nd<12&&Math.random()<.15)await p.keyboard.press('KeyU');
   }
-  for(const k of ['KeyJ','KeyQ','KeyE','KeyW','KeyS','KeyA','KeyD'])await p.keyboard.up(k);
+  for(const k of ['KeyJ',look.left,look.right,'KeyW','KeyS','KeyA','KeyD'])await p.keyboard.up(k);
   out.push({scenario:s.name,setup:s.setup,...(res||{won:false,timeout:true}),errors});
   console.log(JSON.stringify(out[out.length-1]));
   await p.context().close();
  }
  await b.close();
  const merged=[...prior.filter(r=>!out.some(o=>o.scenario===r.scenario)),...out];
- fs.writeFileSync(path.join(release,'playthrough.json'),JSON.stringify({version:process.env.RELEASE||'web-arsenal-build-v0.9.1',method:'Playwright keyboard bot (J held, Q/E turn to nearest bug, H heal, U grenades, stays by the gate); setup hooks only set chapter/gear before R; fight runs in real time without damage hooks',runs:merged},null,1));
+ fs.writeFileSync(path.join(release,'playthrough.json'),JSON.stringify({version:process.env.RELEASE||'web-arsenal-build-v0.9.1',method:'Playwright keyboard bot (J held, rebound [ / ] turn to nearest bug, N medkit, U grenades, stays by the gate); setup hooks only set chapter/gear and the two look keys before R; fight runs in real time without damage or kill hooks',runs:merged},null,1));
 })().catch(e=>{console.error(e);process.exit(1);});

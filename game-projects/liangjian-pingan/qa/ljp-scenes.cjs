@@ -44,7 +44,7 @@ const { open, shot } = require('./lib.cjs');
   // 第三阶段：手榴弹雨
   await step(15.5);
   await look(0, 15, -31); await step(0.3); await look(0, 15, -31); await snap('p3-mark');
-  await page.evaluate(() => { __lj.app.input.key('KeyU', true, false); __lj.step(1, false); __lj.app.input.key('KeyU', false, false); });
+  await page.evaluate(() => { __lj.app.input.key('KeyG', true, false); __lj.step(1, false); __lj.app.input.key('KeyG', false, false); });
   await step(1.3); await snap('p3-rain');
   await page.evaluate(() => { const g = __lj.game; g.destroyBunker(g.world.bunkers[1], true); });
   await step(2.5); await snap('p3-ruin');

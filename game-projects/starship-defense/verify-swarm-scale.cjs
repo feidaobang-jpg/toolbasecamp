@@ -1,9 +1,9 @@
-// 虫潮规模×3 与"准备阶段不再刷野怪"的行为回归（0.38.8，玩家反馈：怪出多点）
+// 虫潮规模×3 与"准备阶段不再刷野怪"的行为回归（0.39.1，玩家反馈：怪出多点）
 // 真实浏览器：只读地检查准备阶段布怪、波次数量、掉落金币、出怪间隔下限与同屏上限。
 const {chromium}=require('C:/Users/37818/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const url=process.env.GAME_URL||'http://127.0.0.1:8931/html/game/starship-defense/index.html';
-const out=process.env.QA_OUTPUT||path.join(__dirname,'media-kit/releases/web-swarm-scale-v0.38.8/qa');
+const out=process.env.QA_OUTPUT||path.join(__dirname,'media-kit/releases/web-swarm-scale-v0.39.1/qa');
 const results=[];
 const pass=(name,detail)=>{results.push({name,ok:true,detail});console.log('PASS',name,detail===undefined?'':JSON.stringify(detail));};
 (async()=>{

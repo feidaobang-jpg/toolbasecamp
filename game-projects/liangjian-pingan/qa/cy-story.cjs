@@ -1,4 +1,4 @@
-// 苍云岭的机制与剧情检查：语音按章加载、默认章节、转移进度与停顿、抓舌头（打倒 / 打死换人 / 按 I 抓活的）、
+// 苍云岭的机制与剧情检查：语音按章加载、默认章节、转移进度与停顿、抓舌头（打倒 / 打死换人 / 按 F 抓活的）、
 // 炮组被堵与重整、迫击炮表尺与两发炮弹（柱子报偏差、打中走原作、两发都偏走坂田）、结局存档
 // 开火、互动都走键盘输入层；为了把场面摆到要测的状态，部分前置条件直接改了游戏状态（例如把鬼子摆到阵地前）
 const { open } = require('./lib.cjs');
@@ -65,12 +65,12 @@ const check = (name, ok, info) => { results.push({ name, ok: !!ok, info }); cons
   await page.evaluate(() => { const g = __lj.game, t = g.tongue; g.place(g.hero, t.x, t.z + 1.6); __lj.app.audio.log.length = 0; });
   await step(0.3);
   const pr = await page.evaluate(() => document.getElementById('prompt').textContent);
-  await key('KeyI');
+  await key('KeyF');
   await step(1);
   const cap = await page.evaluate(() => ({ captured: __lj.game.flags.captured, scn: !!__lj.game.scn, voice: __lj.app.audio.log.includes('voice:cy_bantian'), prompt: document.getElementById('prompt').hidden }));
   await step(9);
   const cap2 = await page.evaluate(() => ({ voice: __lj.app.audio.log.includes('voice:cy_jingrui'), dialog: document.getElementById('dialog').textContent }));
-  check('走到跟前提示“按 I 抓活的”，按 I 进入过场：原声“坂田联队”，过场里不再显示互动提示', /抓活的/.test(pr) && cap.captured && cap.scn && cap.voice && cap.prompt, { pr, cap });
+  check('走到跟前提示“按 F 抓活的”，按 F 进入过场：原声“坂田联队”，过场里不再显示互动提示', /抓活的/.test(pr) && cap.captured && cap.scn && cap.voice && cap.prompt, { pr, cap });
   check('过场接着放“老子打的就是精锐，全体上刺刀”', cap2.voice && /精锐/.test(cap2.dialog), cap2);
   await skip();
   // 第三阶段的开场过场（望远镜）
@@ -95,7 +95,7 @@ const check = (name, ok, info) => { results.push({ name, ok: !!ok, info }); cons
   await begin(4);
   await skip(); await step(1);
   await page.evaluate(() => { const g = __lj.game; g.place(g.hero, g.cannon.x + 0.4, g.cannon.z + 2.2); });
-  await step(0.2); await key('KeyI'); await step(0.3);
+  await step(0.2); await key('KeyF'); await step(0.3);
   const m0 = await page.evaluate(() => ({ manned: __lj.game.cannon.manned, aim: document.getElementById('aim-info').textContent, cross: !document.getElementById('crosshair').hidden, arc: __lj.game.arc.visible }));
   check('上迫击炮：显示仰角和表尺，屏幕中间有准星，但没有落点预览线', m0.manned && /表尺 约 \d+ 米/.test(m0.aim) && m0.cross && !m0.arc, m0);
   const e0 = await page.evaluate(() => __lj.game.cannon.elev); await key('KeyW', 0.5); const e1 = await page.evaluate(() => __lj.game.cannon.elev);
@@ -126,7 +126,7 @@ const check = (name, ok, info) => { results.push({ name, ok: !!ok, info }); cons
   await begin(4);
   await skip(); await step(1);
   await page.evaluate(() => { const g = __lj.game; g.place(g.hero, g.cannon.x + 0.4, g.cannon.z + 2.2); });
-  await step(0.2); await key('KeyI'); await step(0.3);
+  await step(0.2); await key('KeyF'); await step(0.3);
   // 算一组正好落在帐篷上的方向和仰角（算上风偏）
   await page.evaluate(() => {
     const g = __lj.game, c = g.cannon, cfg = g.gunCfg;

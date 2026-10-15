@@ -1,0 +1,18 @@
+{
+ "url": "https://www.bilibili.com/toy/preview/preview_fenpWdm0/index.html",
+ "base": "https://www.bilibilitoy.com/toy/preview/preview_fenpWdm0/index.html?qa=1",
+ "lobby": {
+  "hint": "键鼠 · 自动瞄准 · 自动射击 · 移动 W/A/S/D · 左Shift 按住跑步 · 左键 射击 / 放置 · 空格 跳跃 / 直升机升高 · G 投掷手雷 · F 互动 / 上下载具 · E 医疗 / 兵种支援 · Q 切换武器 · B 商店 · T 建造 · X 开始虫潮 · V 切换视角 · 鼠标转视角 · P 暂停",
+  "fire": "左键",
+  "jump": "Space",
+  "use": "KeyF",
+  "run": "ShiftLeft",
+  "view": "KeyV",
+  "med": "KeyE",
+  "look": ""
+ },
+ "ok": {
+  "lobby": true
+ },
+ "errors": []
+}

@@ -31,9 +31,9 @@ export class CangyunlingGame extends Game {
       speed: MV, grav: MG, barrel: 1.1, pivotY: 0.25, reload: 3.0, shells: 2, elev0: 60 * DEG, elevMin: 45 * DEG, elevMax: 84 * DEG, yawMin: -0.7, yawMax: 0.9, yaw0: 0,
       preview: false, cross: true, turnRate: 0.3, elevRate: 0.5, simSteps: 900,
       brokenLine: '团长，炮组让鬼子打散了！', noShell: '两发炮弹都打出去了',
-      tip: 'A/D 或鼠标左右转炮口，W/S 或 Y/H 调仰角（仰角越低打得越远）。准星对准指挥部、表尺对上距离再放炮——只有两发！I 离开炮位',
+      tip: 'A/D 或鼠标左右转炮口，W/S 或鼠标上下调仰角（仰角越低打得越远）。准星对准指挥部、表尺对上距离再放炮——只有两发！F 离开炮位',
       tipTouch: '摇杆或滑屏左右转炮口、上下调仰角（仰角越低打得越远）。准星对准指挥部、表尺对上距离再点开火键——只有两发！',
-      keyHint: '<kbd>A</kbd><kbd>D</kbd> 转炮口　<kbd>W</kbd><kbd>S</kbd> 调仰角（越低越远）　<kbd>J</kbd>/左键 放炮　<kbd>I</kbd> 离开炮位　<kbd>C</kbd> 切换人称',
+      keyHint: '<kbd>A</kbd><kbd>D</kbd> 转炮口　<kbd>W</kbd><kbd>S</kbd> 调仰角（越低越远）　左键 放炮　<kbd>F</kbd> 离开炮位　<kbd>V</kbd> 切换人称',
       crewSpots: (placed) => (placed ? [[1.2, 0.9, -0.3], [-1.3, 0.6, 0.4], [-0.6, 2.4, 0.1]] : [[0.35, 0.15, 0], [-1.2, 1.6, 0], [1.2, 1.9, 0]]),
     };
   }
@@ -155,13 +155,13 @@ export class CangyunlingGame extends Game {
     u.downed = true; u.hp = 1; u.active = false; u.aim = 0; u.moving = 0; u.state = 'idle';
     this.addScore(300);
     this.ui.say('虎子', '团长，军曹倒了，还有口气！', { now: true });
-    this.ui.toast(this.app.isTouch() ? '走到军曹跟前，点“抓俘虏”' : '走到军曹跟前按 I 抓活的', 4);
+    this.ui.toast(this.app.isTouch() ? '走到军曹跟前，点“抓俘虏”' : '走到军曹跟前按 F 抓活的', 4);
     return true;
   }
   useOption(h) {
     const t = this.tongue;
     if (this.phase !== 2 || !t || !t.alive || !t.downed || this.flags.captured || h.y > 0.5 || dist2(h.x, h.z, t.x, t.z) > 2.4 * 2.4) return null;
-    return { label: '抓俘虏', prompt: '按 I 抓活的', act: () => this.captureScene() };
+    return { label: '抓俘虏', prompt: '按 F 抓活的', act: () => this.captureScene() };
   }
   respawnPoint() {
     const p = this.phase, c = this.cannon;
@@ -252,13 +252,13 @@ export class CangyunlingGame extends Game {
       this.allies.forEach((al) => this.place(al, POSTS1[al.slot][0], POSTS1[al.slot][1]));
       ui.say('李云龙', '张大彪！师部和野战医院正在转移，新一团给我钉死在山头上！');
       ui.say('张大彪', '是！一营、二营，都给我顶住！');
-      this.after(4.5, () => ui.toast(this.app.isTouch() ? '守住山头：左上角的转移进度走满就完成。鬼子压到阵地跟前，转移会停下。阵地两边的机枪可以接管' : '守住山头：左上角的转移进度走满就完成。鬼子压到阵地跟前，转移会停下。阵地两边的机枪可以接管（I）', 7));
+      this.after(4.5, () => ui.toast(this.app.isTouch() ? '守住山头：左上角的转移进度走满就完成。鬼子压到阵地跟前，转移会停下。阵地两边的机枪可以接管' : '守住山头：左上角的转移进度走满就完成。鬼子压到阵地跟前，转移会停下。阵地两边的机枪可以接管（F）', 7));
     } else if (n === 2) {
       if (fresh) this.place(h, 0, 60);
       this.tongueIdx = 0; this.spawnTongue(0);
       this.vo('cy_zhuohuode', 4.5, () => ui.say('李云龙', '去，抓个活的问问，对面的鬼子是哪个部队的。', { now: true, dur: 4.6 }));
       this.spawnMed(0, 50);
-      this.after(4.8, () => ui.toast('抓舌头：用枪把带臂章的军曹打倒（手榴弹、骑兵会把他弄死），再过去按 I 抓活的', 6));
+      this.after(4.8, () => ui.toast('抓舌头：用枪把带臂章的军曹打倒（手榴弹、骑兵会把他弄死），再过去按 F 抓活的', 6));
     } else if (n === 3) {
       c.visible = true; c.placed = false; c.moving = false; c.x = L.mortarStart.x; c.z = L.mortarStart.z; c.hp = c.maxHp; c.alive = true;
       this.pathI = 0;
@@ -278,7 +278,7 @@ export class CangyunlingGame extends Game {
         ui.say('柱子', '是！保证完成任务！', { dur: 1.4 });
       });
       this.after(13.6, () => { if (this.phase === 4 && !this.shots) ui.say('柱子', '团长，指挥部离这儿七十五米上下。今儿刮西风，炮弹往右飘，瞄的时候往左带一点。', { dur: 6 }); });
-      this.after(3, () => { if (this.phase === 4 && !c.manned) ui.toast(this.app.isTouch() ? '走到迫击炮旁边点“操炮”' : '走到迫击炮旁边按 I 操炮', 4); });
+      this.after(3, () => { if (this.phase === 4 && !c.manned) ui.toast(this.app.isTouch() ? '走到迫击炮旁边点“操炮”' : '走到迫击炮旁边按 F 操炮', 4); });
     } else if (n === 5) {
       h.weapon = 'lmg'; h.magMax = 40; h.mag = 40; h.reloadT = 0;
       c.visible = true; c.placed = true; c.x = L.firePos.x; c.z = L.firePos.z;

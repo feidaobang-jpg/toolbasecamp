@@ -190,7 +190,7 @@ Toy 自动同步的既有操作授权保留，改为**实时**节奏（用户202
 虫潮围城按两套规则区分。**战地**是枪战规则，属于“所有 3D 游戏必须多视角”和默认自动瞄准的明确例外；**主战役、房车生存、虫族模式、酸液围场**仍是多视角加默认自动瞄准，不增加有限弹药模式。不要把战地改回多视角或自动瞄准，也不要把其他模式改成只有第一人称。
 
 - 战地：步行固定第一人称；载具用第三人称跟随，C 只在两档跟随距离之间切换。手动瞄准，只在按住时开火，弹匣有限。
-- 键鼠完全手动：按住左键或 J 射击，右键拖动只转视角、原地点按举枪；不使用鼠标锁定。触屏和纯键盘保留准星约 7° 内的轻度吸附，触屏按住射击键可继续拖动瞄准。
+- 键鼠完全手动：按住左键射击，右键举枪；2026-10-15 起和其他模式一样默认鼠标接管（锁定），被拒绝时退回右键拖动转视角，键位见「电脑键位 v2」。触屏和纯键盘保留准星约 7° 内的轻度吸附，触屏按住射击键可继续拖动瞄准。
 - 战地不读取也不改写玩家保存的瞄准方式、射击方式和战役视角偏好。联机战地由房主按客人的朝向、俯仰和镜头距离还原准星，只用服务端已放行的输入字段。
 - **抗战战役已不属于虫潮**：2026-10-14（虫潮围城 0.38.7）把虫潮里残留的抗战战役代码（`resistance-campaign.js`/`resistance-ui.js`/`resistance-assets.js` 与 `warOn()` 分支）删干净，抗战规则现在只在《枪火集结》里，见「枪火集结 · 亮剑战役是重做版」。不要按旧的“虫潮抗战”去恢复入口或代码。
 - 战地在 0.4.0 大厅拆分后**本地单人菜单已无入口**，虫潮里只剩联机房间（房主把 `settings.mode` 设成 `versus`、规则为 conquest）会走到这段代码；`battlefield-*` 与 `vsMenu` 因此不是死代码，不要顺手删。线上脚本 `verify-fps-rules-online.cjs` 仍在点已不存在的 `#btnVersus`，这个缺口如实记在 `game-projects/site-games/releases/game-split-hygiene-20261014/notes.md`。
@@ -201,9 +201,18 @@ Toy 自动同步的既有操作授权保留，改为**实时**节奏（用户202
 用户问过要不要合并成“大厅选游戏、再选模式”，看过玩法差异后决定**保持分开**：虫潮做自动瞄准的建造塔防，枪火做手动瞄准的第一人称枪战；两边视角、操控与按钮本来就不同，合成一款会让设置项变复杂。不要再提合并或做“跨款大厅”。
 
 - 两款同在 `zhengxiaohui.cn` 域下，localStorage 按域共享，所以**存档命名空间必须分开**：枪火用 `gunfire-*`／战役档 `gfs_save_` 前缀，云档与导出备份标识 `gunfire-assembly`，Toy 存档键 `gunfire_normal_v1` 等；虫潮保持 `chongchao-*`／`sst_save_` 与 `starship-defense` 不动。老玩家从枪火带过来的偏好靠首次启动**一次性复制**（不删除、不覆盖新键）。
-- 只有通用输入类键跨款共用：`chongchao-keybindings-v1`、`chongchao-combat-controls-v1`、`chongchao-touch-layout-v1`、`chongchao-device-mode`。改这四把时两款一起验；新加“进度/偏好”类键必须带各自前缀。回归入口 `game-projects/site-games/qa/save-namespace-split.cjs`（索引 SAVE-NS-014）。
+- 只有通用输入类键跨款共用：`chongchao-keybindings-v2`（2026-10-15 前为 v1）、`chongchao-combat-controls-v1`、`chongchao-touch-layout-v1`、`chongchao-device-mode`。改这四把时两款一起验；新加“进度/偏好”类键必须带各自前缀。回归入口 `game-projects/site-games/qa/save-namespace-split.cjs`（索引 SAVE-NS-014）。
 - 模式入口不互相残留：虫潮没有抗战战役，枪火没有虫族模式与房车生存（2026-10-14 删除，索引 MODE-BOOT-015）。删模式要连 `index.html` 入口、`NAV_ROOTS`、`__gameQA` 暴露、构建与打包引用一起删，并断言最终 `game.compat.js` 里搜不到该模式字符串。
 - 两款共用的 24 个模块以 `game-projects/site-games/shared/` 为规范源，游戏目录保留运行时副本（Toy 打包与子路径加载按目录取文件，不能改成跨目录 import）。改公共模块前先跑 `node game-projects/site-games/shared/sync-shared.mjs`，确实只属于一边的分叉要写进 `shared-modules.json` 的 `perGame` 并说明原因（索引 SHARED-MOD-016）。
+
+## 电脑键位 v2：CS / 吃鸡式左手布局（虫潮 + 枪火所有模式；用户2026-10-14 提出，2026-10-15 上线）
+
+用户要求虫潮和枪火所有模式电脑端默认鼠标接管、右手键全挪到左手附近，参考 CS / 电脑版吃鸡。本节对这两款替代上文“切换视角保留 C 键”“Q/E 转视角”“J/K/U/I 方阵的键盘字母”在**电脑端**的说法；触屏按钮的位置、方阵与图标不变。
+
+- 默认键：鼠标转视角（默认接管 / 锁定，被浏览器或外壳拒绝时退回按住拖动，「操作设置 · 电脑鼠标」可改成按住拖动）、左键射击 / 放置、右键举枪 / 开镜（Z 同）、WASD 移动、按住 Shift 跑、空格跳 / 直升机升高、C 蹲下 / 直升机降低、F 互动 / 上下载具、G 手雷、E 医疗 / 兵种支援、Q 换枪、R 换弹 / 出兵、V 切换视角、B 商店、T 建造、X 开始虫潮、Tab 战况 / 队伍 / 测试台、P/Esc 暂停、M 声音、数字键武器栏。亮剑战役里 Q 是亮剑、E 是骑兵连。
+- 键盘转视角（Q/E、Y/H）默认不占键，大厅两款仍可在键位设置里自己绑；亮剑页没有键位设置，直接取消。旧键 J/K/U/I/N/O/L 没被占用、对应动作也没改过时仍可用，但不再出现在任何提示里。
+- 键位存档 `chongchao-keybindings-v2`（两款共用），旧 v1 自定义不沿用，第一次进局提示一次。所有提示跟随当前键位，改默认键时按各种写法搜全。
+- 实现与验收见 `game-projects/starship-defense/media-kit/releases/web-keys-v2/notes.md`，回归索引 KEYS-V2-018。蹲下 / 趴下、拔刀近战等新动作按后续批次加入时沿用本节键位（C 蹲、Z 趴的分配以届时实现为准，先改本节再改代码）。
 
 ## 枪火集结 · 亮剑战役是重做版（三章；用户2026-10-14）
 
@@ -211,10 +220,10 @@ Toy 自动同步的既有操作授权保留，改为**实时**节奏（用户202
 
 - 位置：`public/html/game/gunfire-assembly/liangjian/`，`?ch=cangyunling|lijiapo|pingan` 选章，不带参数落在上次玩的章节（新玩家第一章），菜单里也能换章（换章重新载入）。引擎 `js/game.js` 与章节 `js/chapters/<章>*.js` 拆开，章节差异走 `game.js` 末尾的“章节钩子”（含地形 `world.hgt`、`setLight`、`heroCover` / `allyCover`）。存档前缀 `lj_campaign_v1_`：设置共用，`cp_<章>`、`best_<章>`、`ending_<章>` 按章分开，第一次打开时搬旧的 `lj_pingan_v1_`。旧地址 `pingan/index.html` 只剩跳转页。重做版主菜单有“返回大厅”回到 `../index.html`。
 - 网站上枪火集结和虫潮围城同域，`chongchao-resistance-checkpoint-v1` 是虫潮抗战的存档键；枪火集结不再读写它，不要再拿它做跳转或迁移。
-- 操作按 game-maker `references/shooter-controls.md`：越肩第三人称 + 第一人称两个视角、手动瞄准带轻度吸附、可跳跃；J 开火、K 跳、U 手榴弹（李家坡手榴弹雨阶段是“全营投弹”）、I 互动（上炮 / 接管机枪 / 抓俘虏 / 挖壕 / 离开，F 为别名）、O / Z 开镜、R 换弹、Q/E 与 Y/H 转视角；亮剑 L（鼠标手 V）、骑兵连 N（鼠标手 X）每章都有。电脑端默认鼠标接管（锁定），被拒绝时自动退回按住拖动。打掉机枪手后阵地机枪可以接管。战友给主角让路，不会把主角挤开。
+- 操作按 game-maker `references/shooter-controls.md`：越肩第三人称 + 第一人称两个视角、手动瞄准带轻度吸附、可跳跃。电脑键位按「电脑键位 v2」：鼠标接管（被拒绝时按住拖动），左键开火、右键或 Z 开镜、按住 Shift 往前跑（开火优先、开镜 / 换弹跑不起来）、空格跳、R 换弹、G 手榴弹（李家坡手榴弹雨阶段是“全营投弹”）、F 互动（上炮 / 接管机枪 / 抓俘虏 / 挖壕 / 离开）、Q 亮剑、E 骑兵连、V 切换人称；键盘转视角取消，旧键 J/K/U/I/L/N/O 只作不显示的别名。打掉机枪手后阵地机枪可以接管。战友给主角让路，不会把主角挤开。
 - 苍云岭（v0.6.0）：坚守山头 → 抓舌头 → 送炮前出五百米 → 两发炮弹（风偏、柱子报偏差）→ 打中＝原作突围，两发都偏＝坂田 Boss；结局存 `ending_cangyunling`。李家坡（v0.7.0，用户选定）：强攻受挫（侧翼拔两个外围火力点）→ 夜里挖交通壕（I 开挖、照明弹、夜袭、掷弹筒）→ 拂晓手榴弹雨（两分钟三千六百颗、炸碉堡）→ 张大彪突击队 → 决战山崎（炸哑射击孔、格子弹、拼刀、战友不打他）；真实山坡、按阶段换光，没有分支结局。平安县城（v0.5.0）：城楼秀芹过场与双结局（`ending_pingan`），飘屏弹幕已按用户选择删除，不要加回。
 - 原声：三章喊话都截自电视剧《亮剑》（用户同意下载 B站片段使用，未取得授权；来源见 `game-projects/liangjian-pingan/media-kit/assets/voice.json`）。语音清单 `liangjian/assets/voice/index.json` 按章节分组，每章只加载自己那一组。下载新片段前先列出 BV、时长、大小与用途给用户确认。不要把原声换回合成，除非用户要求或 Toy 因此退回。局内原声用章节的 `vo()` 排队，过场开始时掐掉排队的。
-- 枪火集结与虫潮围城的“医疗 / 兵种支援 / 直升机降低”默认键都已从 H 改为 N，直升机升高只留 K，Y / H 为抬头 / 低头（两款的 `key-bindings.js` 是同一份；枪火集结 0.2.0、虫潮围城 0.38.1）。玩家自己改过的键保留，新默认键与玩家自定义键冲突时只挪新键。提示文字一律用 `keyBindings.label()` 跟随当前键位；回归用 `game-projects/starship-defense/verify-look-keys.cjs`。
+- 两款的默认键位以「电脑键位 v2」为准（2026-10-14 的“医疗改 N、Y/H 抬头低头”已被替代）。`key-bindings.js` 两款同一份；提示文字一律用 `keyBindings.label()` 跟随当前键位，回归用 `game-projects/starship-defense/verify-keys-v2.cjs`。
 - 构建：`node game-projects/gunfire-assembly/build-compat.mjs` 同时生成大厅与亮剑战役两个兼容包；`build-toy.mjs` 把 `liangjian/` 的入口、样式、兼容包与全部语音、以及 `pingan/index.html` 跳转页打进同一个 Toy 包。验收脚本在 `game-projects/liangjian-pingan/qa/`：苍云岭 `cy-story.cjs`、`cy-playthrough.cjs`（`ROUTE=hit|hit2|miss`）、`cy-scenes.cjs`；李家坡 `ljp-story.cjs`、`ljp-playthrough.cjs`、`ljp-scenes.cjs`；平安县城 `story.cjs`、`playthrough.cjs`（`ROUTE=rescue`）；三章共用 `interact.cjs`、`views.cjs`、`options.cjs`、`mobile.cjs`（`LJ_CH=cangyunling|lijiapo`）；枪火集结大厅 `gunfire-chapters.cjs`。各版记录见 `game-projects/liangjian-pingan/media-kit/releases/` 与 `game-projects/gunfire-assembly/media-kit/releases/web-*/`。
 
 ## 2026-10-06 右上按钮布局补充

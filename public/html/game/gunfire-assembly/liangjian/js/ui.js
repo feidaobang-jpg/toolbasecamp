@@ -97,7 +97,7 @@ export class UI {
     this.btnBili = this._btn('<span class="ol">作者B站主页</span><span class="ov">飞刀班长</span>', 'opt', () => this.app.openAuthor());
     opts.appendChild(this.btnBili);
     opts.appendChild(this._btn('<span class="ol">返回大厅</span><span class="ov">枪火集结</span>', 'opt', () => this.app.toLobby()));
-    const foot = el('div', 'foot', '<span class="pc-only"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移动　鼠标瞄准（点一下画面接管，<kbd>Esc</kbd> 释放）、左键开火、右键开镜　<kbd>空格</kbd> 跳　<kbd>R</kbd> 换弹　<kbd>G</kbd> 手榴弹　<kbd>F</kbd> 互动　<kbd>V</kbd> 亮剑　<kbd>X</kbd> 骑兵连　<kbd>C</kbd> 切换人称<br>纯键盘：<kbd>Q</kbd><kbd>E</kbd> 左右转　<kbd>Y</kbd><kbd>H</kbd> 上下转　<kbd>J</kbd> 开火　<kbd>K</kbd> 跳　<kbd>U</kbd> 手榴弹　<kbd>I</kbd> 互动（上炮 / 上机枪）　<kbd>L</kbd> 亮剑　<kbd>N</kbd> 骑兵连　<kbd>O</kbd> 开镜　<kbd>Enter</kbd> 开始</span><span class="touch-only">左下摇杆移动，右半屏滑动瞄准，按住开火键也能拖着瞄；准星靠近敌人会自动吸一点。打掉机枪手后，阵地里的机枪可以接管。</span>');
+    const foot = el('div', 'foot', '<span class="pc-only"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移动　鼠标瞄准（点一下画面接管，<kbd>Esc</kbd> 释放）、左键开火、右键开镜　<kbd>Shift</kbd> 按住跑　<kbd>空格</kbd> 跳　<kbd>R</kbd> 换弹<br><kbd>G</kbd> 手榴弹　<kbd>F</kbd> 互动（上炮 / 上机枪）　<kbd>Q</kbd> 亮剑　<kbd>E</kbd> 骑兵连　<kbd>V</kbd> 切换人称　<kbd>Enter</kbd> 开始</span><span class="touch-only">左下摇杆移动，右半屏滑动瞄准，按住开火键也能拖着瞄；准星靠近敌人会自动吸一点。打掉机枪手后，阵地里的机枪可以接管。</span>');
     this.menuOpts = opts; this.menuModes = this._modes();
     p.append(head, start, chs, opts, this.menuModes, foot);
     menu.appendChild(p);
@@ -114,7 +114,7 @@ export class UI {
     for (const k of Object.keys(OPTS)) if (OPTS[k].where.includes('p')) o2.appendChild(this._optBtn(k));
     o2.appendChild(this._btn('<span class="ol">全屏</span><span class="ov">切换</span>', 'opt', () => this.app.fullscreen()));
     c2.append(o2, this._modes());
-    c2.appendChild(el('div', 'foot', '<span class="pc-only">准星对着敌人开火，靠近目标会吸附，打头伤害加倍；<kbd>R</kbd> 换弹，打空自动换。<kbd>空格</kbd>/<kbd>K</kbd> 跳：能跳过铁丝网、跳上箱子和土台、跳进机枪阵地侧面，也能跳起躲 Boss 的突进。<kbd>I</kbd>/<kbd>F</kbd> 互动：打掉机枪手后走进阵地接管机枪；炮位旁上炮，<kbd>A</kbd><kbd>D</kbd> 转炮口、<kbd>W</kbd><kbd>S</kbd> 调仰角、开火键开炮；再按一次离开。<kbd>U</kbd>/<kbd>G</kbd> 手榴弹，<kbd>L</kbd>/<kbd>V</kbd> 亮剑（撞上 Boss 的拔刀突进就是拼刀），<kbd>N</kbd>/<kbd>X</kbd> 骑兵连，<kbd>Esc</kbd> 继续。</span><span class="touch-only">准星对着敌人开火，靠近目标会吸附，打头伤害加倍。跳：能跳过铁丝网、跳上箱子和土台、跳进机枪阵地侧面，也能跳起躲 Boss 的突进。打掉机枪手后走进阵地点“机枪”接管；炮位旁点“操炮”，摇杆转炮口、调仰角，开火键开炮。亮剑撞上 Boss 的拔刀突进就是拼刀。</span>'));
+    c2.appendChild(el('div', 'foot', '<span class="pc-only">准星对着敌人开火，靠近目标会吸附，打头伤害加倍；<kbd>R</kbd> 换弹，打空自动换。按住 <kbd>Shift</kbd> 往前跑（跑的时候不开枪）。<kbd>空格</kbd> 跳：能跳过铁丝网、跳上箱子和土台、跳进机枪阵地侧面，也能跳起躲 Boss 的突进。<kbd>F</kbd> 互动：打掉机枪手后走进阵地接管机枪；炮位旁上炮，<kbd>A</kbd><kbd>D</kbd> 转炮口、<kbd>W</kbd><kbd>S</kbd> 调仰角、开火键开炮；再按一次离开。<kbd>G</kbd> 手榴弹，<kbd>Q</kbd> 亮剑（撞上 Boss 的拔刀突进就是拼刀），<kbd>E</kbd> 骑兵连，<kbd>V</kbd> 切换人称，<kbd>Esc</kbd> 继续。</span><span class="touch-only">准星对着敌人开火，靠近目标会吸附，打头伤害加倍。跳：能跳过铁丝网、跳上箱子和土台、跳进机枪阵地侧面，也能跳起躲 Boss 的突进。打掉机枪手后走进阵地点“机枪”接管；炮位旁点“操炮”，摇杆转炮口、调仰角，开火键开炮。亮剑撞上 Boss 的拔刀突进就是拼刀。</span>'));
     cols.append(c1, c2); pp.appendChild(cols); pause.appendChild(pp);
 
     // 结算

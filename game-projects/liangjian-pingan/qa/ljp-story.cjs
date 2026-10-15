@@ -62,12 +62,12 @@ const check = (name, ok, info) => { results.push({ name, ok: !!ok, info }); cons
   const pr2 = await page.evaluate(() => { const g = __lj.game, tr = g.world.trench, q = tr.pointAt(tr.dug + 0.01), p = tr.pointAt(0); g.place(g.hero, p.x, p.z); return document.getElementById('prompt').textContent; });
   await step(0.2);
   const pr2b = await page.evaluate(() => ({ prompt: document.getElementById('prompt').textContent, use: document.getElementById('use') ? document.getElementById('use').textContent : '' }));
-  check('站到壕头提示“按 I 挖交通壕”', /挖交通壕/.test(pr2b.prompt), { pr2, pr2b });
+  check('站到壕头提示“按 F 挖交通壕”', /挖交通壕/.test(pr2b.prompt), { pr2, pr2b });
   const d0 = await page.evaluate(() => { const g = __lj.game; g.flareT = 99; return g.world.trench.dug; });
-  await key('KeyI');
+  await key('KeyF');
   await step(3);
   const dg = await page.evaluate(() => ({ digging: __lj.game.digging, dug: __lj.game.world.trench.dug, shovel: __lj.game.hero.model.shovel.visible, prompt: document.getElementById('prompt').textContent, berm: __lj.game.world.colliders.filter((c) => c.tag === 'berm' && c.on).length }));
-  check('按 I 开挖：三秒挖出两米多（主角 + 两个战友），主角手里有铁锹，提示改成“按 I 停手”，挖出来的那截两边起了土埂', dg.digging && dg.dug - d0 > 2.5 && dg.shovel && /停手/.test(dg.prompt) && dg.berm >= 6, { d0, dg });
+  check('按 F 开挖：三秒挖出两米多（主角 + 两个战友），主角手里有铁锹，提示改成“按 F 停手”，挖出来的那截两边起了土埂', dg.digging && dg.dug - d0 > 2.5 && dg.shovel && /停手/.test(dg.prompt) && dg.berm >= 6, { d0, dg });
   await key('KeyW', 0.3);
   const st = await page.evaluate(() => ({ digging: __lj.game.digging, shovel: __lj.game.hero.model.shovel.visible }));
   check('一走动就停手、铁锹收起', !st.digging && !st.shovel, st);
@@ -105,9 +105,9 @@ const check = (name, ok, info) => { results.push({ name, ok: !!ok, info }); cons
   check('进第三阶段（拂晓的光），手榴弹键变成“全营投弹”', n3.phase === 3 && n3.fog === 0x9e8c86 && /全营投弹/.test(n3.nade), n3);
 
   // ---------- 第三阶段：手榴弹雨 ----------
-  await key('KeyU');
+  await key('KeyG');
   const early = await page.evaluate(() => ({ toast: document.getElementById('toast').textContent, g: __lj.game.grenades }));
-  check('信号弹之前按 U：提示等信号弹，一颗没扔', /信号弹/.test(early.toast) && early.g === 3600, early);
+  check('信号弹之前按 G：提示等信号弹，一颗没扔', /信号弹/.test(early.toast) && early.g === 3600, early);
   await step(15.5);
   const sig = await page.evaluate(() => ({ signal: __lj.game.flags.signal, voice: __lj.app.audio.log.includes('voice:ljp_xinhao'), bar: document.getElementById('cannon-row').textContent }));
   check('原声“信号弹一响……两分钟之内必须全都扔出去”，信号弹后开始两分钟倒计时', sig.signal && sig.voice && /两分钟/.test(sig.bar), sig);
@@ -117,15 +117,15 @@ const check = (name, ok, info) => { results.push({ name, ok: !!ok, info }); cons
   const mk = await page.evaluate(() => ({ ok: __lj.game.mark.ok, vis: __lj.game.markMesh.visible, d: Math.hypot(__lj.game.mark.x - __lj.game.world.bunkers[1].x, __lj.game.mark.z - __lj.game.world.bunkers[1].z) }));
   check('准星压在碉堡上，黄圈罩住碉堡', mk.ok && mk.vis && mk.d < 4.5, mk);
   const hp0 = await page.evaluate(() => __lj.game.world.bunkers[1].hp);
-  await key('KeyU');
+  await key('KeyG');
   const v1 = await page.evaluate(() => ({ g: __lj.game.grenades, cd: __lj.game.volleyCd }));
   await step(2.4);
   const v2 = await page.evaluate(() => ({ hp: __lj.game.world.bunkers[1].hp, alive: __lj.game.world.bunkers[1].alive }));
-  await key('KeyU');
+  await key('KeyG');
   const v3 = await page.evaluate(() => ({ g: __lj.game.grenades, toast: document.getElementById('toast').textContent }));
-  check('按 U 全营投一轮：三百六十颗，三秒多的间隔里再按只提示“还在往前传”', v1.g === 3240 && v1.cd > 3 && v3.g === 3240 && /往前传/.test(v3.toast), { v1, v3 });
+  check('按 G 全营投一轮：三百六十颗，三秒多的间隔里再按只提示“还在往前传”', v1.g === 3240 && v1.cd > 3 && v3.g === 3240 && /往前传/.test(v3.toast), { v1, v3 });
   check('一轮手榴弹砸在碉堡上，碉堡掉血或直接炸塌', v2.hp < hp0 || !v2.alive, { hp0, v2 });
-  for (let r = 0; r < 4 && await page.evaluate(() => __lj.game.world.bunkers[1].alive); r++) { await step(1.2); await aimB(1); await step(0.1); await key('KeyU'); await step(2.2); }
+  for (let r = 0; r < 4 && await page.evaluate(() => __lj.game.world.bunkers[1].alive); r++) { await step(1.2); await aimB(1); await step(0.1); await key('KeyG'); await step(2.2); }
   const bd = await page.evaluate(() => ({ alive: __lj.game.world.bunkers[1].alive, ruin: __lj.game.world.bunkers[1].ruin.visible, col: __lj.game.world.bunkers[1].cols[0].on, byVolley: __lj.game.stats.bunkerVolley }));
   check('碉堡炸塌：换成一堆碎块，碰撞拿掉（成了缺口），记“手榴弹炸掉”', !bd.alive && bd.ruin && !bd.col && bd.byVolley === 1, bd);
   // 时间到了还剩碉堡：张大彪补
@@ -166,7 +166,7 @@ const check = (name, ok, info) => { results.push({ name, ok: !!ok, info }); cons
   const aimPort = () => page.evaluate(() => { const g = __lj.game, p = g.world.cp.ports[0], c = g.camera.position; g.hero.nades = 3; const tx = p.x - 0.3, tz = p.z + 0.5, ty = g.groundY(tx, tz); g.cam.yaw = Math.atan2(-(tx - c.x), -(tz - c.z)); g.cam.pitch = Math.atan2(ty - c.y, Math.hypot(tx - c.x, tz - c.z)); });
   await aimPort(); await step(0.2); await aimPort(); await step(0.05);
   const thr = await page.evaluate(() => { const g = __lj.game; return { aim: [+g.aim.x.toFixed(2), +g.aim.z.toFixed(2)], tgt: g.aim.target ? g.aim.target.type : null, h: [+g.hero.x.toFixed(2), +g.hero.z.toFixed(2)], nades: g.hero.nades, alive: g.hero.alive, cut: g.cut, sub: g.sub }; });
-  await key('KeyU');
+  await key('KeyG');
   const thr2 = await page.evaluate(() => __lj.game.nades.map((q) => [+q.x1.toFixed(2), +q.z1.toFixed(2)]));
   await step(1.2);
   const sil = await page.evaluate(() => ({ alive: __lj.game.world.cp.ports[0].alive, n: __lj.game.stats.ports }));
@@ -187,7 +187,7 @@ const check = (name, ok, info) => { results.push({ name, ok: !!ok, info }); cons
   check('山崎架着刀时子弹全被格开（不掉血），收刀喘气时子弹打得进去（伤害 ×1.5）', g1.hp === b0 && g1.deflect >= 6 && g2.hp < b0 - 4, { b0, g1, g2 });
   // 拼刀
   await page.evaluate(() => { const g = __lj.game, b = g.boss, h = g.hero; b.hp = 120; b.state = 'walk'; b.cd = 99; g.place(h, b.x, b.z + 4); g.cam.yaw = 0; h.dashCd = 0; b.state = 'dashTele'; b.stT = 5; b.dx = 0; b.dz = 1; });
-  await key('KeyL');
+  await key('KeyQ');
   await step(0.3);
   const cl = await page.evaluate(() => ({ state: __lj.game.boss.state, clash: __lj.game.stats.clash, hp: __lj.game.boss.hp }));
   check('山崎突刺时亮剑撞上去：拼刀，山崎被震住（stun）掉血', cl.state === 'stun' && cl.clash === 1 && cl.hp < 120, cl);

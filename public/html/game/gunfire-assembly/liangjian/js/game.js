@@ -20,7 +20,6 @@ const SENS = { low: 0.7, mid: 1, high: 1.4 };
 const JUMP_V = 8.2, GRAVITY = 26, AIR_SPEED = 0.85;    // 起跳约 1.3 米；滞空短一点、空中略慢，容易落在箱子上
 const MAG_SOFT = 4.2 * DEG, MAG_MOUSE = 2.2 * DEG;     // 子弹吸附角：触屏 / 按键转视角略大，鼠标略小
 const FRICTION_ANG = 7.5 * DEG, PULL_ANG = 5 * DEG;    // 准星减速与开火牵引的范围（只对触屏 / 按键生效）
-const KEY_YAW = 1.9, KEY_PITCH = 1.1;                  // Q/E、Y/H 的角速度（弧度 / 秒）
 const _v = new THREE.Vector3(), _v2 = new THREE.Vector3(), _v3 = new THREE.Vector3();
 
 export class Game {
@@ -179,7 +178,7 @@ export class Game {
     this.addScore(300);
     this.spawnMed(pos.x, pos.z - 0.4);
     this.ui.say(this.info().aide, side + '机枪哑火了！');
-    if (!this.flags.mgHint) { this.flags.mgHint = 1; this.after(2.8, () => this.ui.toast(this.app.isTouch() ? '阵地里的机枪归你了：走进去点“机枪”接管' : '阵地里的机枪归你了：走进去按 I 接管', 4.5)); }
+    if (!this.flags.mgHint) { this.flags.mgHint = 1; this.after(2.8, () => this.ui.toast(this.app.isTouch() ? '阵地里的机枪归你了：走进去点“机枪”接管' : '阵地里的机枪归你了：走进去按 F 接管', 4.5)); }
   }
   spawnWave(x, z, n, officers, group, pref) {
     for (let i = 0; i < n; i++) { const e = this.addUnit('enemy', 'rifle', x + rand(-2, 2), z + rand(-4, 4), { group, cannon: i % 2 === 0, wake: 999, pref: pref || rand(9, 14) }); e.active = true; }
@@ -193,7 +192,7 @@ export class Game {
     this.cut = dur + 0.05;
     for (const [t, fn] of steps) this.timers.push({ t, fn, scn: true });
     this.timers.push({ t: dur, fn: () => this.endScene(false), scn: true });
-    if (!this.flags.skipTip) { this.flags.skipTip = 1; this.after(1.1, () => { if (this.scn) this.ui.toast(this.app.isTouch() ? '点开火键可以跳过这段剧情' : '按开火键（J / 左键）或空格可以跳过这段剧情', 3.2); }); }
+    if (!this.flags.skipTip) { this.flags.skipTip = 1; this.after(1.1, () => { if (this.scn) this.ui.toast(this.app.isTouch() ? '点开火键可以跳过这段剧情' : '按左键或空格可以跳过这段剧情', 3.2); }); }
   }
   endScene(skipped) {
     const sc = this.scn; if (!sc) return;
@@ -262,14 +261,14 @@ export class Game {
     }
   }
 
-  // ---------- 转视角：镜头方向就是瞄准方向（左右 Q/E、上下 Y/H、鼠标或手指拖动） ----------
+  // ---------- 转视角：镜头方向就是瞄准方向（鼠标或手指拖动） ----------
   updateLook(dt) {
     const c = this.cam, h = this.hero, inp = this.input, can = this.cannon;
     const [dx, dy] = inp.takeLook();
     if (this.cut > 0 || !h.alive) { c.pendYaw = 0; c.pendPitch = 0; return; }
     const sens = SENS[this.app.get('aimSens')] || 1;
     const ads = h.ads && !can.manned ? 0.62 : 1;
-    // 准星靠近目标时减速、开火时轻微牵引：只对触屏和按键转视角生效，鼠标只保留子弹吸附
+    // 准星靠近目标时减速、开火时轻微牵引：只对触屏生效，鼠标只保留子弹吸附
     const a = this.aim, soft = inp.lookSrc !== 'mouse' && !can.manned;
     let fr = 1;
     if (soft && a.near) fr = 0.5 + 0.5 * Math.min(1, a.nearAng / FRICTION_ANG);
@@ -278,8 +277,6 @@ export class Game {
     const rate = 8 * dt, k = 1 - Math.exp(-(inp.lookSrc === 'mouse' ? 38 : 24) * dt);
     let sy = clamp(c.pendYaw * k, -rate, rate), sp = clamp(c.pendPitch * k, -rate, rate);
     c.pendYaw -= sy; c.pendPitch -= sp;
-    sy -= inp.lookKX * KEY_YAW * ads * fr * dt;      // E 向右：yaw 减小
-    sp += inp.lookKY * KEY_PITCH * ads * fr * dt;    // Y 抬头
     if (soft && a.near && inp.held.fire && a.nearAng < PULL_ANG) {
       const w = (1 - a.nearAng / PULL_ANG) * 0.9 * dt;
       sy += clamp(a.nearDYaw, -w, w); sp += clamp(a.nearDPitch, -w, w);
@@ -344,13 +341,15 @@ export class Game {
     const gun = nearCannon ? null : this.gunNear();
     const extra = nearCannon || gun ? null : this.useOption(h);   // 本章特有的互动（例如抓舌头）
     ui.setUse(nearCannon ? this.gunCfg.use : gun ? '机枪' : extra ? extra.label : null);
-    ui.setPrompt(this.app.isTouch() ? null : nearCannon ? '按 I ' + this.gunCfg.use : gun ? '按 I 接管机枪' : extra ? extra.prompt : null);
+    ui.setPrompt(this.app.isTouch() ? null : nearCannon ? '按 F ' + this.gunCfg.use : gun ? '按 F 接管机枪' : extra ? extra.prompt : null);
     if (nearCannon && use) { this.manCannon(); drain(); return; }
     if (gun && use) { this.manMG(gun); drain(); return; }
     if (extra && use) { extra.act(); drain(); return; }
 
     h.ads = inp.held.ads && h.dashT <= 0 && h.reloadT <= 0;
     const mv = inp.move, yaw = c.yaw, fp = c.view === 1;
+    // 按住 Shift 跑：只往前（含斜前）跑得动；开火、开镜、换弹时跑不起来，开火优先
+    h.sprint = inp.held.sprint && mv.y > 0.3 && !h.ads && !inp.held.fire && h.reloadT <= 0;
     const wx = rightX(yaw) * mv.x + fwdX(yaw) * mv.y, wz = rightZ(yaw) * mv.x + fwdZ(yaw) * mv.y;
     const mag = Math.min(1, Math.hypot(mv.x, mv.y));
     const ox = h.x, oz = h.z;
@@ -370,7 +369,7 @@ export class Game {
       }
       if (h.dashT <= 0) h.inv = Math.max(h.inv, 0.3);
     } else if (mag > 0.01) {
-      const sp = 6.3 * (h.ads ? 0.6 : inp.held.fire ? 0.85 : 1) * (h.onGround ? 1 : AIR_SPEED);
+      const sp = 6.3 * (h.sprint ? 1.45 : h.ads ? 0.6 : inp.held.fire ? 0.85 : 1) * (h.onGround ? 1 : AIR_SPEED);
       h.x += wx * sp * dt; h.z += wz * sp * dt;
     }
     resolveCircle(this.world, h, h.r, h.y, true);
@@ -388,7 +387,7 @@ export class Game {
     } else h.onGround = false;
     h.vx = (h.x - ox) / Math.max(dt, 1e-4); h.vz = (h.z - oz) / Math.max(dt, 1e-4);
     h.moving = damp(h.moving, h.dashT > 0 ? 1 : h.onGround ? mag : 0.25, 14, dt);
-    if (mag > 0.01 && h.onGround) h.walk += dt * (4 + 8 * mag);
+    if (mag > 0.01 && h.onGround) h.walk += dt * (4 + 8 * mag) * (h.sprint ? 1.35 : 1);
     // 身体跟着瞄准方向（枪战类：平移时不转身）
     const faceYaw = h.dashT > 0 ? yawTo(h.dashX, h.dashZ) : c.yaw;
     h.yaw = fp ? faceYaw : angStep(h.yaw, faceYaw, 16 * dt);
@@ -401,7 +400,7 @@ export class Game {
     if (h.reloadT > 0) { h.reloadT -= dt; if (h.reloadT <= 0) h.mag = h.magMax; }
     else if ((wantReload && h.mag < h.magMax) || h.mag <= 0) this.startReload();
     h.aim = damp(h.aim, firing || h.ads || h.fireCd > -0.6 ? 1 : 0, 16, dt);
-    if (firing && h.fireCd <= 0 && h.reloadT <= 0 && h.dashT <= 0 && h.mag > 0) this.heroShoot();
+    if (firing && !h.sprint && h.fireCd <= 0 && h.reloadT <= 0 && h.dashT <= 0 && h.mag > 0) this.heroShoot();
     if (inp.take('nade')) this.throwNade();
     if (inp.take('dash')) this.startDash(wx, wz, mag);
     if (inp.take('cav')) this.callCavalry();
@@ -594,7 +593,7 @@ export class Game {
     h.mg = m; h.x = m.x; h.z = m.z; h.y = m.gy || 0; h.vy = 0; h.onGround = true; h.moving = 0; h.ads = false;
     this.ui.setPrompt(null);
     this.audio.play('uiok');
-    if (!this.flags.mgTip) { this.flags.mgTip = 1; this.ui.toast(this.app.isTouch() ? '滑屏瞄准，按住开火键扫射；点“离开机枪”下来' : '转动准星瞄准，按住开火键扫射；再按 I 下来', 5); }
+    if (!this.flags.mgTip) { this.flags.mgTip = 1; this.ui.toast(this.app.isTouch() ? '滑屏瞄准，按住开火键扫射；点“离开机枪”下来' : '转动准星瞄准，按住左键扫射；再按 F 下来', 5); }
   }
   leaveMG() { this.hero.mg = null; }
   controlMG(dt) {
@@ -1222,17 +1221,17 @@ export class Game {
     ui.setCross(this.mode === 'play' && h.alive && this.cut <= 0 && (!c.manned || !!this.gunCfg.cross) && !this.flags.won, !!this.aim.target && !c.manned, h.ads, this.hitT > 0 ? this.hitKind : 0);
     ui.setCrossTip(c.manned || !h.alive || this.cut > 0 ? null : this.headT > 0 ? '爆头！' : h.reloadT > 0 ? '换弹中…' : h.mag > 0 && h.mag <= 3 ? '子弹不多了' : null, this.headT > 0);
     // 动作键状态（触屏按钮与电脑右下角的状态条共用）
-    if (c.manned) ui.setAction('fire', this.gunCfg.fireLabel, c.shells > 0 ? (c.reload > 0 ? '装填' : '×' + c.shells) : '等炮弹', c.reload > 0 || c.shells <= 0, 'J');
-    else if (h.mg) ui.setAction('fire', touch ? '开火' : '重机枪', h.mg.reload > 0 ? '换弹' : h.mg.ammo + '/' + MG_BELT, h.mg.reload > 0, 'J');
-    else ui.setAction('fire', touch ? '开火' : h.weapon === 'lmg' ? '歪把子' : '驳壳枪', h.reloadT > 0 ? '换弹' : h.mag + '/' + h.magMax, h.reloadT > 0, 'J');
-    ui.setAction('nade', '手榴弹', '×' + h.nades, h.nades <= 0 || c.manned || !!h.mg, 'U');
-    ui.setAction('dash', '亮剑', c.manned ? '操炮中' : h.mg ? '机枪上' : h.dashCd > 0 ? Math.ceil(h.dashCd) + '秒' : '', h.dashCd > 0 || c.manned || !!h.mg, 'L');
+    if (c.manned) ui.setAction('fire', this.gunCfg.fireLabel, c.shells > 0 ? (c.reload > 0 ? '装填' : '×' + c.shells) : '等炮弹', c.reload > 0 || c.shells <= 0, '左键');
+    else if (h.mg) ui.setAction('fire', touch ? '开火' : '重机枪', h.mg.reload > 0 ? '换弹' : h.mg.ammo + '/' + MG_BELT, h.mg.reload > 0, '左键');
+    else ui.setAction('fire', touch ? '开火' : h.weapon === 'lmg' ? '歪把子' : '驳壳枪', h.reloadT > 0 ? '换弹' : h.mag + '/' + h.magMax, h.reloadT > 0, '左键');
+    ui.setAction('nade', '手榴弹', '×' + h.nades, h.nades <= 0 || c.manned || !!h.mg, 'G');
+    ui.setAction('dash', '亮剑', c.manned ? '操炮中' : h.mg ? '机枪上' : h.dashCd > 0 ? Math.ceil(h.dashCd) + '秒' : '', h.dashCd > 0 || c.manned || !!h.mg, 'Q');
     const cavNo = !!this.cavalryBlocked();
-    ui.setAction('cav', '骑兵连', cavNo ? '进不来' : h.cavCd > 0 ? Math.ceil(h.cavCd) + '秒' : '', h.cavCd > 0 || cavNo, 'N');
+    ui.setAction('cav', '骑兵连', cavNo ? '进不来' : h.cavCd > 0 ? Math.ceil(h.cavCd) + '秒' : '', h.cavCd > 0 || cavNo, 'E');
     ui.setKeyHint(c.manned
       ? this.gunCfg.keyHint
-      : h.mg ? '鼠标或 <kbd>Q</kbd><kbd>E</kbd><kbd>Y</kbd><kbd>H</kbd> 瞄准　<kbd>J</kbd>/左键 扫射　<kbd>R</kbd> 换弹链　<kbd>I</kbd> 离开机枪　<kbd>C</kbd> 切换人称'
-      : '<kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移动　鼠标或 <kbd>Q</kbd><kbd>E</kbd><kbd>Y</kbd><kbd>H</kbd> 瞄准　<kbd>空格</kbd>/<kbd>K</kbd> 跳　<kbd>I</kbd> 互动　<kbd>R</kbd> 换弹　<kbd>O</kbd>/右键 开镜　<kbd>C</kbd> 切换人称　<kbd>Esc</kbd> 暂停');
+      : h.mg ? '鼠标 瞄准　左键 扫射　<kbd>R</kbd> 换弹链　<kbd>F</kbd> 离开机枪　<kbd>V</kbd> 切换人称'
+      : '<kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移动　<kbd>Shift</kbd> 跑　<kbd>空格</kbd> 跳　左键 开火　右键 开镜　<kbd>R</kbd> 换弹　<kbd>F</kbd> 互动　<kbd>V</kbd> 切换人称　<kbd>Esc</kbd> 暂停');
     // 目标指示
     const [w, hgt] = this.app.size();
     const o = this._o || (this._o = {});
@@ -1275,9 +1274,9 @@ export class Game {
       build: buildCannon, name: '意大利炮', use: '操炮', fireLabel: '开炮', crew: ['dabiao', 'ally', 'ally'], crewName: '二营长',
       speed: SHELL_V, grav: SHELL_G, barrel: 1.9, pivotY: 1.04, reload: 2.1, shells: 8, elev0: 0.2, elevMin: 0.03, elevMax: 0.7, yawMin: -0.95, yawMax: 0.95, preview: true,
       brokenLine: '团长，炮……炮让鬼子打坏了！', noShell: '炮弹打光了，和尚正在扛（稍等几秒）',
-      tip: 'A/D 或鼠标转炮口，W/S 或 Y/H 调仰角，落点对准目标后按开火键（左键 / J）开炮；I 离开炮位',
+      tip: 'A/D 或鼠标左右转炮口，W/S 或鼠标上下调仰角，落点对准目标后按左键开炮；F 离开炮位',
       tipTouch: '摇杆或滑屏转炮口、调仰角，落点对准目标后点开火键开炮',
-      keyHint: '<kbd>A</kbd><kbd>D</kbd> 转炮口　<kbd>W</kbd><kbd>S</kbd> 调仰角　<kbd>J</kbd>/左键 开炮　<kbd>I</kbd> 离开炮位　<kbd>C</kbd> 切换人称',
+      keyHint: '<kbd>A</kbd><kbd>D</kbd> 转炮口　<kbd>W</kbd><kbd>S</kbd> 调仰角　左键 开炮　<kbd>F</kbd> 离开炮位　<kbd>V</kbd> 切换人称',
       crewSpots: (placed) => (placed ? [[-1.5, 1.3, 0.3], [1.9, 2.6, -0.2], [-2.2, 2.8, 0.2]] : [[-1.25, 1.2, 0], [1.25, 1.2, 0], [0, 3.0, 0]]),
     };
   }

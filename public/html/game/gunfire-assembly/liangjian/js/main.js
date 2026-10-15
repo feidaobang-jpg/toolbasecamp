@@ -42,6 +42,7 @@ class App {
     const playable = CHAPTERS.filter((c) => c.Game);
     this.chapters = CHAPTERS;
     this.chapter = playable.find((c) => c.id === q0.get('ch')) || playable.find((c) => c.id === store.get('lastCh')) || playable[0];
+    this.keysNotice = store.get('lastCh') !== null && !store.get('keys2');   // 老玩家第一次在键位 v2 下进战斗时提示一次
     store.set('lastCh', this.chapter.id);
     document.title = '亮剑 · ' + this.chapter.title;
     const lt = document.querySelector('#loading .ld-title'); if (lt) lt.textContent = this.chapter.loading;
@@ -205,7 +206,7 @@ class App {
     }
     if (down && !e.repeat) {
       if (code === 'Escape' || code === 'KeyP') { e.preventDefault(); this.pause(); return; }
-      if (code === 'KeyC') { e.preventDefault(); this.nextView(); this.onDevice('pc'); return; }
+      if (code === 'KeyV') { e.preventDefault(); this.nextView(); this.onDevice('pc'); return; }
     }
     if (this.input.isGameKey(code)) {
       e.preventDefault();
@@ -225,6 +226,10 @@ class App {
     this.sfx('uiok');
     this.last = performance.now();
     this.engageLock();
+    if (this.keysNotice && !this.isTouch()) {
+      this.keysNotice = false; store.set('keys2', 1);
+      this.game.after(0.6, () => this.ui.toast('键位换了（和 CS、吃鸡类似）：左键开火、右键开镜、Shift 跑、F 互动、G 手榴弹、Q 亮剑、E 骑兵连、V 切换人称', 7));
+    }
   }
   pause() {
     if (this.state !== 'play' || this.game.over) return;

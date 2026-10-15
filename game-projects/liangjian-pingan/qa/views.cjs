@@ -1,4 +1,4 @@
-// 枪战类操作验收：两个视角下的移动 / Q,E / Y,H / 鼠标瞄准、吸附与爆头、换弹、开镜、跳跃与关卡里的可跳物、操炮
+// 枪战类操作验收（键位 v2）：两个视角下的移动 / 鼠标转视角（Q,E / Y,H 不再转）/ 鼠标瞄准、吸附与爆头、换弹、开镜、Shift 跑、跳跃与关卡里的可跳物、操炮
 // Edge 无头浏览器，真实键盘与鼠标事件 + 手动步进。
 const { open, shot, start } = require('./lib.cjs');
 
@@ -12,6 +12,8 @@ const DEG = Math.PI / 180;
   await page.evaluate(() => { __lj.manual(true); __lj.app.demo = true; });
   const step = (n) => page.evaluate((k) => __lj.step(k, true), n);
   const hold = async (key, n) => { await page.keyboard.down(key); await step(n); await page.keyboard.up(key); await step(2); };
+  // 鼠标接管时的 movementX / movementY（无头浏览器拿不到指针锁定，直接喂位移）
+  const look = async (dx, dy, n = 30) => { await page.evaluate(([x, y]) => __lj.app.input._look(x, y, 'mouse'), [dx, dy]); await step(n); };
   // 干净场地：清掉敌人和定时台词，主角放到指定位置
   const clean = (view, x = 0, z = 80, yaw = 0, phase = 1) => page.evaluate(([v, px, pz, y, ph]) => {
     const g = __lj.game; g.reset(ph, false);
@@ -45,27 +47,33 @@ const DEG = Math.PI / 180;
     b = await st();
     d = [b.x - a.x, b.z - a.z]; l = Math.hypot(d[0], d[1]) || 1;
     check(`${N}：D 向右平移且身体不转身`, l > 1 && (d[0] * r[0] + d[1] * r[1]) / l > 0.97 && Math.abs(b.heroYaw - b.yaw) < 0.05, { moved: l.toFixed(2), heroYaw: b.heroYaw.toFixed(2) });
-    // Q/E
-    a = await st(); await hold('KeyE', 40); b = await st();
-    check(`${N}：E 向右转，身体跟着转`, turn(a, b) > 0.5 && Math.abs(Math.atan2(Math.sin(b.heroYaw - b.yaw), Math.cos(b.heroYaw - b.yaw))) < 0.25, { proj: turn(a, b).toFixed(2) });
+    // 鼠标接管：左右
+    a = await st(); await look(260, 0); b = await st();
+    check(`${N}：鼠标右移向右转，身体跟着转`, turn(a, b) > 0.5 && Math.abs(Math.atan2(Math.sin(b.heroYaw - b.yaw), Math.cos(b.heroYaw - b.yaw))) < 0.25, { proj: turn(a, b).toFixed(2) });
     a = b; await hold('KeyW', 24); b = await st();
     d = [b.x - a.x, b.z - a.z]; l = Math.hypot(d[0], d[1]) || 1; f = fwd(a);
     check(`${N}：转向后 W 仍朝镜头前方`, l > 1 && (d[0] * f[0] + d[1] * f[1]) / l > 0.97, null);
-    a = await st(); await hold('KeyQ', 40); b = await st();
-    check(`${N}：Q 向左转`, turn(a, b) < -0.5, { proj: turn(a, b).toFixed(2) });
-    // Y/H
+    a = await st(); await look(-260, 0); b = await st();
+    check(`${N}：鼠标左移向左转`, turn(a, b) < -0.5, { proj: turn(a, b).toFixed(2) });
+    // 鼠标接管：上下
     await clean(v);
-    a = await st(); await hold('KeyY', 20); b = await st();
-    check(`${N}：Y 抬头（镜头前向量向上）`, b.pitch > a.pitch + 0.2 && b.f[1] > a.f[1] + 0.15, { pitch: b.pitch.toFixed(2), fy: b.f[1].toFixed(2) });
-    a = b; await hold('KeyH', 20); b = await st();
-    check(`${N}：H 低头`, b.pitch < a.pitch - 0.2 && b.f[1] < a.f[1] - 0.15, { pitch: b.pitch.toFixed(2) });
-    await hold('KeyY', 200); const up = await st();
-    await hold('KeyH', 260); const dn = await st();
+    a = await st(); await look(0, -160); b = await st();
+    check(`${N}：鼠标上移抬头（镜头前向量向上）`, b.pitch > a.pitch + 0.2 && b.f[1] > a.f[1] + 0.15, { pitch: b.pitch.toFixed(2), fy: b.f[1].toFixed(2) });
+    a = b; await look(0, 160); b = await st();
+    check(`${N}：鼠标下移低头`, b.pitch < a.pitch - 0.2 && b.f[1] < a.f[1] - 0.15, { pitch: b.pitch.toFixed(2) });
+    for (let i = 0; i < 6; i++) await look(0, -480, 12);
+    await step(30); const up = await st();
+    for (let i = 0; i < 8; i++) await look(0, 480, 12);
+    await step(30); const dn = await st();
     const lim = v === 0 ? [-50, 42] : [-60, 60];
-    check(`${N}：Y/H 有上下限位，镜头不钻地`, Math.abs(up.pitch / DEG - lim[1]) < 0.6 && Math.abs(dn.pitch / DEG - lim[0]) < 0.6 && up.camY > 0.25 && dn.camY > 0.25, { up: (up.pitch / DEG).toFixed(1), dn: (dn.pitch / DEG).toFixed(1), camYUp: up.camY.toFixed(2) });
-    // 松开即停
-    await clean(v); await hold('KeyY', 10); a = await st(); await step(20); b = await st();
-    check(`${N}：松开 Y 立即停止`, Math.abs(b.pitch - a.pitch) < 0.01, null);
+    check(`${N}：上下有限位，镜头不钻地`, Math.abs(up.pitch / DEG - lim[1]) < 0.6 && Math.abs(dn.pitch / DEG - lim[0]) < 0.6 && up.camY > 0.25 && dn.camY > 0.25, { up: (up.pitch / DEG).toFixed(1), dn: (dn.pitch / DEG).toFixed(1), camYUp: up.camY.toFixed(2) });
+    // 鼠标停下镜头就停
+    await clean(v); await look(0, -60); a = await st(); await step(20); b = await st();
+    check(`${N}：鼠标停下镜头立即停`, Math.abs(b.pitch - a.pitch) < 0.01, null);
+    // 键位 v2：Y / H 不再转视角，Q / E 改成亮剑 / 骑兵连，也不转视角
+    await clean(v); a = await st();
+    await hold('KeyY', 20); await hold('KeyH', 20); b = await st();
+    check(`${N}：Y / H 不再转视角（键位 v2）`, Math.abs(b.pitch - a.pitch) < 1e-6 && Math.abs(b.yaw - a.yaw) < 1e-6, null);
     // 鼠标：右键按住拖动转视角
     await clean(v);
     a = await st();
@@ -174,14 +182,34 @@ const DEG = Math.PI / 180;
     await shot(page, `view-${v}.png`);
   }
 
-  // C 在两个视角间切换，保持瞄准方向
+  // V 在两个视角间切换，保持瞄准方向（键位 v2：C 留给蹲下，不再切视角）
   await clean(0);
-  await hold('KeyE', 20); await hold('KeyY', 10);
+  await look(160, -60);
   const c0 = await st();
-  await page.keyboard.press('KeyC'); await step(3); const c1 = await st();
+  await page.keyboard.press('KeyV'); await step(3); const c1 = await st();
   const n1 = await page.evaluate(() => document.getElementById('view-name').textContent);
-  await page.keyboard.press('KeyC'); await step(3); const c2 = await st();
-  check('C 在第三人称 / 第一人称间切换，瞄准方向不变', c1.view === 1 && c2.view === 0 && Math.abs(c1.yaw - c0.yaw) < 1e-6 && Math.abs(c1.pitch - c0.pitch) < 1e-6 && n1 === '第一人称', { c0: [c0.yaw, c0.pitch], c1: [c1.view, c1.yaw, c1.pitch], n1 });
+  await page.keyboard.press('KeyV'); await step(3); const c2 = await st();
+  check('V 在第三人称 / 第一人称间切换，瞄准方向不变', c1.view === 1 && c2.view === 0 && Math.abs(c1.yaw - c0.yaw) < 1e-6 && Math.abs(c1.pitch - c0.pitch) < 1e-6 && n1 === '第一人称', { c0: [c0.yaw, c0.pitch], c1: [c1.view, c1.yaw, c1.pitch], n1 });
+  await page.keyboard.press('KeyC'); await step(3); const c3 = await st();
+  check('C 不再切换视角', c3.view === 0, { view: c3.view });
+  const kb = await page.evaluate(() => document.querySelector('#btn-view .kb').textContent);
+  check('右上视角按钮标 V', kb === 'V', { kb });
+
+  // Shift 按住往前跑：比走快约 1.45 倍；按住开火就停跑开枪；开镜时跑不起来
+  const runFor = async (mods, n = 30) => {
+    await clean(0, 0, 80, 0, 1);
+    for (const k of mods) await page.keyboard.down(k);
+    const a0 = await st(); await hold('KeyW', n); const b0 = await st();
+    for (const k of mods) await page.keyboard.up(k);
+    await step(2);
+    return { d: Math.hypot(b0.x - a0.x, b0.z - a0.z), mag: [a0.mag, b0.mag] };
+  };
+  const wk = await runFor([]), rn = await runFor(['ShiftLeft']), rf = await runFor(['ShiftLeft', 'KeyJ']), ra = await runFor(['ShiftLeft', 'KeyZ']);
+  check('按住 Shift 往前跑，速度约走路的 1.45 倍', rn.d / wk.d > 1.35 && rn.d / wk.d < 1.55, { walk: wk.d.toFixed(2), run: rn.d.toFixed(2) });
+  check('跑的时候按住开火：停跑开枪', rf.d < wk.d && rf.mag[1] < rf.mag[0], rf);
+  check('开镜时 Shift 跑不起来', ra.d < wk.d * 0.75, { ads: ra.d.toFixed(2), walk: wk.d.toFixed(2) });
+  const bk = await (async () => { await clean(0, 0, 80, 0, 1); await page.keyboard.down('ShiftLeft'); const a0 = await st(); await hold('KeyS', 30); const b0 = await st(); await page.keyboard.up('ShiftLeft'); await step(2); return Math.hypot(b0.x - a0.x, b0.z - a0.z); })();
+  check('Shift 只往前跑，后退不加速', Math.abs(bk - wk.d) < 0.15, { back: bk.toFixed(2), walk: wk.d.toFixed(2) });
 
   // 换弹
   await clean(0);
@@ -279,15 +307,16 @@ const DEG = Math.PI / 180;
   await page.keyboard.press('KeyF'); await step(6);
   const m1 = await page.evaluate(() => ({ manned: __lj.game.cannon.manned, shells: __lj.game.cannon.shells }));
   await page.keyboard.up('KeyJ'); await step(3);
-  check('炮位旁提示“按 I 操炮”，按 F（或 I）上炮；上炮时按着开火键也不会直接开炮', !pr.hidden && /I/.test(pr.prompt) && m1.manned && m1.shells === 8, { pr, m1 });
+  check('炮位旁提示“按 F 操炮”，按 F 上炮；上炮时按着开火键也不会直接开炮', !pr.hidden && /按 F/.test(pr.prompt) && m1.manned && m1.shells === 8, { pr, m1 });
   for (let v = 0; v < 2; v++) {
     await page.evaluate((view) => { const g = __lj.game; g.app.s.view = view; g.setView(view); g.cam.yaw = 0; g.cannon.elev = 0.2; __lj.step(20, true); }, v);
     const c0 = await page.evaluate(() => ({ yaw: __lj.game.cannon.aimYaw, el: __lj.game.cannon.elev }));
     await hold('KeyD', 30); const c1 = await page.evaluate(() => ({ yaw: __lj.game.cannon.aimYaw, el: __lj.game.cannon.elev }));
     await hold('KeyW', 30); const c2 = await page.evaluate(() => ({ yaw: __lj.game.cannon.aimYaw, el: __lj.game.cannon.elev }));
-    await hold('KeyH', 20); const c3 = await page.evaluate(() => ({ yaw: __lj.game.cannon.aimYaw, el: __lj.game.cannon.elev }));
-    await hold('KeyQ', 20); const c4 = await page.evaluate(() => ({ yaw: __lj.game.cannon.aimYaw, el: __lj.game.cannon.elev }));
-    check(`操炮·${names[v]}：D 右转、W 抬高、H 压低、Q 左转`, c1.yaw < c0.yaw - 0.1 && c2.el > c1.el + 0.05 && c3.el < c2.el - 0.03 && c4.yaw > c3.yaw + 0.1, { c0, c1, c2, c3, c4 });
+    await hold('KeyS', 20); const c3 = await page.evaluate(() => ({ yaw: __lj.game.cannon.aimYaw, el: __lj.game.cannon.elev }));
+    await hold('KeyA', 20); const c4 = await page.evaluate(() => ({ yaw: __lj.game.cannon.aimYaw, el: __lj.game.cannon.elev }));
+    await look(0, -200); const c5 = await page.evaluate(() => ({ yaw: __lj.game.cannon.aimYaw, el: __lj.game.cannon.elev }));
+    check(`操炮·${names[v]}：D 右转、W 抬高、S 压低、A 左转、鼠标上移抬高`, c1.yaw < c0.yaw - 0.1 && c2.el > c1.el + 0.05 && c3.el < c2.el - 0.03 && c4.yaw > c3.yaw + 0.1 && c5.el > c4.el + 0.02, { c0, c1, c2, c3, c4, c5 });
     await page.evaluate(() => { const g = __lj.game; g.cam.yaw = 0; g.cannon.elev = 0.16; __lj.step(30, true); });
     await shot(page, `cannon-view-${v}.png`);
   }

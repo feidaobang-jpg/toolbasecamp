@@ -335,7 +335,7 @@ export class LijiapoGame extends Game {
         this.fx.sparks(u.x - dx * 0.4, u.y + 1.45, u.z - dz * 0.4, 4, 0xffffff);
         if (this.t - (this.deflT || -9) > 0.22) { this.deflT = this.t; this.sfxAt('clang', u.x, u.z, 0.45); }
         this.stats.deflect++;
-        if (!this.flags.deflTip && this.stats.deflect >= 5) { this.flags.deflTip = 1; this.ui.toast('山崎的刀把子弹都格开了：等他出刀落空、收刀喘气（血条闪）再打，或者他突刺时按 L 亮剑拼刀', 5); }
+        if (!this.flags.deflTip && this.stats.deflect >= 5) { this.flags.deflTip = 1; this.ui.toast('山崎的刀把子弹都格开了：等他出刀落空、收刀喘气（血条闪）再打，或者他突刺时按 Q 亮剑拼刀', 5); }
         return;
       }
       if (kind === 'blast') dmg *= 0.5;
@@ -389,10 +389,10 @@ export class LijiapoGame extends Game {
     if (this.phase !== 2 || this.cut > 0) return null;
     const tr = this.world.trench;
     if (tr.dug >= tr.total) return null;
-    if (this.digging) return { label: '停手', prompt: '按 I 停手（走动、开枪也会停）', act: () => this.stopDig() };
+    if (this.digging) return { label: '停手', prompt: '按 F 停手（走动、开枪也会停）', act: () => this.stopDig() };
     const q = tr.pointAt(tr.dug);
     if (dist(h.x, h.z, q.x, q.z) > 2.8 || this.elev(h) > 0.6) return null;
-    return { label: '挖壕', prompt: '按 I 挖交通壕', act: () => this.startDig() };
+    return { label: '挖壕', prompt: '按 F 挖交通壕', act: () => this.startDig() };
   }
   startDig() {
     this.digging = true; this.digSwing = 0;
@@ -490,7 +490,7 @@ export class LijiapoGame extends Game {
         ui.say('李云龙', '部队用土工作业的方式向前平行推进，', { dur: 4.8 });
         ui.say('李云龙', '只要我们掘进了五十米，剩下的三十米，就是个娘们儿都能把手榴弹扔进了环型工事去。', { dur: 9.6 });
       });
-      this.after(3.5, () => this.phase === 2 && ui.toast(this.app.isTouch() ? '挖交通壕：走到壕头的铁锹那里点“挖壕”。夜里坡顶的机枪只能瞎扫；照明弹一亮，赶紧退回壕里' : '挖交通壕：走到壕头的铁锹那里按 I 开挖。夜里坡顶的机枪只能瞎扫；照明弹一亮，赶紧退回壕里', 7));
+      this.after(3.5, () => this.phase === 2 && ui.toast(this.app.isTouch() ? '挖交通壕：走到壕头的铁锹那里点“挖壕”。夜里坡顶的机枪只能瞎扫；照明弹一亮，赶紧退回壕里' : '挖交通壕：走到壕头的铁锹那里按 F 开挖。夜里坡顶的机枪只能瞎扫；照明弹一亮，赶紧退回壕里', 7));
     } else if (n === 3) {
       const q = tr.pointAt(tr.total - 2.5);
       if (fresh || dist2(h.x, h.z, q.x, q.z) > 9) this.place(h, q.x, q.z);
@@ -508,7 +508,7 @@ export class LijiapoGame extends Game {
         const p = tr.pointAt(tr.total);
         this.launchFlare(p.x, p.z, p.x, p.z - 6, 0xff5a3a);
         ui.stamp('信号弹！扔！', 1.4, 'red'); this.audio.play('drum');
-        ui.toast(this.app.isTouch() ? '手榴弹雨：准星抬到坡顶，黄圈罩住碉堡和战壕，点“全营投弹”。每轮三百六十颗，两分钟内扔完三千六百颗' : '手榴弹雨：准星抬到坡顶，黄圈罩住碉堡和战壕，按 U 全营投弹。每轮三百六十颗，两分钟内扔完三千六百颗', 7);
+        ui.toast(this.app.isTouch() ? '手榴弹雨：准星抬到坡顶，黄圈罩住碉堡和战壕，点“全营投弹”。每轮三百六十颗，两分钟内扔完三千六百颗' : '手榴弹雨：准星抬到坡顶，黄圈罩住碉堡和战壕，按 G 全营投弹。每轮三百六十颗，两分钟内扔完三千六百颗', 7);
       });
     } else if (n === 4) {
       const q = tr.pointAt(tr.total - 1.5);
@@ -535,7 +535,7 @@ export class LijiapoGame extends Game {
         ui.say('喊话员', '李团长用军人的荣誉担保，如果败在阁下的剑下，八路军独立团立即停止攻击，给贵军让开道路。', { dur: 9.5 });
         ui.say('喊话员', '小日本，你们听见了吗？', { dur: 3.0 });
       }));
-      this.after(3.5, () => this.phase === 5 && this.sub === 'ports' && ui.toast('指挥所四个射击孔都架着机枪：从侧面（射击孔看不到的角度）贴过去，往孔边扔手榴弹（U）把它炸哑', 6));
+      this.after(3.5, () => this.phase === 5 && this.sub === 'ports' && ui.toast('指挥所四个射击孔都架着机枪：从侧面（射击孔看不到的角度）贴过去，往孔边扔手榴弹（G）把它炸哑', 6));
     }
   }
 
@@ -609,8 +609,8 @@ export class LijiapoGame extends Game {
     super.syncHud(dt);
     if (this.phase === 3 && !this.flags.p3done && !this.cannon.manned && !this.hero.mg) {
       const ui = this.ui, cd = this.volleyCd;
-      ui.setAction('nade', '全营投弹', !this.flags.signal ? '等信号' : this.grenades <= 0 ? '扔完了' : cd > 0 ? cd.toFixed(1) + '秒' : this.grenades + '颗', !this.flags.signal || cd > 0 || this.grenades <= 0, 'U');
-      ui.setKeyHint('<kbd>U</kbd> 全营投弹（落在黄圈里）　鼠标或 <kbd>Q</kbd><kbd>E</kbd><kbd>Y</kbd><kbd>H</kbd> 瞄准　<kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移动　<kbd>J</kbd>/左键 开枪　<kbd>C</kbd> 切换人称　<kbd>Esc</kbd> 暂停');
+      ui.setAction('nade', '全营投弹', !this.flags.signal ? '等信号' : this.grenades <= 0 ? '扔完了' : cd > 0 ? cd.toFixed(1) + '秒' : this.grenades + '颗', !this.flags.signal || cd > 0 || this.grenades <= 0, 'G');
+      ui.setKeyHint('<kbd>G</kbd> 全营投弹（落在黄圈里）　鼠标 瞄准　<kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移动　左键 开枪　<kbd>V</kbd> 切换人称　<kbd>Esc</kbd> 暂停');
     }
   }
 
@@ -849,7 +849,7 @@ export class LijiapoGame extends Game {
     ui.say('山崎', '混蛋，攻击！', { foe: true, dur: 3.5 });
     this.playScene(11.9, [[8.2, () => { ui.stamp('山崎出来了！', 1.4, 'red'); this.cutCam = { px: d.x + 1.2, py: y + 1.8, pz: d.z + 3.2, lx: b.x, ly: y + 1.7, lz: b.z }; }]], () => {
       this.sub = 'boss';
-      this.after(0.8, () => ui.toast('山崎的刀能格开子弹：等他出刀落空、收刀喘气（血条闪）时再打；他突刺时按 L 亮剑和他拼刀', 6));
+      this.after(0.8, () => ui.toast('山崎的刀能格开子弹：等他出刀落空、收刀喘气（血条闪）时再打；他突刺时按 Q 亮剑和他拼刀', 6));
     });
   }
   updateFinal() {
