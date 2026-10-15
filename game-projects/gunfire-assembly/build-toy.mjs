@@ -13,6 +13,7 @@ const PACKAGE = path.join(OUT, 'package');
 const GAME = JSON.parse(fs.readFileSync(path.join(HERE, 'media-kit/game.json'), 'utf-8'));
 const VERSION = GAME.current_version;
 const SLUG = 'feidao-gunfire';
+const UPDATE_SRC = fs.readFileSync(path.join(SOURCE, 'update-history.js'), 'utf-8');
 
 const BASE_FILES = ['index.html', 'boot.js', 'game.compat.js', 'combat-controls.css', 'author-home.js', 'base.css', 'icon.svg', 'vendor/LICENSE.txt'];
 // 抗战战役「亮剑战役」重做版（第一章苍云岭、第三章平安县城）：同包内的独立页面（入口、样式、兼容包与按章节分组的原声语音）；
@@ -78,8 +79,16 @@ export function build() {
   // Toy 的云档与本地档都按作品隔离，键名换不换都不影响别的游戏；这里把 gfs_save_ 落回
   // 0.4.1 之前一直在用的 toy-gunfire-v1-sst_save_，是为了已发布的 Toy 玩家更新后本地进度、
   // 自动备份和「这一成绩已提交」状态一字不变。网站上两款分家靠的是源码里的 gfs_save_，不是这里。
-  const packaged = bundled.replaceAll('"gfs_save_"', '"toy-gunfire-v1-sst_save_"');
+  let packaged = bundled.replaceAll('"gfs_save_"', '"toy-gunfire-v1-sst_save_"');
   if (packaged === bundled) throw new Error('Save prefix rewrite did not apply');
+  // Toy 包不带电视剧原版配乐，更新记录里点名原版配乐的那一行对 Toy 版不属实；2026-10-15 去掉配乐文件后 0.8.0
+  // 仍被“内容审核未通过”退回，点名的电视剧曲目是剩下的疑点。Toy 包里删掉这一行，标题去掉“原版配乐”。
+  const esc = s => s.replace(/[^\x00-\x7f]/g, c => '\\u' + c.charCodeAt(0).toString(16).toUpperCase().padStart(4, '0'));
+  const musicLine = UPDATE_SRC.match(/'(亮剑三章换上电视剧原版配乐[^']*)',\n/)[1];
+  for (const [from, to] of [[`"${esc(musicLine)}",`, ''], [esc('亮剑原版配乐、台词配音'), esc('亮剑台词配音')]]) {
+    if (!packaged.includes(from)) throw new Error('Toy update-notes rewrite did not apply: ' + from.slice(0, 40));
+    packaged = packaged.replace(from, to);
+  }
   fs.writeFileSync(compatPath, packaged, 'utf-8');
   const archive = path.join(OUT, 'feidao-gunfire.zip');
   if (fs.existsSync(archive)) fs.rmSync(archive);
