@@ -8,7 +8,7 @@
 //   node game-projects/site-games/shared/sync-shared.mjs --write             // 规范源 → 两款运行副本
 //   node game-projects/site-games/shared/sync-shared.mjs --adopt gunfire-assembly key-bindings.js
 //                                                                            // 把某款里就地改好的那份收进规范源，再同步两款
-// 规范源：本目录下的同名文件；两款运行副本在 public/html/game/<游戏>/。
+// 规范源：本目录下的同名文件；两款运行副本在 game-projects/<游戏>/game/（2026-10-15 移出 public/）。
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
@@ -16,7 +16,7 @@ import { fileURLToPath } from 'node:url';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, '../../..');
-const GAME_ROOT = path.join(ROOT, 'public/html/game');
+const gameDir = g => path.join(ROOT, 'game-projects', g, 'game');
 const MANIFEST = JSON.parse(fs.readFileSync(path.join(HERE, 'shared-modules.json'), 'utf8'));
 const args = process.argv.slice(2);
 const WRITE = args.includes('--write');
@@ -26,7 +26,7 @@ const sha = f => crypto.createHash('sha256').update(fs.readFileSync(f)).digest('
 const copy = (from, to) => { fs.copyFileSync(from, to); };
 
 function targetsOf(file) {
-  return MANIFEST.games.map(g => path.join(GAME_ROOT, g, file));
+  return MANIFEST.games.map(g => path.join(gameDir(g), file));
 }
 
 if (ADOPT) {
@@ -37,7 +37,7 @@ if (ADOPT) {
     process.exit(2);
   }
   for (const file of files) {
-    const src = path.join(GAME_ROOT, game, file);
+    const src = path.join(gameDir(game), file);
     if (!fs.existsSync(src)) { console.error('找不到 ' + src); process.exit(2); }
     copy(src, path.join(HERE, file));
     console.log('已收进规范源：' + file + '  ← ' + game);
@@ -46,7 +46,7 @@ if (ADOPT) {
 
 // 第一次建立规范源：以第一款游戏的副本为准，把清单里的共用模块收进本目录。
 if (args.includes('--bootstrap')) {
-  for (const file of MANIFEST.shared) copy(path.join(GAME_ROOT, MANIFEST.games[0], file), path.join(HERE, file));
+  for (const file of MANIFEST.shared) copy(path.join(gameDir(MANIFEST.games[0]), file), path.join(HERE, file));
   console.log('规范源已建立：' + MANIFEST.shared.length + ' 个模块取自 ' + MANIFEST.games[0]);
   process.exit(0);
 }
@@ -82,7 +82,7 @@ for (const file of MANIFEST.shared) {
 // 两款目录里新出现的顶层模块必须先在清单里归类，否则会被当成没人管的第四份拷贝。
 const known = new Set([...MANIFEST.shared, ...Object.keys(MANIFEST.perGame), ...Object.keys(MANIFEST.chongchaoOnly), ...Object.keys(MANIFEST.gunfireOnly)]);
 for (const g of MANIFEST.games) {
-  for (const f of fs.readdirSync(path.join(GAME_ROOT, g)).filter(f => f.endsWith('.js'))) {
+  for (const f of fs.readdirSync(gameDir(g)).filter(f => f.endsWith('.js'))) {
     if (!known.has(f)) { bad++; lines.push('UNCLASSIFIED  ' + g + '/' + f + '：没写进 shared-modules.json，先判断是共用（进 shared 并 --adopt）还是各游戏独有（进 perGame/only 并写原因）'); }
   }
 }

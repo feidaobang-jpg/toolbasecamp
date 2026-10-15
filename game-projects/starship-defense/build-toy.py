@@ -5,8 +5,8 @@ import json
 import shutil
 import zipfile
 
-ROOT = Path(__file__).resolve().parents[2]
-SOURCE = Path(__file__).resolve().parent / 'game'
+ROOT = Path(__file__).resolve().parent
+SOURCE = ROOT / 'game'
 OUT = ROOT / 'dist/toy/chongchao-qianshao'
 PACKAGE = OUT / 'package'
 GAME = json.loads((Path(__file__).parent / 'media-kit/game.json').read_text('utf-8'))

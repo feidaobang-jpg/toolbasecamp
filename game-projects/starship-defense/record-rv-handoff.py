@@ -8,9 +8,9 @@ kit = root / 'game-projects/starship-defense/media-kit'
 release = kit / 'releases/web-rv-v0.28.0'
 sha = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
 handoff = json.loads((release / 'handoff.json').read_text(encoding='utf-8'))
-identity = sha(root / 'public/html/game/starship-defense/game.compat.js')
+identity = sha(root / 'game-projects/starship-defense/game/game.compat.js')
 handoff['created_at'] = datetime.now(timezone.utc).isoformat()
-handoff['build'] = {'id': 'rv280-' + identity[:12], 'commit': subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip(), 'dirty': bool(subprocess.check_output(['git','status','--porcelain'],cwd=root,text=True).strip()), 'fingerprint': identity, 'entrypoint': 'public/html/game/starship-defense/index.html'}
+handoff['build'] = {'id': 'rv280-' + identity[:12], 'commit': subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip(), 'dirty': bool(subprocess.check_output(['git','status','--porcelain'],cwd=root,text=True).strip()), 'fingerprint': identity, 'entrypoint': 'game-projects/starship-defense/game/index.html'}
 if isinstance(handoff['media'], dict):
     handoff['media_summary'] = handoff['media']
 media = []

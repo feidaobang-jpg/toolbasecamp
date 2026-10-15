@@ -12,7 +12,7 @@ import struct
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[2]
-DEST = ROOT / 'public/html/game/starship-defense/assets'
+DEST = ROOT / 'game-projects/starship-defense/game/assets'
 
 
 def optimize_glb(source, target):

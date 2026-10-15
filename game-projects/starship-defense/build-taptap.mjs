@@ -1,6 +1,6 @@
 // Build the existing stable game for TapTap H5; this command never uploads it.
-import {build} from '../site-games/tools/taptap-runtime.mjs';
-import {inlineStartup,STARTUP_ADAPTER} from '../site-games/tools/taptap-startup.mjs';
+import {build} from './tools/taptap-runtime.mjs';
+import {inlineStartup,STARTUP_ADAPTER} from './tools/taptap-startup.mjs';
 import {createHash} from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -8,8 +8,8 @@ import {spawnSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
-const root = path.resolve(here, '../..');
-const source = path.join(root, 'public/html/game/starship-defense');
+const root = here;
+const source = path.join(root, 'game');
 const output = path.join(root, 'dist/taptap/chongchao-qianshao');
 const packageDir = path.join(output, 'chongchao-qianshao');
 const game = JSON.parse(fs.readFileSync(path.join(here, 'media-kit/game.json'), 'utf8'));
@@ -28,15 +28,15 @@ for (const name of entries) {
   fs.mkdirSync(path.dirname(destination), {recursive: true});
   fs.copyFileSync(path.join(source, name), destination);
 }
-fs.copyFileSync(path.join(root, 'public/css/base.css'), path.join(packageDir, 'base.css'));
+fs.copyFileSync(path.join(source, 'shared/base.css'), path.join(packageDir, 'base.css'));
 
 let html = fs.readFileSync(path.join(source, 'index.html'), 'utf8');
-html = html.replaceAll('../../../css/base.css', './base.css');
+html = html.replaceAll('./shared/base.css', './base.css');
 html = html.replace(/<script src="\.\.\/\.\.\/\.\.\/js\/game\/thumb-preview\.js"><\/script>/g, '');
 html = html.replace(/<script type="module">[\s\S]*?landscape-typing\.js[\s\S]*?<\/script>/g, '');
 html = html.replace(/<a class="gameBack"[^>]*>[\s\S]*?<\/a>/g, '');
 html = html.replace(/<div id="toyExtras">[\s\S]*?<\/section>/, '</section>');
-if (/\.\.\/\.\.\/|B站 Toy|bilibili\.com/.test(html)) {
+if (/\.\.\/\.\.\/|\.\/shared\/|B站 Toy|bilibili\.com/.test(html)) {
   throw new Error('TapTap HTML still contains a site-relative or Toy-only dependency');
 }
 fs.writeFileSync(path.join(packageDir, 'index.html'), html, 'utf8');
@@ -51,7 +51,7 @@ await build({
     // Toy account, rankings and external video navigation are unavailable on TapTap.
     // Site-account cloud saves and local file backups remain available on TapTap.
     b.onLoad({filter: /[\\/]toy-platform\.js$/}, () => ({contents: "import {mountSavePanel} from './save-panel.js'; export function setupToyPlatform(game){return mountSavePanel(game,{storage:game.store.storage});}", loader: 'js', resolveDir: source}));
-    b.onLoad({filter: /[\\/]starship-defense[\\/]game\.js$/}, args => {
+    b.onLoad({filter: /[\\/]starship-defense[\\/]game[\\/]game\.js$/}, args => {
       const original = fs.readFileSync(args.path, 'utf8');
       const expected = "const SAVE_PREFIX='sst_save_';";
       if (!original.includes(expected)) throw new Error('Save namespace changed; review the channel adapter');

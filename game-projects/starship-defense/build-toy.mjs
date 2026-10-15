@@ -6,9 +6,9 @@ import zlib from 'node:zlib';
 import {fileURLToPath} from 'node:url';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
-const ROOT = path.resolve(HERE, '..', '..');
 const SOURCE = path.join(HERE, 'game');
-const OUT = path.join(ROOT, 'dist/toy/chongchao-qianshao');
+// 只读本目录，输出也在本目录 dist/（已被 .gitignore 忽略），整个游戏目录可单独成仓库。
+const OUT = path.join(HERE, 'dist/toy/chongchao-qianshao');
 const PACKAGE = path.join(OUT, 'package');
 const GAME = JSON.parse(fs.readFileSync(path.join(HERE, 'media-kit/game.json'), 'utf-8'));
 const VERSION = GAME.current_version;
@@ -45,7 +45,7 @@ function writeZip(archive, entries) {
 }
 
 export function build() {
-  const expected = path.join(ROOT, 'dist/toy/chongchao-qianshao/package');
+  const expected = path.join(HERE, 'dist/toy/chongchao-qianshao/package');
   if (path.resolve(PACKAGE) !== path.resolve(expected)) throw new Error('Unexpected package output path');
   fs.rmSync(PACKAGE, {recursive: true, force: true});
   fs.mkdirSync(PACKAGE, {recursive: true});
@@ -68,7 +68,7 @@ export function build() {
   writeZip(archive, RUNTIME_FILES.map(name => [name, fs.readFileSync(path.join(PACKAGE, name))]));
   const manifest = {
     title: GAME.name, slug: 'chongchao-qianshao',
-    version: VERSION, source: path.relative(ROOT, SOURCE).split(path.sep).join('/'),
+    version: VERSION, source: path.relative(HERE, SOURCE).split(path.sep).join('/'),
     zip_sha256: sha256(archive),
     files: Object.fromEntries(RUNTIME_FILES.map(name => [name, sha256(path.join(PACKAGE, name))])),
     status: 'built_not_submitted', published_toy_unchanged: true,
