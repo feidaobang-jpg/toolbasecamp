@@ -5,7 +5,7 @@ alwaysApply: true
 
 # 主站静态部署：push ≠ 上线
 
-游戏运行改动遵循 `game-release-cadence.mdc`：所有已完成并通过验证的代码立即发布网站；仅用户单独要求审核或限制发布时才暂停。网站仍须完整部署核验；Toy按共享规则实时提交，简介/公告按 bili-game-update 的按需/累计门槛判断，原反馈回复按用户指示处理，不再有22点或其他定时批次。
+游戏运行改动遵循 `game-release-cadence.mdc`：构建通过的代码立即发布网站；仅用户单独要求审核或限制发布时才暂停。部署核验指**一次公网 curl 抽查**，不是哈希比对或多轮复查；Toy 实时提交一次，不再维护视频简介/公告的待合并台账，玩家反馈按用户指示处理，不再有22点或其他定时批次。
 
 `zhengxiaohui.cn` 静态文件在 VPS **`/var/www/toolbasecamp`**，靠 GitHub Actions `rsync public/`。  
 **git push 成功只表示 GitHub 有新代码**；Actions 失败/卡住时，线上仍是旧 HTML/JS（曾导致改名后侧栏仍显示「文字成片」）。
@@ -14,16 +14,14 @@ alwaysApply: true
 
 部署顺序由 Actions 保证：`deploy.yml` 的 `concurrency: production-deploy` 一次只跑一个部署、最新提交最后部署；比服务器记录 `/opt/toolbasecamp-deploy/state/last-deployed-sha` 更旧的运行会报错拒绝覆盖。推送后不占用任何锁等待部署，自己核验即可。网站只部署已合并主线的提交，不从任务 worktree 上传文件。
 
-## 何时必须校验
+## 何时必须校验（2026-10-15 起：只做一次抽查）
 
-本次 commit **改了 `public/**`**（含 locales、HTML、CSS、JS），且用户可见文案/界面会受影响时：
+本次 commit **改了 `public/**`**（含 locales、HTML、CSS、JS）时，push 后做**一次**公网抽查即可：
 
 1. push 后 **不要**直接对用户说「已上线 / 刷新即可」。
-2. **抽查线上**（优先公网 URL；也可用 SSH 看 VPS 文件）：
-   - 改了 locale：`https://www.zhengxiaohui.cn/js/locales/zh-CN.js` 里是否含新字符串
-   - 改了某页：该页 HTML 的 `?v=` / 关键文案是否已变
-3. push 后约 **2–3 分钟**仍旧 → 先查部署是否还在排队：
-   `curl -s "https://api.github.com/repos/feidaobang-jpg/toolbasecamp/actions/workflows/deploy.yml/runs?branch=master&per_page=5"`，看各运行的 `head_sha`、`status`、`conclusion`。有 `queued`/`in_progress` 的运行就等它结束再抽查（最新的部署包含你的提交）。该接口未登录每小时仅 60 次、本机多个 AI 共用，常被限流；限流时改看服务器 `ssh toolbasecamp-cn "cat /opt/toolbasecamp-deploy/state/last-deployed-sha"`（上次**完整成功**的部署提交，是你的提交或其后代即已部署）。
+2. **抽查一次线上**：`curl` 对应 URL 里是否含新字符串（例如 `https://www.zhengxiaohui.cn/js/locales/zh-CN.js`、该页 HTML 的关键文案）。**不需要**逐字节 sha256 比对、不需要多轮重查、不需要解码 `\uXXXX` 之外的额外验证。
+3. 抽查没看到新内容时，先等约 2–3 分钟再查一次部署是否还在排队：
+   `curl -s "https://api.github.com/repos/feidaobang-jpg/toolbasecamp/actions/workflows/deploy.yml/runs?branch=master&per_page=5"`，看各运行的 `head_sha`、`status`、`conclusion`。有 `queued`/`in_progress` 的运行就等它结束再抽查一次（最新的部署包含你的提交）。该接口未登录每小时仅 60 次、本机多个 AI 共用，常被限流；限流时改看服务器 `ssh toolbasecamp-cn "cat /opt/toolbasecamp-deploy/state/last-deployed-sha"`（上次**完整成功**的部署提交，是你的提交或其后代即已部署）。
 4. 没有在途运行、而最近一次失败或迟迟没有运行 → **判定部署未生效**，Agent **自己 SSH 补同步**，不要甩给用户；同时查看失败步骤并修复根因。
 
 ## 本机补同步（ubuntu → 需 sudo）
@@ -44,9 +42,11 @@ ssh toolbasecamp-cn "sudo install -o lighthouse -g ubuntu -m 644 ~/sync-static/z
 
 ## 禁止
 
-- 只 push、不校验用户可见的 `public/**` 改动
-- 用「等 Actions / 你清一下缓存」代替校验与补同步
+- 只 push、完全不抽查用户可见的 `public/**` 改动
+- 用「等 Actions / 你清一下缓存」代替那一次抽查与补同步
 - 只递增某页 `?v=` 却不确认 **locale/JS 文件本体**已在 VPS 更新
+
+除以上之外不再要求更多校验：不做哈希比对、不为验证截图、不写部署证据文件。
 
 ## 与其它规则
 
