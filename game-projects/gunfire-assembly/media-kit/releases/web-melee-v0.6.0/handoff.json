@@ -1,0 +1,61 @@
+{
+ "version": "web-melee-v0.6.0",
+ "base_version": "web-keys-v2-v0.5.0",
+ "game_version": "0.6.0",
+ "scope": "亮剑战役拔刀近战（Q 拔刀、左键连砍 / 按住重砍破防、右键格挡、刀到瞬间格挡＝弹开，Boss 拼刀；军官和 Boss 会格挡）、C 蹲 / Z 趴（子弹与敌人瞄准按姿势高度、趴下躲破片、手机姿势键）、去掉骑兵连技能、山本手榴弹限 25 米、载入时预编译着色器。",
+ "source_commit": "249c10ab4fae58c359ffb3f337764e993ab8c683",
+ "task_id": "f54e3773-shooter-controls-1",
+ "source": "Claude Code",
+ "user_instruction": "用户 2026-10-14 长消息第 2 批：亮剑改拔刀近战并加格挡、去掉骑兵连、加蹲下趴下、敌方手榴弹射程、查开炮卡顿。",
+ "validation": {
+  "local": {
+   "liangjian-pingan/qa/melee.cjs": "26/26",
+   "views / interact / story / cy-story / ljp-story / options / gunfire-chapters": "通过（interact 18/18、story 19/19、cy-story 26/26、ljp-story 40/40、gunfire-chapters 10/10）",
+   "mobile.cjs（三章）": "通过",
+   "通关机器人（平安县城两条路线、苍云岭 hit / miss、李家坡）": "通过",
+   "verify-keys-v2.cjs（枪火）": "10/10"
+  },
+  "production": {
+   "melee.cjs（线上）": "26/26（qa-melee-prod.json）",
+   "interact.cjs（线上）": "18/18"
+  },
+  "toy_preview": {
+   "url": "https://www.bilibili.com/toy/preview/preview_VwiZ3DQC/index.html",
+   "package_check": "10/10（toy-preview.json）",
+   "keys_and_melee": "通过（toy-preview-keys.json：拔刀砍倒步兵、C 蹲下、状态条）"
+  },
+  "toy_doctor": "ok，1 条内容指纹 WARN",
+  "entry_size": "上传入口 index.html 68,247 字节"
+ },
+ "package": {
+  "zip": "dist/toy/feidao-gunfire/feidao-gunfire.zip",
+  "zip_sha256": "f1c46113364a4b21492e0a25b1d4b80e726c571ca9928962e47c1cfd16ca4292",
+  "liangjian_game.compat.js_sha256_16": "8e9a75998166b9c4（与网站逐字节一致）"
+ },
+ "channels": {
+  "website": {
+   "status": "verified",
+   "version": "web-melee-v0.6.0",
+   "commit": "249c10ab4fae58c359ffb3f337764e993ab8c683",
+   "evidence": "Actions 部署成功；线上大厅与亮剑页兼容包、update-history、style.css 与 249c10ab 逐字节一致"
+  },
+  "toy": {
+   "id": 43022175699968,
+   "slug": "feidao-gunfire",
+   "status": "published",
+   "submitted_at": "2026-10-15T08:25:03+08:00",
+   "published_at": "2026-10-15T08:27:57+08:00",
+   "public_verified_at": "2026-10-15T12:12:13+08:00",
+   "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_DOg7GwxJ/index.html",
+   "public_check": "正式入口 toy-package-check 10/10（toy-public.json）、拔刀与蹲下抽查通过（toy-public-keys.json）"
+  },
+  "taptap": {
+   "status": "not_published_by_default"
+  },
+  "bilibili_description": {
+   "status": "pending_merge",
+   "note": "亮剑两条视频简介的键位 / 亮剑 / 骑兵连说法已失实，等用户决定（主目录另有会话在改简介）"
+  }
+ },
+ "not_done": "手机真机、真人手感（格挡窗口、伤害数值待试玩后调）；用户电脑上的开炮卡顿是否就是着色器编译未能直接确认。"
+}
