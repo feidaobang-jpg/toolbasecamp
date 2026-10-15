@@ -49,7 +49,7 @@ import {WALL_TOP,RAMPARTS,rampartHeight,rampartNavigation,legacyRampartWall} fro
 import {COVER_HEIGHT,WALL_WIDTH,WALL_DEPTH,wallTouches,wallSegment} from './wall-geometry.js';
 import {HiveWorld,HIVE,MOUTHS,tunnelDistance,hiveFloor,hiveCeiling,hiveRoute,hiveNavigation} from './hive-world.js?v=toy3dui2';
 import {SQUAD_ROLES,squadRoleId,MAX_SQUAD} from './squad-roles.js';
-import {KEY_ACTIONS,createKeyBindings} from './key-bindings.js';
+import {KEY_ACTIONS,KEY_SCHEMES,createKeyBindings} from './key-bindings.js';
 import {createOperations,OP_COMPLETION_KEYS} from './operations.js';
 import {tacticalWavePlan,openingSupply} from './tactical-waves.js';
 import {mountTacticalPanel} from './tactical-panel.js';
@@ -249,13 +249,14 @@ const Input={
       if(onButton&&this.isPlaying()&&e.target!==document.body)e.target.blur();
       else if(onButton&&['Enter','Space'].includes(e.code))return;
       if(e.code==='Tab'&&!this.isPlaying())return;
-      const k=this.mapKey(e.code);
-      if(k==='J'&&this.isPlaying()&&!place.kind&&!e.repeat)CombatControls.press(e.code);
-      if(k==='P'){e.preventDefault();if(!e.repeat&&this.onPause)this.onPause();return;}
-      if(k){if(!this.keys[k]&&!e.repeat)this.pressed[k]=true;this.keys[k]=true;e.preventDefault();}
+      const ks=this.mapKeys(e.code);
+      if(ks.includes('J')&&this.isPlaying()&&!place.kind&&!e.repeat)CombatControls.press(e.code);
+      if(ks.includes('P')){e.preventDefault();if(!e.repeat&&this.onPause)this.onPause();return;}
+      if(ks.length&&this.isPlaying()&&keyBindings.takeNotice())showKeySchemeNotice();
+      for(const k of ks){if(!this.keys[k]&&!e.repeat)this.pressed[k]=true;this.keys[k]=true;e.preventDefault();}
       AudioSys.init();AudioSys.resume();
     });
-    window.addEventListener('keyup',e=>{CombatControls.release(e.code);const k=this.mapKey(e.code);if(k)this.keys[k]=false;});
+    window.addEventListener('keyup',e=>{CombatControls.release(e.code);for(const k of this.mapKeys(e.code))this.keys[k]=false;});
     // Optional mouse look: click the view to capture the mouse (falls back to dragging when
     // pointer lock is not allowed, e.g. in some iframes). Keyboard-only play still works.
     const cv=$('c3d');
@@ -293,7 +294,7 @@ const Input={
       if(document.pointerLockElement===cv){
         if(!this.canMouseLook()){this.releaseMouseLook();return;}
         this.lockOwned=true;this.resetLook();
-        if(keyBindings.takeNotice())showMsg('电脑键位已改：鼠标转视角、左键射击 · '+['I','U','H','X','C','O','L','WAVE'].filter(a=>keyBindings.code(a)).map(a=>KL(a)+' '+actionLabel(a)).join(' · ')+'（暂停菜单「操作设置」可改）',6);
+        if(keyBindings.takeNotice())showKeySchemeNotice();
         else showMsg('鼠标已接管瞄准：移动转向，左键射击，Esc 释放并暂停',2.6);
       }else if(this.lockOwned){
         const expected=this.lockExpectedRelease;this.lockOwned=false;this.lockExpectedRelease=false;this.reset();
@@ -391,8 +392,8 @@ const Input={
     const mouse=this.drag,touch=this.touchLook;this.drag=null;this.touchLook=null;
     for(const [el,p] of [[$('c3d'),mouse],[$('lookZone'),touch]])if(p&&el.hasPointerCapture(p.id))el.releasePointerCapture(p.id);
   },
-  mapKey(c){
-    return keyBindings.action(c);
+  mapKeys(c){
+    return keyBindings.actions(c);
   },
   network:null,
   firing(hasTarget=false){
@@ -4106,7 +4107,7 @@ window.addEventListener('keydown',e=>{
     return;
   }
   // 战况 / 队伍面板默认用 Tab 打开：再按一次 Tab 关上，而不是在面板里切焦点
-  if(root.id==='vsPanel'&&vsUI.open&&vsUI.tab==='team'&&keyBindings.action(e.code)==='T'){e.preventDefault();e.stopImmediatePropagation();versusClosePanel();return;}
+  if(root.id==='vsPanel'&&vsUI.open&&vsUI.tab==='team'&&keyBindings.is(e.code,'T')){e.preventDefault();e.stopImmediatePropagation();versusClosePanel();return;}
   if(e.code==='Tab'){
     e.preventDefault();e.stopImmediatePropagation();const items=navItems(root);if(!items.length)return;
     const i=items.indexOf(t);navFocus(items[(i<0?0:i+(e.shiftKey?-1:1)+items.length)%items.length]);return;
@@ -4262,7 +4263,17 @@ function syncKeyLabels(){
   const combatLabel=(isTouch?'触屏':combat.input==='drag'?'键鼠（拖动转视角）':'键鼠')+' · '+(fpsRules()?'手动瞄准 · 按住射击'+(isTouch||combat.input==='mouse'?'':' · 右键拖动转视角'):(combat.aim==='auto'?'自动瞄准':'手动瞄准')+' · '+({auto:'自动射击',hold:'按住射击',toggle:'点击开关连射'})[combat.fire]);
   $('keysHint').textContent=combatLabel+' · 移动 '+['up','left','down','right'].map(a=>keyBindings.label(a)).join('/')+' · '+(vsOn()?['J','R','Z','K','U','I','H','O','L','T','C','LOOK','P']:['SPRINT','J','K','U','I','H','X','O','L','WAVE','C','LOOK','P']).map(a=>a==='LOOK'?(keyBindings.code('Q')||keyBindings.code('E')?KL('Q')+'/'+KL('E')+' 转视角':'鼠标转视角')+(keyBindings.code('LOOKUP')||keyBindings.code('LOOKDOWN')?' · '+KL('LOOKUP')+'/'+KL('LOOKDOWN')+' 抬头低头':''):keyBindings.label(a)+' '+actionLabel(a)).join(' · ');
 }
+function showKeySchemeNotice(){showMsg('电脑键位有两套可选：'+Object.values(KEY_SCHEMES).map(s=>s.name).join(' / ')+'，现在用「'+KEY_SCHEMES[keyBindings.scheme].name+'」；暂停菜单「操作设置」里切换，每套都能自己改键',7);}
 function renderKeys(){
+  const schemes=$('keySchemes');schemes.replaceChildren();
+  for(const [id,s] of Object.entries(KEY_SCHEMES)){const b=document.createElement('button');b.className='mbtn'+(keyBindings.scheme===id?' on':'');b.setAttribute('aria-pressed',keyBindings.scheme===id?'true':'false');
+    b.innerHTML='<b></b><span class="small"></span>';b.firstChild.textContent=(keyBindings.scheme===id?'✔ ':'')+s.name;b.lastChild.textContent=s.desc;
+    b.onclick=()=>{if(keyBindings.scheme===id)return;bindingAction=null;keyBindings.setScheme(id);
+      // 全键盘方案不抢鼠标；换回鼠标方案时恢复鼠标接管
+      CombatControls.set('input',id==='classic'?'drag':'mouse');if(id==='classic'&&document.pointerLockElement)document.exitPointerLock();
+      if(combatSection)combatSection.querySelector('#combat-input').value=CombatControls.settings.input;
+      Input.reset();renderKeys();syncKeyLabels();$('keyStatus').textContent='已切换到「'+s.name+'」，下面可以继续改单个键';};
+    schemes.appendChild(b);}
   const grid=$('keyGrid');grid.replaceChildren();
   for(const a of Object.keys(KEY_ACTIONS)){if(a==='F'&&$('fullBtn').hidden)continue;const b=document.createElement('button');b.className='mbtn';b.dataset.action=a;b.textContent=actionLabel(a)+'：'+keyBindings.label(a);
     b.onclick=()=>{Input.reset();bindingAction=a;$('keyStatus').textContent='正在修改「'+actionLabel(a)+'」：请按新键，Esc 取消';};grid.appendChild(b);}
@@ -4270,16 +4281,17 @@ function renderKeys(){
 function setupFeaturePanels(){
   const open=()=>{closePanels();Input.reset();panelOpen=true;$('keyPanel').classList.remove('hidden');$('keyStatus').textContent='选择要修改的动作';renderKeys();combatSection?.lockAim(fpsRules());if(document.pointerLockElement)document.exitPointerLock();};
   $('keysMenu').onclick=open;$('keysClose').onclick=closePanels;
-  $('keysReset').onclick=()=>{bindingAction=null;keyBindings.reset();Input.reset();renderKeys();syncKeyLabels();$('keyStatus').textContent='已恢复默认键位';};
+  $('keysReset').onclick=()=>{bindingAction=null;keyBindings.reset();Input.reset();renderKeys();syncKeyLabels();$('keyStatus').textContent='「'+KEY_SCHEMES[keyBindings.scheme].name+'」已恢复默认键位';};
   $('menuButton').onclick=()=>pauseKey();
   $('opsButton').onclick=$('opsPause').onclick=operations.open;$('opsClose').onclick=closePanels;
   window.addEventListener('keydown',e=>{
     if(!bindingAction)return;e.preventDefault();e.stopImmediatePropagation();
     if(e.repeat)return;
     if(e.code==='Escape'){bindingAction=null;$('keyStatus').textContent='已取消改绑';return;}
-    const error=keyBindings.bind(bindingAction,e.code);
-    if(error){$('keyStatus').textContent=error;return;}
-    bindingAction=null;Input.reset();renderKeys();syncKeyLabels();$('keyStatus').textContent='已保存，新键位立即生效';
+    const result=keyBindings.bind(bindingAction,e.code);
+    if(result.error){$('keyStatus').textContent=result.error;return;}
+    const changed=bindingAction;bindingAction=null;Input.reset();renderKeys();syncKeyLabels();
+    $('keyStatus').textContent=result.swapped?'已保存：「'+actionLabel(changed)+'」改为 '+KL(changed)+'，原来用这个键的「'+actionLabel(result.swapped)+'」换成 '+KL(result.swapped):'已保存，新键位立即生效';
   },true);
 }
 const visuals=new DarkVisuals(THREE,scene,PAL);
@@ -4402,10 +4414,10 @@ function setupWebControls(){
     if(!$('confirmPanel').classList.contains('hidden')){if(e.code==='Escape')$('confirmCancel').click();return;}
     if(e.code==='Enter'&&Game.state==='menu'&&$('vsMenu').classList.contains('hidden'))requestNewGame();
     else if(e.code==='Enter'&&Game.state==='over'){if(acidOn())acidArena.start();else if(rvOn())rvBreakout.start();else if(vsOn())versusRematch();else restartLevel();}
-    else if(keyBindings.action(e.code)==='WAVE'&&Game.state==='prep'&&!panelOpen)startBattle();
+    else if(keyBindings.is(e.code,'WAVE')&&Game.state==='prep'&&!panelOpen)startBattle();
     else if(e.code==='Escape'){e.preventDefault();pauseKey(true);}
-    else if(keyBindings.action(e.code)==='T'&&Game.testMode&&Game.state!=='menu'){e.preventDefault();if(panelOpen)closePanels();else openSandbox();}
-    else if(keyBindings.action(e.code)==='M')$('muteBtn').click();else if(keyBindings.action(e.code)==='F')$('fullBtn').click();
+    else if(keyBindings.is(e.code,'T')&&Game.testMode&&Game.state!=='menu'){e.preventDefault();if(panelOpen)closePanels();else openSandbox();}
+    else if(keyBindings.is(e.code,'M'))$('muteBtn').click();else if(keyBindings.is(e.code,'F'))$('fullBtn').click();
   });
   window.addEventListener('blur',()=>{Input.reset();if(['prep','battle'].includes(Game.state))togglePause();});
   syncPauseOptions();syncKeyLabels();
