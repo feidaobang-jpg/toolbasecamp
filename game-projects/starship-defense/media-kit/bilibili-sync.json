@@ -381,7 +381,7 @@
   ],
   "latest_record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json",
   "pending": [],
-  "pending_note": null,
+  "pending_note": "待合并：web-opening-hints-v0.38.5、web-save-notice-v0.38.6、web-drop-resistance-v0.38.7、web-keys-v2-v0.39.0、web-swarm-scale-v0.39.1（含键位 v2 与虫潮×3 两项玩家可明显感知的变化）。满 7 天窗口 2026-10-21 之后合并更新 B站 7 个目标简介；只做 B站，不发其他平台，不自动回复玩家评论。",
   "pending_release": {
     "version": "web-resistance-aim-v0.33.1",
     "status": "pending_22_batch",
@@ -783,6 +783,42 @@
       "summary": "前五波准备阶段布防建议直接可见，建造位置提示更清楚；数值不变",
       "record": "releases/web-opening-hints-v0.38.5/handoff.json",
       "website_verified_at": "2026-10-14T12:08:10.901968+00:00"
+    },
+    {
+      "version": "web-save-notice-v0.38.6",
+      "classification": "普通可见补丁",
+      "summary": "存档与备份提示更直白，自动保存状态胶囊不再刷屏。",
+      "status": "pending_merge",
+      "recorded_at": "2026-10-15T08:50:00+08:00",
+      "reason": "普通玩家可见变化，按发布节奏累计合并：距上次公开核验（web-mode-focus-v0.38.3，2026-10-14T11:39Z）需满 7 天且累计≥3 次有意义稳定更新；现已累计 0.38.5→0.39.1 共 5 次，最早可在 2026-10-21 之后随下一条相关视频或批次一并更新 7 个目标简介。现有简介未提到准备阶段野怪，本轮不存在失实项，玩家评论不由作者自动回复。",
+      "record": "releases/web-swarm-scale-v0.39.1/handoff.json"
+    },
+    {
+      "version": "web-drop-resistance-v0.38.7",
+      "classification": "普通可见更新",
+      "summary": "空投与抗战战役掉落调整，玩家可感知的难度与收益变化。",
+      "status": "pending_merge",
+      "recorded_at": "2026-10-15T08:50:00+08:00",
+      "reason": "普通玩家可见变化，按发布节奏累计合并：距上次公开核验（web-mode-focus-v0.38.3，2026-10-14T11:39Z）需满 7 天且累计≥3 次有意义稳定更新；现已累计 0.38.5→0.39.1 共 5 次，最早可在 2026-10-21 之后随下一条相关视频或批次一并更新 7 个目标简介。现有简介未提到准备阶段野怪，本轮不存在失实项，玩家评论不由作者自动回复。",
+      "record": "releases/web-swarm-scale-v0.39.1/handoff.json"
+    },
+    {
+      "version": "web-keys-v2-v0.39.0",
+      "classification": "键位变更",
+      "summary": "电脑端改成人称射击式左手布局：左键射击、右键举枪、空格跳、Shift 跑、F 互动、G 手雷、E 医疗、Q 换枪、V 视角、B 商店、T 建造、X 开始虫潮、Tab 战况；键位存档升到 v2，旧自定义不沿用并提示一次，旧键仍可当别名。",
+      "status": "pending_merge",
+      "recorded_at": "2026-10-15T08:50:00+08:00",
+      "reason": "普通玩家可见变化，按发布节奏累计合并：距上次公开核验（web-mode-focus-v0.38.3，2026-10-14T11:39Z）需满 7 天且累计≥3 次有意义稳定更新；现已累计 0.38.5→0.39.1 共 5 次，最早可在 2026-10-21 之后随下一条相关视频或批次一并更新 7 个目标简介。现有简介未提到准备阶段野怪，本轮不存在失实项，玩家评论不由作者自动回复。",
+      "record": "releases/web-swarm-scale-v0.39.1/handoff.json"
+    },
+    {
+      "version": "web-swarm-scale-v0.39.1",
+      "classification": "玩法规模变化（玩家反馈）",
+      "summary": "来自 B站动态评论“怪可以出多点吗”：每关正式虫潮按 3 倍出怪（第一关 11→33 只），准备阶段不再在地图上刷野怪，只剩母巢的母皇与护卫；单只掉落金币与出怪间隔按 √3 回落，同屏上限按设备给（电脑 144·手机 80·联机 72）。",
+      "status": "pending_merge",
+      "recorded_at": "2026-10-15T08:50:00+08:00",
+      "reason": "普通玩家可见变化，按发布节奏累计合并：距上次公开核验（web-mode-focus-v0.38.3，2026-10-14T11:39Z）需满 7 天且累计≥3 次有意义稳定更新；现已累计 0.38.5→0.39.1 共 5 次，最早可在 2026-10-21 之后随下一条相关视频或批次一并更新 7 个目标简介。现有简介未提到准备阶段野怪，本轮不存在失实项，玩家评论不由作者自动回复。",
+      "record": "releases/web-swarm-scale-v0.39.1/handoff.json"
     }
   ],
   "comment_corrections": [
@@ -1190,7 +1226,7 @@
   "last_release_record": "releases/web-acid-arena-v0.38.0/handoff.json",
   "status": "public_verified",
   "version": "web-acid-arena-v0.38.0",
-  "updated_at": "2026-10-13T20:10:19.195225+08:00",
+  "updated_at": "2026-10-15T08:50:00+08:00",
   "last_public_verified": {
     "version": "web-acid-arena-v0.38.0",
     "at": "2026-10-13T20:10:19.195225+08:00",

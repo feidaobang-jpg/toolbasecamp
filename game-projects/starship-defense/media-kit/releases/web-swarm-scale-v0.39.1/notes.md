@@ -28,3 +28,10 @@
 ## 发布
 
 按实时节奏：网站整合主线、推送并线上核验后，同一稳定包提交一次 Toy 审核（虫潮围城 Toy ID 38678478981120）。TapTap 默认不发布。B 站按累计节奏处理，并检查现有视频简介/置顶是否把「路上有野怪」当成当前玩法在介绍——失实才改，不逐版本改文案。置顶评论与玩家回复由用户自己看过后再指示，不自动回复。不建定时任务。
+
+### 实际发布结果（2026-10-15）
+
+- 主线提交 `6554590e`（含 9827f0bb 功能、3acbf8cd 合 0.39.0 键位 v2、3957d389 夹具与证据）。线上核验：`index.html` 缓存位已是 `game.compat.js?v=6554590e`；线上 `game.compat.js` sha256 `f24e9fa910c22d58…`（1,284,953 字节）与主线构建产物逐字节一致；`update-history.js` 含 0.39.1；并在线上正式入口复跑 5 项行为回归全通过（`qa-prod/results.json`）。
+- Toy：包 `dist/toy/chongchao-qianshao/chongchao-qianshao.zip`，425,963 字节，sha256 `1427bed8f5a947b4…`；入口 `index.html` 68,463 字节（Toy 建议 100KB 以内，符合）。提交前预览 `preview_S6VsMBUN` 用 `toy-package-check.cjs` 10/10（`toy-preview.json`）；08:47:30 加 `--yes` 提交（`auditing`），102 秒后回执 `published`（mtime 08:49:12）。正式入口复跑同一脚本 10/10，包内 `game.compat.js` `1a316a38fa24e81f` 与本地构建逐字节一致（`toy-public.json`）。网站与 Toy 现同为 web-swarm-scale-v0.39.1。
+- TapTap：默认不发布，未做本次同步。
+- B 站：现有 7 个目标简介都没有把准备阶段野怪写成本关玩法（无失实项），0.38.5→0.39.1 按普通可见变化累计进 `bilibili-sync.json` 的 `pending_updates`，最早 2026-10-21 之后合并更新；玩家评论不自动回复。
