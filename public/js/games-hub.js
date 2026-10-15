@@ -196,60 +196,30 @@
         if (!external) {
             var gameKeyMatch = (item.url || '').match(/(?:^|\/)html\/game\/([a-z0-9_-]+)(?:\.html|\/index\.html)(?:[?#]|$)/i);
             var gameKey = gameKeyMatch ? gameKeyMatch[1].toLowerCase() : '';
-            var primaryIsToy = !!item.toyUrl && item.primaryPlay !== 'site';
-            var toyLabel = tr(item.toyLabelKey || 'games.playToy');
-            var siteLabel = tr(item.siteLabelKey || 'games.playHere');
+            var playUrl = item.toyUrl || 'https://www.bilibili.com/toy/feidao-games/index.html';
+            var playLabel = tr(item.toyUrl ? 'games.playToy' : 'games.collectionOpen');
             var mainLink = document.createElement('a');
             mainLink.className = 'hub-game-main';
-            mainLink.href = primaryIsToy ? item.toyUrl : item.url;
-            mainLink.setAttribute('aria-label', label + ' · ' + (primaryIsToy ? toyLabel : siteLabel));
-            if (primaryIsToy) {
-                mainLink.target = '_blank';
-                mainLink.rel = 'noopener noreferrer';
-            }
-            if (gameKey) mainLink.setAttribute('data-tb-track', 'game.play.' + (primaryIsToy ? 'toy.' : 'site.') + gameKey);
+            mainLink.href = playUrl;
+            mainLink.setAttribute('aria-label', label + ' · ' + playLabel);
+            mainLink.target = '_blank';
+            mainLink.rel = 'noopener noreferrer';
+            if (gameKey) mainLink.setAttribute('data-tb-track', 'game.play.toy.' + gameKey);
             while (card.firstChild) mainLink.appendChild(card.firstChild);
             card.appendChild(mainLink);
 
             var actions = document.createElement('div');
-            actions.className = 'hub-game-actions';
-            var sitePlayLink;
-            var entries = [{ url: item.toyUrl, label: toyLabel, external: true },
-                { url: item.url, label: siteLabel, external: false }];
-            if (!primaryIsToy) entries.reverse();
-            entries.forEach(function (entry) {
-                if (!entry.url) return;
-                var link = document.createElement('a');
-                link.className = 'tb-btn' + (item.toyUrl && entry.external !== primaryIsToy ? ' hub-game-play-secondary' : '');
-                link.href = entry.url;
-                link.textContent = entry.label;
-                link.setAttribute('aria-label', label + ' · ' + entry.label);
-                if (gameKey) link.setAttribute('data-tb-track', 'game.play.' + (entry.external ? 'toy.' : 'site.') + gameKey);
-                if (entry.external) {
-                    link.target = '_blank';
-                    link.rel = 'noopener noreferrer';
-                }
-                actions.appendChild(link);
-                if (!entry.external) sitePlayLink = link;
-            });
-            if (gameKey) {
-                var vote = document.createElement('button');
-                vote.type = 'button';
-                vote.className = 'tb-btn hub-game-vote';
-                vote.dataset.voteGame = gameKey;
-                vote.dataset.gameLabel = label;
-                vote.disabled = true;
-                vote.textContent = tr('games.cardVoteLoading');
-                sitePlayLink.insertAdjacentElement('afterend', vote);
-            }
+            actions.className = 'hub-game-actions action-row';
+            var playLink = document.createElement('a');
+            playLink.className = 'tb-btn';
+            playLink.href = playUrl;
+            playLink.textContent = playLabel;
+            playLink.setAttribute('aria-label', label + ' · ' + playLabel);
+            playLink.target = '_blank';
+            playLink.rel = 'noopener noreferrer';
+            if (gameKey) playLink.setAttribute('data-tb-track', 'game.play.toy.' + gameKey);
+            actions.appendChild(playLink);
             card.appendChild(actions);
-            if (gameKey) {
-                var status = document.createElement('p');
-                status.className = 'hub-game-vote-status';
-                status.setAttribute('role', 'status');
-                status.hidden = true;
-                card.appendChild(status);
-            }
         }
         return card;
     }
@@ -345,7 +315,6 @@
         renderKindChips(centerEl);
         if (kindFilter !== 'all') applyKindFilter();
         if (searchQuery) applySearchFilter(searchQuery);
-        if (window.initGameCardVotes) window.initGameCardVotes();
     }
 
     window.renderGamesHub = renderGamesHub;

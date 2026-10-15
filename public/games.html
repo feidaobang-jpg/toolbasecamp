@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>游戏试玩 — 百宝箱</title>
-    <meta name="description" content="在百宝箱试玩坦克大战等游戏，支持电脑键盘与手机触屏。">
+    <title>B站 Toy 游戏合集 — 百宝箱</title>
+    <meta name="description" content="飞刀班长的游戏今后只在 B站 Toy 上架和更新。查看已公开游戏，后续投票与反馈统一在 B站进行。">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="icon" href="/favicon.ico" sizes="any">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="css/site-shell.css?v=nosTW1">
   <link rel="stylesheet" href="css/tools-hub.css?v=card-vote2">
   <link rel="stylesheet" href="css/creator-follow.css?v=bilibili1">
-  <link rel="stylesheet" href="css/game-vote.css?v=starship-mode1">
+  <link rel="stylesheet" href="css/docs/docs-common.css?v=nosTW1">
 </head>
 <body id="top" class="site-page site-page--hub">
     <header class="site-header site-header--shrink">
@@ -37,17 +37,15 @@
                         <div class="hub-center-inner">
                             <section class="creator-follow" aria-labelledby="game-collection-title">
                                 <div class="creator-follow-copy">
-                                    <h2 id="game-collection-title" data-i18n="games.collectionTitle">飞刀班长的游戏 · 选一款直接开玩</h2>
-                                    <p data-i18n="games.collectionDesc">枪火集结、虫潮围城、恐龙快打、赤色要塞和经典休闲游戏。B站合集集中展示全部 Toy，下面也可选择本站试玩。</p>
+                                    <h2 id="game-collection-title" data-i18n="games.collectionTitle">飞刀班长的游戏 · B站 Toy 合集</h2>
+                                    <p data-i18n="games.collectionDesc">今后我的游戏只在 B站 Toy 上架和更新，本站不再提供新的试玩与更新入口。下方自研游戏均前往已公开的 Toy 游玩。</p>
+                                    <p data-i18n="games.voteMigration">本站游戏投票与愿望单已停止。后续投票统一在 B站动态发布，玩法建议和反馈请留在 B站评论或弹幕。</p>
                                 </div>
                                 <div class="action-row">
-                                    <a class="tb-btn" href="game-online.html">联机大厅</a>
                                     <a class="tb-btn" href="https://www.bilibili.com/toy/feidao-games/index.html" target="_blank" rel="noopener noreferrer" data-i18n="games.collectionOpen">B站全部游戏合集</a>
-                                    <a class="tb-btn" href="game-vote.html" data-i18n="games.collectionVote">投票与愿望单</a>
-                                    <a class="tb-btn" href="game-vote.html#gv-starship-modes" data-i18n="gameVote.modeNav">虫潮模式投票</a>
+                                    <a class="tb-btn" href="https://space.bilibili.com/16214353/dynamic" target="_blank" rel="noopener noreferrer" data-i18n="games.followVotes">关注后续动态投票</a>
                                 </div>
                             </section>
-                            <div id="game-vote-board"></div>
                             <section class="creator-follow" aria-labelledby="creator-follow-title">
                                 <div class="creator-follow-copy">
                                     <h2 id="creator-follow-title" data-i18n="creator.gamesTitle">喜欢这些小游戏？来 B 站找我</h2>
@@ -66,20 +64,16 @@
         </main>
     </div>
 
-    <script src="js/locales/zh-CN.js?v=gunfire1"></script>
+    <script src="js/locales/zh-CN.js?v=toy-only1"></script>
     <script src="js/i18n.js?v=visitor-stats2"></script>
     <script src="js/astra-games-catalog.js?v=67d0feab3f"></script>
     <script src="js/config.js?v=gunfire2"></script>
     <script id="tb-stats-script" src="js/tb-stats.js?v=game-clicks1"></script>
     <script src="js/common_ui.js?v=nosTW1"></script>
-    <script src="js/game-vote-client.js?v=wish-fulfilled1"></script>
-    <script src="js/games-vote-board.js?v=wish-fulfilled1"></script>
-    <script src="js/games-card-vote.js?v=card-vote2"></script>
-    <script src="js/games-hub.js?v=card-vote2"></script>
+    <script src="js/games-hub.js?v=toy-only1"></script>
     <script>
       (function () {
         function go() {
-            if (typeof renderGamesVoteBoard === 'function') renderGamesVoteBoard();
             if (typeof renderGamesHub === 'function') renderGamesHub();
         }
         if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go);

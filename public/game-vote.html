@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>游戏投票榜 — 百宝箱</title>
-    <meta name="description" content="给你爱玩的自研游戏投票，写下想玩的游戏愿望，查看已兑现的愿望并直接试玩。">
+    <title>游戏投票已迁至 B站 — 百宝箱</title>
+    <meta name="description" content="本站游戏投票与愿望单已停止。后续投票和反馈统一在 B站进行，游戏只在 B站 Toy 上架和更新。">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="icon" href="/favicon.ico" sizes="any">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -30,110 +30,24 @@
     <div class="site-hub-layout">
         <main class="site-main site-main--hub site-main--scroll">
             <div class="gv-wrap">
-                <div class="gv-page-head">
-                    <h2 data-i18n="gameVote.title">游戏投票榜</h2>
-                    <p data-i18n="gameVote.subtitle">给喜欢的游戏投票，写下游戏愿望，也看看哪些愿望已经能玩。</p>
-                </div>
-
-                <div class="tip-box gv-rules">
-                    <strong data-i18n="gameVote.rulesTitle">投票规则</strong>
-                    <span data-i18n="gameVote.rulesBody">不用登录，本机可投「最爱玩」3 票、「愿望单」5 票，投过还能改。想玩的游戏榜单上没有，可以自己填一条愿望，别人也能给你投票。</span>
-                </div>
-
-                <div id="gv-msg" class="gv-msg" role="status" aria-live="polite"></div>
-                <p id="gv-totals" class="gv-totals"></p>
-
-                <nav class="action-row gv-section-nav" aria-label="投票分区">
-                    <a class="tb-btn" href="#gv-starship-modes" data-i18n="gameVote.modeNav">虫潮模式投票</a>
-                    <a class="tb-btn" href="#gv-original-games" data-i18n="gameVote.originalNav">自研游戏投票</a>
-                    <a class="tb-btn" href="#gv-compose" data-i18n="gameVote.composeNav">填写愿望</a>
-                    <a class="tb-btn" href="#gv-wish-board" data-i18n="gameVote.wishNav">愿望投票</a>
-                </nav>
-                <div id="gv-boards">
-                    <section id="gv-starship-modes" class="gv-card gv-mode-card" aria-labelledby="gv-mode-title">
-                        <h3 id="gv-mode-title" data-i18n="gameVote.modeTitle">虫潮围城，你最希望下一步重点完善哪个模式？</h3>
-                        <p class="gv-desc" data-i18n="gameVote.modeDesc">不用登录，每台设备选一个，可直接改投或撤回，不占用游戏票和愿望票。票数结合具体反馈与开发成本参考，不承诺最高票必做。战地模式与抗战战役已拆成独立游戏《枪火集结》，请在下方「自研原创」里给它投票。</p>
-                        <p id="gv-mode-summary" class="gv-desc" data-i18n="gameVote.modeLoading">正在加载模式投票…</p>
-                        <ul id="gv-mode-list" class="gv-list" aria-labelledby="gv-mode-title"></ul>
-                        <p id="gv-mode-msg" class="gv-msg" role="status" aria-live="polite"></p>
-                        <div class="action-row gv-mode-actions">
-                            <button type="button" id="gv-mode-refresh" class="tb-btn" data-i18n="gameVote.modeRefresh">刷新模式票数</button>
-                            <a class="tb-btn" href="#gv-compose" data-i18n="gameVote.modeFeedback">写下具体玩法建议</a>
-                        </div>
-                        <p class="gv-tip" data-i18n="gameVote.modeDeviceNote">按当前浏览器的本机标识计票，设备数不等于独立玩家人数。清除浏览器数据或更换设备后，原选择无法在这里找回。</p>
-                    </section>
-                    <section id="gv-original-games" class="gv-card">
-                        <h3 data-i18n="gameVote.boardTitle">自研原创 · 最爱玩哪个</h3>
-                        <p class="gv-desc" data-i18n="gameVote.boardDesc">已上线自研游戏的得票数，右侧括号里是近 7 天新增。</p>
-                        <div id="gv-remaining" class="gv-remaining"></div>
-                        <ul id="gv-favorite" class="gv-list gv-list--favorite"></ul>
-                    </section>
-
-                <section id="gv-compose" class="gv-card gv-card--compose">
-                    <h3 data-i18n="gameVote.submitWishTitle">写下你的游戏愿望</h3>
-                    <p class="gv-desc" data-i18n="gameVote.submitWishDesc">想玩什么游戏、想加什么玩法？提交后会公开展示，其他玩家可以为你的愿望投票。</p>
-                        <form id="gv-wish-form" class="gv-wish-form" autocomplete="off">
-                            <label class="gv-field">
-                                <span data-i18n="gameVote.wishNameLabel">想玩的游戏</span>
-                                <input type="text" id="gv-wish-name" maxlength="24" minlength="2" required
-                                    placeholder="例如：合金弹头式横版闯关">
-                            </label>
-                            <label class="gv-field">
-                                <span data-i18n="gameVote.wishNoteLabel">想要什么样的玩法</span>
-                                <textarea id="gv-wish-note" maxlength="160" rows="3"
-                                    placeholder="例如：双人合作守城，能建炮塔，每关结束选择升级"></textarea>
-                            </label>
-                            <div class="action-row">
-                                <button type="submit" class="tb-btn" data-i18n="gameVote.submitWishBtn">提交愿望</button>
-                            </div>
-                            <p class="gv-tip" data-i18n="gameVote.wishTip">别放链接和联系方式，广告内容会被管理员下架。</p>
-                        </form>
-                    <p id="gv-wish-msg" class="gv-msg" role="status" aria-live="polite"></p>
+                <section class="gv-card" aria-labelledby="vote-migration-title">
+                    <h2 id="vote-migration-title" data-i18n="gameVote.closedTitle">游戏投票已迁至 B站</h2>
+                    <p class="gv-desc" data-i18n="gameVote.closedDesc">本站游戏投票、虫潮模式投票和愿望单提交已停止，后续投票统一在 B站进行。</p>
+                    <p class="gv-desc" data-i18n="gameVote.closedFeedback">请关注飞刀班长的 B站动态，有新投票时会在那里发布；平时可在 B站视频评论或弹幕中提出玩法建议和反馈。</p>
+                    <p class="gv-desc" data-i18n="gameVote.closedGames">今后游戏只在 B站 Toy 上架和更新，已公开的游戏可从 Toy 合集中进入。</p>
+                    <div class="action-row">
+                        <a class="tb-btn" href="https://space.bilibili.com/16214353/dynamic" target="_blank" rel="noopener noreferrer" data-i18n="games.followVotes">关注后续动态投票</a>
+                        <a class="tb-btn" href="https://www.bilibili.com/toy/feidao-games/index.html" target="_blank" rel="noopener noreferrer" data-i18n="games.collectionOpen">B站全部游戏合集</a>
+                        <a class="tb-btn" href="games.html" data-i18n="gameVote.backToGames">返回游戏列表</a>
+                    </div>
                 </section>
-
-
-                    <section id="gv-wish-board" class="gv-card">
-                        <h3 data-i18n="gameVote.wishBoardTitle">愿望单 · 想玩这些</h3>
-                        <p class="gv-desc" data-i18n="gameVote.wishBoardDesc">票数作为选题线索，结合玩法、工作量和试玩反馈安排。已兑现的愿望保留原需求与票数，已投票可撤回改投。</p>
-                        <div class="action-row gv-progress-tabs" role="group" aria-label="愿望进度">
-                            <button type="button" class="tb-btn" data-wish-progress="pending" aria-pressed="true">待实现</button>
-                            <button type="button" class="tb-btn" data-wish-progress="fulfilled" aria-pressed="false">已兑现</button>
-                        </div>
-                        <label class="gv-sort"><span data-i18n="gameVote.sortLabel">排序</span> <select id="gv-wish-sort"><option value="votes" data-i18n="gameVote.sortVotes">票数优先</option><option value="newest" data-i18n="gameVote.sortNewest">最新提交</option></select></label>
-                        <ul id="gv-wishlist" class="gv-list"></ul>
-                        <div id="gv-wish-pager"></div>
-
-
-                    </section>
-
-
-                </div>
-
-                <section id="gv-admin" class="gv-card gv-card--admin" hidden>
-                    <h3 data-i18n="gameVote.adminTitle">愿望单管理</h3>
-                    <label class="gv-check">
-                        <input type="checkbox" id="gv-admin-toggle-hidden">
-                        <span data-i18n="gameVote.adminShowHidden">显示已下架</span>
-                    </label>
-                    <ul id="gv-admin-list" class="gv-list"></ul>
-                </section>
-
-                <div class="action-row gv-foot-actions">
-                    <button type="button" id="gv-refresh" class="tb-btn" data-i18n="gameVote.refreshBtn">刷新榜单</button>
-                    <a class="tb-btn" href="games.html" data-i18n="gameVote.backToGames">返回游戏列表</a>
-                </div>
             </div>
         </main>
     </div>
 
-    <script src="js/locales/zh-CN.js?v=vote-modes-20261014"></script>
+    <script src="js/locales/zh-CN.js?v=toy-only1"></script>
     <script src="js/i18n.js?v=nosTW1"></script>
-    <script src="js/astra-games-catalog.js?v=cfb7f37d20"></script>
     <script src="js/config.js?v=journey-hidden1"></script>
     <script src="js/common_ui.js?v=nosTW1"></script>
-    <script src="js/game-vote-client.js?v=wish-fulfilled1"></script>
-    <script src="js/tb-pager.js?v=1"></script>
-    <script src="js/game-vote.js?v=wish-fulfilled1"></script>
-    <script src="js/starship-mode-vote.js?v=starship-mode1"></script>
 </body>
 </html>
