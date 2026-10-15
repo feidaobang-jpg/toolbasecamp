@@ -1,6 +1,9 @@
 // Player-facing notes travel with the same game package; no network or account required.
-export const GAME_VERSION='0.39.1';
+export const GAME_VERSION='0.40.0';
 export const UPDATE_HISTORY=[
+  {version:'0.40.0',date:'2026-10-15',title:'战地能蹲下、趴下',changes:[
+    '联机战地里 C 蹲下、Z 趴下，再按站起来（跳、按 Shift 跑、上载具也会站起来）：子弹按你的实际高度算，镜头跟着变低，蹲着走、趴着爬都更慢。',
+    '电脑上举枪只用右键；银行塔防里换路线还是 Z。']},
   {version:'0.39.1',date:'2026-10-15',title:'虫潮放大三倍，路上不再刷野怪',changes:[
     '按玩家反馈「作者可以怪出多点吗」：主战役每关正式虫潮数量放大到原来的 3 倍，出怪更密、一关更长，同屏虫子上限电脑提到 144 只、手机 80 只、联机 72 只。',
     '准备阶段不再在前中场散布野怪，地图上除了虫巢里的母皇与护卫，开战前路上没有虫子；想提前打虫巢的选择保留，残留在场上的虫仍会加入本关进攻。',

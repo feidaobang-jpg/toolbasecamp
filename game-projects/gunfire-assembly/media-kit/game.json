@@ -2,7 +2,7 @@
   "game_id": "gunfire-assembly",
   "name": "枪火集结",
   "engine": "Three.js r152",
-  "current_version": "web-crews-v0.7.0",
+  "current_version": "web-liangjian-v0.8.0",
   "entrypoint": "public/html/game/gunfire-assembly/index.html",
   "release_intent": "web_demo",
   "development_model": "Composer",
@@ -205,7 +205,7 @@
       "record": "releases/web-save-notice-v0.3.1/handoff.json"
     }
   ],
-  "website_version": "web-crews-v0.7.0",
+  "website_version": "web-liangjian-v0.8.0",
   "website_commit": "249c10ab4fae58c359ffb3f337764e993ab8c683",
   "website_verified_at": "2026-10-15T08:10:00+08:00",
   "website": {
