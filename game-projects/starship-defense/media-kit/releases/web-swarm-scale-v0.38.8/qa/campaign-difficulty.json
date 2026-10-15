@@ -1,0 +1,654 @@
+{
+  "url": "http://127.0.0.1:8941/html/game/starship-defense/index.html",
+  "method": "Edge headless WebGL, keyboard/touch UI plus marked qa combat fixtures; no physical phone or audio recording",
+  "results": [
+    {
+      "shape": "desktop",
+      "difficulty": [
+        {
+          "id": "casual",
+          "hp": 25.5,
+          "damage": 5.6,
+          "gold": 12,
+          "bossHp": 612,
+          "eliteHp": 76.5,
+          "baseHp": 2700,
+          "wave": 33,
+          "spawned": 1,
+          "interval": 1.4794600647984164,
+          "weakenedWave": 21,
+          "save": {
+            "campaignId": "4d2cabb7-fd8b-48c2-b045-925302616b1a",
+            "testMode": false,
+            "difficulty": "casual",
+            "loop": 1,
+            "chapter": 1,
+            "level": 1,
+            "gold": 150,
+            "score": 0,
+            "cls": "gunner",
+            "weapons": [
+              "lmg"
+            ],
+            "curWeapon": "lmg",
+            "weaponLv": {},
+            "items": {
+              "medkit": 2
+            },
+            "hpBonus": 0,
+            "vehiclesOwned": [],
+            "squadCount": 0,
+            "squadOrder": "follow",
+            "squadAutoDefense": true,
+            "lastBattle": null,
+            "squadGear": [],
+            "opsCompleted": {},
+            "perks": {
+              "magnet": false,
+              "regen": false
+            },
+            "hive": {
+              "loop": 1,
+              "chapter": 1,
+              "queen": 1,
+              "killed": false
+            },
+            "baseHp": 2700,
+            "pendingDrops": [],
+            "buildings": [],
+            "time": 1792023143456,
+            "version": "0.9",
+            "rampartRevision": 1
+          },
+          "valid": true,
+          "badSaveRejected": true
+        },
+        {
+          "id": "normal",
+          "hp": 30,
+          "damage": 8,
+          "gold": 12,
+          "bossHp": 720,
+          "eliteHp": 90,
+          "baseHp": 2000,
+          "wave": 33,
+          "spawned": 1,
+          "interval": 1.183568051838733,
+          "weakenedWave": 21,
+          "save": {
+            "campaignId": "5ca3c62a-3d5c-44e9-af24-b57f879297a4",
+            "testMode": false,
+            "difficulty": "normal",
+            "loop": 1,
+            "chapter": 1,
+            "level": 1,
+            "gold": 150,
+            "score": 0,
+            "cls": "gunner",
+            "weapons": [
+              "lmg"
+            ],
+            "curWeapon": "lmg",
+            "weaponLv": {},
+            "items": {
+              "medkit": 2
+            },
+            "hpBonus": 0,
+            "vehiclesOwned": [],
+            "squadCount": 0,
+            "squadOrder": "follow",
+            "squadAutoDefense": true,
+            "lastBattle": null,
+            "squadGear": [],
+            "opsCompleted": {},
+            "perks": {
+              "magnet": false,
+              "regen": false
+            },
+            "hive": {
+              "loop": 1,
+              "chapter": 1,
+              "queen": 1,
+              "killed": false
+            },
+            "baseHp": 2000,
+            "pendingDrops": [],
+            "buildings": [],
+            "time": 1792023144173,
+            "version": "0.9",
+            "rampartRevision": 1
+          },
+          "valid": true,
+          "badSaveRejected": true
+        },
+        {
+          "id": "hard",
+          "hp": 33.6,
+          "damage": 10.4,
+          "gold": 7,
+          "bossHp": 806.4000000000001,
+          "eliteHp": 100.80000000000001,
+          "baseHp": 2000,
+          "wave": 42,
+          "spawned": 1,
+          "interval": 0.7693192336951765,
+          "weakenedWave": 27,
+          "save": {
+            "campaignId": "5af5bf7a-43ec-4eb8-97d7-eaab49773177",
+            "testMode": false,
+            "difficulty": "hard",
+            "loop": 1,
+            "chapter": 1,
+            "level": 1,
+            "gold": 150,
+            "score": 0,
+            "cls": "gunner",
+            "weapons": [
+              "lmg"
+            ],
+            "curWeapon": "lmg",
+            "weaponLv": {},
+            "items": {
+              "medkit": 2
+            },
+            "hpBonus": 0,
+            "vehiclesOwned": [],
+            "squadCount": 0,
+            "squadOrder": "follow",
+            "squadAutoDefense": true,
+            "lastBattle": null,
+            "squadGear": [],
+            "opsCompleted": {},
+            "perks": {
+              "magnet": false,
+              "regen": false
+            },
+            "hive": {
+              "loop": 1,
+              "chapter": 1,
+              "queen": 1,
+              "killed": false
+            },
+            "baseHp": 2000,
+            "pendingDrops": [],
+            "buildings": [],
+            "time": 1792023144781,
+            "version": "0.9",
+            "rampartRevision": 1
+          },
+          "valid": true,
+          "badSaveRejected": true
+        }
+      ],
+      "compatibility": {
+        "legacyValid": true,
+        "legacy": {
+          "id": "normal",
+          "level": 4,
+          "gold": 712
+        },
+        "opResults": [
+          {
+            "hp": 33.6,
+            "dmg": 8.96,
+            "gold": 12
+          },
+          {
+            "hp": 33.6,
+            "dmg": 8.96,
+            "gold": 12
+          },
+          {
+            "hp": 33.6,
+            "dmg": 8.96,
+            "gold": 12
+          }
+        ],
+        "test": {
+          "id": "normal",
+          "mode": true
+        }
+      },
+      "curves": {
+        "cases": 800,
+        "problems": [],
+        "maxGoldRatio": 1.1333333333333333
+      },
+      "keyboard": true,
+      "touchSimulation": false,
+      "errors": []
+    },
+    {
+      "shape": "landscape",
+      "difficulty": [
+        {
+          "id": "casual",
+          "hp": 25.5,
+          "damage": 5.6,
+          "gold": 12,
+          "bossHp": 612,
+          "eliteHp": 76.5,
+          "baseHp": 2700,
+          "wave": 33,
+          "spawned": 1,
+          "interval": 1.4794600647984164,
+          "weakenedWave": 21,
+          "save": {
+            "campaignId": "ec7c51eb-4d25-469d-aaf1-36069ebbf1eb",
+            "testMode": false,
+            "difficulty": "casual",
+            "loop": 1,
+            "chapter": 1,
+            "level": 1,
+            "gold": 150,
+            "score": 0,
+            "cls": "gunner",
+            "weapons": [
+              "lmg"
+            ],
+            "curWeapon": "lmg",
+            "weaponLv": {},
+            "items": {
+              "medkit": 2
+            },
+            "hpBonus": 0,
+            "vehiclesOwned": [],
+            "squadCount": 0,
+            "squadOrder": "follow",
+            "squadAutoDefense": true,
+            "lastBattle": null,
+            "squadGear": [],
+            "opsCompleted": {},
+            "perks": {
+              "magnet": false,
+              "regen": false
+            },
+            "hive": {
+              "loop": 1,
+              "chapter": 1,
+              "queen": 1,
+              "killed": false
+            },
+            "baseHp": 2700,
+            "pendingDrops": [],
+            "buildings": [],
+            "time": 1792023152708,
+            "version": "0.9",
+            "rampartRevision": 1
+          },
+          "valid": true,
+          "badSaveRejected": true
+        },
+        {
+          "id": "normal",
+          "hp": 30,
+          "damage": 8,
+          "gold": 12,
+          "bossHp": 720,
+          "eliteHp": 90,
+          "baseHp": 2000,
+          "wave": 33,
+          "spawned": 1,
+          "interval": 1.183568051838733,
+          "weakenedWave": 21,
+          "save": {
+            "campaignId": "6f46183c-9462-4f2e-a03f-7b6313da2180",
+            "testMode": false,
+            "difficulty": "normal",
+            "loop": 1,
+            "chapter": 1,
+            "level": 1,
+            "gold": 150,
+            "score": 0,
+            "cls": "gunner",
+            "weapons": [
+              "lmg"
+            ],
+            "curWeapon": "lmg",
+            "weaponLv": {},
+            "items": {
+              "medkit": 2
+            },
+            "hpBonus": 0,
+            "vehiclesOwned": [],
+            "squadCount": 0,
+            "squadOrder": "follow",
+            "squadAutoDefense": true,
+            "lastBattle": null,
+            "squadGear": [],
+            "opsCompleted": {},
+            "perks": {
+              "magnet": false,
+              "regen": false
+            },
+            "hive": {
+              "loop": 1,
+              "chapter": 1,
+              "queen": 1,
+              "killed": false
+            },
+            "baseHp": 2000,
+            "pendingDrops": [],
+            "buildings": [],
+            "time": 1792023153077,
+            "version": "0.9",
+            "rampartRevision": 1
+          },
+          "valid": true,
+          "badSaveRejected": true
+        },
+        {
+          "id": "hard",
+          "hp": 33.6,
+          "damage": 10.4,
+          "gold": 7,
+          "bossHp": 806.4000000000001,
+          "eliteHp": 100.80000000000001,
+          "baseHp": 2000,
+          "wave": 42,
+          "spawned": 1,
+          "interval": 0.7693192336951765,
+          "weakenedWave": 27,
+          "save": {
+            "campaignId": "9af54feb-96e7-43c5-a81f-7d798118d2e6",
+            "testMode": false,
+            "difficulty": "hard",
+            "loop": 1,
+            "chapter": 1,
+            "level": 1,
+            "gold": 150,
+            "score": 0,
+            "cls": "gunner",
+            "weapons": [
+              "lmg"
+            ],
+            "curWeapon": "lmg",
+            "weaponLv": {},
+            "items": {
+              "medkit": 2
+            },
+            "hpBonus": 0,
+            "vehiclesOwned": [],
+            "squadCount": 0,
+            "squadOrder": "follow",
+            "squadAutoDefense": true,
+            "lastBattle": null,
+            "squadGear": [],
+            "opsCompleted": {},
+            "perks": {
+              "magnet": false,
+              "regen": false
+            },
+            "hive": {
+              "loop": 1,
+              "chapter": 1,
+              "queen": 1,
+              "killed": false
+            },
+            "baseHp": 2000,
+            "pendingDrops": [],
+            "buildings": [],
+            "time": 1792023153358,
+            "version": "0.9",
+            "rampartRevision": 1
+          },
+          "valid": true,
+          "badSaveRejected": true
+        }
+      ],
+      "compatibility": {
+        "legacyValid": true,
+        "legacy": {
+          "id": "normal",
+          "level": 4,
+          "gold": 712
+        },
+        "opResults": [
+          {
+            "hp": 33.6,
+            "dmg": 8.96,
+            "gold": 12
+          },
+          {
+            "hp": 33.6,
+            "dmg": 8.96,
+            "gold": 12
+          },
+          {
+            "hp": 33.6,
+            "dmg": 8.96,
+            "gold": 12
+          }
+        ],
+        "test": {
+          "id": "normal",
+          "mode": true
+        }
+      },
+      "curves": {
+        "cases": 800,
+        "problems": [],
+        "maxGoldRatio": 1.1333333333333333
+      },
+      "keyboard": false,
+      "touchSimulation": true,
+      "errors": []
+    },
+    {
+      "shape": "portrait",
+      "difficulty": [
+        {
+          "id": "casual",
+          "hp": 25.5,
+          "damage": 5.6,
+          "gold": 12,
+          "bossHp": 612,
+          "eliteHp": 76.5,
+          "baseHp": 2700,
+          "wave": 33,
+          "spawned": 1,
+          "interval": 1.4794600647984164,
+          "weakenedWave": 21,
+          "save": {
+            "campaignId": "393a12d9-227a-4476-8769-c28568125d10",
+            "testMode": false,
+            "difficulty": "casual",
+            "loop": 1,
+            "chapter": 1,
+            "level": 1,
+            "gold": 150,
+            "score": 0,
+            "cls": "gunner",
+            "weapons": [
+              "lmg"
+            ],
+            "curWeapon": "lmg",
+            "weaponLv": {},
+            "items": {
+              "medkit": 2
+            },
+            "hpBonus": 0,
+            "vehiclesOwned": [],
+            "squadCount": 0,
+            "squadOrder": "follow",
+            "squadAutoDefense": true,
+            "lastBattle": null,
+            "squadGear": [],
+            "opsCompleted": {},
+            "perks": {
+              "magnet": false,
+              "regen": false
+            },
+            "hive": {
+              "loop": 1,
+              "chapter": 1,
+              "queen": 1,
+              "killed": false
+            },
+            "baseHp": 2700,
+            "pendingDrops": [],
+            "buildings": [],
+            "time": 1792023158125,
+            "version": "0.9",
+            "rampartRevision": 1
+          },
+          "valid": true,
+          "badSaveRejected": true
+        },
+        {
+          "id": "normal",
+          "hp": 30,
+          "damage": 8,
+          "gold": 12,
+          "bossHp": 720,
+          "eliteHp": 90,
+          "baseHp": 2000,
+          "wave": 33,
+          "spawned": 1,
+          "interval": 1.183568051838733,
+          "weakenedWave": 21,
+          "save": {
+            "campaignId": "62e29fe1-5ac6-443b-bb8d-242d90e115ff",
+            "testMode": false,
+            "difficulty": "normal",
+            "loop": 1,
+            "chapter": 1,
+            "level": 1,
+            "gold": 150,
+            "score": 0,
+            "cls": "gunner",
+            "weapons": [
+              "lmg"
+            ],
+            "curWeapon": "lmg",
+            "weaponLv": {},
+            "items": {
+              "medkit": 2
+            },
+            "hpBonus": 0,
+            "vehiclesOwned": [],
+            "squadCount": 0,
+            "squadOrder": "follow",
+            "squadAutoDefense": true,
+            "lastBattle": null,
+            "squadGear": [],
+            "opsCompleted": {},
+            "perks": {
+              "magnet": false,
+              "regen": false
+            },
+            "hive": {
+              "loop": 1,
+              "chapter": 1,
+              "queen": 1,
+              "killed": false
+            },
+            "baseHp": 2000,
+            "pendingDrops": [],
+            "buildings": [],
+            "time": 1792023158612,
+            "version": "0.9",
+            "rampartRevision": 1
+          },
+          "valid": true,
+          "badSaveRejected": true
+        },
+        {
+          "id": "hard",
+          "hp": 33.6,
+          "damage": 10.4,
+          "gold": 7,
+          "bossHp": 806.4000000000001,
+          "eliteHp": 100.80000000000001,
+          "baseHp": 2000,
+          "wave": 42,
+          "spawned": 1,
+          "interval": 0.7693192336951765,
+          "weakenedWave": 27,
+          "save": {
+            "campaignId": "94eae4c2-fcd0-4536-a75f-62ebab7ca7dd",
+            "testMode": false,
+            "difficulty": "hard",
+            "loop": 1,
+            "chapter": 1,
+            "level": 1,
+            "gold": 150,
+            "score": 0,
+            "cls": "gunner",
+            "weapons": [
+              "lmg"
+            ],
+            "curWeapon": "lmg",
+            "weaponLv": {},
+            "items": {
+              "medkit": 2
+            },
+            "hpBonus": 0,
+            "vehiclesOwned": [],
+            "squadCount": 0,
+            "squadOrder": "follow",
+            "squadAutoDefense": true,
+            "lastBattle": null,
+            "squadGear": [],
+            "opsCompleted": {},
+            "perks": {
+              "magnet": false,
+              "regen": false
+            },
+            "hive": {
+              "loop": 1,
+              "chapter": 1,
+              "queen": 1,
+              "killed": false
+            },
+            "baseHp": 2000,
+            "pendingDrops": [],
+            "buildings": [],
+            "time": 1792023158927,
+            "version": "0.9",
+            "rampartRevision": 1
+          },
+          "valid": true,
+          "badSaveRejected": true
+        }
+      ],
+      "compatibility": {
+        "legacyValid": true,
+        "legacy": {
+          "id": "normal",
+          "level": 4,
+          "gold": 712
+        },
+        "opResults": [
+          {
+            "hp": 33.6,
+            "dmg": 8.96,
+            "gold": 12
+          },
+          {
+            "hp": 33.6,
+            "dmg": 8.96,
+            "gold": 12
+          },
+          {
+            "hp": 33.6,
+            "dmg": 8.96,
+            "gold": 12
+          }
+        ],
+        "test": {
+          "id": "normal",
+          "mode": true
+        }
+      },
+      "curves": {
+        "cases": 800,
+        "problems": [],
+        "maxGoldRatio": 1.1333333333333333
+      },
+      "keyboard": false,
+      "touchSimulation": true,
+      "errors": []
+    }
+  ]
+}

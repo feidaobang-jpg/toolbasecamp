@@ -56,7 +56,7 @@ import {mountTacticalPanel} from './tactical-panel.js';
 import {createCombatControls,mountCombatSettings} from './combat-controls.js';
 import {mountTouchLayout} from './touch-layout.js';
 import {MAX_BUILDINGS,buildingLimit,turretDamageMul} from './defense-progression.js';
-import {CAMPAIGN_DIFFICULTIES,campaignDifficultyId,campaignDifficulty,campaignEliteChance,campaignWaveCount,campaignSpawnInterval} from './campaign-difficulty.js';
+import {CAMPAIGN_DIFFICULTIES,campaignDifficultyId,campaignDifficulty,campaignEliteChance,campaignWaveCount,campaignSpawnInterval,SWARM_SCALE,swarmGoldMul} from './campaign-difficulty.js';
 let selectedDifficulty='normal';
 try{selectedDifficulty=campaignDifficultyId(localStorage.getItem('chongchao-campaign-difficulty'));}catch(_e){}
 let combatStorage;try{combatStorage=localStorage;}catch(_e){}
@@ -1468,7 +1468,7 @@ function killMonster(mo){
   spawnParticles(p,0x336611,8,5,.5,1.5);
   AudioSys.sfx('boom');
   if(mo.explodeOnDie)explode(p,3,mo.dmg*.8,false);
-  if(mo.split&&monsters.length<46){ // 分裂小蛛：普通1只、精英2只，子代伤害和血量都大幅降低
+  if(mo.split&&monsters.length<monsterCap()-2){ // 分裂小蛛：普通1只、精英2只，子代伤害和血量都大幅降低
     for(let i=0;i<(mo.elite?2:1)&&monsters.filter(m=>!m.dead).length<48;i++){
       const s=spawnMonster('mob',p.x+rand(-1,1),p.z+rand(-1,1),{isSplit:true,wild:mo.wild,ch:mo.ch,home:mo.home});
       s.hp=s.maxHp=s.maxHp*.3;s.dmg*=.45;s.speed*=1.1;s.gold=Math.round(s.gold*.3);s.mesh.scale.multiplyScalar(.6);s.radius*=.6;s.hitH*=.6;updHPBar(s.bar,1);
@@ -1651,7 +1651,7 @@ function updMonsters(dt){
     }else if(mo.wild){
       tgt=dist2(mo.mesh.position,player.inVehicle?player.inVehicle.mesh.position:player.pos)<900?monsterTargets(mo):null;
     }else tgt=monsterTargets(mo);
-    if(!tgt){ // 野怪巡逻
+    if(!tgt){ // 没有目标：原地游走
       if(!mo.wander||Math.random()<.005){mo.wander=new THREE.Vector3(rand(-1,1),0,rand(-1,1)).normalize();}
       moveMonster(mo,mo.wander,dt,.3);
       continue;
@@ -1665,7 +1665,7 @@ function updMonsters(dt){
     // BOSS/精英技能：冲锋/弹幕/召唤
     if(mo.bs&&mo.bs.length&&mo.spitCd<=0&&mo.chargeT<=0){
       const skill=mo.bs[Math.floor(rand(0,mo.bs.length))];
-      if(skill==='summon'&&monsters.length<44){
+      if(skill==='summon'&&monsters.length<monsterCap()-4){
         mo.spitCd=7;
         const n=2+(Game.loop>2?1:0);
         for(let k=0;k<n&&monsters.filter(m=>!m.dead).length<48;k++){
@@ -2879,7 +2879,7 @@ function updSandboxWave(dt){
   if(sandboxWave.timer>0)return;
   sandboxWave.timer=3;
   const pp=player.inVehicle?player.inVehicle.mesh.position:player.pos;
-  for(let i=0;i<4&&monsters.length<48;i++){
+  for(let i=0;i<4&&monsters.length<monsterCap();i++){
     const n=sandboxWave.spawned++,ch=CHAPTERS[n%CHAPTERS.length];
     const kind=n%32===31?'boss':n%16===15?'miniboss':'mob';
     const angle=(n%9-4)*.24,r=28+(n%3)*4;
@@ -2896,7 +2896,7 @@ function sandboxSpawn(action='selected'){
     resetSandboxWave();
   }
   const add=(ch,kind='mob',affix=null,index=0)=>{
-    if(monsters.length>=48)return;
+    if(monsters.length>=monsterCap())return;
     const centerZ=clamp(player.pos.z+30,30,160),x=(index%5-2)*9,z=centerZ+Math.floor(index/5)*10;
     spawnMonster(kind,x,z,{ch:CHAPTERS[ch],elite:!!affix,affix});
   };
@@ -2910,7 +2910,7 @@ function sandboxSpawn(action='selected'){
     for(let i=0;i<count;i++)add(ch,kind==='elite'?'mob':kind,kind==='elite'?$('testAffix').value:null,monsters.length);
   }
   Game.state='battle';$('readyBtn').classList.add('hidden');
-  showMsg(`已召唤 · 场上 ${monsters.length}/48 只；可清场后更换组合`,2);
+  showMsg(`已召唤 · 场上 ${monsters.length}/${monsterCap()} 只；可清场后更换组合`,2);
 }
 function claimSandbox(type,id){
   if(!Game.testMode)return;
@@ -2974,6 +2974,14 @@ function levelName(){
 }
 function baseMaxHp(){return Math.round(2000*(1+(Game.chapter-1)*.1)*(1+(Game.loop-1)*.3)*campaignDifficulty(Game.testMode?'normal':Game.difficulty).baseHp);}
 function waveMonsters(){return monsters.filter(m=>!m.dead&&!m.home);}
+/* 同屏上限：虫潮按 SWARM_SCALE 放大后，手机和联机分别收紧——联机每约65ms把全部单位同步给客人，
+   条带过宽会吃满房主上行；手机在 4 倍 CPU 降频模拟下 96 只约 55 帧、120 只约 49 帧，
+   真机未测，故上限只放到 80 只。 */
+function monsterCap(){
+  const scaled=48*SWARM_SCALE;
+  if(coopDriver?.config)return Math.min(scaled,72);
+  return Math.min(scaled,isTouch?80:150);
+}
 /* 虫巢：母皇与护卫只守老巢。母皇血量在同一章内保留，击杀后本章剩余关卡虫潮规模 -35%。 */
 function syncHive(){
   const h=Game.hive;
@@ -3023,7 +3031,7 @@ function tacticalPreview(){
   const mouths=[...new Set(plan.schedule.map(e=>e.mouth))].map(id=>MOUTHS.find(m=>m.id===id).name).join('、');
   const extra=battle?Game.wave.initialWilds:waveMonsters().length;
   return {title:(battle?'本关虫潮 · ':'下一波 · ')+plan.title,
-    info:[...groups].map(([name,count])=>name+' '+count+'只').join(' · ')+'\n入口：'+mouths+(extra?'\n另有 '+extra+' 只场上野怪加入进攻':''),
+    info:[...groups].map(([name,count])=>name+' '+count+'只').join(' · ')+'\n入口：'+mouths+(extra?'\n另有 '+extra+' 只场上残虫加入进攻':''),
     hint:plan.hint,supply:openingSupply(Game.chapter,Game.level,Game.loop)};
 }
 /* 本章完整说明：战场中间只留一行短提示，细则收进「战术部署」面板，免得面板糊住战场（用户2026-10-14） */
@@ -3050,15 +3058,10 @@ function startPrep(){
   gate.dead=false;gate.maxHp=Math.round(2500*(1+(Game.chapter-1)*.08)*(1+(Game.loop-1)*.4));gate.hp=gate.maxHp;gate.auto=false;
   updHPBar(gate.bar,1);gate.open=true;
   if(!Game.testMode){repairVehicles();while(squad.length<Math.min(squadLimit(),Game.squadCount))spawnSquad();}
-  // 野怪：散布在前中场，避开隧道与老巢
-  const n=6+Math.min(10,Game.chapter+Game.loop);
-  for(let i=0;i<n;i++){
-    let x,z,k=0;do{x=rand(WORLD.minX+12,WORLD.maxX-12);z=rand(50,240);}while((tunnelDistance(x,z)<9||Math.hypot(x-HIVE.x,z-HIVE.z)<HIVE.r+12||HILL_FORTS.some(f=>Math.hypot(x-f.x,z-f.z)<f.top+5))&&++k<30);
-    const ec=campaignEliteChance(Game.testMode?'normal':Game.difficulty,Game.chapter,Game.loop,true);
-    spawnMonster('mob',x,z,{wild:true,elite:Math.random()<ec?true:undefined,quiet:true});
-  }
-  if(Math.random()<.5)spawnMonster('miniboss',rand(-40,40),rand(130,170),{wild:true});
+  // 准备阶段不再散布野怪（用户2026-10-14：地图上除母巢外不要野怪）；虫潮全部从虫洞正式出兵，老巢仍留母皇与护卫可提前打。
   if(!Game.testMode)spawnHive();
+  // 母巢状态同步后再算预告，保证准备阶段看到的虫潮数量与开战时一致
+  if(!Game.testMode)Game.wave.plan=currentWavePlan();
   $('readyBtn').classList.remove('hidden');
   showMsg(levelName(),3);
   const tip=Game.level===1?'本章：'+chapterCfg().tip+' · ':'';
@@ -3074,7 +3077,7 @@ function startBattle(){
   Game.state='battle';
   $('readyBtn').classList.add('hidden');
   showHint('守住基地，耐久归零即失败 · 清完本关进下一关 · '+(Game.hive.killed?'母皇已死，虫潮减弱':'母皇存活，掉落更多也更难守'));
-  // 剩余野怪加入进攻；老巢护卫与母皇留守
+  // 残留的非老巢虫（如提前打母巢时分裂、召唤出来的）一律加入进攻；老巢护卫与母皇留守
   for(const mo of monsters){if(!mo.home)mo.wild=false;}
   const w=Game.wave,current=waveMonsters().length;
   w.killed=0;w.spawned=current;w.timer=1.5;w.bossSpawned=false;w.done=false;w.mouth=Math.floor(rand(0,MOUTHS.length));
@@ -3093,7 +3096,7 @@ function mouthSpawn(main=false){
 function updWave(dt){
   if(zergOn())return; // 虫族模式的增援由虫族模块自己导演
   if(operations.update(dt))return;
-  if(Game.testMode){updSandboxWave(dt);$('waveTxt').textContent=`🧪 ${sandboxWave.enabled?'持续虫潮':'刷怪暂停'} · ${monsters.length}/48`;return;}
+  if(Game.testMode){updSandboxWave(dt);$('waveTxt').textContent=`🧪 ${sandboxWave.enabled?'持续虫潮':'刷怪暂停'} · ${monsters.length}/${monsterCap()}`;return;}
   const w=Game.wave;
   if(Game.battleLedger&&Game.battleLedger.active)Game.battleLedger.elapsed+=dt;
   // 过关等待随游戏时钟推进；暂停、失焦或打开菜单时保留，不丢失一次性回调。
@@ -3104,7 +3107,7 @@ function updWave(dt){
     return;
   }
   // 出怪
-  if(w.spawned<w.total && monsters.length<48){
+  if(w.spawned<w.total && monsters.length<monsterCap()){
     w.timer-=dt;
     if(w.timer<=0){
       const entry=w.plan&&w.plan.schedule[w.planIndex++];
@@ -3113,6 +3116,8 @@ function updWave(dt){
         const mouth=MOUTHS.find(m=>m.id===entry.mouth),ch=CHAPTERS[entry.species];
         const ec=campaignEliteChance(Game.difficulty,Game.chapter,Game.loop);
         const monster=spawnMonster(entry.kind,0,HIVE.z-3,{ch,elite:entry.kind==='mob'&&Math.random()<ec,route:hiveRoute(mouth.id)});
+        // 虫潮按 SWARM_SCALE 放大，小兵与精英的单只掉落同步回落，避免金币随数量同倍膨胀
+        if(entry.kind==='mob')monster.gold=Math.max(1,Math.round(monster.gold*swarmGoldMul()));
         monster.waveEntry={...entry};
         if(entry.kind!=='mob'){
           w.bossSpawned=true;showMsg((entry.kind==='boss'?'💀 ':'⚔ 小首领 ')+ch.boss+' 正沿'+mouth.name+'进军！',3);AudioSys.sfx('wave');
@@ -3788,8 +3793,9 @@ function updHUD(dt){
   }
   $('hiveTxt').textContent=Game.testMode?'':Game.hive.killed?'👑 母皇已击杀 · 虫潮 -35% · 每关补给 +'+queenSupply():`👑 虫巢母皇 ${Math.round(Game.hive.queen*100)}% · 击杀后每关 +${queenSupply()}`;
   if(Game.state==='prep'){
-    const wilds=waveMonsters().length;
-    $('waveTxt').textContent=`🛠 准备中 · 野怪 ${wilds}（可选打）`;
+    const total=Game.wave.plan?Game.wave.plan.schedule.length:currentWavePlan().schedule.length;
+    const left=waveMonsters().length;
+    $('waveTxt').textContent=`🛠 准备中 · 本关虫潮 ${total} 只`+(left?` · 场上残虫 ${left}`:'');
   }
   renderWeaponBar();
   if(Game.msgTimer>0){Game.msgTimer-=dt;if(Game.msgTimer<=0)$('msg').classList.add('hidden');}
@@ -4398,7 +4404,7 @@ function setupWebControls(){
     window.__gameQA={CAMPAIGN_DIFFICULTIES,campaignDifficulty,campaignEliteChance,campaignWaveCount,campaignSpawnInterval,baseMaxHp,AudioSys,lookControl,hiveFloor,hiveCeiling,hiveNavigation,hiveRoute,rampartHeight,rampartNavigation,RAMPARTS,mouthSpawn,navDir,moveMonster,SQUAD_ROLES,squadRole,changeSquadRole,assignSquadVehicle,boardSquadVehicle,leaveSquadVehicle,updSquadSupport,updSquadDriver,monsterTargets,buyItem,battlefield,groundMesh,environmentForChapter,classDamage,updSmartGate,setGate,CombatControls,playerAim,automaticFireTarget,operations,keyBindings,squadGear,upgradeSquad,squadMaxHp,MAX_BUILDINGS,updPickups,openShop,closePanels,WEAPONS,CHAPTERS,ELITES,BUILDINGS,ITEMS,VEHICLES,MOUTHS,HIVE,THEME,bullets,buildings,rockColliders,fortress,hive,groundY,tooSteep,slopeSpeed,interactionTarget,getCamYaw:()=>camYaw,setCamYaw:v=>{camYaw=v;},getCamMode:()=>camMode,setCamMode,collideWalls,fireBullet,updBullets,updBuildings,updPlayer,updSquad,updWave,updMonsters,updGate,updCamera,sandboxWave,loadGame,autoSave,saveData,applySave,damageGate,damageBuilding,damageSquad,damageVehicle,placeBuilding,sandboxSpawn,claimSandbox,openSandbox,saveStore,getPlatformSave:()=>platformSave,Game,player,base,gate,monsters,squad,vehicles,pickups,renderer,scene,camera,Input,newGame,requestNewGame,startBattle,startPrep,spawnMonster,spawnSquad,spawnVehicle,enterVehicle,exitVehicle,damageMonster,playerDamage,damageBase,restartLevel,clearEntities,setCameraView,visuals,weaponDps,weaponMul,upgradeWeapon,startPlacement,confirmPlacement,cancelPlacement,startDemolish,demolishTarget,findFreeSpot,spotFree,placementCheck,place,migrateWeapons,LEGACY_WEAPONS,CLASSES,renderBuild,selectWeapon,cycleWeapon,useMedkit,setSquadTask,squadBehavior,squadTaskLabel,validateNormalSave,vehicleMuzzle,vehicleAim,squadMuzzle,squadFollowPoint,squadPatrolPoint,squadAnchor,muzzleTip,updateSquadHeading,levelWin,togglePause,pauseKey,hasProgress,slotInfo,camState,dropPickup,explode,
       get acidArena(){return acidArena;},acidOn,fpsRules,manualHuman,aimAssistKind,crosshairPoint,cycleCamView,syncBattlefieldView,restoreView,starshipInput,withHuman,getCamPitch:()=>camPitch,setCamPitch:v=>{camPitch=v;},getCamView:()=>camView,getVehicleView:()=>bfVehicleView,getCamDist:()=>camState.dist,
       get rvBreakout(){return rvBreakout;},get versus(){return versus;},get zerg(){return zergMode;},zergOn,selectVersusRules,bankOn,battleOn,versusBank,versusSend,versusBuildPick,startVersusAI,startVersusSim,versusSimStep,exitVersus,versusTogglePanel,versusPick,versusSeatPlan,versusGive,get VS_UNITS(){return VS_UNITS;},get VS_AI(){return VS_AI;},get VS_RULES(){return VS_RULES;},VS_SIZES,get coopHumans(){return coopHumans;},
-      touchLayout,setDeviceMode,vehicleCanStand,queenSupply,updHUD,throwGrenade,explorationLight,tacticalWavePlan,openingSupply,tacticalPreview,tacticalPanel,setSquadMemberTask,setSquadAutoDefense,finishBattleReport,updAirdrops,updParticles,get panelOpen(){return panelOpen;},get isTouch(){return isTouch;},
+      touchLayout,setDeviceMode,vehicleCanStand,queenSupply,updHUD,throwGrenade,explorationLight,tacticalWavePlan,openingSupply,tacticalPreview,tacticalPanel,setSquadMemberTask,setSquadAutoDefense,finishBattleReport,updAirdrops,updParticles,monsterCap,SWARM_SCALE,swarmGoldMul,get panelOpen(){return panelOpen;},get isTouch(){return isTouch;},
       startMeasure(){frameTimes.length=0;previousFrame=0;measuring=true;},
       endMeasure(){measuring=false;const s=[...frameTimes].sort((a,b)=>a-b),sum=s.reduce((a,b)=>a+b,0);return{samples:s.length,averageFPS:1000/(sum/s.length),medianMs:s[Math.floor(s.length*.5)],p95Ms:s[Math.floor(s.length*.95)],over50ms:s.filter(v=>v>50).length,drawCalls:renderer.info.render.calls,triangles:renderer.info.render.triangles,memory:renderer.info.memory,viewport:[innerWidth,innerHeight],dpr:renderer.getPixelRatio(),drawingBuffer:[renderer.domElement.width,renderer.domElement.height],renderer:renderer.getContext().getParameter((renderer.getContext().getExtension('WEBGL_debug_renderer_info')||{}).UNMASKED_RENDERER_WEBGL||renderer.getContext().RENDERER),quality,theme:THEME,raw:frameTimes.slice()};}
     };

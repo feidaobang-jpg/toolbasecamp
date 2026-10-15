@@ -13,13 +13,20 @@ export function campaignEliteChance(id,chapter,loop,wild=false){
   const d=campaignDifficulty(id),base=wild?(loop>1||chapter>3?.12:.05):Math.min(.28,.04+(loop-1)*.05+(chapter-1)*.012);
   return Math.min(.38,base*d.elite+d.eliteBonus);
 }
+// 虫潮规模倍数（玩家反馈"作者可以怪出多点吗"，用户2026-10-14选定默认3倍）：
+// 每波虫子数量×SWARM_SCALE；出怪间隔和单只击杀金币只按 √倍数 收，
+// 让一关的时长与总收益约按 √倍数 增长，不随数量同倍膨胀。同屏上限另按设备收紧。
+export const SWARM_SCALE=3;
+export function swarmIntervalDiv(){return Math.sqrt(SWARM_SCALE);}
+export function swarmGoldMul(){return 1/Math.sqrt(SWARM_SCALE);}
 export function campaignWaveCount(id,chapter,level,loop,queenKilled=false){
   const d=campaignDifficulty(id);
   let n=Math.round((8+level*1.8+chapter*1.6)*(1+(loop-1)*.3));
   n=Math.round(n*d.wave);
-  return queenKilled?Math.round(n*.65):n;
+  return (queenKilled?Math.round(n*.65):n)*SWARM_SCALE;
 }
 export function campaignSpawnInterval(id,chapter,level,loop){
   const old=Math.max(.45,2.2-level*.1-chapter*.05-(loop-1)*.25);
-  return Math.max(.35,old*campaignDifficulty(id).interval);
+  // 虫潮×N 后出怪同比加密：整条间隔曲线除以 √N，三档难度的相对顺序与原有下限不变
+  return Math.max(.35,old*campaignDifficulty(id).interval)/swarmIntervalDiv();
 }

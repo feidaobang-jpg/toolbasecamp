@@ -35,12 +35,14 @@ const out=process.env.QA_OUTPUT||path.join(__dirname,'media-kit/releases/web-dif
    assert.equal(measured.id,id);assert.ok(measured.valid&&measured.badSaveRejected);assert.equal(measured.save.difficulty,id);assert.ok(measured.weakenedWave<measured.wave);assert.equal(measured.spawned,1);
    difficulty.push(measured);console.log(shape,id,'rules/save passed');
    assert.ok((await game.locator('#statLine').textContent()).includes({casual:'休闲',normal:'普通',hard:'困难'}[id]));
-   await press('#menuButton');await press('#btnSaveMenu');await press('#slotList .saveSlot:not(.auto):nth-child(1) button:first-child');
+   await press('#menuButton');await press('#menuPause [data-menu-panel="menuSavePanel"]');await press('#btnSaveMenu');await press('#slotList .saveSlot:not(.auto):nth-child(1) button:first-child');
    assert.ok((await game.locator('#slotList').textContent()).includes({casual:'休闲',normal:'普通',hard:'困难'}[id]));
    await press('#saveClose');await press('#btnQuit');
   }
   const [easy,normal,hard]=difficulty;
-  assert.equal(normal.hp,30);assert.equal(normal.damage,8);assert.equal(normal.gold,12);assert.equal(normal.baseHp,2000);assert.equal(normal.wave,11);assert.ok(Math.abs(normal.interval-2.05)<1e-10);
+  // 0.38.8 起虫潮规模×3（campaign-difficulty.js 的 SWARM_SCALE），出怪间隔按 √3 收紧
+  const swarm=3;
+  assert.equal(normal.hp,30);assert.equal(normal.damage,8);assert.equal(normal.gold,12);assert.equal(normal.baseHp,2000);assert.equal(normal.wave,11*swarm);assert.ok(Math.abs(normal.interval-2.05/Math.sqrt(swarm))<1e-10);
   assert.ok(easy.hp<normal.hp&&easy.damage<normal.damage&&easy.baseHp>normal.baseHp&&easy.interval>normal.interval);
   assert.ok(hard.hp>normal.hp&&hard.damage>normal.damage&&hard.wave>normal.wave&&hard.interval<normal.interval&&hard.gold<normal.gold);
   assert.ok(hard.hp<normal.hp*1.2&&hard.bossHp<normal.bossHp*1.2,'hard mode avoids bloated HP');
@@ -77,17 +79,18 @@ const out=process.env.QA_OUTPUT||path.join(__dirname,'media-kit/releases/web-dif
   await press('#btnContinue');await game.waitForTimeout(1000);
   await page.screenshot({path:path.join(out,'captures',shape+'-hud.png')});
   const paused=await game.evaluate(()=>{const q=__gameQA;q.togglePause();return{d:q.Game.difficulty,l:q.Game.level,g:q.Game.gold};});
+  await press('#menuPause [data-menu-panel="menuSettingsPanel"]');
   await press('[data-device-mode="touch"]');await press('[data-device-mode="desktop"]');await press('[data-device-mode="auto"]');
   assert.deepEqual(await game.evaluate(()=>({d:__gameQA.Game.difficulty,l:__gameQA.Game.level,g:__gameQA.Game.gold})),paused,'mode switching preserves run');
   assert.equal(await game.locator('#menuPause [data-campaign-difficulty]').count(),0,'difficulty is fixed for this run');
   const curves=await game.evaluate(()=>{
    const q=__gameQA,problems=[];let cases=0,maxGoldRatio=0;const affixes=Object.keys(q.ELITES).length;
    for(const loop of [1,2,10,100000])for(let chapter=1;chapter<=10;chapter++)for(let level=1;level<=10;level++)for(const killed of [false,true]){
-    const old=Math.round((8+level*1.8+chapter*1.6)*(1+(loop-1)*.3)),n=killed?Math.round(old*.65):old;
+    const old=Math.round((8+level*1.8+chapter*1.6)*(1+(loop-1)*.3)),n=(killed?Math.round(old*.65):old)*q.SWARM_SCALE;
     const normal=q.campaignWaveCount('normal',chapter,level,loop,killed),hard=q.campaignWaveCount('hard',chapter,level,loop,killed);
-    const interval=Math.max(.45,2.2-level*.1-chapter*.05-(loop-1)*.25);
+    const interval=Math.max(.35,Math.max(.45,2.2-level*.1-chapter*.05-(loop-1)*.25))/Math.sqrt(q.SWARM_SCALE);
     if(normal!==n||q.campaignSpawnInterval('normal',chapter,level,loop)!==interval)problems.push('normal parity');
-    if(hard<normal||q.campaignSpawnInterval('hard',chapter,level,loop)>=interval||q.campaignSpawnInterval('hard',chapter,level,loop)<.35)problems.push('pressure/cap');
+    if(hard<normal||q.campaignSpawnInterval('hard',chapter,level,loop)>=interval||q.campaignSpawnInterval('hard',chapter,level,loop)<.35/Math.sqrt(q.SWARM_SCALE))problems.push('pressure/cap');
     const ec=id=>q.campaignEliteChance(id,chapter,loop),base=q.CHAPTERS[chapter-1].mob.gold*(1+(loop-1)*.3);
     const mean=id=>{const r=q.campaignDifficulty(id),g=Math.round(Math.round(base)*r.mobGold);return (id==='hard'?hard:normal)*g*(1+ec(id)*(4*(1+r.doubleAffix*(affixes-1)/affixes)-1));};
     const ratio=mean('hard')/mean('normal');maxGoldRatio=Math.max(maxGoldRatio,ratio);if(ratio>1.15)problems.push('gold snowball');cases++;

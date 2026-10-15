@@ -6,7 +6,6 @@
     "battlefield-assets.js",
     "battlefield-palette.js",
     "boot.js",
-    "campaign-difficulty.js",
     "dark-visuals.js",
     "defense-progression.js",
     "enemy-visuals.js",
@@ -29,6 +28,7 @@
   ],
   "perGame": {
     "game.js": "玩法内核已按游戏分叉（自动瞄准语义、视角预设数量、首领血量与行军步长、镜头直连与队列），合并等于让一款游戏继承另一款的行为",
+    "campaign-difficulty.js": "数值平衡按游戏分叉：虫潮围城 0.38.8 起按玩家反馈把战役每关虫潮数量×3（导出 SWARM_SCALE，出怪间隔与单只掉落按 √3 收），枪火集结抗战战役保持 1 倍。规范源本目录仍留无倍数基线供 shared/tactical-waves.js 引用；改共用算法（如难度表结构）请分别改两款并各自回归，别把一款的倍率带给另一款。",
     "game.compat.js": "构建产物，由各自的 game.js 用 build-compat 打包，不入库比对内容一致性",
     "cloud-save.js": "云档标记 game 字段不同：starship-defense / gunfire-assembly",
     "save-panel.js": "导出备份 envelope 的 game 字段不同，导入时按这个字段校验",
