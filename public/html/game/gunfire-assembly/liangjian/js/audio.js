@@ -1,5 +1,11 @@
-// 声音：音效与鼓点军乐用 WebAudio 合成（原创）；喊话多数截自电视剧《亮剑》原声，片源里没有的几句是本机合成。
+// 声音：音效用 WebAudio 合成；背景音乐用电视剧《亮剑》原版配乐（李海鹰 / 亚洲爱乐乐团，用户 2026-10-14 指定、知道未授权），
+// 加载不了时退回原来的合成鼓点；喊话多数截自电视剧原声，片源里没有的几句是本机合成。
+// 配乐片源见 game-projects/liangjian-pingan/media-kit/assets/music.json
 // 语音清单在 assets/voice/index.json（按章节分组，每章只加载自己的），来源与时间点见 game-projects/liangjian-pingan/media-kit/assets/voice.json
+
+// 配乐：assets/music/<名字>.mp3。菜单《中国军魂》，各章交战曲，决战 / Boss《战斗序曲》
+const BATTLE = { pingan: 'touru', cangyunling: 'xiaoyan', lijiapo: 'weiji' };
+const MUSIC_VOL = 0.42;
 
 export class GameAudio {
   constructor(chapter = '') {
@@ -14,6 +20,8 @@ export class GameAudio {
     this.step = 0;
     this.pausedByGame = false;
     this.log = [];        // 供验收脚本查看触发过的声音
+    this.tracks = {};     // 名字 → <audio>
+    this.track = null; this.trackName = null; this.fallback = false;
   }
 
   unlock() {
@@ -35,6 +43,7 @@ export class GameAudio {
     for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
     this.nextStep = ctx.currentTime + 0.1;
     this.loadVoices();
+    if (this.trackName && !this.track) { const n = this.trackName; this.trackName = null; this.setTrack(n, this.trackOnce); }
   }
   async loadVoices() {
     // 先读清单，只取实际存在的语音，没有就只显示字幕
@@ -51,9 +60,9 @@ export class GameAudio {
       } catch (e) { /* 没有语音文件时只显示字幕 */ }
     }
   }
-  setVolume(v) { this.volume = v; if (this.master) this.master.gain.value = v; }
-  suspend() { this.pausedByGame = true; if (this.ctx && this.ctx.state === 'running') this.ctx.suspend(); }
-  resume() { this.pausedByGame = false; if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume(); }
+  setVolume(v) { this.volume = v; if (this.master) this.master.gain.value = v; for (const k in this.tracks) { const a = this.tracks[k]; a.volume = Math.min(1, v * MUSIC_VOL * (a._fade || 0)); } }
+  suspend() { this.pausedByGame = true; if (this.ctx && this.ctx.state === 'running') this.ctx.suspend(); if (this.track) this.track.pause(); }
+  resume() { this.pausedByGame = false; if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume(); if (this.track && this.ctx) this.track.play().catch(() => {}); }
 
   // ---- 合成积木 ----
   _noise(t, dur, type, f0, f1, gain, q = 0.8, dest) {
@@ -193,11 +202,45 @@ export class GameAudio {
   // 跳过剧情、重开时把还没说完的台词掐掉
   stopVoices() { for (const s of this.speaking) { try { s.stop(); } catch (e) { /* 已经播完 */ } } this.speaking.clear(); }
 
-  // ---- 背景鼓点与军乐（原创程序化），用 AudioContext 时钟排程，暂停即冻结 ----
-  setMusic(level) { this.level = level; this.musicOn = level >= 0; }
+  // ---- 背景音乐：原版配乐，淡入淡出切换；level -1 关、0 菜单、1 交战、2 决战 ----
+  setMusic(level) {
+    this.level = level; this.musicOn = level >= 0;
+    this.setTrack(level < 0 ? null : level === 0 ? 'junhun' : level >= 2 ? 'xuqu' : BATTLE[this.chapter] || 'xiaoyan');
+  }
+  // 指定一首（剧情、胜利等）；once=true 放完不循环
+  setTrack(name, once = false) {
+    this.log.push('music:' + name);
+    if (name === this.trackName) return;
+    this.trackName = name; this.trackOnce = once;
+    const old = this.track;
+    if (old) this._fadeTo(old, 0, 0.8, () => { if (old !== this.track) old.pause(); });
+    this.track = null;
+    if (!name || !this.ctx) return;     // 还没解锁声音：解锁时再放
+    let a = this.tracks[name];
+    if (!a) {
+      a = this.tracks[name] = new Audio('assets/music/' + name + '.mp3');
+      a.preload = 'auto';
+      a.addEventListener('error', () => { this.fallback = true; });   // 配乐加载不了就用合成鼓点
+    }
+    a.loop = !once; a._fade = 0; a.volume = 0;
+    if (old !== a) { try { a.currentTime = 0; } catch (e) { /* 还没加载 */ } }
+    this.track = a; this.fallback = false;
+    if (!this.pausedByGame) a.play().catch(() => {});
+    this._fadeTo(a, 1, 1.2);
+  }
+  _fadeTo(a, to, sec, done) {
+    clearInterval(a._fi);
+    const from = a._fade || 0, t0 = performance.now();
+    a._fi = setInterval(() => {
+      const k = Math.min(1, (performance.now() - t0) / (sec * 1000));
+      a._fade = from + (to - from) * k; a.volume = Math.min(1, this.volume * MUSIC_VOL * a._fade);
+      if (k >= 1) { clearInterval(a._fi); if (done) done(); }
+    }, 50);
+  }
+  // 配乐加载失败时的后备：原创合成鼓点，用 AudioContext 时钟排程，暂停即冻结
   tick() {
     const c = this.ctx;
-    if (!c || c.state !== 'running' || !this.musicOn) return;
+    if (!c || c.state !== 'running' || !this.musicOn || !this.fallback) return;
     if (this.nextStep < c.currentTime - 0.3) this.nextStep = c.currentTime + 0.05;
     const bpm = this.level >= 2 ? 126 : this.level === 1 ? 112 : 92;
     const sp = 60 / bpm / 4;

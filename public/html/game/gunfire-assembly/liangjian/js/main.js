@@ -87,6 +87,7 @@ class App {
     this.layout(true);
     this._bind();
     this.ui.show('menu');
+    this.audio.setMusic(0);   // 菜单放《中国军魂》（点一下画面解锁声音后才响）
     $('loading').hidden = true;
     if (this.qa) this._qa();
     this.last = performance.now();
@@ -274,7 +275,7 @@ class App {
     d.best = best;
     this.input.exitLock();
     this.state = 'result';
-    this.audio.setMusic(-1);
+    if (d.win) this.audio.setTrack('fenghuo', true); else this.audio.setMusic(-1);   // 打赢了放《烽火连天》
     this.input.clear();
     this.ui.result(d);
   }

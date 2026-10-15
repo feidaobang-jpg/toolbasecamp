@@ -469,6 +469,7 @@ export class LijiapoGame extends Game {
     if (fresh || !this.lb) this.lightTo(want, 0);
     spawnPhase(this, n);
     this.audio.setMusic(n >= 4 ? 2 : 1);
+    if (n === 2) this.audio.setTrack('shenru');   // 夜里挖交通壕：《深入敌后》
     if (n === 1) {
       this.place(h, L.start.x, L.start.z);
       this.allies.forEach((al, i) => this.place(al, L.start.x + (i % 2 ? 1 : -1) * (2.2 + Math.floor(i / 2) * 2.2), L.start.z + 2.4 + Math.floor(i / 2) * 1.6));

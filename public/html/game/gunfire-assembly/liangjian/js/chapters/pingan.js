@@ -177,7 +177,8 @@ export class PinganGame extends Game {
     if (c.manned) this.leaveCannon();
     h.hp = h.maxHp; h.nades = h.nadeMax; h.inv = Math.max(h.inv, 1.2);
     spawnPhase(this, n);
-    this.audio.setMusic(n >= 5 ? 2 : n === 3 ? 2 : 1);
+    this.audio.setMusic(n >= 5 ? 2 : 1);
+    if (n === 3) this.audio.setTrack('jinji');   // 炮击城墙：《紧急》
     if (n === 1) {
       this.place(h, L.start.x, L.start.z);
       ui.say('李云龙', '传我命令：全团集合，打平安县城！');
@@ -390,6 +391,7 @@ export class PinganGame extends Game {
     const tower = { px: 1.8, py: 11.7, pz: -9.2, lx: 0.1, ly: 11.0, lz: -16.4 };
     const face = () => ({ px: h.x - 1.3, py: 1.9, pz: h.z - 3.4, lx: h.x, ly: 1.55, lz: h.z });
     this.cutCam = tower;
+    this.audio.setTrack('xiongdi');   // 秀芹被押上城楼：《兄弟连心》
     ui.say('山本一木', '楼下的八路，别打啦！你们往楼上看——这个女人，你们认识吗？', { now: true, foe: true, dur: 9.1 });
     this.audio.voice('shanben_bieda');
     this.playScene(23.4, [
