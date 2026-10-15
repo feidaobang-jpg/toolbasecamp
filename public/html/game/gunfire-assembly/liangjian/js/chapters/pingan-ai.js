@@ -88,7 +88,7 @@ export function updateBoss(g, u, dt) {
       if (u.cd <= 0) {
         const r = rand();
         if (d > 4 && r < 0.45) startDash(g, u, fast ? 0.62 : 0.85);
-        else if (u.stage >= 2 && r < 0.7) { u.state = 'nade'; u.stT = 0.55; u.slash = 0; }
+        else if (u.stage >= 2 && r < 0.7 && d < 25) { u.state = 'nade'; u.stT = 0.55; u.slash = 0; }   // 手榴弹扔不过 25 米
         else { u.state = 'aimShot'; u.stT = 0.5; }
       }
       break;
@@ -121,9 +121,11 @@ export function updateBoss(g, u, dt) {
       g.fx.spawn({ x: u.x, y: 1.2, z: u.z, life: 0.2, s0: 0.5, s1: 0.05, c0: 0xff8a70, c1: 0x7a1a12, spin: 0 });
       if (!u.hitDone && d < 1.7) {
         u.hitDone = true;
-        if (h.dashT > 0) { g.tryClash(u); break; }
-        // 刀锋贴地横扫：跳起来就躲过去了
-        if (h.y > 0.7) { g.addScore(150); g.stats.dodges = (g.stats.dodges || 0) + 1; if (!g.flags.jumpDodge) { g.flags.jumpDodge = 1; g.ui.toast('跳过去了！山本的突进扑了个空', 2.2); } }
+        const def = g.bladeDefend(u, 'dash');   // 拔刀格挡：挡住被震退，刀到的一瞬间按下＝拼刀
+        if (def === 'parry') break;
+        // 刀锋贴地横扫：跳起来就躲过去了（格挡住了就不算）
+        if (def) { /* 挡住了 */ }
+        else if (h.y > 0.7) { g.addScore(150); g.stats.dodges = (g.stats.dodges || 0) + 1; if (!g.flags.jumpDodge) { g.flags.jumpDodge = 1; g.ui.toast('跳过去了！山本的突进扑了个空', 2.2); } }
         else g.hurtHero(2, u.x, u.z);
       }
       if (u.left <= 0 || moved < sp * dt * 0.3) {

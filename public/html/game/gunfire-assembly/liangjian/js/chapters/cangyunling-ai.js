@@ -176,9 +176,12 @@ export function updateBoss(g, u, dt) {
       g.fx.spawn({ x: u.x, y: 1.2, z: u.z, life: 0.2, s0: 0.5, s1: 0.05, c0: 0xff8a70, c1: 0x7a1a12, spin: 0 });
       if (!u.hitDone && d < 1.7) {
         u.hitDone = true;
-        if (h.dashT > 0) { g.tryClash(u); break; }
-        if (h.y > 0.7) { g.addScore(150); if (!g.flags.jumpDodge) { g.flags.jumpDodge = 1; g.ui.toast('跳过去了！坂田的突进扑了个空', 2.2); } }
-        else g.hurtHero(2, u.x, u.z);
+        const def = g.bladeDefend(u, 'dash');   // 拔刀格挡：挡住被震退，刀到的一瞬间按下＝拼刀
+        if (def === 'parry') break;
+        if (!def) {
+          if (h.y > 0.7) { g.addScore(150); if (!g.flags.jumpDodge) { g.flags.jumpDodge = 1; g.ui.toast('跳过去了！坂田的突进扑了个空', 2.2); } }
+          else g.hurtHero(2, u.x, u.z);
+        }
       }
       if (u.left <= 0 || moved < sp * dt * 0.3) { u.state = 'recover'; u.stT = 1.2; }
       break;

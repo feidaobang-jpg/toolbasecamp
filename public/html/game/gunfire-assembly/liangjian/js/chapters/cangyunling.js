@@ -147,7 +147,7 @@ export class CangyunlingGame extends Game {
   gunTargetable(u) { const c = this.cannon; return this.phase === 3 && c.visible && c.alive && !c.placed && u.wantCannon; }
   gunBar() { return this.phase === 1 ? this.prog / 100 : this.phase === 3 && !this.cannon.placed ? this.cannon.hp / this.cannon.maxHp : null; }
   gunBarLabel() { return this.phase === 1 ? '转移进度' : '炮组'; }
-  // 抓舌头：军曹挨枪子只会倒地，手榴弹、炮弹、刀和骑兵会把他弄死
+  // 抓舌头：军曹挨枪子只会倒地，手榴弹、炮弹和刀会把他弄死
   spareUnit(u, dmg, kind) {
     if (u !== this.tongue || this.phase !== 2) return false;
     if (u.downed) { u.hp = 1; return true; }
@@ -258,7 +258,7 @@ export class CangyunlingGame extends Game {
       this.tongueIdx = 0; this.spawnTongue(0);
       this.vo('cy_zhuohuode', 4.5, () => ui.say('李云龙', '去，抓个活的问问，对面的鬼子是哪个部队的。', { now: true, dur: 4.6 }));
       this.spawnMed(0, 50);
-      this.after(4.8, () => ui.toast('抓舌头：用枪把带臂章的军曹打倒（手榴弹、骑兵会把他弄死），再过去按 F 抓活的', 6));
+      this.after(4.8, () => ui.toast('抓舌头：用枪把带臂章的军曹打倒（手榴弹、大刀会把他弄死），再过去按 F 抓活的', 6));
     } else if (n === 3) {
       c.visible = true; c.placed = false; c.moving = false; c.x = L.mortarStart.x; c.z = L.mortarStart.z; c.hp = c.maxHp; c.alive = true;
       this.pathI = 0;
@@ -450,7 +450,7 @@ export class CangyunlingGame extends Game {
     if (t && !t.alive && !this.flags.captured) {
       this.stats.tongueFail++; this.tongue = null;
       ui.say('虎子', '团长，下手太重了，这个没气了！', { now: true });
-      ui.toast('要活的：用枪把军曹打倒，别用手榴弹、亮剑和骑兵连', 4);
+      ui.toast('要活的：用枪把军曹打倒，别用手榴弹和大刀', 4);
       this.after(2.5, () => { if (this.phase === 2 && !this.flags.captured && !this.over) { this.tongueIdx++; this.spawnTongue(this.tongueIdx); ui.say('张大彪', '那边还有一个戴臂章的！'); } });
     }
   }
@@ -734,7 +734,7 @@ export class CangyunlingGame extends Game {
       rows: [
         ...(this.flags.line ? [['结局', hit ? (s.hitShot ? '第' + cn(s.hitShot) + '发炮弹打掉指挥部（原作）' : '炮弹打掉指挥部（原作）') : '炮弹打偏，手刃坂田（改写）']] : []),
         ['用时', fmtTime(this.t)], ['歼敌', s.kills], ['干掉精锐', s.elites], ['抓舌头', s.tongueFail ? '打死 ' + s.tongueFail + ' 个才抓到活的' : '一次抓活'],
-        ['炮组重整', s.retries], ['拼刀成功', s.clash], ['骑兵连出击', s.cav], ['阵亡', s.deaths], ['受击', s.hurt], ['爆头', s.heads],
+        ['炮组重整', s.retries], ['拼刀成功', s.clash], ['弹开', s.parry], ['阵亡', s.deaths], ['受击', s.hurt], ['爆头', s.heads],
         ['规则', (this.app.get('lives') === 'inf' ? '无限命' : '经典 3 命') + ' · ' + ({ std: '标准', easy: '宽松', one: '一发' }[this.app.get('armor')])],
       ],
     });

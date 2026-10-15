@@ -66,7 +66,7 @@ export function shootAt(g, u, t, spread, lead, speed = 34, left = false) {
   const isCannon = t === g.cannon;
   const tx = t.x + (t.vx || 0) * fl * lead + rand(-spread, spread) * d;
   const tz = t.z + (isCannon ? 0.8 : 0) + (t.vz || 0) * fl * lead + rand(-spread, spread) * d;
-  const ty = (t.y || 0) + (isCannon ? 0.9 : 1.1) + rand(-spread, spread) * d * 0.4;
+  const ty = g.aimY(t) + rand(-spread, spread) * d * 0.4;
   g.fireBullet(1, _v.x, _v.y, _v.z, tx, ty, tz, 1, speed, g.elev(u) > 2 ? 'citywall' : null);
   u.shotT = 0.07;
   g.sfxAt(u.type === 'elite' || u.type === 'boss' ? 'mg' : 'rifle', u.x, u.z, 0.75);
@@ -86,6 +86,7 @@ export function updateEnemy(g, u, dt) {
     return;
   }
   if (g.cut > 0 || g.flags.won) { still(u, dt); u.aim = damp(u.aim, 0, 8, dt); return; }
+  if (u.stagT > 0) { u.stagT -= dt; still(u, dt); u.aim = damp(u.aim, 0, 8, dt); u.slash = -1; return; }   // 被重砍、被弹开：踉跄一下
   if (u.think <= 0 || (u.target && u.target.alive === false) || (u.target && u.target.down > 0)) {
     u.think = 0.5 + rand(0.3);
     u.target = chooseTarget(g, u);
@@ -112,14 +113,14 @@ export function updateEnemy(g, u, dt) {
   if (type === 'mg') {
     still(u, dt);
     const ox = u.x, oz = u.z + 1.75;
-    const ok = t.z > u.z - 1 && d < def.range && !losBlocked(g.world, ox, oz, t.x, t.z, 1.7, u.y + 1.7, (t.y || 0) + 1.2);
+    const ok = t.z > u.z - 1 && d < def.range && !losBlocked(g.world, ox, oz, t.x, t.z, 1.7, u.y + 1.7, g.aimY(t) + 0.1);
     if (u.state === 'burst') {
       u.sh -= dt;
       u.tx = damp(u.tx, t.x, 2.2, dt); u.tz = damp(u.tz, t.z, 2.2, dt);
       u.yaw = angStep(u.yaw, yawTo(u.tx - u.x, u.tz - u.z), 5 * dt);
       if (u.sh <= 0) {
         u.sh = 0.085; u.burst--;
-        g.fireBullet(1, ox, u.y + 1.72, oz, u.tx + rand(-2.0, 2.0), (t.y || 0) + 1.0, u.tz + rand(-2.0, 2.0), 1, 36, null);
+        g.fireBullet(1, ox, u.y + 1.72, oz, u.tx + rand(-2.0, 2.0), g.aimY(t) - 0.1, u.tz + rand(-2.0, 2.0), 1, 36, null);
         g.fx.sparks(ox, u.y + 1.72, oz + 0.3, 1, 0xffe08a);
         g.sfxAt('mg', u.x, u.z, 0.9);
         if (u.burst <= 0) { u.state = 'idle'; u.stT = rand(2.2, 3.2); }
@@ -140,7 +141,7 @@ export function updateEnemy(g, u, dt) {
       still(u, dt);
       if (u.slash > 0.45 && !u.hitDone) {
         u.hitDone = true;
-        if (d < 2.5 && !(t === h && h.y > u.y + 1.1)) { if (t === h) g.hurtHero(1, u.x, u.z); else if (t === g.cannon) g.hurtCannon(2); else g.hurtUnit(t, 2, dx, dz, 'blade'); }
+        if (d < 2.5 && !(t === h && h.y > u.y + 1.1)) { if (t === h) { if (!g.bladeDefend(u, 'slash')) g.hurtHero(1, u.x, u.z); } else if (t === g.cannon) g.hurtCannon(2); else g.hurtUnit(t, 2, dx, dz, 'blade'); }
       }
     } else if (d < 1.9 + (t === g.cannon ? 1.4 : 0) && u.stT <= 0) {
       u.slash = 0; u.hitDone = false; u.stT = 1.3; g.sfxAt('slash', u.x, u.z, 0.8);
@@ -152,7 +153,7 @@ export function updateEnemy(g, u, dt) {
   // 步兵 / 特工队 / 城墙守军
   const elite = type === 'elite', wall = type === 'wall';
   // 射界按子弹实际飞的高度算（枪口到目标胸口），矮掩体也算进去：被自己面前的沙袋、土坎挡住时就换位置，不对着掩体白打
-  const los = !losBlocked(g.world, u.x, u.z, t.x, t.z, wall ? 1.7 : 0, u.y + 1.3, (t.y || 0) + 1.1);
+  const los = !losBlocked(g.world, u.x, u.z, t.x, t.z, wall ? 1.7 : 0, u.y + 1.3, g.aimY(t));
   u.yaw = angStep(u.yaw, yawTo(dx, dz), 7 * dt);
   if (u.state === 'aim') {
     still(u, dt); u.aim = damp(u.aim, 1, 14, dt);

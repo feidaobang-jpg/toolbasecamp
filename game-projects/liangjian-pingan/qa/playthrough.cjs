@@ -37,7 +37,7 @@ const BOT = require('fs').readFileSync(require('path').join(__dirname, 'bot.brow
       last = { phase: s.phase, t: s.t, deaths: s.deaths, hurt: s.hurt };
       if (SHOTS) await shot(page, `play-phase${s.phase}-start.png`);
     }
-    if (SHOTS) for (const k of ['shells', 'cav', 'loot', 'clash', 'tower', 'won', 'genius']) if (s[k] > prev[k] && (k !== 'shells' || s[k] <= 2 || s.tower)) await shot(page, `play-${k}-${s[k]}.png`);
+    if (SHOTS) for (const k of ['shells', 'loot', 'clash', 'tower', 'won', 'genius']) if (s[k] > prev[k] && (k !== 'shells' || s[k] <= 2 || s.tower)) await shot(page, `play-${k}-${s[k]}.png`);
     prev = s;
     if (i % 120 === 0) console.log(`t=${s.t.toFixed(0)}s phase=${s.phase} hero=(${s.hx},${s.hz}) hp=${s.hp} deaths=${s.deaths} hurt=${s.hurt} kills=${s.kills} enemies=${s.enemies} cannon=${s.cannon} boss=${s.boss} retries=${s.retries}`);
     if (s.state === 'result') done = s;

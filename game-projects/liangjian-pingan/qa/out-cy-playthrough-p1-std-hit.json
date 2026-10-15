@@ -1,55 +1,55 @@
 {
- "at": "2026-10-14T23:31:38.597Z",
+ "at": "2026-10-15T00:16:46.586Z",
  "startPhase": 1,
  "armor": "std",
  "route": "hit",
  "line": "hit",
  "finished": true,
- "gameSeconds": 355,
+ "gameSeconds": 350.8,
  "wallSeconds": 8,
  "phases": [
   {
    "phase": 1,
-   "seconds": 155.5,
-   "deaths": 2,
-   "hurt": 7
+   "seconds": 156.8,
+   "deaths": 3,
+   "hurt": 10
   },
   {
    "phase": 2,
-   "seconds": 37.8,
+   "seconds": 34.5,
    "deaths": 0,
    "hurt": 0
   },
   {
    "phase": 3,
-   "seconds": 88,
+   "seconds": 88.3,
    "deaths": 1,
-   "hurt": 4
+   "hurt": 6
   },
   {
    "phase": 4,
-   "seconds": 13.7,
+   "seconds": 14,
    "deaths": 0,
    "hurt": 0
   },
   {
    "phase": 5,
-   "seconds": 60,
+   "seconds": 57.3,
    "deaths": 0,
-   "hurt": 1
+   "hurt": 2
   }
  ],
  "final": {
   "state": "result",
   "phase": 5,
   "sub": "out",
-  "t": 355.01666666667245,
-  "deaths": 3,
-  "hurt": 12,
-  "kills": 123,
-  "hp": 4,
-  "hx": 8.9,
-  "hz": -148.2,
+  "t": 350.7666666666763,
+  "deaths": 4,
+  "hurt": 18,
+  "kills": 121,
+  "hp": 3,
+  "hx": 7.4,
+  "hz": -148.7,
   "prog": 100,
   "shots": 1,
   "line": "hit",
@@ -59,13 +59,13 @@
   "boss": null,
   "cz": -52,
   "enemies": 0,
-  "score": 27530
+  "score": 27246
  },
  "result": {
   "title": "苍云岭，突出去了！",
   "rank": "评价：亮剑团长",
-  "total": "战功合计 26630　最高 26630",
-  "stats": "结局第一发炮弹打掉指挥部（原作）用时5:55歼敌123干掉精锐9抓舌头一次抓活炮组重整0拼刀成功0骑兵连出击5阵亡3受击12爆头75规则无限命 · 标准",
+  "total": "战功合计 26046　最高 26046",
+  "stats": "结局第一发炮弹打掉指挥部（原作）用时5:50歼敌121干掉精锐9抓舌头一次抓活炮组重整0拼刀成功0弹开0阵亡4受击18爆头87规则无限命 · 标准",
   "hidden": false
  },
  "voices": [

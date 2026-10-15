@@ -70,7 +70,7 @@ const DEG = Math.PI / 180;
     // 鼠标停下镜头就停
     await clean(v); await look(0, -60); a = await st(); await step(20); b = await st();
     check(`${N}：鼠标停下镜头立即停`, Math.abs(b.pitch - a.pitch) < 0.01, null);
-    // 键位 v2：Y / H 不再转视角，Q / E 改成亮剑 / 骑兵连，也不转视角
+    // 键位 v2：Y / H 不再转视角（Q 是拔刀，E 不再有用）
     await clean(v); a = await st();
     await hold('KeyY', 20); await hold('KeyH', 20); b = await st();
     check(`${N}：Y / H 不再转视角（键位 v2）`, Math.abs(b.pitch - a.pitch) < 1e-6 && Math.abs(b.yaw - a.yaw) < 1e-6, null);
@@ -204,7 +204,7 @@ const DEG = Math.PI / 180;
     await step(2);
     return { d: Math.hypot(b0.x - a0.x, b0.z - a0.z), mag: [a0.mag, b0.mag] };
   };
-  const wk = await runFor([]), rn = await runFor(['ShiftLeft']), rf = await runFor(['ShiftLeft', 'KeyJ']), ra = await runFor(['ShiftLeft', 'KeyZ']);
+  const wk = await runFor([]), rn = await runFor(['ShiftLeft']), rf = await runFor(['ShiftLeft', 'KeyJ']), ra = await runFor(['ShiftLeft', 'KeyO']);
   check('按住 Shift 往前跑，速度约走路的 1.45 倍', rn.d / wk.d > 1.35 && rn.d / wk.d < 1.55, { walk: wk.d.toFixed(2), run: rn.d.toFixed(2) });
   check('跑的时候按住开火：停跑开枪', rf.d < wk.d && rf.mag[1] < rf.mag[0], rf);
   check('开镜时 Shift 跑不起来', ra.d < wk.d * 0.75, { ads: ra.d.toFixed(2), walk: wk.d.toFixed(2) });

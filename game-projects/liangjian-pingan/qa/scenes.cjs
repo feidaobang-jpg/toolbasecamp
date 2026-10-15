@@ -39,9 +39,9 @@ const { open, shot, start, BASE } = require('./lib.cjs');
   await put(1, 0, 0, 70, 0);
   await page.keyboard.press('KeyK'); await page.evaluate(() => __lj.step(14, true)); await shot(page, 'scene-jump-tp.png');
   await put(1, 0, 0, 84, 0);
-  await page.keyboard.down('KeyZ'); await page.keyboard.down('KeyJ'); await page.evaluate(() => __lj.step(26, true)); await shot(page, 'scene-ads-fire-tp.png'); await page.keyboard.up('KeyJ'); await page.keyboard.up('KeyZ');
+  await page.keyboard.down('KeyO'); await page.keyboard.down('KeyJ'); await page.evaluate(() => __lj.step(26, true)); await shot(page, 'scene-ads-fire-tp.png'); await page.keyboard.up('KeyJ'); await page.keyboard.up('KeyO');
   await put(1, 1, 0, 84, 0);
-  await page.keyboard.down('KeyZ'); await page.keyboard.down('KeyJ'); await page.evaluate(() => __lj.step(26, true)); await shot(page, 'scene-ads-fire-fp.png'); await page.keyboard.up('KeyJ'); await page.keyboard.up('KeyZ');
+  await page.keyboard.down('KeyO'); await page.keyboard.down('KeyJ'); await page.evaluate(() => __lj.step(26, true)); await shot(page, 'scene-ads-fire-fp.png'); await page.keyboard.up('KeyJ'); await page.keyboard.up('KeyO');
   for (const v of [0, 1]) {
     await put(3, v, 0.5, 28, 0, 'for (const b of g.world.bunkers) b.cd = 999');
     await page.keyboard.press('KeyF'); await page.evaluate(() => __lj.step(30, true)); await shot(page, `scene-cannon-${v ? 'fp' : 'tp'}.png`);

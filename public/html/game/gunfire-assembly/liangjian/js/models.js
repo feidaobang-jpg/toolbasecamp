@@ -88,13 +88,15 @@ function soldierGeos(key) {
     g.box(0.66, 0.2, 0.36, 0, 0.56, 0.04, L.cape, 0, 0, 0, 0.1);
     g.box(0.64, 0.92, 0.1, 0, 0.16, 0.23, L.cape, 0, 0.1, 0, 0.3);
   }
-  if (L.blade) {
-    // 背上的大刀
-    g.box(0.1, 0.85, 0.035, 0.06, 0.42, 0.33, 0xcfd6dd, 0, 0, 0.5, 0.1);
-    g.box(0.07, 0.24, 0.05, -0.2, 0.86, 0.33, 0x5a3d26, 0, 0, 0.5, 0);
-    g.box(0.07, 0.2, 0.05, -0.3, 0.98, 0.33, 0xc23b2b, 0, 0, 0.9, 0);
-  }
   out.torso = g;
+  if (L.blade) {
+    // 背上的大刀：单独一块，主角拔刀时藏起来（刀到了手上）
+    const b = new Geo();
+    b.box(0.1, 0.85, 0.035, 0.06, 0.42, 0.33, 0xcfd6dd, 0, 0, 0.5, 0.1);
+    b.box(0.07, 0.24, 0.05, -0.2, 0.86, 0.33, 0x5a3d26, 0, 0, 0.5, 0);
+    b.box(0.07, 0.2, 0.05, -0.3, 0.98, 0.33, 0xc23b2b, 0, 0, 0.9, 0);
+    out.back = b;
+  }
   // 腿（原点在胯部，向下）
   g = new Geo();
   g.box(0.21, 0.42, 0.25, 0, -0.21, 0, L.pants);
@@ -130,7 +132,8 @@ function soldierGeos(key) {
   };
   const r = arm(L.weapon), l = arm(L.left || 'none');
   out.armR = r.geo; out.armL = l.geo; out.muzzle = r.len; out.muzzleL = l.len;
-  for (const k of ['torso', 'leg', 'armR', 'armL']) out[k] = out[k].build(MAT.vc).geometry;
+  if (L.blade) out.armBare = arm('none').geo;   // 主角拔刀时右手换成空手（刀另挂在手腕上）
+  for (const k of ['torso', 'leg', 'armR', 'armL', 'back', 'armBare']) if (out[k]) out[k] = out[k].build(MAT.vc).geometry;
   geoCache[key] = out;
   return out;
 }
@@ -153,6 +156,8 @@ export function buildSoldier(key) {
   const mk = (geo) => { const m = new THREE.Mesh(geo, MAT.vc); m.castShadow = true; return m; };
   const torso = mk(gs.torso);
   body.add(torso);
+  const back = gs.back ? mk(gs.back) : null;
+  if (back) body.add(back);
   const armR = mk(gs.armR); armR.position.set(0.335, 0.56, 0); body.add(armR);
   const armL = mk(gs.armL); armL.position.set(-0.335, 0.56, 0); body.add(armL);
   const legR = mk(gs.leg); legR.position.set(0.13, 0.72, 0); root.add(legR);
@@ -164,7 +169,8 @@ export function buildSoldier(key) {
   const s = L.scale || 1;
   root.scale.setScalar(s);
   const meshes = [torso, armR, armL, legR, legL];
-  return { root, body, torso, armR, armL, legR, legL, flash, flashL, meshes, muzzle: gs.muzzle, muzzleL: gs.muzzleL, look: key, scale: s, melee: L.weapon === 'katana' || L.weapon === 'saber' };
+  if (back) meshes.push(back);
+  return { armGeo: gs.armBare ? { gun: gs.armR, bare: gs.armBare } : null, root, body, torso, back, armR, armL, legR, legL, flash, flashL, meshes, muzzle: gs.muzzle, muzzleL: gs.muzzleL, look: key, scale: s, melee: L.weapon === 'katana' || L.weapon === 'saber' };
 }
 
 export function setSoldierMat(model, mat) {
@@ -178,13 +184,17 @@ export function muzzleWorld(model, out, left = false) {
   return out.set(0, -(left ? model.muzzleL : model.muzzle), 0).applyMatrix4(arm.matrixWorld);
 }
 
-// 姿势：st = { walk(弧度相位), moving(0~1), aim(0~1), pitch, slash(0~1,-1 表示无), carry:'rifle'|'side'|'blade', cheer }
+// 姿势：st = { walk(弧度相位), moving(0~1), aim(0~1), pitch, slash(0~1,-1 表示无), carry:'rifle'|'side'|'blade', cheer,
+//   主角另有 crouch(0~1 单膝跪), prone(0~1 趴下，整体放倒在 poseHero 里做)；拿刀的手臂和手腕在 game.js 的 poseBlade 里摆 }
 export function poseSoldier(m, st) {
   const sw = Math.sin(st.walk) * 0.75 * st.moving;
-  m.legR.rotation.x = sw;
-  m.legL.rotation.x = -sw;
-  m.body.position.y = 0.72 + Math.abs(Math.cos(st.walk)) * 0.04 * st.moving;
-  m.body.rotation.x = 0.1 * st.moving;
+  const cr = st.crouch || 0, pr = st.prone || 0, drop = 0.42 * cr;
+  m.legR.rotation.x = sw * (1 - cr) - 1.3 * cr;    // 蹲：右腿往前、左膝着地
+  m.legL.rotation.x = -sw * (1 - cr) + 1.25 * cr;
+  m.legR.position.y = m.legL.position.y = 0.72 - drop;
+  m.body.position.y = 0.72 - drop + Math.abs(Math.cos(st.walk)) * 0.04 * st.moving * (1 - cr);
+  m.body.rotation.x = 0.1 * st.moving + 0.15 * cr;
+  m.body.rotation.y = 0;
   let rx, lx, rz = 0, lz = 0;
   if (st.carry === 'blade') { rx = 2.4; lx = -sw * 0.6; rz = -0.25; }
   else if (st.carry === 'rifle') { rx = 0.95 - sw * 0.15; lx = 0.8 + sw * 0.15; lz = 0.5; rz = -0.25; }
@@ -201,6 +211,15 @@ export function poseSoldier(m, st) {
     const k = st.slash;
     rx = k < 0.35 ? 2.4 + (k / 0.35) * 0.7 : 3.1 - Math.min(1, (k - 0.35) / 0.3) * 2.6;
     rz = -0.2;
+  }
+  // 趴下（模型整体已向前放倒）：腿伸直轻轻蹬，举枪时双臂朝前（模型的头顶方向），不举枪时两手交替往前爬
+  if (pr > 0.5) {
+    m.legR.rotation.x = sw * 0.35; m.legL.rotation.x = -sw * 0.35;
+    m.legR.position.y = m.legL.position.y = 0.72;
+    m.body.position.y = 0.72; m.body.rotation.x = 0;
+    const crawl = Math.sin(st.walk) * 0.45 * st.moving;
+    if (st.aim > 0.3) { rx = Math.PI + (st.pitch || 0); lx = rx - 0.08; rz = -0.12; lz = 0.3; }
+    else { rx = Math.PI - 0.4 + crawl; lx = Math.PI - 0.4 - crawl; rz = -0.15; lz = 0.15; }
   }
   if (st.cheer > 0) { rx = 3.0 + Math.sin(st.cheer * 9) * 0.25; lx = 3.0 + Math.cos(st.cheer * 9) * 0.25; rz = 0.3; lz = -0.3; }
   m.armR.rotation.set(rx, 0, rz);

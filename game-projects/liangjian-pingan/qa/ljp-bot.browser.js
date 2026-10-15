@@ -67,8 +67,6 @@ window.__installLjpBot = function () {
     const d = dist(h.x, h.z, t.x, t.z);
     if (!noBoom) {
       if (S.nadeT <= 0 && h.nades > 0 && d < 20 && d > 7 && err < 0.2) { tap('KeyU'); S.nadeT = 2.4; }
-      if (h.dashCd <= 0 && t.type !== 'boss' && d < 5 && err < 0.4) tap('KeyL');
-      if (h.cavCd <= 0 && err < 0.5 && !g.cavalryBlocked() && alive((e) => e.active && dist(e.x, e.z, h.x, h.z) < 40).length >= 4) tap('KeyN');
     }
     return t;
   }
@@ -141,9 +139,8 @@ window.__installLjpBot = function () {
         if (b.state === 'dashTele') {
           const side = (h.x - b.x) * (-b.dz) + (h.z - b.z) * b.dx > 0 ? 1 : -1;
           mx = -b.dz * side; mz = b.dx * side;
-          if (b.stT < 0.18 && d < 10) { const r = Math.random(); if (r < 0.5 && h.dashCd <= 0) { steer(dx / d, dz / d, true); tap('KeyL'); return; } else if (r < 0.75) tap('KeyK'); }
+          if (b.stT < 0.18 && d < 10) { const r = Math.random(); if (r < 0.75) tap('KeyK'); }
         }
-        if (b.state === 'stun' && d < 5 && h.dashCd <= 0) { steer(dx / d, dz / d, true); tap('KeyL'); return; }
         steer(mx, mz, true);
         return;
       }
