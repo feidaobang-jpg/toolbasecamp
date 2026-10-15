@@ -98,6 +98,7 @@ export class Input {
         el.classList.add('down');
         if (fire) { this.src.fireTouch++; this.edges.fire = true; }
         else if (a === 'ads') { this.adsToggle = !this.adsToggle; this.src.adsTouch = true; }
+        else if (a === 'sprint') this.sprintToggle = !this.sprintToggle;
         else this.edges[a] = true;
         this._sync();
         this.hooks.onEdge(a);
@@ -196,7 +197,9 @@ export class Input {
   _sync() {
     this.held.fire = this.src.fireKey || this.src.fireMouse || this.src.fireTouch > 0;
     this.held.ads = this.src.adsKey || this.src.adsMouse || this.adsToggle;
-    this.held.sprint = this.src.sprintKey;
+    this.held.sprint = this.src.sprintKey || !!this.sprintToggle;
+    const sb = this.btns['act-sprint'];
+    if (sb) sb.classList.toggle('on', !!this.sprintToggle);
     this.held.block = this.src.rmb || this.src.adsKey || this.src.adsTouch;
     const b = this.btns['act-ads'];
     if (b) b.classList.toggle('on', this.adsToggle);
@@ -242,7 +245,7 @@ export class Input {
     this.keys.clear();
     for (const e of EDGES) this.edges[e] = false;
     this.src.fireKey = this.src.fireMouse = this.src.adsKey = this.src.adsMouse = this.src.sprintKey = this.src.rmb = this.src.adsTouch = false; this.src.fireTouch = 0;
-    this.adsToggle = false;
+    this.adsToggle = false; this.sprintToggle = false;
     for (const id in this.btns) { this.btns[id]._pid = undefined; this.btns[id].classList.remove('down'); }
     this._joyEnd();
     this.drag = null;

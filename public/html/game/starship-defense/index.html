@@ -241,6 +241,7 @@ button::before,button::after{content:none!important}
 #cornerTools{position:absolute;top:var(--corner-top);right:var(--corner-right);z-index:35;display:flex;gap:var(--corner-gap);align-items:center}
 #cornerTools .mbtn,#vC,#vP{height:var(--corner-height);min-width:72px;white-space:nowrap;line-height:normal;display:flex;align-items:center;justify-content:center;padding:0 12px;border-radius:14px;background:#0e1e30;border:2px solid #8cc8f0;color:#fff6df;font:800 13px "Microsoft YaHei",sans-serif;text-shadow:0 1px 2px #000;box-shadow:0 2px 8px rgba(0,0,0,.45)}
 .touch-mode #cornerTools #menuButton,.touch-mode #cornerTools #personBtn{display:none}
+.touch-mode #cornerTools #autoFireBtn{position:absolute;right:0;top:calc(var(--corner-height) + 6px);height:30px;min-width:0;font-size:12px;padding:0 10px}
 #vC,#vP{top:var(--corner-top);bottom:auto}#vC{right:calc(var(--corner-right) + 144px + 2 * var(--corner-gap));width:86px}#vP{right:calc(var(--corner-right) + 72px + var(--corner-gap));width:72px}#cornerTools #fullBtn{width:72px}
 #hudRight{right:var(--corner-right);top:calc(var(--corner-top) + var(--corner-height) + var(--corner-gap))}
 
@@ -404,7 +405,7 @@ html,body{overscroll-behavior:none}
 <div id="stage">
   <canvas id="c3d"></canvas>
 <div id="assetLoad" role="status">正在部署前哨基地…</div>
-<div id="cornerTools"><button id="personBtn" class="mbtn">第三人称</button><button class="mbtn" id="menuButton" aria-label="打开游戏菜单，P 或 Esc">暂停 P</button><button id="fullBtn" class="mbtn">全屏 F</button></div>
+<div id="cornerTools"><button id="autoFireBtn" class="mbtn" aria-pressed="true">自动射击：开</button><button id="personBtn" class="mbtn">第三人称</button><button class="mbtn" id="menuButton" aria-label="打开游戏菜单，P 或 Esc">暂停 P</button><button id="fullBtn" class="mbtn">全屏 F</button></div>
 
   <!-- HUD -->
   <div id="hud" class="overlay hidden">
@@ -552,7 +553,7 @@ html,body{overscroll-behavior:none}
     <header class="infoHeader"><h3 id="menuSettingsTitle">游戏设置</h3><button class="closeX" data-menu-close aria-label="关闭设置">×</button></header>
     <p class="small" id="deviceModeCaption">操作模式 · 立即生效，保留本局进度</p>
     <div class="rescue-actions" role="group" aria-labelledby="deviceModeCaption"><button class="tb-btn" data-device-mode="desktop">电脑键鼠</button><button class="tb-btn" data-device-mode="touch">手机触屏</button><button class="tb-btn" data-device-mode="auto">自动识别</button></div>
-    <div class="dialogGrid"><button class="mbtn" id="keysMenu">射击、瞄准与按键</button><button class="mbtn" id="muteBtnMenu">声音</button><button class="mbtn" id="daylightMain">地表：白天</button></div>
+    <div class="dialogGrid"><button class="mbtn" id="keysMenu">射击、瞄准与按键</button><button class="mbtn touch-help" id="touchLayoutSettings">调整手机按键位置</button><button class="mbtn" id="muteBtnMenu">声音</button><button class="mbtn" id="daylightMain">地表：白天</button></div>
   </section>
   <section id="menuSavePanel" class="panel menuDialog hidden" role="dialog" aria-modal="true" aria-labelledby="menuSaveTitle">
     <header class="infoHeader"><h3 id="menuSaveTitle">存档与恢复</h3><button class="closeX" data-menu-close aria-label="关闭存档菜单">×</button></header>
@@ -593,7 +594,7 @@ html,body{overscroll-behavior:none}
         <button class="mbtn green" id="btnResume">继续游戏</button><button class="mbtn" data-menu-panel="menuSettingsPanel">游戏设置</button>
         <button class="mbtn campaign-only" data-menu-panel="menuSavePanel">存档与恢复</button><button class="mbtn" id="btnRestartLv">重开本关</button>
         <button class="mbtn red versus-only" id="vsSurrender">投降</button><button class="mbtn red" id="btnQuit">回主菜单</button>
-        <button class="mbtn" data-menu-panel="menuMorePanel">说明与更多</button>
+        <button class="mbtn" data-menu-panel="menuMorePanel">说明与更多</button><button class="mbtn touch-help" id="touchLayoutPause">调整手机按键位置</button>
       </div></section>
       <section class="pauseCard campaign-only"><h3>小队与战术</h3><p class="small" id="squadTaskHint"></p><div class="dialogGrid">
         <button class="mbtn" id="squadOrderPause">队友：跟随我</button><button class="mbtn" id="tacticsPause">战术部署 / 虫潮预告</button><button class="mbtn" id="opsPause">副本任务</button>
@@ -722,7 +723,7 @@ html,body{overscroll-behavior:none}
   </div>
 </div>
 <script src="./boot.js?v=mobile12"></script>
-<script defer src="./game.compat.js?v=ca2b8d25ed7c" onerror="window.__ccBootError('游戏资源下载失败')"></script>
+<script defer src="./game.compat.js?v=110537a16d81" onerror="window.__ccBootError('游戏资源下载失败')"></script>
 <script src="../../../js/game/thumb-preview.js"></script>
 <script type="module">
 // 内联自 /js/game/landscape-typing.js：Toy/TapTap 包不含站点共享目录，外链模块会缺失

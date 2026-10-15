@@ -385,6 +385,8 @@ export class Game {
     if (inp.take('prone')) this.setStance(h.stance === 2 ? 0 : 2);
     if (inp.take('stance')) this.setStance((h.stance + 1) % 3);
     const mv = inp.move, yaw = c.yaw, fp = c.view === 1;
+    // 触屏跑步键是开关：摇杆不往前推了就自动停，免得下次一推就冲出去
+    if (inp.sprintToggle && mv.y <= 0.3) { inp.sprintToggle = false; inp._sync(); }
     // 蹲着、趴着按 Shift 往前跑：先站起来
     if (h.stance && inp.held.sprint && mv.y > 0.3) this.setStance(0);
     h.crouchK = damp(h.crouchK, h.stance === 1 ? 1 : 0, 12, dt);

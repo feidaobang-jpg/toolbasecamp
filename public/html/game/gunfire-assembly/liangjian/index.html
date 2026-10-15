@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" content="#2a231b">
 <title>亮剑战役</title>
-<link rel="stylesheet" href="style.css?v=0.10.0">
+<link rel="stylesheet" href="style.css?v=0.10.1">
 </head>
 <body>
 <div id="stage">
@@ -49,6 +49,7 @@
     <button class="tb" id="act-reload" data-act="reload" type="button" aria-label="换弹"><b class="kb">R</b><span>换弹</span></button>
     <button class="tb" id="act-nade" data-act="nade" type="button" aria-label="手榴弹"><b class="kb">G</b><span>手榴弹</span><em></em></button>
     <button class="tb" id="act-blade" data-act="blade" type="button" aria-label="拔刀"><b class="kb">Q</b><span>拔刀</span><em></em></button>
+    <button class="tb" id="act-sprint" data-act="sprint" type="button" aria-label="跑步（点一下开关）"><b class="kb">Shift</b><span>跑步</span></button>
     <button class="tb" id="act-stance" data-act="stance" type="button" aria-label="姿势"><b class="kb">C</b><span>站着</span><em></em></button>
     <button class="tb" id="act-use" data-act="use" type="button" aria-label="互动" hidden><b class="kb">F</b><span>操炮</span></button>
   </div>
@@ -68,6 +69,6 @@ window.addEventListener('error', function (e) {
   if (b) { b.hidden = false; b.onclick = function () { location.reload(); }; }
 }, true);
 </script>
-<script defer src="game.compat.js?v=0.10.0"></script>
+<script defer src="game.compat.js?v=0.10.1"></script>
 </body>
 </html>

@@ -1,6 +1,8 @@
 // Player-facing notes travel with the same game package; no network or account required.
-export const GAME_VERSION='0.8.1';
+export const GAME_VERSION='0.8.2';
 export const UPDATE_HISTORY=[
+  {version:'0.8.2',date:'2026-10-15',title:'亮剑战役手机加跑步键',changes:[
+    '手机上的亮剑战役（苍云岭、李家坡、平安县城）新增「跑步」按钮：点一下往前推摇杆就跑，再点一下或摇杆不往前推就停；开火、开镜、换弹时照旧跑不起来。']},
   {version:'0.8.1',date:'2026-10-15',title:'平安县城结算页修正',changes:[
     '平安县城打完的结算页去掉了已经删除的“骑兵连出击”一栏，换成“弹开”次数。']},
   {version:'0.8.0',date:'2026-10-15',title:'亮剑原版配乐、台词配音，平安县城与李家坡大改',changes:[

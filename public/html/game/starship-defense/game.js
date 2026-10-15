@@ -265,7 +265,7 @@ const Input={
       if(!this.isPlaying()||isTouch||!CombatControls.mouseEnabled)return;
       AudioSys.init();AudioSys.resume();
       // 枪战规则下左键是开火，转视角不能只靠它：右键拖动只转视角，原地点一下才举枪。
-      if(e.button===2){e.preventDefault();if(fpsRules()){if(document.pointerLockElement===cv){if(battleOn())toggleBattlefieldAim();}else{this.drag={id:e.pointerId,x:e.clientX,y:e.clientY,moved:0,sight:true};cv.setPointerCapture(e.pointerId);}}return;}
+      if(e.button===2){e.preventDefault();if(fpsRules()||campaignFps()){if(document.pointerLockElement===cv){toggleSight();}else{this.drag={id:e.pointerId,x:e.clientX,y:e.clientY,moved:0,sight:true};cv.setPointerCapture(e.pointerId);}}return;}
       if(e.button!==0)return;
       // 首次点击只接管鼠标，不把返回游戏的点击算成一枪；拒绝接管时仍可拖动。
       if(this.canMouseLook()&&cv.requestPointerLock&&!this.lockUnavailable&&document.pointerLockElement!==cv){this.drag={id:e.pointerId,x:e.clientX,y:e.clientY,moved:0};cv.setPointerCapture(e.pointerId);this.requestMouseLook();return;}
@@ -282,11 +282,11 @@ const Input={
         this.look.yaw-=e.movementX*.0032;this.look.pitch-=e.movementY*.0032;return;
       }
       // 已按着一个键再按另一个键，浏览器只发 pointermove：右键拖视角时补按左键也要能开火。
-      if(e.pointerType==='mouse'&&fpsRules()&&this.drag?.sight){const left=!!(e.buttons&1);if(left&&!this.mouseFire){this.mouseFire=true;if(!place.kind)CombatControls.press('mouse');}else if(!left&&this.mouseFire){this.mouseFire=false;CombatControls.release('mouse');}}
+      if(e.pointerType==='mouse'&&(fpsRules()||campaignFps())&&this.drag?.sight){const left=!!(e.buttons&1);if(left&&!this.mouseFire){this.mouseFire=true;if(!place.kind)CombatControls.press('mouse');}else if(!left&&this.mouseFire){this.mouseFire=false;CombatControls.release('mouse');}}
       const d=this.drag;if(!d||d.id!==e.pointerId)return;
       const s=toStageScale();this.look.yaw-=(e.clientX-d.x)/s*.0075;this.look.pitch-=(e.clientY-d.y)/s*.0075;d.moved+=Math.abs(e.clientX-d.x)+Math.abs(e.clientY-d.y);d.x=e.clientX;d.y=e.clientY;
     });
-    const endDrag=e=>{if(this.drag&&this.drag.id===e.pointerId){const d=this.drag;this.drag=null;if(d.sight&&e.type==='pointerup'&&e.button===2&&d.moved<6&&this.isPlaying()){if(battleOn())toggleBattlefieldAim();}}if(e.type==='lostpointercapture'&&document.pointerLockElement===cv)return;if(e.button===0||e.type!=='pointerup'){this.mouseFire=false;CombatControls.release('mouse');}if(e.type==='pointercancel')CombatControls.reset();};
+    const endDrag=e=>{if(this.drag&&this.drag.id===e.pointerId){const d=this.drag;this.drag=null;if(d.sight&&e.type==='pointerup'&&e.button===2&&d.moved<6&&this.isPlaying()){toggleSight();}}if(e.type==='lostpointercapture'&&document.pointerLockElement===cv)return;if(e.button===0||e.type!=='pointerup'){this.mouseFire=false;CombatControls.release('mouse');}if(e.type==='pointercancel')CombatControls.reset();};
     ['pointerup','pointercancel','lostpointercapture'].forEach(t=>cv.addEventListener(t,endDrag));
     document.addEventListener('pointerup',e=>{if(e.pointerType!=='touch'&&e.button===0){this.mouseFire=false;CombatControls.release('mouse');}});
     document.addEventListener('pointerlockchange',()=>{
@@ -398,7 +398,7 @@ const Input={
   network:null,
   firing(hasTarget=false){
     if(this.network)return !!(this.network.fire||(this.network.autoFire&&hasTarget));
-    if(fpsRules())return this.isPlaying()&&!place.kind&&CombatControls.held;
+    if(fpsRules()||campaignFps())return this.isPlaying()&&!place.kind&&CombatControls.held;
     return this.isPlaying()&&!place.kind&&CombatControls.firing(hasTarget);
   },
   axis(){
@@ -441,7 +441,7 @@ function setCameraView(index,notify=true){
 function setCamMode(mode,notify=true){
   camMode=mode==='first'?'first':'third';camPitch=0;camYaw=behindYaw();camState.init=false;delete player.lookHeading;Input.resetLook();
   try{localStorage.setItem('chongchao-person',camMode);}catch(_e){}
-  if(notify)showMsg(camMode==='first'?'第一人称（'+KL('C')+' 切回第三人称）':'第三人称 · '+CAMERA_VIEWS[camView].name,1.4);
+  if(notify)showMsg(camMode==='first'?(campaignFps()?'第一人称：准星瞄准，按住左键射击，右键开镜（'+KL('C')+' 切回第三人称）':'第一人称（'+KL('C')+' 切回第三人称）'):'第三人称 · '+CAMERA_VIEWS[camView].name,1.4);
   syncViewLabels();
   Input.requestMouseLook();
 }
@@ -2586,9 +2586,20 @@ function crosshairPoint(range){
   for(const t of foes){const s=segmentHit(a,b,center(t),(t.radius||.65)+.15);if(s!==null&&s<hit)hit=s;}
   return a.lerp(b,Math.max(hit,Math.min(1,3/range)));
 }
+// 电脑上主战役 / 测试台步行第一人称：参考枪火战地，准星指哪打哪、按住左键射击、右键开镜；手机和第三人称仍按设置。
+function campaignFps(){return !isTouch&&!Input.network&&camMode==='first'&&!player.inVehicle&&!battleOn()&&!vsOn()&&!zergOn()&&!rvOn()&&!acidOn();}
+let fpsZoom=false;
+function toggleSight(){if(battleOn())toggleBattlefieldAim();else if(campaignFps())fpsZoom=!fpsZoom;}
+function campaignCrosshair(range){
+  const dir=camForward(true),a=camera.position.clone(),b=a.clone().addScaledVector(dir,range+4);
+  let hit=shotCover(a,b,true,a);
+  for(const m of monsters){if(m.dead||m.emerge>0)continue;const s=segmentHit(a,b,m.mesh.position.clone().add(new THREE.Vector3(0,m.hitH,0)),m.radius+.25);if(s!==null&&s<hit)hit=s;}
+  return a.lerp(b,Math.max(hit,Math.min(1,3/range)));
+}
 function manualAim(from,range){const target=crosshairPoint(range);return {dir:target.clone().sub(from).normalize(),target,mo:null};}
 function playerAim(from,range,moveDir){
   if(manualHuman())return manualAim(from,range);
+  if(campaignFps()){const target=campaignCrosshair(range);return {dir:target.clone().sub(from).normalize(),target,mo:null};}
   const f=camForward(camMode==='first');
   const auto=Input.network?Input.network.autoAim:CombatControls.autoAim;
   if(auto)return autoAim(from,f,range);
@@ -2982,6 +2993,24 @@ function levelName(){
   if(isBossLevel())t+=' 💀BOSS';else if(isMiniBossLevel())t+=' ⚔小BOSS';
   return t;
 }
+function prepWildTarget(){return 12+Math.min(14,(Game.chapter+Game.loop)*2);}
+function spawnPrepWild(ring,avoid=null){
+  let x,z,k=0;
+  do{
+    if(ring){const a=rand(0,TAU),r=rand(26,48);x=clamp(Math.sin(a)*r,WORLD.minX+12,WORLD.maxX-12);z=clamp(140+Math.cos(a)*r*.8,60,230);}
+    else{x=rand(WORLD.minX+12,WORLD.maxX-12);z=rand(50,240);}
+  }while((tunnelDistance(x,z)<9||Math.hypot(x-HIVE.x,z-HIVE.z)<HIVE.r+12||HILL_FORTS.some(f=>Math.hypot(x-f.x,z-f.z)<f.top+5)||avoid&&Math.hypot(x-avoid.x,z-avoid.z)<30)&&++k<30);
+  const ec=campaignEliteChance(Game.testMode?'normal':Game.difficulty,Game.chapter,Game.loop,true);
+  return spawnMonster('mob',x,z,{wild:true,elite:Math.random()<ec?true:undefined,quiet:true});
+}
+// 准备阶段野怪打掉后每 6 秒补一只，离玩家 30 米外刷出，可以一直刷钱；开战后不再补。
+function updPrepWilds(dt){
+  if(Game.testMode||vsOn()||zergOn()||rvOn()||acidOn()||operations.active)return;
+  const w=Game.prepWilds||(Game.prepWilds={target:prepWildTarget(),timer:6}); // 读档回到准备阶段时补上
+  if((w.timer-=dt)>0)return;
+  w.timer=6;
+  if(waveMonsters().filter(m=>m.wild).length<w.target&&monsters.length<monsterCap())spawnPrepWild(Math.random()<.5,player.inVehicle?player.inVehicle.mesh.position:player.pos);
+}
 function baseMaxHp(){return Math.round(2000*(1+(Game.chapter-1)*.1)*(1+(Game.loop-1)*.3)*campaignDifficulty(Game.testMode?'normal':Game.difficulty).baseHp);}
 function waveMonsters(){return monsters.filter(m=>!m.dead&&!m.home);}
 /* 同屏上限：虫潮按 SWARM_SCALE 放大后，手机和联机分别收紧——联机每约65ms把全部单位同步给客人，
@@ -3070,12 +3099,9 @@ function startPrep(){
   if(!Game.testMode){repairVehicles();while(squad.length<Math.min(squadLimit(),Game.squadCount))spawnSquad();}
   // 野怪：散布在前中场，避开隧道与老巢；可选打来刷金币（掉落不按虫潮倍数回落），开战时剩下的加入进攻。
   // 0.39.1 曾按“除母巢外不要野怪”去掉，玩家反馈先刷野怪攒钱造炮塔再开虫潮的玩法没了，0.40.1 恢复（用户2026-10-15）。
-  const n=6+Math.min(10,Game.chapter+Game.loop);
-  for(let i=0;i<n;i++){
-    let x,z,k=0;do{x=rand(WORLD.minX+12,WORLD.maxX-12);z=rand(50,240);}while((tunnelDistance(x,z)<9||Math.hypot(x-HIVE.x,z-HIVE.z)<HIVE.r+12||HILL_FORTS.some(f=>Math.hypot(x-f.x,z-f.z)<f.top+5))&&++k<30);
-    const ec=campaignEliteChance(Game.testMode?'normal':Game.difficulty,Game.chapter,Game.loop,true);
-    spawnMonster('mob',x,z,{wild:true,elite:Math.random()<ec?true:undefined,quiet:true});
-  }
+  // 0.40.2：玩家要“满地虫子、中场一圈野怪”——数量加大、一半围在中场，打掉后准备阶段会陆续补刷（updPrepWilds）。
+  Game.prepWilds={target:prepWildTarget(),timer:8};
+  for(let i=0;i<Game.prepWilds.target;i++)spawnPrepWild(i%2===0);
   if(Math.random()<.5)spawnMonster('miniboss',rand(-40,40),rand(130,170),{wild:true});
   if(!Game.testMode)spawnHive();
   // 母巢状态同步后再算预告，保证准备阶段看到的虫潮数量与开战时一致
@@ -3809,6 +3835,7 @@ function updHUD(dt){
     const text=Game.testMode?'战术部署：自由测试':operations.active?'副本任务进行中':(Game.state==='prep'?'下一波：':'本关：')+plan.title+' · 战术部署';
     if($('tacticsButton').textContent!==text)$('tacticsButton').textContent=text;
   }
+  syncAutoFireBtn();
   $('hiveTxt').textContent=Game.testMode?'':Game.hive.killed?'👑 母皇已击杀 · 虫潮 -35% · 每关补给 +'+queenSupply():`👑 虫巢母皇 ${Math.round(Game.hive.queen*100)}% · 击杀后每关 +${queenSupply()}`;
   if(Game.state==='prep'){
     const total=Game.wave.plan?Game.wave.plan.schedule.length:currentWavePlan().schedule.length;
@@ -3884,7 +3911,8 @@ function updCamera(dt){
   // 用户偏好：爆炸、炮击、受伤等不移动镜头；打击反馈保留在粒子、音效与武器模型上。
   const v=player.inVehicle,tp=acidOn()&&camMode==='third'&&camView===2?acidArena.cameraTarget:v?v.mesh.position:player.pos;
   // 跑步时视野略微拉宽
-  const fovT=62+(player.sprinting&&!v?4:0);
+  if(fpsZoom&&!campaignFps())fpsZoom=false;
+  const fovT=fpsZoom?42:62+(player.sprinting&&!v?4:0);
   if(camera.fov!==fovT){camera.fov=Math.abs(fovT-camera.fov)<.05?fovT:camera.fov+(fovT-camera.fov)*Math.min(1,dt*(fovT>camera.fov?20:8));camera.updateProjectionMatrix();}
   if(!camState.init){camState.target.copy(tp);camState.init=true;camState.dist=99;}
   camState.target.lerp(tp,1-Math.exp(-dt*(v?11:18)));
@@ -3998,6 +4026,8 @@ function syncPauseOptions(){
 }
 $('placeOk').onclick=confirmPlacement;$('placeCancel').onclick=()=>cancelPlacement();
 $('personBtn').onclick=()=>{if(fpsRules())return;setCamMode(camMode==='first'?'third':'first');syncPauseOptions();};
+$('autoFireBtn').onclick=toggleAutoFire;
+$('touchLayoutPause').onclick=$('touchLayoutSettings').onclick=()=>touchLayout.open();
 function toggleSquadOrder(){setSquadTask(Game.squadOrder==='defend'?'follow':'defend');updSquadOrderBtn();}
 $('squadOrderBtn').onclick=toggleSquadOrder;$('squadOrderPause').onclick=toggleSquadOrder;
 // 游玩中用鼠标点过的按钮不保留焦点，避免空格/回车再次触发它
@@ -4226,7 +4256,7 @@ function loop(){
     updSquad(dt);
     updPickups(dt);
     updAirdrops(dt);
-    if(Game.state==='battle')updWave(dt);
+    if(Game.state==='battle')updWave(dt);else if(Game.state==='prep')updPrepWilds(dt);
     AudioSys.bgm(dt,Game.state==='battle');
     updHUD(dt);
     // 心跳存档静默写盘：不弹提示，只在玩家可感知的节点（买兵/建塔/过关/手动存档）提示
@@ -4260,7 +4290,21 @@ const operations=createOperations({Game,player,monsters,squad,THREE,scene,showMs
 const tacticalPanel=mountTacticalPanel({Game,squad,vehicles,squadGear,squadRole,squadBehavior,setSquadTask,setSquadMemberTask,setSquadAutoDefense,openingSupply,preview:tacticalPreview,chapterTip:chapterBriefing,closePanels,resetInput:()=>Input.reset(),autoSave,
   operationActive:()=>operations.active,cancelPlacement:()=>cancelPlacement(true),setPanelOpen:v=>{markPanelOpen();panelOpen=v;AudioSys.pause(v||Game.state==='paused');},releasePointer:()=>{if(document.pointerLockElement)document.exitPointerLock();}});
 function actionLabel(a){return (bankOn()?{R:'出兵',O:'买枪',L:'建造',Z:'换路线',N0:'升级银行',T:'队伍'}[a]:null)||(battleOn()?{R:'换弹',O:'装备',L:'部署',Z:'举枪',H:'兵种支援',T:'战况',C:'载具视角'}[a]:null)||KEY_ACTIONS[a][0];}
+function syncAutoFireBtn(){
+  const b=$('autoFireBtn');if(!b)return;
+  const fixed=fpsRules()||zergOn(),fps=campaignFps(),on=CombatControls.settings.fire==='auto';
+  const text=fps?'第一人称：按住射击':'自动射击：'+(on?'开':'关'),hidden=fixed||vsOn()||Game.state==='menu';
+  if(b.textContent!==text){b.textContent=text;b.setAttribute('aria-pressed',String(on&&!fps));}
+  if(b.hidden!==hidden)b.hidden=hidden;
+}
+function toggleAutoFire(){
+  if(campaignFps()){showMsg('第一人称固定按住左键射击，切回第三人称可用自动射击',1.8);return;}
+  const on=CombatControls.settings.fire==='auto';
+  CombatControls.set('fire',on?'hold':'auto');if(combatSection)combatSection.querySelector('#combat-fire').value=CombatControls.settings.fire;
+  syncAutoFireBtn();syncKeyLabels();showMsg(on?'自动射击已关：按住射击键才开火':'自动射击已开：有目标时自动开火',1.6);
+}
 function syncKeyLabels(){
+  syncAutoFireBtn();
   syncViewLabels();combatSection?.lockAim(fpsRules());
   $('fullBtn').textContent=isTouch||!keyBindings.code('F')?'全屏':'全屏 '+KL('F');
   $('readyBtn').textContent='✅ 准备完毕，开战！（'+KL('WAVE')+'）';
