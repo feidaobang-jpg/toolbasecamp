@@ -743,7 +743,7 @@ export class Game {
   // 战友操机枪：转枪口打最近的鬼子，打几发歇一会儿
   allyShootMG(u, dt) {
     const m = u.gun;
-    if (dist(u.x, u.z, m.x, m.z) > 0.5) return false;   // 还没走到
+    if (dist(u.x, u.z, m.x, m.z) > 3.5) return false;   // 还没走到；到了跟前直接坐进枪位（沙袋围子挡路，和团长上机枪一样）
     u.x = m.x; u.z = m.z; still(u, dt);
     u.think -= dt;
     if (u.think <= 0 || (u.target && !u.target.alive)) {
@@ -752,7 +752,7 @@ export class Game {
       for (const e of this.enemies) {
         if (!e.alive || !e.active || e.downed || e.noAlly) continue;
         const d = dist(m.x, m.z, e.x, e.z);
-        if (d < bd && !losBlocked(this.world, m.x, m.z, e.x, e.z, 1.2, m.gy + 1.4, e.y + 1.1)) { bd = d; best = e; }
+        if (d < bd && !losBlocked(this.world, m.x + fwdX(yawTo(e.x - m.x, e.z - m.z)) * 1.6, m.z + fwdZ(yawTo(e.x - m.x, e.z - m.z)) * 1.6, e.x, e.z, 1.2, m.gy + 1.6, e.y + 1.2)) { bd = d; best = e; }   // 从枪口（越过自家沙袋）看
       }
       u.target = best;
     }
@@ -1282,7 +1282,7 @@ export class Game {
         if (d2 >= rr * rr || d2 < 1e-6) continue;
         const d = Math.sqrt(d2), push = (rr - d) * 0.5, nx = dx / d, nz = dz / d;
         // 战友给主角让路：主角不会被自己人挤开
-        const fa = a.hold || a.type === 'mg' || (a === this.hero && (this.cannon.manned || a.mg || b.kind === 'ally')), fb = b.hold || b.type === 'mg' || (b === this.hero && a.kind === 'ally');
+        const fa = a.hold || a.type === 'mg' || !!a.gun || (a === this.hero && (this.cannon.manned || a.mg || b.kind === 'ally')), fb = b.hold || b.type === 'mg' || !!b.gun || (b === this.hero && a.kind === 'ally');
         const pa = fb ? push * 2 : push, pb = fa ? push * 2 : push;
         if (!fa) { a.x -= nx * pa; a.z -= nz * pa; }
         if (!fb) { b.x += nx * pb; b.z += nz * pb; }
