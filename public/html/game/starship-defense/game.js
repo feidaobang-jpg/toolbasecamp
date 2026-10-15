@@ -3041,7 +3041,7 @@ function tacticalPreview(){
   const mouths=[...new Set(plan.schedule.map(e=>e.mouth))].map(id=>MOUTHS.find(m=>m.id===id).name).join('、');
   const extra=battle?Game.wave.initialWilds:waveMonsters().length;
   return {title:(battle?'本关虫潮 · ':'下一波 · ')+plan.title,
-    info:[...groups].map(([name,count])=>name+' '+count+'只').join(' · ')+'\n入口：'+mouths+(extra?'\n另有 '+extra+' 只场上残虫加入进攻':''),
+    info:[...groups].map(([name,count])=>name+' '+count+'只').join(' · ')+'\n入口：'+mouths+(extra?'\n另有 '+extra+' 只场上野怪加入进攻':''),
     hint:plan.hint,supply:openingSupply(Game.chapter,Game.level,Game.loop)};
 }
 /* 本章完整说明：战场中间只留一行短提示，细则收进「战术部署」面板，免得面板糊住战场（用户2026-10-14） */
@@ -3068,7 +3068,15 @@ function startPrep(){
   gate.dead=false;gate.maxHp=Math.round(2500*(1+(Game.chapter-1)*.08)*(1+(Game.loop-1)*.4));gate.hp=gate.maxHp;gate.auto=false;
   updHPBar(gate.bar,1);gate.open=true;
   if(!Game.testMode){repairVehicles();while(squad.length<Math.min(squadLimit(),Game.squadCount))spawnSquad();}
-  // 准备阶段不再散布野怪（用户2026-10-14：地图上除母巢外不要野怪）；虫潮全部从虫洞正式出兵，老巢仍留母皇与护卫可提前打。
+  // 野怪：散布在前中场，避开隧道与老巢；可选打来刷金币（掉落不按虫潮倍数回落），开战时剩下的加入进攻。
+  // 0.39.1 曾按“除母巢外不要野怪”去掉，玩家反馈先刷野怪攒钱造炮塔再开虫潮的玩法没了，0.40.1 恢复（用户2026-10-15）。
+  const n=6+Math.min(10,Game.chapter+Game.loop);
+  for(let i=0;i<n;i++){
+    let x,z,k=0;do{x=rand(WORLD.minX+12,WORLD.maxX-12);z=rand(50,240);}while((tunnelDistance(x,z)<9||Math.hypot(x-HIVE.x,z-HIVE.z)<HIVE.r+12||HILL_FORTS.some(f=>Math.hypot(x-f.x,z-f.z)<f.top+5))&&++k<30);
+    const ec=campaignEliteChance(Game.testMode?'normal':Game.difficulty,Game.chapter,Game.loop,true);
+    spawnMonster('mob',x,z,{wild:true,elite:Math.random()<ec?true:undefined,quiet:true});
+  }
+  if(Math.random()<.5)spawnMonster('miniboss',rand(-40,40),rand(130,170),{wild:true});
   if(!Game.testMode)spawnHive();
   // 母巢状态同步后再算预告，保证准备阶段看到的虫潮数量与开战时一致
   if(!Game.testMode)Game.wave.plan=currentWavePlan();
@@ -3805,7 +3813,7 @@ function updHUD(dt){
   if(Game.state==='prep'){
     const total=Game.wave.plan?Game.wave.plan.schedule.length:currentWavePlan().schedule.length;
     const left=waveMonsters().length;
-    $('waveTxt').textContent=`🛠 准备中 · 本关虫潮 ${total} 只`+(left?` · 场上残虫 ${left}`:'');
+    $('waveTxt').textContent=`🛠 准备中 · 本关虫潮 ${total} 只`+(left?` · 野怪 ${left}（可选打）`:'');
   }
   renderWeaponBar();
   if(Game.msgTimer>0){Game.msgTimer-=dt;if(Game.msgTimer<=0)$('msg').classList.add('hidden');}
