@@ -56,7 +56,7 @@ def clean_input(source):
     length = math.hypot(data.get('x', 0), data.get('z', 0))
     if length > 1:
         data['x'] /= length; data['z'] /= length
-    for key in ('fire', 'firePressed', 'bomb', 'bombPressed', 'atk', 'jump', 'mega', 'run', 'motion', 'lane', 'autoFire', 'autoAim', 'fp', 'rise', 'lower'):
+    for key in ('fire', 'firePressed', 'bomb', 'bombPressed', 'atk', 'jump', 'mega', 'run', 'motion', 'lane', 'autoFire', 'autoAim', 'fp', 'rise', 'lower', 'crouch', 'prone'):
         data[key] = source.get(key) is True
     direction = source.get('dir')
     data['dir'] = direction if type(direction) is int and -1 <= direction <= 7 else -1

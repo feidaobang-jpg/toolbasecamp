@@ -2527,7 +2527,7 @@ function crosshairPoint(range){
   const net=Input.network,dir=camForward(true),v=player.inVehicle;
   // 步行是第一人称，从眼睛出发；载具镜头在车后上方，跳过镜头到车身这一段，免得瞄到自己或车后的地面。
   const back=!v?0:net?clamp(net.look,0,40):camState.dist;
-  const eye=!v?player.pos.clone().add(new THREE.Vector3(0,1.72,0)):net?vehicleEye(v,back):camera.position.clone();
+  const eye=!v?player.pos.clone().add(new THREE.Vector3(0,1.72-STANCE_DROP[stanceOf()],0)):net?vehicleEye(v,back):camera.position.clone();
   const a=eye.addScaledVector(dir,v?back+2:0),b=a.clone().addScaledVector(dir,range);
   const foes=versus.aimTargets(player.team).filter(t=>!t.dead&&t.mesh),center=t=>t.mesh.position.clone().add(new THREE.Vector3(0,t.hitH||1,0)),assist=net?(net.autoAim?'touch':null):aimAssistKind();
   if(assist){
@@ -2651,13 +2651,18 @@ function updLook(dt){
   camYaw=(camYaw%TAU+TAU)%TAU;
 }
 
+// 战地的蹲 / 趴（C 蹲、Z 趴，再按站起；跳、Shift 跑、上载具都会站起来）：镜头、枪口、中弹高度、速度跟着变。
+// 联机客人把自己的姿势当开关（crouch / prone）发给房主，房主按这个算。
+const STANCE_DROP=[0,.55,1.2],STANCE_HIT=[1.15,.8,.42],STANCE_SPEED=[1,.55,.25];
+function stanceOf(){return battleOn()&&!player.inVehicle?(Input.network?(Input.network.prone?2:Input.network.crouch?1:0):player.stance||0):0;}
+function toggleStance(s){if(!battleOn()||player.inVehicle)return;player.stance=(player.stance||0)===s?0:s;}
 function playerMuzzle(dir){
   if(camMode==='first'){
     const f=camForward(true),right=new THREE.Vector3(-Math.cos(camYaw),0,Math.sin(camYaw));
     // 第一人称枪口放在右下方武器模型前端，离眼睛 1 米以上，光束不再从眼前穿过
-    return player.pos.clone().add(new THREE.Vector3(0,1.42,0)).addScaledVector(f,1.1).addScaledVector(right,.24);
+    return player.pos.clone().add(new THREE.Vector3(0,1.42-STANCE_DROP[stanceOf()],0)).addScaledVector(f,1.1).addScaledVector(right,.24);
   }
-  return player.pos.clone().add(new THREE.Vector3(dir.x*.55,1.35,dir.z*.55));
+  return player.pos.clone().add(new THREE.Vector3(dir.x*.55,1.35-STANCE_DROP[stanceOf()],dir.z*.55));
 }
 // A ledge is not a wall: test solids at the actual feet height, and only
 // limit upward terrain steps. Downward movement stays airborne until landing.
@@ -2688,6 +2693,8 @@ function updPlayer(dt){
   let mvx=Input.network?Input.network.x||0:f*sn-r*cs, mvz=Input.network?Input.network.z||0:f*cs+r*sn;
   const moving=Math.hypot(mvx,mvz)>.01;
   player.sprinting=!!(moving&&(Input.network?Input.network.run:Input.keys.SPRINT)&&!player.inVehicle);
+  if(player.inVehicle||(player.sprinting&&!Input.network))player.stance=0;   // 跑起来、上载具就站起来
+  if(battleOn()){const st=stanceOf();player.hitH=STANCE_HIT[st];if(player.mesh){player.mesh.rotation.order='YXZ';player.mesh.scale.y=st===1?.72:1;player.mesh.rotation.x=st===2?-Math.PI*.46:0;}}
   player.moveZ=moving?mvz/Math.hypot(mvx,mvz):0;
   const moveDir=moving?new THREE.Vector3(mvx,0,mvz).normalize():null;
   visuals.animate(player.mesh,dt,moving?'Run':'Idle',camera);
@@ -2760,14 +2767,14 @@ function updPlayer(dt){
     updHPBar(player.bar,player.hp/player.maxHp);
     if(Math.random()<.08)selfFx(0x66ff99,2,2,.5,1);
   }
-  if(Input.pop('K')&&player.onGround){player.vy=9;player.onGround=false;AudioSys.sfx('jump');}
+  if(Input.pop('K')&&player.onGround){if(stanceOf()){if(!Input.network)player.stance=0;}else{player.vy=9;player.onGround=false;AudioSys.sfx('jump');}}   // 蹲着、趴着按跳是站起来
   if(moving){
     if(camMode==='third'){
       const probe=player.pos.clone();probe.y+=1.35;
       const range=WEAPONS[Game.curWeapon].range,aim=playerAim(probe,range,moveDir);
       if(!Input.firing(automaticFireTarget(probe,range,aim)))player.yaw=Math.atan2(mvx,mvz);
     }
-    const sp=player.speed*(player.sprinting?1.65:1)*(player.buffT>0?1.4:1)*(player.onGround?slopeSpeed(groundY,player.pos.x,player.pos.z,mvx,mvz):1);
+    const sp=player.speed*(player.sprinting?1.65:1)*STANCE_SPEED[stanceOf()]*(player.buffT>0?1.4:1)*(player.onGround?slopeSpeed(groundY,player.pos.x,player.pos.z,mvx,mvz):1);
     const nx=player.pos.x+mvx*sp*dt,nz=player.pos.z+mvz*sp*dt;
     if(playerCanMove(nx,player.pos.z))player.pos.x=nx;
     if(playerCanMove(player.pos.x,nz))player.pos.z=nz;
@@ -2852,7 +2859,7 @@ function updPlayer(dt){
     const action=interactionTarget();
     if(action.kind==='vehicle')enterVehicle(action.vehicle);
     else if(action.kind==='gate'){if(!gate.dead)setGate(!gate.open);else showMsg(action.tip,2);}
-    else showMsg(bankOn()?KL('R')+' 出兵、'+KL('N0')+' 升级银行、'+KL('Z')+' 切换路线；靠近核心回血':battleOn()?'靠近本方载具按 '+KL('I')+' 驾驶；'+keyBindings.label('H')+' 使用当前兵种支援能力':'附近没有可互动的东西：靠近载具驾驶，靠近城门开关门；'+keyBindings.label('H')+' 是医疗包',2.4);
+    else showMsg(bankOn()?KL('R')+' 出兵、'+KL('N0')+' 升级银行、'+KL('PRONE')+' 切换路线；靠近核心回血':battleOn()?'靠近本方载具按 '+KL('I')+' 驾驶；'+keyBindings.label('H')+' 使用当前兵种支援能力':'附近没有可互动的东西：靠近载具驾驶，靠近城门开关门；'+keyBindings.label('H')+' 是医疗包',2.4);
     updInteraction();
   }
   if(Input.pop('H'))useMedkit();
@@ -3817,7 +3824,7 @@ function updCamera(dt){
   if(!camState.init){camState.target.copy(tp);camState.init=true;camState.dist=99;}
   camState.target.lerp(tp,1-Math.exp(-dt*(v?11:18)));
   if(camMode==='first'){
-    const eye=_look.copy(tp);eye.y+=v?v.cfg.seatH+1.3:1.72;
+    const eye=_look.copy(tp);eye.y+=v?v.cfg.seatH+1.3:1.72-STANCE_DROP[stanceOf()];
     if(v)eye.addScaledVector(_dir.set(Math.sin(v.yaw),0,Math.cos(v.yaw)),v.cfg.fly?1.2:1.6);
     camera.position.copy(eye);
     camera.lookAt(_probe.copy(eye).add(camForward(true)));
@@ -4342,7 +4349,7 @@ function applyRoot(obj,row){
 function starshipInput(){
   const axis=Input.axis(),cs=Math.cos(camYaw),sn=Math.sin(camYaw),f=-axis.y,r=axis.x,edges=[];
   edges.push(...coopPendingEdges.splice(0));
-  const input={x:f*sn-r*cs,z:f*cs+r*sn,edges,yaw:camYaw,fp:camMode==='first',run:!!Input.keys.SPRINT,rise:!!Input.keys.K,lower:!!Input.keys.H,
+  const input={x:f*sn-r*cs,z:f*cs+r*sn,edges,yaw:camYaw,fp:camMode==='first',run:!!Input.keys.SPRINT,rise:!!Input.keys.K,lower:!!(Input.keys.CROUCH||Input.keys.H),crouch:(player.stance||0)===1,prone:(player.stance||0)===2,
     fire:isTouch?!!Input.keys.J:CombatControls.firing(true),autoFire:!isTouch&&CombatControls.settings.fire==='auto',autoAim:isTouch||CombatControls.settings.aim==='auto'};
   // 战地：客人只在按住时开火；俯仰和镜头距离（look，步行为 0）让房主还原准星，autoAim 表示触屏/纯键盘的轻度吸附。
   if(battleOn())Object.assign(input,{pitch:camPitch,look:player.inVehicle?camState.dist:0,fire:isTouch?!!Input.keys.J:CombatControls.held,autoFire:false,autoAim:!!aimAssistKind()});
@@ -4483,7 +4490,7 @@ function renderVersusSize(){
   const n=vsUI.size;
   document.querySelectorAll('[data-vs-size]').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.vsSize===n?'true':'false'));
   $('vsMenuTitle').textContent=bankMode?'🏦 银行塔防对战':'⚑ 战地模式 · 沙漠据点战';
-  document.querySelectorAll('#vsMenu .vs-rules').forEach((el,i)=>{if(!el.dataset.conquest)el.dataset.conquest=el.textContent;el.textContent=bankMode?(i===0?'经营银行、每10秒收入、派兵放虫、建造炮塔，英雄升级并购买武器。三路推进，摧毁敌方核心获胜。每局独立，仅保存战绩，退出后重新开局。':KL('R')+' 出兵 / 面板内 '+KL('N0')+' 升级银行 / '+KL('Z')+' 换路线 / '+KL('L')+' 建造 / '+KL('O')+' 买枪 / '+KL('T')+' 给队友转钱。保留多种视角与自动瞄准设置；手机使用同名按钮。好友可中途加入接手电脑，双方每人独立银行与金币。'):el.dataset.conquest;});
+  document.querySelectorAll('#vsMenu .vs-rules').forEach((el,i)=>{if(!el.dataset.conquest)el.dataset.conquest=el.textContent;el.textContent=bankMode?(i===0?'经营银行、每10秒收入、派兵放虫、建造炮塔，英雄升级并购买武器。三路推进，摧毁敌方核心获胜。每局独立，仅保存战绩，退出后重新开局。':KL('R')+' 出兵 / 面板内 '+KL('N0')+' 升级银行 / '+KL('PRONE')+' 换路线 / '+KL('L')+' 建造 / '+KL('O')+' 买枪 / '+KL('T')+' 给队友转钱。保留多种视角与自动瞄准设置；手机使用同名按钮。好友可中途加入接手电脑，双方每人独立银行与金币。'):el.dataset.conquest;});
   $('vsSizeNote').textContent=bankMode?'每队 '+n+' 人，每人独立银行与金币，空位由电脑补充。':'每队 '+n+' 个玩家/电脑座位，另有 8 名步兵增援与 4 类载具。空位由电脑补充，双方固定装备与生命。';
   renderVersusRecord();
 }
@@ -4641,7 +4648,7 @@ function versusEnterUI(){
   showHUD();$('readyBtn').classList.add('hidden');$('sandboxBtn').classList.add('hidden');showHint(null);
   vsUI.open=false;vsUI.tab='units';$('vsPanel').classList.add('hidden');$('vsTeamTab').classList.remove('hidden');
   const hint=$('keysHint');if(!hint.dataset.campaign)hint.dataset.campaign=hint.textContent;
-  hint.textContent='WASD移动 · 鼠标转视角 · 按住左键射击 · 右键或'+KL('Z')+'举枪 · '+KL('SPRINT')+'跑步 · '+KL('R')+'换弹 · '+KL('O')+'装备 · '+KL('L')+'部署 · '+KL('T')+'战况 · '+KL('H')+'兵种支援 · '+KL('I')+'上/下载具 · '+KL('U')+'手雷 · '+KL('K')+'跳跃 · '+KL('C')+'载具视角 · Esc暂停';
+  hint.textContent='WASD移动 · 鼠标转视角 · 按住左键射击 · 右键举枪 · '+KL('CROUCH')+'蹲 · '+KL('PRONE')+'趴 · '+KL('SPRINT')+'跑步 · '+KL('R')+'换弹 · '+KL('O')+'装备 · '+KL('L')+'部署 · '+KL('T')+'战况 · '+KL('H')+'兵种支援 · '+KL('I')+'上/下载具 · '+KL('U')+'手雷 · '+KL('K')+'跳跃 · '+KL('C')+'载具视角 · Esc暂停';
   const rl=$('btnRestartLv');if(!rl.dataset.campaign)rl.dataset.campaign=rl.textContent;rl.textContent='🔄 重开对战';
   $('vH').classList.remove('hidden');$('vO').textContent='装备';$('vL').textContent='部署';$('vR').textContent='换弹';
   bfVehicleView=0;syncViewLabels();
@@ -4708,7 +4715,9 @@ function versusPick(i){
 function toggleBattlefieldAim(){bfAiming=!bfAiming&&!player.inVehicle;$('vZ').classList.toggle('aiming',bfAiming);$('vZ').setAttribute('aria-pressed',String(bfAiming));} // 举枪只在步行第一人称下有意义
 function versusPanelInput(){
   if(bankOn())return bankVersusPanelInput();
-  if(Input.pop('Z'))toggleBattlefieldAim();
+  if(Input.pop('Z'))toggleBattlefieldAim();   // 触屏举枪按钮（电脑用右键）
+  if(Input.pop('PRONE'))toggleStance(2);
+  if(!player.inVehicle&&Input.pop('CROUCH'))toggleStance(1);
   if(!vsUI.open)return;
   for(let n=1;n<=9;n++)if(Input.pop('N'+n))versusPick(n-1);
 }
@@ -4791,7 +4800,7 @@ function bankVersusEnterUI(){
   showHUD();$('readyBtn').classList.add('hidden');$('sandboxBtn').classList.add('hidden');showHint(null);
   vsUI.open=false;vsUI.tab='units';$('vsPanel').classList.add('hidden');$('vsTeamTab').classList.toggle('hidden',versus.size<2);
   const hint=$('keysHint');if(!hint.dataset.campaign)hint.dataset.campaign=hint.textContent;
-  hint.textContent='WASD移动 · 鼠标转视角 · 左键射击 · '+KL('R')+' 出兵面板（打开后 1-9 派兵、'+KL('N0')+' 升级银行）· '+KL('Z')+' 切换进攻路线 · '+KL('L')+' 建造 · '+KL('O')+' 买枪'+(versus.size>1?' · '+KL('T')+' 队伍（给队友转钱）':'')+' · '+KL('U')+' 手雷 · '+KL('K')+' 跳跃 · '+KL('C')+' 切换视角 · Esc 暂停';
+  hint.textContent='WASD移动 · 鼠标转视角 · 左键射击 · '+KL('R')+' 出兵面板（打开后 1-9 派兵、'+KL('N0')+' 升级银行）· '+KL('PRONE')+' 切换进攻路线 · '+KL('L')+' 建造 · '+KL('O')+' 买枪'+(versus.size>1?' · '+KL('T')+' 队伍（给队友转钱）':'')+' · '+KL('U')+' 手雷 · '+KL('K')+' 跳跃 · '+KL('C')+' 切换视角 · Esc 暂停';
   const rl=$('btnRestartLv');if(!rl.dataset.campaign)rl.dataset.campaign=rl.textContent;rl.textContent='🔄 重开对战';
   $('vH').classList.add('hidden');$('vC').classList.remove('hidden');$('vO').textContent='买枪';$('vL').textContent='建造';$('vR').textContent='出兵';$('vZ').textContent='路线';$('vZ').setAttribute('aria-label','切换进攻路线');$('vR').setAttribute('aria-label','出兵与升级银行');$('vZ').classList.remove('aiming');$('vZ').setAttribute('aria-pressed','false');syncViewLabels();
 }
@@ -4848,7 +4857,7 @@ function bankRenderVersusPanel(rebuild=false){
 }
 function bankVersusPick(i){const c=versusCards()[vsUI.tab==='units'?i+1:i];if(c)c.act();renderVersusPanel();}
 function bankVersusPanelInput(){
-  if(Input.pop('Z'))versusSetLane(null);
+  if(Input.pop('Z')||Input.pop('PRONE'))versusSetLane(null);
   if(!vsUI.open)return;
   if(Input.pop('N0')&&vsUI.tab==='units')versusBank();
   for(let n=1;n<=9;n++)if(Input.pop('N'+n))versusPick(n-1);
@@ -4893,7 +4902,7 @@ function bankUpdVersusHUD(dt){
   const lane=({left:'上路',mid:'中路',right:'下路',alt:'轮换'})[t.lane];
   let mates='';
   if(n>1){const list=versus.members(me).filter(s=>s.pid!==t.pid);mates='\n👥 '+'队友：'+list.map(s=>versus.seatName(s)+(s.ai&&s.name&&s.name!=='电脑'?'（电脑接管）':'')+' 英雄Lv'+s.level).join(' · ');const votes=versus.members(me).filter(s=>s.surrender).length;if(votes)mates+=' · 🏳 投降 '+votes+'/'+versus.members(me).filter(s=>!s.ai).length;}
-  $('vsEco').textContent='💰 '+Math.floor(t.gold)+' · 英雄 Lv'+t.level+'/15 · '+(t.level>=15?'经验已满':Math.floor(t.xp)+'/'+versus.xpNeeded(t.level)+'经验')+' · 伤害 +'+Math.round((t.level-1)*VS_RULES.heroDamagePerLevel*100)+'%'+versus.buffText(t.pid)+'\n🏦 银行 Lv'+t.bank+(t.bankDown>0?'（重建 '+Math.ceil(t.bankDown)+' 秒）':'')+' · 每10秒 +'+versus.incomeOf(t.pid)+'\n⚔ 增援 '+lane+' · 付费兵力 '+versus.popOf(t.pid)+'/'+versus.popCap()+mates+'\n'+(isTouch?'出兵 / 建造 / 商店 按钮':KL('R')+' 出兵 · '+KL('L')+' 建造 · '+KL('O')+' 买枪 · '+KL('Z')+' 换路线'+(n>1?' · '+KL('T')+' 队伍':''));
+  $('vsEco').textContent='💰 '+Math.floor(t.gold)+' · 英雄 Lv'+t.level+'/15 · '+(t.level>=15?'经验已满':Math.floor(t.xp)+'/'+versus.xpNeeded(t.level)+'经验')+' · 伤害 +'+Math.round((t.level-1)*VS_RULES.heroDamagePerLevel*100)+'%'+versus.buffText(t.pid)+'\n🏦 银行 Lv'+t.bank+(t.bankDown>0?'（重建 '+Math.ceil(t.bankDown)+' 秒）':'')+' · 每10秒 +'+versus.incomeOf(t.pid)+'\n⚔ 增援 '+lane+' · 付费兵力 '+versus.popOf(t.pid)+'/'+versus.popCap()+mates+'\n'+(isTouch?'出兵 / 建造 / 商店 按钮':KL('R')+' 出兵 · '+KL('L')+' 建造 · '+KL('O')+' 买枪 · '+KL('PRONE')+' 换路线'+(n>1?' · '+KL('T')+' 队伍':''));
   renderWeaponBar();
   if(vsUI.open&&(vsUI.t-=dt)<=0){vsUI.t=.2;renderVersusPanel();}
   if(Game.msgTimer>0){Game.msgTimer-=dt;if(Game.msgTimer<=0)$('msg').classList.add('hidden');}

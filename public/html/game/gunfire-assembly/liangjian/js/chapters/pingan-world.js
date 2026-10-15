@@ -8,7 +8,7 @@ export const L = {
   start: { x: 0, z: 92 },
   nestA: { x: -16, z: 58 },
   nestB: { x: 15, z: 38 },
-  firePos: { x: 0, z: 26 },
+  firePos: { x: 0, z: 60 },        // 炮位离城墙约 77 米：城墙上的掷弹筒、机枪都够不着（用户 2026-10-14）
   cannonStart: { x: 0, z: 97 },
   wallZ0: -23, wallZ1: -17, wallH: 9,
   gateHalf: 3.5, gateH: 6,

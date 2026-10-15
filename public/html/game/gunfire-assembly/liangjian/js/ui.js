@@ -384,6 +384,8 @@ export class UI {
       dlg.lastElementChild.textContent = it.text;
       dlg.classList.toggle('foe', it.foe);
       dlg.hidden = false; this.dlgT = it.dur;
+      const vd = this.app.audio.lineVoice(it.text);   // 没有原声的台词放合成配音，字幕至少停到说完
+      if (vd) this.dlgT = Math.max(this.dlgT, vd + 0.25);
     }
     // 大字
     if (this.stampD > 0) {

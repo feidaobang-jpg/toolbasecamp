@@ -1,13 +1,13 @@
 // Persist actions, never executable code. Touch controls keep their action identities.
 // 2026-10（键位 v2）：电脑端改成“鼠标瞄准 + 左手键位”（参考 CS / 电脑版吃鸡）：左键射击、右键举枪、空格跳、Shift 跑、F 互动、G 手雷、
-// E 医疗、Q 换枪、V 视角、B 商店、T 建造、X 开始虫潮、C 蹲下 / 直升机降低、Tab 战况。键盘转视角（原 Q/E、Y/H）默认不占键，仍可在「操作设置」里绑定。
+// E 医疗、Q 换枪、V 视角、B 商店、T 建造、X 开始虫潮、C 蹲下 / 直升机降低、Z 趴下（银行模式里是换路线）、Tab 战况。键盘转视角（原 Q/E、Y/H）默认不占键，仍可在「操作设置」里绑定。
 // 动作名（J、K、U…）沿用旧的内部编号，触屏按钮和联机输入照旧。
 export const KEY_ACTIONS={
   up:['前进','KeyW'],down:['后退','KeyS'],left:['左移','KeyA'],right:['右移','KeyD'],
   J:['射击 / 放置',''],K:['跳跃 / 直升机升高','Space'],SPRINT:['按住跑步','ShiftLeft'],CROUCH:['蹲下 / 直升机降低','KeyC'],
   I:['互动 / 上下载具','KeyF'],U:['投掷手雷','KeyG'],H:['医疗 / 兵种支援','KeyE'],X:['切换武器','KeyQ'],
   O:['商店','KeyB'],L:['建造','KeyT'],WAVE:['开始虫潮','KeyX'],R:['换弹 / 出兵','KeyR'],T:['战况 / 队伍 / 测试台','Tab'],
-  C:['切换视角','KeyV'],Z:['举枪 / 银行换路线','KeyZ'],
+  C:['切换视角','KeyV'],Z:['举枪（触屏按钮；电脑用右键）',''],PRONE:['趴下（战地）/ 银行换路线','KeyZ'],
   Q:['键盘左转视角',''],E:['键盘右转视角',''],LOOKUP:['键盘抬头',''],LOOKDOWN:['键盘低头',''],
   P:['暂停','KeyP'],M:['声音','KeyM'],F:['全屏','']
 };

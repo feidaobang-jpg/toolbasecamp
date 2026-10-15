@@ -15,7 +15,7 @@ export const INFO = {
   seal: '独立团<br>重做版', loading: '亮剑 · 攻打平安县城', bossName: '山本一木', aide: '和尚', winTitle: '平安县城，拿下了！', loseTitle: '攻城受挫',
   phases: ['', '扫清城外', '拉炮上阵', '开炮！', '打进县城', '决战山本'],
 };
-const SIEGE_POSTS = [[-9, 24.6], [9, 24.6], [-12.5, 27], [12.5, 27], [-6.5, 29.5], [7, 30.5]];
+const SIEGE_POSTS = [[-9, 58.6], [9, 58.6], [-12.5, 61], [12.5, 61], [-6.5, 63.5], [7, 64.5], [-16, 63], [16, 63], [-3, 66], [3.5, 67]];
 const ESCORT = [[-3.6, -1.5], [3.6, -1.5], [0, 5]];
 
 export class PinganGame extends Game {
@@ -43,7 +43,8 @@ export class PinganGame extends Game {
   }
   startPos() { return L.start; }
   startWeapon(startPhase) { return startPhase >= 5 ? 'lmg' : 'pistol'; }
-  allyRoster() { return [['dabiao', '张大彪'], ['monk', '和尚'], ['ally'], ['ally'], ['ally'], ['ally']]; }
+  allyRoster() { return [['dabiao', '张大彪'], ['monk', '和尚'], ['ally'], ['ally'], ['ally'], ['ally'], ['ally'], ['ally'], ['ally'], ['ally']]; }   // 全团攻城：比原来多一倍人
+  reinforceReserve() { return 6; }
   resetGun(startPhase) {
     const c = this.cannon;
     c.placed = startPhase >= 3; c.visible = startPhase >= 2;
@@ -127,7 +128,7 @@ export class PinganGame extends Game {
     let x = L.start.x, z = L.start.z;
     if (p === 1) { if (this.flags.nA) { x = L.nestA.x; z = L.nestA.z + 7; } }
     else if (p === 2) { x = c.x + 2; z = c.z + 7; }
-    else if (p === 3) { x = 4; z = 31; }
+    else if (p === 3) { x = 4; z = 65; }
     else if (p === 4) { x = 0; z = this.flags.s2 ? -61 : this.flags.s1 ? -37 : -12; }
     else if (p === 5) { x = 0; z = -85.5; }
     return [x, z];
@@ -144,14 +145,15 @@ export class PinganGame extends Game {
     let tx, tz;
     if (this.phase === 2) { if (c.z > 54 || c.placed) return null; tx = c.x + rand(-1.5, 1.5); tz = c.z + rand(-1, 2); }
     else if (this.phase === 3) {
-      if (!c.manned && h.alive && rand() < 0.55 && h.z < 60) { tx = h.x + h.vx * 0.8; tz = h.z + h.vz * 0.8; }
-      else { const a = rand(TAU), r = rand(2.5, 8); tx = c.x + Math.cos(a) * r; tz = c.z + 1 + Math.sin(a) * r; }
+      // 掷弹筒只打得到离城墙 45 米以内的人；炮位在 77 米外，够不着
+      if (h.alive && !c.manned && h.z < L.wallZ1 + 45) { tx = h.x + h.vx * 0.8; tz = h.z + h.vz * 0.8; }
+      else return null;
     } else return null;
     return [tx, tz];
   }
   allyPost(u) {
     if (this.phase === 3) return [SIEGE_POSTS[u.slot][0], SIEGE_POSTS[u.slot][1], true];
-    if (this.phase === 2 && u.slot >= 3 && this.cannon.visible) { const e = ESCORT[u.slot - 3]; return [this.cannon.x + e[0], this.cannon.z + e[1], false]; }
+    if (this.phase === 2 && u.slot >= 3 && u.slot < 6 && this.cannon.visible) { const e = ESCORT[u.slot - 3]; return [this.cannon.x + e[0], this.cannon.z + e[1], false]; }
     return null;
   }
   formationYaw() { return this.phase >= 4 ? 0 : (this.advYaw === undefined ? 0 : this.advYaw); }
@@ -177,13 +179,15 @@ export class PinganGame extends Game {
     if (c.manned) this.leaveCannon();
     h.hp = h.maxHp; h.nades = h.nadeMax; h.inv = Math.max(h.inv, 1.2);
     spawnPhase(this, n);
+    // 秀芹从一开始就被山本押在城楼上（用户 2026-10-14：“秀芹他们一开始就要在城楼上”），城楼两侧六个卫兵
+    if (n <= 3) { this.clearCast(); this.spawnCast(); }
     this.audio.setMusic(n >= 5 ? 2 : 1);
     if (n === 3) this.audio.setTrack('jinji');   // 炮击城墙：《紧急》
     if (n === 1) {
       this.place(h, L.start.x, L.start.z);
       ui.say('李云龙', '传我命令：全团集合，打平安县城！');
       ui.say('张大彪', '一营听令，跟团长上！');
-      this.after(4.5, () => ui.toast(this.app.isTouch() ? '准星对着敌人开火，靠近会吸附，打头加倍；机枪阵地正面打不穿，绕到侧面、跳进去，或者扔手榴弹、叫骑兵连。打掉机枪手，机枪就归你用' : '准星对着敌人开火，靠近会吸附，打头加倍；机枪阵地正面打不穿——绕到侧面、跳进去，或者用手榴弹（G）。打掉机枪手，机枪就归你用（F）', 7));
+      this.after(4.5, () => ui.toast(this.app.isTouch() ? '准星对着敌人开火，靠近会吸附，打头加倍；机枪阵地正面打不穿，绕到侧面、跳进去，或者扔手榴弹。打掉机枪手，机枪就归你用' : '准星对着敌人开火，靠近会吸附，打头加倍；机枪阵地正面打不穿——绕到侧面、跳进去，或者用手榴弹（G）。打掉机枪手，机枪就归你用（F）', 7));
     } else if (n === 2) {
       if (fresh) this.place(h, 2, 84);
       c.visible = true; c.placed = false; c.x = L.cannonStart.x; c.z = L.cannonStart.z; c.hp = c.maxHp;
@@ -197,7 +201,7 @@ export class PinganGame extends Game {
       this.after(2.3, () => ui.stamp('意大利炮呢？', 1.8));
       this.after(5, () => ui.toast('护着炮往前推：鬼子靠近炮组就会停下，先把他们打掉', 5));
     } else if (n === 3) {
-      if (fresh) this.place(h, 3.5, 31);
+      if (fresh) this.place(h, 3.5, 65);
       c.visible = true; c.placed = true; c.x = L.firePos.x; c.z = L.firePos.z; c.hp = Math.min(c.maxHp, c.hp + 12); c.shells = 8;
       for (const e of this.enemies) if (e.type === 'wall' || e.type === 'mortar') e.active = true;
       ui.say('二营长', '团长，炮架好了！', { now: true, dur: 1.9 });
@@ -315,10 +319,10 @@ export class PinganGame extends Game {
       if (rand() < dt * 6) this.fx.dust(c.x + rand(-0.9, 0.9), 0.1, c.z + 0.5, 1);
     } else if (blocked && !this.flags.blockedTip) { this.flags.blockedTip = 1; ui.say('二营长', '团长，鬼子摸上来了，炮推不动！'); }
     const wave = (id, z, fn) => { if (!this.flags[id] && c.z < z) { this.flags[id] = 1; fn(); } };
-    wave('w1', 90, () => { this.spawnWave(-42, 72, 5, 0, 'W'); ui.say('和尚', '左边土坡后头有鬼子！'); });
-    wave('w2', 74, () => { this.spawnWave(42, 56, 5, 1, 'W'); ui.say('张大彪', '右翼上来一股，冲着炮来的！'); });
-    wave('w4', 40, () => { this.spawnWave(-40, 12, 4, 1, 'W'); this.spawnWave(40, 10, 4, 1, 'W'); ui.say('和尚', '城墙根底下又冲出来两股！'); });
-    wave('w3', 58, () => { this.spawnWave(-42, 40, 4, 1, 'W'); this.spawnWave(42, 38, 4, 1, 'W'); for (const e of this.enemies) if (e.type === 'mortar' || e.type === 'wall') e.active = true; ui.say('二营长', '城墙上的掷弹筒盯上咱们了，红圈落下来前躲开！'); });
+    wave('w1', 93, () => { this.spawnWave(-42, 72, 5, 0, 'W'); ui.say('和尚', '左边土坡后头有鬼子！'); });
+    wave('w2', 84, () => { this.spawnWave(42, 56, 5, 1, 'W'); ui.say('张大彪', '右翼上来一股，冲着炮来的！'); });
+    wave('w4', 66, () => { this.spawnWave(-40, 40, 4, 1, 'W'); this.spawnWave(40, 38, 4, 1, 'W'); ui.say('和尚', '城墙根底下又冲出来两股！'); });
+    wave('w3', 75, () => { this.spawnWave(-42, 56, 4, 1, 'W'); this.spawnWave(42, 54, 4, 1, 'W'); for (const e of this.enemies) if (e.type === 'mortar' || e.type === 'wall') e.active = true; ui.say('二营长', '城墙上的掷弹筒够不着炮位，可别往城墙根底下凑！'); });
     if (c.z <= L.firePos.z) {
       c.z = L.firePos.z; c.x = L.firePos.x; c.placed = true; c.moving = false;
       this.addScore(600);
@@ -343,7 +347,9 @@ export class PinganGame extends Game {
           this.sfxAt('mg', b.x, b.z, 0.8);
         }
       } else if (b.cd <= 0) {
-        const t = rand() < 0.6 && this.hero.alive ? this.hero : c;
+        const reach = (q) => dist(b.x, b.z, q.x, q.z) < 66;   // 机枪子弹飞不到 70 米外
+        const t = this.hero.alive && reach(this.hero) && (rand() < 0.6 || !reach(c)) ? this.hero : reach(c) ? c : null;
+        if (!t) { b.cd = 1; continue; }
         b.tx = t.x; b.tz = t.z; b.burst = 9; b.shotT = 0.5; b.cd = rand(3.6, 5.2);
         this.fx.strip(b.x, b.z + 1.2, yawTo(t.x - b.x, t.z - b.z - 1.2), dist(b.x, b.z, t.x, t.z), 0.5, 0.5);
       }
@@ -379,13 +385,14 @@ export class PinganGame extends Game {
     this.poseTied(xq);
     poseSoldier(ym, { walk: 0, moving: 0, aim: 0, carry: 'side', slash: -1 });
     ym.armR.rotation.x = 1.75; ym.armR.rotation.z = -0.55;     // 刀横在她肩前
-    for (const sx of [-1, 1]) { const e = this.addUnit('enemy', 'wall', sx * 3.1, z - 0.05, { y, hold: true, group: 'tower' }); e.active = true; e.stT = 2.5; }
+    for (const sx of [-1, 1]) for (const k of [0, 1, 2]) { const e = this.addUnit('enemy', 'wall', sx * (3.1 + k * 1.9), z - 0.05 - k * 0.3, { y, hold: true, group: 'tower' }); e.active = true; e.stT = 2.5 + k; }
   }
   hostageScene() {
+    const had = this.cast.length > 0;
     const ui = this.ui, h = this.hero;
     // 贴着门洞站的人先退后两步，剧情一结束放行时不至于一抬脚就误入城门
     if (h.alive && h.z < L.wallZ1 + 2.5 && Math.abs(h.x) < L.gateHalf + 1) this.place(h, h.x, L.wallZ1 + 2.5);
-    this.spawnCast();
+    if (!had) this.spawnCast();
     this.bullets = this.bullets.filter((b) => b.team === 0);
     this.mortars.forEach((m) => m.mesh && this.scene.remove(m.mesh)); this.mortars.length = 0; this.fx.clearWarnings();
     const tower = { px: 1.8, py: 11.7, pz: -9.2, lx: 0.1, ly: 11.0, lz: -16.4 };

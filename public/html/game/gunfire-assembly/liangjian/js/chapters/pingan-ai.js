@@ -5,7 +5,7 @@ import { L } from './pingan-world.js';
 import { move, still, shootAt } from '../ai.js';
 
 function wallUnits(g, active) {
-  for (const x of [-30, -11, 11, 30]) { const e = g.addUnit('enemy', 'wall', x, L.wallZ1 - 1.35, { y: L.wallH, hold: true, group: 'wall' }); e.active = active; }
+  for (const x of [-38, -30, -24, -11, 11, 24, 30, 38]) { const e = g.addUnit('enemy', 'wall', x, L.wallZ1 - 1.35, { y: L.wallH, hold: true, group: 'wall' }); e.active = active; }
   for (const sx of [-1, 1]) { const e = g.addUnit('enemy', 'mortar', sx * L.mortarX, L.wallZ1 - 2.6, { y: L.wallH, hold: true, group: 'wall' }); e.active = active; e.stT = sx < 0 ? 9 : 13; }
 }
 

@@ -50,6 +50,8 @@ export class GameAudio {
     let list = [];
     try { const r = await fetch('assets/voice/index.json'); if (r.ok) list = await r.json(); } catch (e) { /* 忽略 */ }
     if (!Array.isArray(list)) list = (list && list[this.chapter]) || [];
+    // 没有原声的字幕台词：本机合成的配音，按台词文字对照（显示这句字幕时播）
+    try { const r = await fetch('assets/voice/lines.json'); if (r.ok) this.lineMap = await r.json(); } catch (e) { /* 没有就只显示字幕 */ }
     for (const id of list) {
       if (!/^[a-z0-9_]+$/.test(id)) continue;
       try {
@@ -198,6 +200,12 @@ export class GameAudio {
     s.connect(g); g.connect(this.vox); s.start();
     this.speaking.add(s); s.onended = () => this.speaking.delete(s);
     return true;
+  }
+  // 字幕显示时播这句的合成配音（没有原声的台词才有）；返回配音秒数，没有返回 0
+  lineVoice(text) {
+    const id = this.lineMap && this.lineMap[text], b = id && this.voices[id];
+    if (!b || !this.ctx || this.ctx.state !== 'running') return 0;
+    return this.voice(id) ? b.duration : 0;
   }
   // 跳过剧情、重开时把还没说完的台词掐掉
   stopVoices() { for (const s of this.speaking) { try { s.stop(); } catch (e) { /* 已经播完 */ } } this.speaking.clear(); }
