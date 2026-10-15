@@ -1,6 +1,6 @@
 {
   "task_id": "01a137f4-0430-7731-8313-96ed49bb705f-video01",
-  "phase": "awaiting_user_review",
+  "phase": "superseded",
   "video_sha256": "eec2db8a7e8172fe12d732496ed9f79fd38ca22739c3e7981a43692ec93f1c9a",
   "duration_seconds": 181.9,
   "source_commit": "ce1f9bd1",
@@ -9,12 +9,14 @@
   "uploaded": false,
   "account_write_locks_held": false,
   "own_capture_processes_closed": true,
-  "next_action": "Wait for human approval of this hash, then Bilibili publication, Toy 43022175699968 binding, pinned comment, campaign/rewards quick check and push-stream application; no other platforms.",
+  "next_action": "无：本包已被 story-20261014 版本取代，旧 approval_event_id 与 next_action 不再执行。",
   "runtime_sha256": "ab29299d81d19414e5b88645e380de8fb74ef5084ab55f8292659d115c0b8d81",
   "cleanup": {
     "temporary_encodes_removed": true,
     "own_browser_capture_closed": true,
     "own_preview_service_stopped": true,
     "worktree_retained_for_review": true
-  }
+  },
+  "superseded_by": "game-video-pingan-20261014 / story-20261014（v0.5.0 秀芹双结局）",
+  "superseded_reason": "用户2026-10-14要求最新版成片；本包基于 v0.3.0，无秀芹过场与双结局，不作发布。"
 }
