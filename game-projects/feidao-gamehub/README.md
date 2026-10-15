@@ -31,4 +31,4 @@ toy update <toy-id> package --json        # 生成预览
 toy update <toy-id> package --json --yes  # 核对后提交审核
 ```
 
-首次发布用 `toy create package --title 飞刀班长游戏合集 --slug feidao-games --category COLLECTION --visibility public --poster poster.jpg --icon icon.png`。`poster.jpg`（1200×900）与 `icon.png`（500×500）由仓库根的截图脚本生成，改动后可重做。
+首次发布用 `toy create package --title 飞刀班长游戏合集 --slug feidao-games --category COLLECTION --visibility public --poster poster.jpg --icon icon.png`。`poster.jpg`（1200×900）与 `icon.png`（500×500）：封面源文件是本目录根的 `poster-source.html`（引用 `package/assets/` 里的当前游戏截图），改数量或换卡片后用无头浏览器按 1200×900 截图导出即可；图标改动需另做。
