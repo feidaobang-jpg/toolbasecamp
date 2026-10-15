@@ -84,12 +84,10 @@ export class LijiapoGame extends Game {
     const ph = this.phase;
     let lim = null, msg = '';
     if (ph === 1) { lim = 12; msg = '坡顶三个碉堡的机枪封着这面坡，冲上去就是送死！'; }
-    else if (ph === 2) { lim = this.world.trench.pointAt(this.world.trench.dug).z - 6; msg = '再往上就是鬼子的机枪口：顺着交通壕一锹一锹挖上去'; }
+    else if (ph === 2) { lim = this.world.trench.pointAt(this.world.trench.dug).z - 6; msg = '再往上就是鬼子的机枪口，露头就挨打：守着壕头，等交通壕挖上去'; }
     else if (ph === 3) { lim = -19; msg = '先把手榴弹扔出去，炸了碉堡再冲！'; }
-    if (lim !== null && h.z < lim) {
-      h.z = lim;
-      if (this.t - (this.flags.boundTip || -9) > 4) { this.flags.boundTip = this.t; this.ui.toast(msg, 2.4); }
-    }
+    // 没有空气墙：越过去只提醒一句，危险靠坡顶的机枪自己说话（用户 2026-10-14）
+    if (lim !== null && h.z < lim && this.t - (this.flags.boundTip || -9) > 8) { this.flags.boundTip = this.t; this.ui.toast(msg, 2.4); }
   }
   mgSpots() { return [['PL', L.postL, 1], ['PR', L.postR, 1]]; }
   // 坡顶碉堡朝南的射击孔（宽 2.4、高 0.42，外侧在 z+2.13）
@@ -132,7 +130,8 @@ export class LijiapoGame extends Game {
   trenchState(x, z) {
     const tr = this.world.trench;
     if (tr.dug < 1) return null;
-    const r = tr.locate(x, z, tr.dug);
+    let r = { d: 9, t: 0 };
+    for (const ox of tr.offsets) { const q = tr.locate(x - ox, z, tr.dug); if (q.d < r.d) r = q; }
     if (r.d > 1.05) return null;
     return this.phase >= 3 || tr.dug >= tr.total || r.t < tr.dug - 2.6 ? 'deep' : 'head';
   }
@@ -427,12 +426,35 @@ export class LijiapoGame extends Game {
       const dig = this.phase === 2 && this.cut <= 0 && a.alive && !(a.down > 0) && !a.target && !this.lit && tr.dug < tr.total && dist2(a.x, a.z, q.x, q.z) < 4.5 * 4.5;
       a.model.shovel.visible = dig;
       if (!dig) continue;
-      rate += 0.22;
+      rate += 0.4;
       a.yaw = yawTo(q.dx, q.dz);
       a.digT = (a.digT || rand(0.7)) - dt;
       if (a.digT <= 0) { a.digT = 0.75; a.slash = 0; if (rand() < 0.5) this.fx.debris(q.x, hgt(q.x, q.z) + 0.3, q.z, 2, [0xa1855a, 0x8a6f4c], 3, 0.14); }
     }
+    // 左右两条壕各有两个战士在挖（照明弹一亮就趴下停手）
+    this.updateSideDiggers(dt, q);
+    if (this.phase === 2 && this.cut <= 0 && !this.lit && tr.dug < tr.total) rate += 0.3;
     if (rate > 0 && this.cut <= 0) w.setDug(tr.dug + rate * dt);
+  }
+  updateSideDiggers(dt, q) {
+    const tr = this.world.trench, on = this.phase === 2 && tr.dug < tr.total - 0.3;
+    if (!this.sideDiggers) {
+      this.sideDiggers = [];
+      for (const ox of tr.offsets.slice(1)) for (const k of [0, 1]) {
+        const m = buildSoldier('ally'), s = buildShovel(); m.armR.add(s); m.root.visible = false; this.scene.add(m.root);
+        this.sideDiggers.push({ m, ox, k, t: rand(0.7) });
+      }
+    }
+    for (const d of this.sideDiggers) {
+      d.m.root.visible = on;
+      if (!on) continue;
+      const p = tr.pointAt(Math.max(0, tr.dug - 0.9 - d.k * 1.6)), x = p.x + d.ox + (d.k ? 0.35 : -0.2), z = p.z;
+      d.m.root.position.set(x, hgt(x, z), z); d.m.root.rotation.y = yawTo(q.dx, q.dz);
+      d.t -= dt;
+      const swing = this.lit ? -1 : (d.t % 0.75) / 0.75;
+      if (d.t <= -0.75) d.t += 0.75;
+      poseSoldier(d.m, { walk: 0, moving: 0, aim: 0, carry: 'side', slash: swing, crouch: this.lit ? 1 : 0.3 });
+    }
   }
 
   // 局内喊话：上一句原声没放完就排到它后面；换了阶段就不放了
@@ -493,7 +515,7 @@ export class LijiapoGame extends Game {
         ui.say('李云龙', '部队用土工作业的方式向前平行推进，', { dur: 4.8 });
         ui.say('李云龙', '只要我们掘进了五十米，剩下的三十米，就是个娘们儿都能把手榴弹扔进了环型工事去。', { dur: 9.6 });
       });
-      this.after(3.5, () => this.phase === 2 && ui.toast(this.app.isTouch() ? '挖交通壕：走到壕头的铁锹那里点“挖壕”。夜里坡顶的机枪只能瞎扫；照明弹一亮，赶紧退回壕里' : '挖交通壕：走到壕头的铁锹那里按 F 开挖。夜里坡顶的机枪只能瞎扫；照明弹一亮，赶紧退回壕里', 7));
+      this.after(3.5, () => this.phase === 2 && ui.toast(this.app.isTouch() ? '战士们在三处壕头往上挖，你负责掩护：打掉摸下来的鬼子；想快点就到中间壕头点“挖壕”一起挖。照明弹一亮，赶紧退回壕里' : '战士们在三处壕头往上挖，你负责掩护：打掉摸下来的鬼子；想快点就到中间壕头按 F 一起挖。照明弹一亮，赶紧退回壕里', 7));
     } else if (n === 3) {
       const q = tr.pointAt(tr.total - 2.5);
       if (fresh || dist2(h.x, h.z, q.x, q.z) > 9) this.place(h, q.x, q.z);

@@ -28,7 +28,27 @@ const C = {
 const smooth = (k) => k * k * (3 - 2 * k);
 // 坡面：坡脚以南是平地，往北一路抬到坡顶，坡顶以北是平顶。下缓上陡（凹坡），坡顶的机枪能看到整面坡
 function slope(z) { const s = clamp((L.footZ - z) / (L.footZ - L.crestZ), 0, 1); return L.top * Math.pow(s, 1.35); }
-export function hgt(x, z) {
+// 交通壕往地下挖 1.2 米、壕宽约 1 米：三条壕（中间主壕，左右各一条）挖到哪儿，地形高度就在哪儿往下陷
+const TRENCH_DEPTH = 1.2, TRENCH_HALF = 0.45, TRENCH_EDGE = 0.8;
+export const TRENCH_OFFSETS = [0, -15, 15];
+const dig = { segs: null, dug: 0 };
+function trenchCut(x, z) {
+  if (!dig.segs || dig.dug <= 0 || z > 44 || z < -18 || Math.abs(x) > 29) return 0;
+  let best = 9;
+  for (const ox of TRENCH_OFFSETS) {
+    const lx = x - ox;
+    for (const s of dig.segs) {
+      if (s.t0 > dig.dug) break;
+      const lim = Math.min(s.len, dig.dug - s.t0), k = clamp((lx - s.x0) * s.dx + (z - s.z0) * s.dz, 0, lim);
+      const d = Math.hypot(lx - (s.x0 + s.dx * k), z - (s.z0 + s.dz * k));
+      if (d < best) best = d;
+    }
+  }
+  if (best >= TRENCH_EDGE) return 0;
+  return best <= TRENCH_HALF ? TRENCH_DEPTH : TRENCH_DEPTH * (1 - smooth((best - TRENCH_HALF) / (TRENCH_EDGE - TRENCH_HALF)));
+}
+export function hgt(x, z) { return baseHgt(x, z) - trenchCut(x, z); }
+function baseHgt(x, z) {
   let h = slope(z);
   // 外围火力点：挖平的小台地
   for (const p of [L.postL, L.postR]) {
@@ -81,11 +101,7 @@ export function buildWorld(scene) {
     const pos = g.attributes.position;
     const colors = new Float32Array(pos.count * 3);
     const cA = new THREE.Color(), cB = new THREE.Color();
-    for (let i = 0; i < pos.count; i++) {
-      const x = pos.getX(i), z = pos.getZ(i);
-      const y = hgt(x, z);
-      pos.setY(i, y);
-      const n = Math.sin(x * 0.31 + z * 0.17) * 0.5 + Math.sin(x * 0.07 - z * 0.23) * 0.5;
+    const groundColor = (x, z) => {      const n = Math.sin(x * 0.31 + z * 0.17) * 0.5 + Math.sin(x * 0.07 - z * 0.23) * 0.5;
       const n2 = Math.sin(x * 0.53 - z * 0.41) * 0.5 + Math.sin(x * 0.19 + z * 0.29) * 0.5;
       cA.set(C.loess).lerp(cB.set(C.loess2), 0.5 + 0.5 * n);
       // 残雪：朝南的坡面晒得多，雪少；平地和坡顶背阴处多一些
@@ -101,7 +117,56 @@ export function buildWorld(scene) {
         const d = Math.hypot(x - cx, z - cz2);
         if (d < cr + 1.5) cA.lerp(cB.set(C.crater), clamp((cr + 1.5 - d) / 2.5, 0, 1) * 0.85);
       }
-      colors[i * 3] = cA.r; colors[i * 3 + 1] = cA.g; colors[i * 3 + 2] = cA.b;
+      return cA;
+    };
+    // 壕沟那一片（PX0..PX1 × PZ0..PZ1，对齐大网格的格线）从大网格里挖掉，换成 5 倍细的网格
+    const dx = gw / sx, dz = gd / sz;
+    const ix0 = Math.floor((-27 + gw / 2) / dx), ix1 = Math.ceil((27 + gw / 2) / dx), iz0 = Math.floor((-20 + gd / 2) / dz), iz1 = Math.ceil((46 + gd / 2) / dz);
+    for (let i = 0; i < pos.count; i++) {
+      const x = pos.getX(i), z = pos.getZ(i);
+      pos.setY(i, hgt(x, z));
+      const c = groundColor(x, z); colors[i * 3] = c.r; colors[i * 3 + 1] = c.g; colors[i * 3 + 2] = c.b;
+    }
+    {
+      const idx = g.index.array, keep = [];
+      for (let q = 0; q < idx.length; q += 6) {
+        const cell = q / 6, cx = cell % sx, czz = Math.floor(cell / sx);
+        if (cx >= ix0 && cx < ix1 && czz >= iz0 && czz < iz1) continue;
+        for (let k = 0; k < 6; k++) keep.push(idx[q + k]);
+      }
+      g.setIndex(keep);
+    }
+    {
+      const SUB = 5, nx = (ix1 - ix0) * SUB, nz = (iz1 - iz0) * SUB;
+      const X0 = -gw / 2 + ix0 * dx, Z0 = -gd / 2 + iz0 * dz;
+      const pg = new THREE.PlaneGeometry((ix1 - ix0) * dx, (iz1 - iz0) * dz, nx, nz);
+      pg.rotateX(-Math.PI / 2); pg.translate(X0 + (ix1 - ix0) * dx / 2, 0, Z0 + (iz1 - iz0) * dz / 2);
+      const pp = pg.attributes.position, pc = new Float32Array(pp.count * 3);
+      const dirt = new THREE.Color(C.floor), dirt2 = new THREE.Color(C.dirt2);
+      // 边上一圈的点按大网格两端插值，和大网格严丝合缝
+      const edge = (x, z) => {
+        const fx = (x - X0) / dx, fz = (z - Z0) / dz, onX = Math.abs(fx - Math.round(fx)) < 1e-4, onZ = Math.abs(fz - Math.round(fz)) < 1e-4;
+        if (onX && onZ) return baseHgt(x, z);
+        if (onZ) { const a = Math.floor(fx), k = fx - a; return baseHgt(X0 + a * dx, z) * (1 - k) + baseHgt(X0 + (a + 1) * dx, z) * k; }
+        const a = Math.floor(fz), k = fz - a; return baseHgt(x, Z0 + a * dz) * (1 - k) + baseHgt(x, Z0 + (a + 1) * dz) * k;
+      };
+      const border = (i) => { const c = i % (nx + 1), r = Math.floor(i / (nx + 1)); return c === 0 || r === 0 || c === nx || r === nz; };
+      const refresh = () => {
+        for (let i = 0; i < pp.count; i++) {
+          const x = pp.getX(i), z = pp.getZ(i), cutD = trenchCut(x, z);
+          pp.setY(i, border(i) ? edge(x, z) : baseHgt(x, z) - cutD);
+          const c = groundColor(x, z);
+          if (cutD > 0.05) c.lerp(cutD > 0.9 ? dirt : dirt2, 0.85);
+          pc[i * 3] = c.r; pc[i * 3 + 1] = c.g; pc[i * 3 + 2] = c.b;
+        }
+        pp.needsUpdate = true; pg.attributes.color.needsUpdate = true; pg.computeVertexNormals();
+      };
+      pg.setAttribute('color', new THREE.BufferAttribute(pc, 3));
+      const puv = pg.attributes.uv;
+      for (let i = 0; i < pp.count; i++) puv.setXY(i, pp.getX(i) / 7, pp.getZ(i) / 7);
+      refresh();
+      const patch = new THREE.Mesh(pg, matGround); patch.receiveShadow = true; add(patch);
+      world.refreshTrenchGround = refresh;
     }
     g.setAttribute('color', new THREE.BufferAttribute(colors, 3));
     const uv = g.attributes.uv;
@@ -288,7 +353,8 @@ export function buildWorld(scene) {
       }
       return best;
     };
-    const STEP = 0.6, N = Math.floor(tot / STEP);
+    dig.segs = segs;
+    const STEP = 0.6, N = Math.floor(tot / STEP), NT = TRENCH_OFFSETS.length;
     const box = new THREE.BoxGeometry(1, 1, 1);
     const mk = (count, cast) => {
       const m = new THREE.InstancedMesh(box, new THREE.MeshLambertMaterial({ color: 0xffffff }), count);
@@ -297,44 +363,50 @@ export function buildWorld(scene) {
       add(m);
       return m;
     };
-    const berm = mk(N * 2, true), top = mk(N * 2, true), floor = mk(N, false);
+    const berm = mk(N * NT, true), top = mk(N * NT, true);
     const o = new THREE.Object3D(), col3 = new THREE.Color();
     const bermCols = [];
     for (let i = 0; i < N; i++) {
       const t = (i + 0.5) * STEP, p = pointAt(t), yaw = Math.atan2(-p.dx, -p.dz);
-      const nx = -p.dz, nz = p.dx;
-      const hc = hgt(p.x, p.z);
-      const pitch = Math.atan2(hgt(p.x + p.dx * 0.3, p.z + p.dz * 0.3) - hgt(p.x - p.dx * 0.3, p.z - p.dz * 0.3), 0.6);
-      o.position.set(p.x, hc + 0.035, p.z); o.rotation.set(pitch, yaw, 0, 'YXZ'); o.scale.set(1.6, 0.07, 0.68); o.updateMatrix();
-      floor.setMatrixAt(i, o.matrix); floor.setColorAt(i, col3.set(C.floor).offsetHSL(0, 0, R(-0.03, 0.03)));
-      for (let s = 0; s < 2; s++) {
-        const sg = s ? 1 : -1, cx = p.x + nx * 1.18 * sg, cz = p.z + nz * 1.18 * sg, h = hgt(cx, cz), k = i * 2 + s;
-        o.position.set(cx, h + 0.36, cz); o.rotation.set(0, yaw + R(-0.06, 0.06), 0, 'YXZ'); o.scale.set(0.9, 0.95, 0.74); o.updateMatrix();
+      // 挖出来的土堆在上坡（北，-z）一侧当胸墙
+      let nx = -p.dz, nz = p.dx;
+      if (nz > 0) { nx = -nx; nz = -nz; }
+      for (let s = 0; s < NT; s++) {
+        const ox = TRENCH_OFFSETS[s], cx = p.x + ox + nx * 1.05, cz = p.z + nz * 1.05, h = baseHgt(cx, cz), k = i * NT + s;
+        o.position.set(cx, h + 0.3, cz); o.rotation.set(0, yaw + R(-0.06, 0.06), 0, 'YXZ'); o.scale.set(0.9, 0.8, 0.8); o.updateMatrix();
         berm.setMatrixAt(k, o.matrix); berm.setColorAt(k, col3.set(R(0, 1) < 0.5 ? C.dirt : C.dirt2).offsetHSL(0, 0, R(-0.03, 0.03)));
-        o.position.set(cx + nx * sg * 0.1, h + 0.92, cz + nz * sg * 0.1); o.rotation.set(R(-0.1, 0.1), yaw + R(-0.15, 0.15), 0, 'YXZ'); o.scale.set(0.55, 0.3, 0.7); o.updateMatrix();
+        o.position.set(cx + nx * 0.1, h + 0.72, cz + nz * 0.1); o.rotation.set(R(-0.1, 0.1), yaw + R(-0.15, 0.15), 0, 'YXZ'); o.scale.set(0.55, 0.28, 0.7); o.updateMatrix();
         top.setMatrixAt(k, o.matrix); top.setColorAt(k, col3.set(C.dirt2).offsetHSL(0, 0, R(-0.05, 0.02)));
-        const c = col(cx - 0.3, cx + 0.3, cz - 0.3, cz + 0.3, 0.95, 'berm', { heroOnly: true });
+        const c = col(cx - 0.3, cx + 0.3, cz - 0.3, cz + 0.3, 0.8, 'berm', { heroOnly: true });
         c.y0 = h - 0.3; c.h += h; c.base = h; c.on = false; c.t = t;
         bermCols.push(c);
       }
     }
-    for (const m of [berm, top, floor]) { m.instanceMatrix.needsUpdate = true; m.instanceColor.needsUpdate = true; }
+    for (const m of [berm, top]) { m.instanceMatrix.needsUpdate = true; m.instanceColor.needsUpdate = true; }
     // 壕头：一堆新翻出来的土、一把插着的铁锹
     const hp = new Geo();
     for (let k = 0; k < 6; k++) hp.ball(R(0.35, 0.6), R(-0.8, 0.8), R(0.05, 0.2), R(-0.4, 0.3), k % 2 ? C.dirt : C.dirt2, 0, 0.55);
     hp.box(0.05, 1.1, 0.05, 0.5, 0.75, 0.1, 0x6b4a2c, 0, 0.25, 0.2, 0); hp.box(0.24, 0.3, 0.03, 0.62, 0.18, 0.16, 0x55585a, 0, 0.25, 0.2, 0);
-    const head = add(hp.build(matVC));
-    world.trench = { segs, total: tot, pointAt, locate, dug: 0, head };
+    const headGeo = hp.build(matVC);
+    const heads = TRENCH_OFFSETS.map(() => add(headGeo.clone()));
+    const head = heads[0];
+    world.trench = { segs, total: tot, pointAt, locate, dug: 0, head, heads, offsets: TRENCH_OFFSETS };
     world.setDug = (d) => {
       const tr = world.trench;
       tr.dug = clamp(d, 0, tot);
       const n = Math.min(N, Math.floor(tr.dug / STEP));
-      floor.count = n; berm.count = n * 2; top.count = n * 2;
+      berm.count = n * NT; top.count = n * NT;
       for (const c of bermCols) c.on = c.t <= tr.dug - 0.2;
       const p = pointAt(tr.dug);
-      head.visible = tr.dug > 0.3 && tr.dug < tot - 0.3;
-      head.position.set(p.x + p.dx * 0.4, hgt(p.x + p.dx * 0.4, p.z + p.dz * 0.4), p.z + p.dz * 0.4);
-      head.rotation.y = Math.atan2(-p.dx, -p.dz);
+      heads.forEach((hd, s) => {
+        const ox = TRENCH_OFFSETS[s];
+        hd.visible = tr.dug > 0.3 && tr.dug < tot - 0.3;
+        hd.position.set(p.x + ox + p.dx * 0.4, baseHgt(p.x + ox + p.dx * 0.4, p.z + p.dz * 0.4), p.z + p.dz * 0.4);
+        hd.rotation.y = Math.atan2(-p.dx, -p.dz);
+      });
+      // 地面跟着往下挖：每挖 0.4 米刷新一次那块细网格
+      dig.dug = tr.dug;
+      if (world.refreshTrenchGround && (Math.abs(tr.dug - (tr.groundAt ?? -9)) >= 0.4 || tr.dug === 0 || tr.dug === tot)) { tr.groundAt = tr.dug; world.refreshTrenchGround(); }
     };
     world.setDug(0);
   }
