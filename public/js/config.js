@@ -180,19 +180,6 @@ const gamesConfig = {
                 { titleKey: 'tools.tank3d.title', subtitleKey: 'games.content.tank', tagKeys: ['games.tags.threeD', 'games.tags.demo'], firstProducedAt: '2026-09-29', toyUrl: 'https://www.bilibili.com/toy/feidao-tank-3d/index.html', url: 'html/game/tank-3d/index.html?v=2', thumb: 'assets/game/thumbs/tank-3d.jpg?v=2' },
                 { titleKey: 'tools.mario3d.title', subtitleKey: 'games.content.mario', tagKeys: ['games.tags.threeD', 'games.tags.demo'], firstProducedAt: '2026-09-28', url: 'html/game/mario-3d/index.html', thumb: 'assets/game/thumbs/mario-3d.jpg?v=4', toyUrl: 'https://www.bilibili.com/toy/feidao-mario-3d/index.html' }
             ]
-        },
-        {
-            titleKey: 'games.groups.puzzle',
-            items: [
-                { titleKey: 'tools.gemswap.title', toyUrl: 'https://www.bilibili.com/toy/feidao-gemswap/index.html', url: 'html/game/gemswap.html?v=10' },
-                { titleKey: 'tools.lianliankan.title', toyUrl: 'https://www.bilibili.com/toy/feidao-lianliankan/index.html', url: 'html/game/lianliankan.html' },
-                { titleKey: 'tools.bubbleDragon.title', toyUrl: 'https://www.bilibili.com/toy/feidao-bubble-dragon/index.html', url: 'html/game/bubble_dragon.html?v=6' },
-                { titleKey: 'tools.flyBird.title', url: 'html/game/fly_bird.html', toyUrl: 'https://www.bilibili.com/toy/feidao-fly-bird/index.html' },
-                { titleKey: 'tools.frogZuma.title', toyUrl: 'https://www.bilibili.com/toy/feidao-frog-zuma/index.html', url: 'html/game/frog_zuma.html?v=6' },
-                { titleKey: 'tools.worms.title', toyUrl: 'https://www.bilibili.com/toy/feidao-worms/index.html', url: 'html/game/worms.html?v=7' },
-                { titleKey: 'tools.brickBreaker.title', toyUrl: 'https://www.bilibili.com/toy/feidao-brick-breaker/index.html', url: 'html/game/brick_breaker.html?v=7' },
-                { titleKey: 'tools.sheepstack.title', toyUrl: 'https://www.bilibili.com/toy/feidao-sheepstack/index.html', url: 'html/game/sheepstack.html?v=10' }
-            ]
         }
     ]
 };
