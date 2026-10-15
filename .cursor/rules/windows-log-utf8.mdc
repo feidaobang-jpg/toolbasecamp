@@ -28,7 +28,3 @@ alwaysApply: true
 - 假定「页面上看起来乱码没关系、文件里是好的」——用户看的就是页面日志。
 - 默认强制 `HF_ENDPOINT=https://hf-mirror.com`（易导致 hub `missing commit header`）；镜像仅在本机显式需要时设置。
 - 用 PowerShell 默认编码重定向含中文的日志文件。
-
-## 自检
-
-跑一次带中文 `print` 的 worker，页面/pipeline.log 里应看到正常汉字（如「权重已加载」），而不是 `` `����` ``。

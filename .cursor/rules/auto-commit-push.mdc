@@ -1,49 +1,24 @@
 ---
-description: 任务改完自动提交，整合最新主线后乐观推送（无全局锁），动过 public 做一次抽查；取消复验与清理仪式
+description: 按发布权限提交本任务改动并正常推主线，不附加测试和台账
 alwaysApply: true
 ---
 
-# Git 收尾：并行开发，乐观推送，部署由 Actions 排队（用户2026-10-15 简化）
 
-用户于2026-10-05授权默认自动完成本闭环，不再逐次询问是否提交或合并。默认在用户指定的工作目录直接改（见 git-sync-before-work），不再要求每个任务先建独立 worktree。只读任务、无改动和用户明确不提交／不推送／不合并时按实际范围跳过。
+# 提交与交付
 
-2026-10-08 用户确认：**废弃本机全局合并锁 `agent-integration.lock`**。主线安全靠 git 的快进检查，部署顺序靠 GitHub Actions 排队，外部平台按目标单独加锁。
+- 只读、无改动或用户禁止提交/推送时跳过对应步骤。游戏先按 game-release-cadence 确定发布权限；待本地试玩的新内容不得推生产主线，可本地提交或在不触发部署的分支备份。
+- 只暂存本任务路径，查看最终差异；中文普通 commit 说明改动及原因，不 amend、不跳过 hook、不提交凭据。本次只是文档则不跑代码测试或游戏构建。
+- 获准发布后 fetch 最新 `origin/master`，正常合并；只有运行产物确实需要更新时重新构建。无需为合并另跑回归。以 `git push origin HEAD:master` 正常快进推送；拒绝时重新整合，最多连续三次，不强推、不绕分支保护。若保护要求 PR/CI，沿用现有门槛，不额外添加。
+- 不用全局合并锁。部署由现有 Actions concurrency 和服务器 last-deployed-sha 防旧版本覆盖。涉及 `public/**` 才按 verify-static-deploy 确认部署结果；API/VPS 按对应规则。不手动部署纯规则文档。
+- 最终简述结果、交付入口和真实发布状态；不另建 release/QA/handoff 台账，不按步骤反复通知。
 
-## 提交与验证
+## 共享写目标
 
-游戏运行改动先执行 `game-release-cadence.mdc`：构建通过即推送并做一次线上抽查，只有用户单独要求审核或限制发布时才停在任务分支。网站抽查后 Toy 实时提交一次；不动既有视频简介、不登记待合并项；玩家反馈按用户指示处理；纯规则文档按正常提交闭环处理。
+同一外部目标或公共技能写前加锁、重读，防覆盖和重复提交；仅写操作期间持锁，不为构建/录制/等审核占锁。原子创建锁目录，owner 标明任务和工具，只释放自己的锁。
 
-1. 检查本任务差异，按路径暂存并检查暂存区，不使用会夹带其他任务改动的全量 add。
-2. 验证只做到"构建/语法能通过"这一档；普通 commit，简体中文简短说明改了什么及为什么；不 amend、不跳过 hook、不提交密钥。
-3. 可先推送不会触发部署的任务分支备份，但这不等于已合并或已部署。没有用户明确审核/发布限制时，默认继续整合主线。
+- Toy：`C:/Users/37818/.claude/state/toy/<ToyID>-write.lock`
+- B站：`C:/Users/37818/.claude/state/bili-activities/account-write.lock`
+- TapTap：`C:/Users/37818/.claude/state/taptap/account-100726-write.lock`
+- 公共技能/其他目标：`C:/Users/37818/.claude/state/<平台>/<目标>-write.lock`
 
-## 整合主线与推送（不加锁）
-
-- 不再获取、也不必等待 `agent-integration.lock`。旧会话可能还在用它：不要删除或改动别人的锁目录，它存在也不阻止本任务推送。
-- `git fetch origin` 后在本任务干净分支整合最新 `origin/master`：落后可快进，分叉则正常 merge（提交说明中文），不改写别人的提交。能明确保留双方意图的冲突自行解决；需求相互矛盾或无法判断时才询问。
-- 合并后只需要该重新构建的产物重新构建；没有冲突就推送，不为合并另跑一轮测试。
-- 核实最新 `origin/master` 是本任务 HEAD 的祖先、新增提交仅包含本任务及已授权依赖，再用普通 `git push origin HEAD:master` 快进远端主线；必要时同时更新任务分支。无需切换或修改原共享目录的本地 master。
-- 推送被拒（别人抢先推了）是正常情况：重新 fetch、整合后再推。最多连续 3 次仍失败，保存状态并说明竞争情况。禁止强推、`--no-verify` 或绕过分支保护——快进检查保证不会覆盖别人的提交，这就是主线唯一需要的保护。
-- 如果分支保护要求 PR，遵循受保护流程，CI通过后在已有授权内合并。
-
-## 部署
-
-- 推送 master 即触发 `.github/workflows/deploy.yml`。它用 `concurrency: production-deploy` 一次只跑一个部署，最新提交总是最后部署；排队中被 GitHub 替换掉的中间运行，其改动由下一次运行补上（与服务器 `/opt/toolbasecamp-deploy/state/last-deployed-sha` 记录的上次成功部署提交比较，见 `deploy/detect-deploy-changes.sh`）；比已部署记录更旧的运行会报错拒绝覆盖线上，这是保护而非故障。
-- 因此推送后不占用任何东西等待部署；涉及 public/** 时按 verify-static-deploy 自行公网核验。主线是累积的，后面别人的部署也包含你的提交。
-- comfyui-api-server/ 按 comfyui-api-restart 执行；VPS操作按 vps-ssh-ops。规则/文档变更本身不触发手动全站部署。
-
-## 外部平台：按目标加锁
-
-- Toy、TapTap、B站稿件/简介、共享数据库、公共技能文件等不随 Git 隔离。同一目标的写操作按目标互斥，不同目标互不等待。
-- 已有的账号锁照旧：TapTap 用 `C:/Users/37818/.claude/state/taptap/account-100726-write.lock`，B站账号写操作用 `C:/Users/37818/.claude/state/bili-activities/account-write.lock`。
-- Toy 按作品加锁：`C:/Users/37818/.claude/state/toy/<ToyID>-write.lock`（例如 `40412421031936-write.lock`），不同 Toy 互不等待。共享数据库、公共技能文件等其他目标同样放在 `C:/Users/37818/.claude/state/<平台>/<目标>-write.lock`。
-- 用原子的目录创建获取（例如 Python `Path.mkdir()`，不设 exist_ok），获锁后写 `owner.json`（任务ID、工具、绝对工作区、目标、开始时间）。
-- 锁只覆盖「写前查重 → 提交/更新 → 查回平台状态」这一段；打包、等待审核等长耗时环节不持锁。
-- 锁存在时先做其他工作，稍后再试；不覆盖、不删除别人的锁。只有核实持有任务已退出且没有操作进行中，才可恢复遗留锁。完成后仅由持有者核对 owner 后删除自己的锁。
-- 其他发布频率和审片授权仍按现有规则，不能因为合并自动扩大发布范围。
-
-## 报告（2026-10-15 起取消清理环节）
-
-- 最终答复里说清：提交了什么、是否推送主线、线上抽查结果、Toy 提交与状态。准确区分已提交、已推送任务分支、已合并主线、已部署。
-- **不再执行**按 `no-scratch-leftovers.mdc` 的收尾自查、审片副本哈希核对、worktree 清理与 `git status` 全量分类。只在用户要求时清理。
-- 只有成果确实进入远端主线后才算完成；失败/阻塞任务保留现场供恢复。
+既有锁不得擅自删除；结果不明先查平台自带历史/状态，不能盲目重复写入。保留用户成果及他人现场，不进行例行全仓清理。
