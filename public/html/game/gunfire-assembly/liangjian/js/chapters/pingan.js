@@ -519,7 +519,7 @@ export class PinganGame extends Game {
       : '李云龙：“胜败乃兵家常事，重整队伍，再来！”';
     this.app.onResult({
       win, rank, quote, score, demo: s.demo, ending: this.flags.ending || '', title: rescue ? '平安县城拿下了，秀芹也救回来了！' : '',
-      rows: [...(this.flags.ending ? [['结局', rescue ? '救下秀芹（改写）' : '城楼开炮（原作）']] : []), ['用时', fmtTime(this.t)], ['歼敌', s.kills], ['干掉精锐', s.elites], ['开炮', s.shells + ' 发'], ['“天才”炮击', s.genius], ['拼刀成功', s.clash], ['骑兵连出击', s.cav], ['缴获军火库', s.loot ? '是' : '否'], ['阵亡', s.deaths], ['受击', s.hurt], ['爆头', s.heads], ['规则', (this.app.get('lives') === 'inf' ? '无限命' : '经典 3 命') + ' · ' + ({ std: '标准', easy: '宽松', one: '一发' }[this.app.get('armor')])]],
+      rows: [...(this.flags.ending ? [['结局', rescue ? '救下秀芹（改写）' : '城楼开炮（原作）']] : []), ['用时', fmtTime(this.t)], ['歼敌', s.kills], ['干掉精锐', s.elites], ['开炮', s.shells + ' 发'], ['“天才”炮击', s.genius], ['拼刀成功', s.clash], ['弹开', s.parry], ['缴获军火库', s.loot ? '是' : '否'], ['阵亡', s.deaths], ['受击', s.hurt], ['爆头', s.heads], ['规则', (this.app.get('lives') === 'inf' ? '无限命' : '经典 3 命') + ' · ' + ({ std: '标准', easy: '宽松', one: '一发' }[this.app.get('armor')])]],
     });
   }
   collapseTower() {

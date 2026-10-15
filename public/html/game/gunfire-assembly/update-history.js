@@ -1,6 +1,8 @@
 // Player-facing notes travel with the same game package; no network or account required.
-export const GAME_VERSION='0.8.0';
+export const GAME_VERSION='0.8.1';
 export const UPDATE_HISTORY=[
+  {version:'0.8.1',date:'2026-10-15',title:'平安县城结算页修正',changes:[
+    '平安县城打完的结算页去掉了已经删除的“骑兵连出击”一栏，换成“弹开”次数。']},
   {version:'0.8.0',date:'2026-10-15',title:'亮剑原版配乐、台词配音，平安县城与李家坡大改',changes:[
     '亮剑三章换上电视剧原版配乐：菜单《中国军魂》，交战、夜里挖壕《深入敌后》、决战《战斗序曲》，秀芹被押上城楼时《兄弟连心》，打赢了《烽火连天》。',
     '原来只有字幕的一百多句台词都配上了声音（剧里没有原声的用本机合成）。',
