@@ -57,7 +57,7 @@ export function mountCombatSettings(container,controls,onChange){
     row.appendChild(select);section.appendChild(row);
   }
   const help=document.createElement('p');help.className='small';help.textContent='电脑和手机共用选择，默认自动寻敌并开火；手雷、医疗和技能仍需主动使用。按住射击：松开即停；点击开关连射：点一下开启，再点停止。暂停、失焦或切换操作模式会关闭已开启的连射。设置自动保存，不影响本局进度。';section.appendChild(help);
-  const mouse=document.createElement('p');mouse.className='small desktop-help';mouse.textContent='电脑端默认鼠标接管：点一下画面后移动鼠标转视角，左键射击，右键举枪，Esc 释放并暂停；浏览器拒绝接管或选了“按住画面拖动”时，按住画面拖动转视角。键位在上面改，键盘转视角默认不占键，需要可自己绑定。';section.appendChild(mouse);
+  const mouse=document.createElement('p');mouse.className='small desktop-help';mouse.textContent='电脑端默认鼠标接管：点一下画面后移动鼠标转视角，左键射击，右键举枪，Esc 释放并暂停；浏览器拒绝接管或选了“按住画面拖动”时，按住画面拖动转视角。想不用鼠标，在上面选「双手全键盘（老键位）」，用 Q/E 转视角、Y/H 抬头低头。';section.appendChild(mouse);
   const touch=document.createElement('p');touch.className='small touch-help';touch.textContent='手机射击键遵循上面的选择。手动瞄准时可拖动空白处转向，也可按着射击键拖动瞄准；默认自动瞄准会寻找最近的有效目标。';section.appendChild(touch);
   const fixed=document.createElement('p');fixed.className='small';fixed.id='combat-fixed';fixed.textContent='战地模式固定为步行第一人称、手动瞄准、按住射击，不使用上面的瞄准和射击设置；鼠标接管后直接移动瞄准，按住左键射击、右键举枪。未接管时右键拖动只转视角，右键点击举枪。';section.appendChild(fixed);
   // 枪战规则生效时锁住瞄准、射击两项，避免玩家以为改了设置却没变化；保存的设置本身不动。

@@ -203,6 +203,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:"Mi
 .theme-dark #joyBase{background:#0e1e30;border:2px solid #8cc8f0;box-shadow:0 2px 10px rgba(0,0,0,.5)}
 .theme-dark #joyKnob{background:#fff6df;border:2px solid #785a28;box-shadow:0 2px 6px rgba(0,0,0,.45)}
 
+#keySchemes{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:6px 0}
+#keySchemes button{text-align:left;min-height:52px;display:flex;flex-direction:column;gap:3px}#keySchemes button .small{font-weight:normal;font-size:11px;line-height:1.35;max-width:none;margin:0}
+#keySchemes button.on{outline:2px solid #ffe066}
 #keyGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:8px 0}
 #keyGrid button{text-align:left;min-height:42px;font-size:13px}
 .operation-card{display:block;width:100%;text-align:left;white-space:normal;margin:12px 0;min-height:54px}
@@ -490,7 +493,8 @@ html,body{overscroll-behavior:none}
 
   <section id="keyPanel" class="panel hidden" aria-label="操作设置">
     <button id="keysClose" class="closeX" aria-label="关闭操作设置">×</button><h3>⌨ 操作设置</h3>
-    <p class="small">选一项后按新键；Esc 取消改绑。Enter、Esc、Tab 保留给菜单；键位保存在当前设备。</p>
+    <div class="desktop-help"><h4>电脑键位方案</h4><div id="keySchemes"></div></div>
+    <p class="small">先选一套方案，再点下面某一项、按新键即可改；新键已被占用时两项自动互换。Esc 取消改绑，Enter、Esc 保留给菜单；两套方案的改键各自保存在当前设备。</p>
     <div id="keyStatus" role="status"></div><button id="keysReset" class="mbtn">恢复默认键位</button><div id="keyGrid"></div>
   </section>
   <section id="operationsPanel" class="panel hidden" aria-label="副本任务">
@@ -570,7 +574,7 @@ html,body{overscroll-behavior:none}
     <div class="small helpText" tabindex="0" role="region" aria-label="玩法内容">
       <p>前哨守卫：机枪兵生命 120、机枪伤害 +25%、受到伤害 −15%；火枪兵生命 100、霰弹伤害 +30%、移动速度 10.5；医疗兵生命 90，自身与 12 米内队友每秒恢复 4 点生命。</p>
       <p>基地防守：打怪攒钱，买枪强化、造炮塔、雇最多12名队友，守住基地。基地耐久归零即失败；玩家阵亡会复活，基地损伤保留。难度只用于新游戏，继续和读档沿用存档难度。</p>
-      <p class="desktop-help">电脑（默认鼠标接管）：WASD / 方向键移动，鼠标转视角，左键射击，Shift 跑步，空格跳跃，F 互动，E 医疗，G 手雷，Q / 滚轮换枪，V 切换视角，B 商店，T 建造，X 开战，Tab 战况 / 测试台，P/Esc 暂停；键位可在「操作设置」里改。菜单可用方向键、Tab 和回车操作。</p>
+      <p class="desktop-help">电脑有两套键位，在「操作设置」里切换，每套都能自己改键。左手键盘 + 右手鼠标（默认）：WASD / 方向键移动，鼠标转视角，左键射击，Shift 跑步，空格跳跃，F 互动，E 医疗，G 手雷，Q / 滚轮换枪，V 切换视角，B 商店，T 建造，X 开战，Tab 战况 / 测试台，P/Esc 暂停。双手全键盘（老键位）：WASD 移动，Q/E 转视角，Y/H 抬头低头，J 射击，K 跳跃，U 手雷，I 互动，N 医疗，X 换枪，C 切换视角，O 商店，L 建造，R 开战 / 换弹，T 战况 / 测试台。菜单可用方向键、Tab 和回车操作。</p>
       <p class="touch-help">手机：左下摇杆移动，右侧空白处拖动转视角；右侧按钮可跳跃、跑步、互动、用医疗包和投掷手雷，商店、建造、换枪也有独立按钮。右上「切换视角」和「菜单」随时可用。</p>
       <p>电脑和手机默认自动瞄准、自动射击；在设置的「射击、瞄准与按键」中可改为按住射击或点击开关连射，也可分别选择瞄准方式。手雷、医疗和技能仍需主动使用；房车自动射击只对已追击的敌人生效。</p>
       <p>基地防守、房车和自由测试可无限投掷手雷，每3秒一次。</p>
@@ -718,7 +722,7 @@ html,body{overscroll-behavior:none}
   </div>
 </div>
 <script src="./boot.js?v=mobile12"></script>
-<script defer src="./game.compat.js?v=fb0391" onerror="window.__ccBootError('游戏资源下载失败')"></script>
+<script defer src="./game.compat.js?v=ca2b8d25ed7c" onerror="window.__ccBootError('游戏资源下载失败')"></script>
 <script src="../../../js/game/thumb-preview.js"></script>
 <script type="module">
 // 内联自 /js/game/landscape-typing.js：Toy/TapTap 包不含站点共享目录，外链模块会缺失
