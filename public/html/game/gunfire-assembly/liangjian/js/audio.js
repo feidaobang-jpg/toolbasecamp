@@ -3,7 +3,7 @@
 // 配乐片源见 game-projects/liangjian-pingan/media-kit/assets/music.json
 // 语音清单在 assets/voice/index.json（按章节分组，每章只加载自己的），来源与时间点见 game-projects/liangjian-pingan/media-kit/assets/voice.json
 
-// 配乐：assets/music/<名字>.mp3。菜单《中国军魂》，各章交战曲，决战 / Boss《战斗序曲》
+// 配乐：assets/bgm/<名字>.mp3。菜单《中国军魂》，各章交战曲，决战 / Boss《战斗序曲》
 const BATTLE = { pingan: 'touru', cangyunling: 'xiaoyan', lijiapo: 'weiji' };
 const MUSIC_VOL = 0.42;
 
@@ -226,7 +226,7 @@ export class GameAudio {
     if (!name || !this.ctx) return;     // 还没解锁声音：解锁时再放
     let a = this.tracks[name];
     if (!a) {
-      a = this.tracks[name] = new Audio('assets/music/' + name + '.mp3');
+      a = this.tracks[name] = new Audio('assets/bgm/' + name + '.mp3');
       a.preload = 'auto';
       a.addEventListener('error', () => { this.fallback = true; });   // 配乐加载不了就用合成鼓点
     }

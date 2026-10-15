@@ -19,7 +19,7 @@ const BASE_FILES = ['index.html', 'boot.js', 'game.compat.js', 'combat-controls.
 // pingan/index.html 只剩一个跳转页，照顾旧链接
 const LIANGJIAN_FILES = ['liangjian/index.html', 'liangjian/style.css', 'liangjian/game.compat.js', 'pingan/index.html',
   ...fs.readdirSync(path.join(SOURCE, 'liangjian/assets/voice')).sort().map(n => 'liangjian/assets/voice/' + n),
-  ...fs.readdirSync(path.join(SOURCE, 'liangjian/assets/music')).sort().map(n => 'liangjian/assets/music/' + n)];   // 原版配乐
+  ...fs.readdirSync(path.join(SOURCE, 'liangjian/assets/bgm')).sort().map(n => 'liangjian/assets/bgm/' + n)];   // 原版配乐
 const RUNTIME_FILES = [...BASE_FILES, ...LIANGJIAN_FILES];
 const sha256 = p => createHash('sha256').update(fs.readFileSync(p)).digest('hex');
 
