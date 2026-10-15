@@ -10,14 +10,9 @@ Deploy 的 `deploy/bust-html-cache.py` 会扫描 HTML；**中文被截断**（�
 
 ## 必须遵守
 
-1. **所有 `public/**/*.html` 必须是合法 UTF-8（无 BOM）**。写入后用 Python 校验：
-   `Path(f).read_bytes().decode("utf-8")` 不得抛错。
+1. **所有 `public/**/*.html` 必须是合法 UTF-8（无 BOM）**。按 UTF-8 文本写入，不逐次另跑校验脚本。
 2. **禁止**在 Windows PowerShell 里用默认重定向 / `Set-Content` / `Out-File`（无 `-Encoding utf8`）改含中文的 HTML/JS/CSS。
 3. **禁止**用按字节截断的方式改中文（错误示例：把「百宝箱」截成「工具大本」+ 半字节）。改 `<title>` / 文案时必须整段替换完整 Unicode 字符串。
-4. **改完含中文的 HTML 后自检**：
-   - 文件可 `decode("utf-8")`
-   - 若有 `<title>`，必须存在完整的 `</title>`（字节序列里能找到 `b"</title>"`）
-   - 正文中不得出现 `` `?/p>` ``、`` `?/a>` ``、`` `?/title>` `` 这类「问号 + 半截闭合标签」
 5. 批量改版本号 / cache-bust 只用仓库脚本：`VER=xxx python deploy/bust-html-cache.py`（按字节安全替换 CSS/JS 的 `?v=`），**不要**用 `perl -pi` / `sed` 在 `LANG=C` 下直接改 HTML。
 6. 备案号等中文配置放在 `config.js` / locales，由 `common_ui.js` 注入；**不要**为挂 ICP 去用不安全编码批量改几十个 HTML 里的中文 fallback。
 

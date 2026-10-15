@@ -26,16 +26,12 @@ alwaysApply: true
    - 继续遵守 `windows-log-utf8.mdc`（`PYTHONUTF8`、日志 UTF-8）。  
    - Windows 上注意 venv 路径：`...\Scripts\python.exe`（不是 `bin/python`）。
 
-5. **换行自检（改过 `.bat` 后）**  
-   - 在 `comfyui-api-server` 下 `cmd /c start-server.bat`，应看到正常横幅与 `Checking Python...`，而不是一串「不是内部或外部命令」。
-
 6. **`.bat` 里 `echo` 的特殊字符（曾导致双击一闪退出）**  
    - **`|` `&` `<` `>` 在未转义时会被 cmd 当管道/重定向**，不是普通文字。  
    - `echo A | B: xxx` 会报 `'B:' is not recognized`，且常在到达 `pause` 前就以非零退出 → **窗口一闪而过**。  
    - `echo` 文案里要用竖线/与号时：写成 `^|` `^&`，或改用 `/` `·` 等安全分隔符。  
    - 括号块内 `echo` 的 `)` 也要 `^)`。  
    - 双击入口脚本：关键路径失败、`app.py` 崩溃后应 **`pause`**（或 `if errorlevel 1 pause`），不要无提示就 `exit`。  
-   - 改完用 `cmd /c start-server.bat` 跑到 `Starting:` / 报错停住，确认没有「不是内部或外部命令」再交差。
 
 ## 禁止
 

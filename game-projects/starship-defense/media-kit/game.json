@@ -10,7 +10,7 @@
   },
   "name": "虫潮围城",
   "engine": "Three.js r152",
-  "current_version": "web-keys-v2-v0.39.0",
+  "current_version": "web-swarm-scale-v0.39.1",
   "entrypoint": "public/html/game/starship-defense/index.html",
   "build_command": "cd game-projects/starship-defense && npm ci && npm run build; python build-toy.py",
   "release_intent": "web_demo",
@@ -20,7 +20,7 @@
   "preview_url": "https://www.bilibili.com/toy/preview/preview_nObJMC9b/index.html",
   "public_play_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
   "media_readiness": "酸液围场开发阶段与操作证据已留存，原片无音轨；正式视频须另行取材审片",
-  "qa": "releases/web-save-notice-v0.38.6/qa.json",
+  "qa": "releases/web-swarm-scale-v0.39.1/qa/results.json",
   "pending_toy_merge": [
     {
       "version": "web-zerg-corpse-spinfix-v0.33.3-combined",
@@ -50,7 +50,7 @@
     "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
     "visibility": "PUBLIC",
     "review_status": "published",
-    "verified_at": "2026-10-15T07:46:08+08:00",
+    "verified_at": "2026-10-15T08:54:00+08:00",
     "video_bindings": [
       "BV1Grpq6JEW5",
       "BV14hpL62EZ5",
@@ -60,16 +60,16 @@
       "BV1Ujad6DEuf"
     ],
     "linked_game_video": "https://www.bilibili.com/video/BV1Ujad6DEuf",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_6nP6sgwy/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_DhhDO6xH/index.html",
     "title": "虫潮围城",
     "zip_sha256": "077d20d585e9d4accb30a3e37a217deaea390cdbc3e70e855629498d31b4abbc",
     "submitted_date": "2026-10-15",
-    "release_record": "releases/web-keys-v2/handoff.json",
-    "submitted_version": "web-keys-v2-v0.39.0",
-    "published_version": "web-keys-v2-v0.39.0",
+    "release_record": "releases/web-swarm-scale-v0.39.1/handoff.json",
+    "submitted_version": "web-swarm-scale-v0.39.1",
+    "published_version": "web-swarm-scale-v0.39.1",
     "preview_url": "https://www.bilibili.com/toy/preview/preview_EEsCwaz1/index.html",
-    "note": "web-keys-v2-v0.39.0：电脑键位 v2：所有模式默认鼠标接管，左键射击、右键举枪、空格跳、Shift 跑、F 互动 / 上下载具、G 手雷、E 医疗 / 兵种支援、Q 换枪、V 视角、B 商店、T 建造、X 开始虫潮、Tab 战况 / 队伍、C 直升机降低；键盘转视角默认不占键（可自绑）；键位存档 v2、旧自定义不沿用并提示一次，旧键作别名。 同一稳定包只提交一次审核；提交前预览 https://www.bilibili.com/toy/preview/preview_fenpWdm0/index.html 用 toy-package-check.cjs 10/10 与键位抽查通过。",
-    "package_sha256": "077d20d585e9d4accb30a3e37a217deaea390cdbc3e70e855629498d31b4abbc",
+    "note": "web-swarm-scale-v0.39.1：玩家反馈虫潮×3（第一关 11→33 只）、准备阶段不再刷野怪、单只掉落与间隔按 √3 回落、同屏上限按设备（电脑 144·手机 80·联机 72）。同一稳定包只提交一次审核；提交前预览 preview_S6VsMBUN 用 toy-package-check.cjs 10/10 通过（含入口 68,463 字节 < 100KB、包内 game.compat.js 与本地构建逐字节一致、手机横屏菜单完整可见、双视口无报错）。 平台 mtime 2026-10-15T08:49:12+08:00 回执 published。",
+    "package_sha256": "1427bed8f5a947b43a7d08ac2426ee061268837ef70ec6af5e6f51bf9ba92494",
     "pending_updates": [
       {
         "version": "web-controls-v0.18.2",
@@ -211,7 +211,7 @@
       "physical_phone_tested": false
     },
     "version": "web-drop-resistance-v0.38.7",
-    "published_at": "2026-10-15T07:45:02+08:00",
+    "published_at": "2026-10-15T08:49:12+08:00",
     "publication_time_note": "平台mtime记录为本次published状态时间；公开实测时间另记。",
     "last_published_version": "web-keys-v2-v0.39.0",
     "last_submitted_version": "web-drop-resistance-v0.38.7",
@@ -365,13 +365,17 @@
     "previous_public_runtime_revision": "v25804",
     "platform_readback_at": "2026-10-14T14:57:16+00:00",
     "submitted_at": "2026-10-15T07:42:50+08:00",
-    "entry_html_bytes": 68409,
+    "entry_html_bytes": 68463,
     "platform_mtime": 1791989667,
     "platform_checked_at": "2026-10-14T22:54:46+08:00",
-    "status_checked_at": "2026-10-14T14:54:27+00:00"
+    "status_checked_at": "2026-10-14T14:54:27+00:00",
+    "zip_bytes": 425963,
+    "compat_sha256_16": "1a316a38fa24e81f",
+    "precheck_preview_url": "https://www.bilibili.com/toy/preview/preview_S6VsMBUN/index.html",
+    "public_check": "正式入口复跑 toy-package-check.cjs 10/10（releases/web-swarm-scale-v0.39.1/toy-public.json）：包内 game.compat.js 与本地构建逐字节一致 1a316a38fa24e81f"
   },
   "website_url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
-  "published_toy_version": "web-drop-resistance-v0.38.7",
+  "published_toy_version": "web-swarm-scale-v0.39.1",
   "web_toy_versions_match": true,
   "migration": {
     "source": "D:/project/gpt/worlds/breachline",
@@ -382,15 +386,15 @@
   "skill_updated": true,
   "steam_status": "Optional possibility only; Toy/video response determines any future decision",
   "extension_review_status": "published",
-  "preview_version": "web-drop-resistance-v0.38.7",
-  "submitted_toy_version": "web-drop-resistance-v0.38.7",
-  "website_version": "web-keys-v2-v0.39.0",
-  "website_verified_at": "2026-10-15T07:38:00+08:00",
+  "preview_version": "web-swarm-scale-v0.39.1",
+  "submitted_toy_version": "web-swarm-scale-v0.39.1",
+  "website_version": "web-swarm-scale-v0.39.1",
+  "website_verified_at": "2026-10-15T08:41:00+08:00",
   "site_list_name": "虫潮围城",
   "controls": "原有多动作按键和Shift按住冲刺保留；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。",
   "default_theme": "dark",
   "feedback_ledger": "feedback-ledger.json",
-  "handoff": "releases/web-drop-resistance-v0.38.7/handoff.json",
+  "handoff": "releases/web-swarm-scale-v0.39.1/handoff.json",
   "squad_controls": "商店雇佣机枪/突击/医疗/工程队友；准备阶段免费转职，强化保留；队友卡片分配四种已购载具，玩家I接管；暂停菜单跟随/守基地。",
   "environments": {
     "desert": "第1–3章：荒漠，可选白天/夜晚",
@@ -427,7 +431,13 @@
     "underground": "automatic view-following torch, nearby fill and dim ambient light; no battery"
   },
   "bilibili_sync": "bilibili-sync.json",
-  "pending_release": "小红书2条说明审核中；快手说明已公开核验",
+  "pending_release": {
+    "version": "web-swarm-scale-v0.39.1",
+    "status": "released_all_approved_channels",
+    "recorded_at": "2026-10-15T08:54:00+08:00",
+    "scope": "网站与 Toy 均已核验生效（TapTap 默认不发）；B站说明按节奏记入待合并，最早 2026-10-21 之后合并",
+    "record": "releases/web-swarm-scale-v0.39.1/handoff.json"
+  },
   "control_audio_camera_update": "2026-10-06: Toy 3D scope; remake UI/menu standard, vertical look, normal movement facing, first-person slow look, keyboard mode shortcuts, latched sprint.",
   "drag_camera_controls": {
     "coupling": "拖动联动身体/头部/炮塔视线，普通视角实际移动及时转身；第一人称单独慢速；虫潮自动射击倒退与坦克独立炮塔保留",
@@ -438,7 +448,7 @@
     "keyboard_modes": "Tab/菜单上下进入模式组，左右或A/D选项，Enter/空格/J确认，有aria-pressed选中状态"
   },
   "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
-  "website_commit": "cb8c1a965a41c8913aaf903217d06a9ed852b213",
+  "website_commit": "6554590e401c1bac1fb2839e6334a585b8b86043",
   "campaign_difficulty": {
     "default": "normal",
     "choices": [
@@ -1549,7 +1559,7 @@
     "new_video_authorized": false
   },
   "website_status": "deployed_verified",
-  "website_runtime_sha256": "3ed814b15f81868176ad0abec4ad5101ed44b3e8b609a354898fb65eb5d089a9",
+  "website_runtime_sha256": "f24e9fa910c22d5809700991c8f0acecac9d148d404173a1b8f935a157fb4a1d",
   "feedback_oct11": {
     "version": "web-feedback-v0.34.1",
     "status": "website_verified_toy_auditing",
