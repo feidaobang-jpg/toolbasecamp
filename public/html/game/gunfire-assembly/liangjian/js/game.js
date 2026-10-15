@@ -6,7 +6,7 @@ import { resolveCircle, groundAt, pointBlocked, losBlocked } from './world-kit.j
 import { MAT, buildSoldier, poseSoldier, muzzleWorld, setSoldierMat, buildCannon, buildMG, buildViewGun, buildBroadsword, buildMedkit, buildCrate } from './models.js';
 import { Geo } from './geo.js';
 import { Fx } from './fx.js';
-import { DEF, updateEnemy, updateAlly, wakeGroup } from './ai.js';
+import { DEF, updateEnemy, updateAlly, wakeGroup, still } from './ai.js';
 
 // 枪战类只留两个视角：越肩第三人称（默认）与第一人称。pitch 为抬头角，向上为正
 export const VIEWS = [
@@ -15,6 +15,8 @@ export const VIEWS = [
 ];
 const SHELL_V = 46, SHELL_G = 18;                     // 意大利炮的默认弹道（章节可在 gunConfig 里换成迫击炮）
 const MG_BELT = 100;                                    // 阵地机枪一条弹链的发数
+const MAN_DELAY = 3, MAN_RANGE = 15, ALLY_GUN_RANGE = 20;   // 机枪 / 碉堡没人后多久、多远内的鬼子会去补位；战友人少站得散，20 米内的会去操枪
+const REINF_DELAY = 8;                                  // 战友阵亡后多久从后面补上来一个
 const ARMOR = { std: 5, easy: 8, one: 1 };
 const SENS = { low: 0.7, mid: 1, high: 1.4 };
 const JUMP_V = 8.2, GRAVITY = 26, AIR_SPEED = 0.85;    // 起跳约 1.3 米；滞空短一点、空中略慢，容易落在箱子上
@@ -129,6 +131,7 @@ export class Game {
     for (const p of this.pickups) this.scene.remove(p.mesh);
     this.units.length = this.enemies.length = this.allies.length = 0;
     this.bullets.length = this.nades.length = this.shells.length = this.mortars.length = this.pickups.length = this.timers.length = 0;
+    this.reinf = []; this._resPhase = -1;
     this.fx.clearWarnings();
     this.ui.clearTransient();
     this.boss = null; this.advYaw = 0; this.sortieT = 9;
@@ -141,7 +144,7 @@ export class Game {
     this.clearDynamic();
     const a = this.app;
     this.t = 0; this.cut = 0; this.cutCam = null; this.over = false; this.slow = 1;
-    this.stats = { kills: 0, elites: 0, genius: 0, clash: 0, parry: 0, blocks: 0, cuts: 0, loot: 0, deaths: 0, hurt: 0, meds: 0, retries: 0, shells: 0, heads: 0, jumps: 0, startPhase, demo: !!a.get('demo') };
+    this.stats = { kills: 0, elites: 0, genius: 0, clash: 0, parry: 0, blocks: 0, cuts: 0, crews: 0, reinf: 0, fallen: 0, loot: 0, deaths: 0, hurt: 0, meds: 0, retries: 0, shells: 0, heads: 0, jumps: 0, startPhase, demo: !!a.get('demo') };
     this.score = 0;
     this.lives = a.get('lives') === 'inf' ? Infinity : 3;
     this.flags = {};
@@ -164,6 +167,7 @@ export class Game {
     c.hp = c.maxHp; c.alive = true; c.manned = false; c.reload = 0; c.shells = this.gunCfg.shells; c.aimYaw = this.gunCfg.yaw0 || 0; c.elev = this.gunCfg.elev0; c.recoil = 0; c.resupplyT = 0; c.yaw = 0;
     this.resetGun(startPhase);
     this.initGuns();
+    this.initBunkerCrews();
     this.cam.yaw = 0; this.cam.pitch = 0; this.cam.pendYaw = 0; this.cam.pendPitch = 0; this.cam.clip = 1; this.cam.gy = 0; this.cam.adsK = 0; this.cam.camDist = 4;
     this.cam.view = clamp(a.get('view') | 0, 0, VIEWS.length - 1);
     this.mode = title ? 'title' : 'play';
@@ -245,6 +249,9 @@ export class Game {
     this.updateLook(dt);
     this.updateHero(dt);
     this.updateCannon(dt);
+    this.updateGuns(dt);
+    this.updateCrews(dt);
+    this.updateReinforce(dt);
     for (const u of this.allies) updateAlly(this, u, dt);
     for (const u of this.enemies) { if (u.type === 'boss') this.updateBossUnit(u, dt); else updateEnemy(this, u, dt); }
     this.separate();
@@ -670,7 +677,7 @@ export class Game {
       const gy = this.groundY(n.x, n.z);
       model.root.position.set(n.x, gy + 1.47, n.z + 1.2 * face); model.root.rotation.set(0, face > 0 ? Math.PI : 0, 0);   // 架在正面沙袋上，枪口朝外
       this.scene.add(model.root);
-      return { id, x: n.x, z: n.z + 0.15 * face, gy, model, ammo: MG_BELT, cd: 0, reload: 0 };
+      return { id, x: n.x, z: n.z + 0.15 * face, gy, model, ammo: MG_BELT, cd: 0, reload: 0, face, gx: n.x, gz: n.z + 0.3 * face, vacT: 0, claim: null, ally: null, burst: 0 };
     });
   }
   gunNear() {
@@ -678,11 +685,169 @@ export class Game {
     if (this.elev(h) > 0.5) return null;
     for (const m of this.mgs) {
       if (dist2(h.x, h.z, m.x, m.z) > 2.3 * 2.3) continue;
-      if (this.enemies.some((e) => e.alive && e.type === 'mg' && e.nest === m.id)) continue;   // 机枪手还在
+      if (m.ally || this.enemies.some((e) => e.alive && e.type === 'mg' && e.nest === m.id)) continue;   // 机枪手（或操枪的战友）还在
       return m;
     }
     return null;
   }
+  // ---------- 机枪有人开：鬼子补位、战友操枪 ----------
+  // 鬼子的机枪手死了约 3 秒，15 米内的鬼子步兵会过去接着打；我方阵地和打下来的阵地，空着约 3 秒、
+  // 团长不在跟前时近处的战友会去操枪，团长走到跟前（3 米内）就把枪让出来——团长只能用没人的机枪
+  updateGuns(dt) {
+    const h = this.hero;
+    for (const m of this.mgs) {
+      if (m.claim && (!m.claim.alive || m.claim.manGun !== m)) m.claim = null;
+      if (m.ally && (!m.ally.alive || m.ally.down > 0 || m.ally.gun !== m)) { if (m.ally.gun === m) m.ally.gun = null; m.ally = null; }
+      if (h.mg === m) { m.vacT = 0; continue; }
+      if (m.ally) {
+        // 团长来了就让，团长走远（追着阶段往前）了也撤下来跟上
+        const dh = dist(h.x, h.z, m.x, m.z);
+        if ((dh < 3 && h.alive) || dh > 60) {
+          const a = m.ally; a.gun = null; m.ally = null; m.vacT = 0;
+          if (dh < 3 && !this.flags.gunGive) { this.flags.gunGive = 1; this.ui.toast('战友把机枪让给你了', 2); }
+        }
+        continue;
+      }
+      if (this.enemies.some((e) => e.alive && e.type === 'mg' && e.nest === m.id)) { m.vacT = 0; continue; }
+      m.vacT += dt;
+      if (m.vacT < MAN_DELAY || m.claim || this.cut > 0 || this.flags.won) continue;
+      // 鬼子补位（只补鬼子那一侧的阵地）
+      if (m.face > 0) {
+        let best = null, bd = MAN_RANGE;
+        for (const e of this.enemies) {
+          if (!e.alive || !e.active || e.downed || e.manGun || (e.type !== 'rifle' && e.type !== 'elite') || Math.abs(e.y - m.gy) > 1.5) continue;
+          const d = dist(e.x, e.z, m.gx, m.gz);
+          if (d < bd) { bd = d; best = e; }
+        }
+        if (best) { best.manGun = m; m.claim = best; continue; }
+      }
+      // 战友操枪：附近没有鬼子、团长不在跟前
+      if (!this.allyGuns() || dist(h.x, h.z, m.x, m.z) < 10) continue;
+      if (this.enemies.some((e) => e.alive && !e.downed && dist(e.x, e.z, m.x, m.z) < 8)) continue;
+      let best = null, bd = ALLY_GUN_RANGE;
+      for (const a of this.allies) {
+        if (!a.alive || a.down > 0 || a.gun || a.name || a.hold || Math.abs(a.y - m.gy) > 1.5) continue;
+        const d = dist(a.x, a.z, m.x, m.z);
+        if (d < bd) { bd = d; best = a; }
+      }
+      if (best) { best.gun = m; m.ally = best; m.vacT = 0; }
+    }
+  }
+  // 鬼子走到机枪后面：变成机枪手
+  takeGun(u, m) {
+    u.type = 'mg'; u.def = DEF.mg; u.nest = m.id; u.hold = true; u.manGun = null; m.claim = null;
+    u.x = m.gx; u.z = m.gz; u.state = 'idle'; u.stT = 0.8; u.yaw = m.face > 0 ? Math.PI : 0;
+    this.stats.crews++;
+    if (!this.flags.manTip) { this.flags.manTip = 1; this.ui.toast('鬼子又补上了一个机枪手：机枪空着的时候赶紧抢过来', 3); }
+  }
+  // 战友操机枪：转枪口打最近的鬼子，打几发歇一会儿
+  allyShootMG(u, dt) {
+    const m = u.gun;
+    if (dist(u.x, u.z, m.x, m.z) > 0.5) return false;   // 还没走到
+    u.x = m.x; u.z = m.z; still(u, dt);
+    u.think -= dt;
+    if (u.think <= 0 || (u.target && !u.target.alive)) {
+      u.think = 0.5;
+      let best = null, bd = 48;
+      for (const e of this.enemies) {
+        if (!e.alive || !e.active || e.downed || e.noAlly) continue;
+        const d = dist(m.x, m.z, e.x, e.z);
+        if (d < bd && !losBlocked(this.world, m.x, m.z, e.x, e.z, 1.2, m.gy + 1.4, e.y + 1.1)) { bd = d; best = e; }
+      }
+      u.target = best;
+    }
+    const t = u.target;
+    if (t) {
+      const want = yawTo(t.x - m.x, t.z - m.z);
+      u.yaw = angStep(u.yaw, want, 3 * dt);
+      u.aim = damp(u.aim, 1, 10, dt);
+      m.cd -= dt;
+      if (m.cd <= 0 && Math.abs(angDiff(u.yaw, want)) < 0.12) {
+        if (m.burst <= 0) m.burst = 8;
+        m.burst--; m.cd = m.burst > 0 ? 0.1 : rand(1.4, 2.4);
+        const fx = fwdX(u.yaw), fz = fwdZ(u.yaw), d = dist(m.x, m.z, t.x, t.z), sp = 0.045;
+        const b = this.fireBullet(0, m.x + fx * 1.9, m.gy + 1.25, m.z + fz * 1.9, t.x + rand(-sp, sp) * d, t.y + 1.0 + rand(-sp, sp) * d * 0.4, t.z + rand(-sp, sp) * d, 1, 70, null);
+        b.fromAlly = 1;
+        this.sfxAt('mg', m.x, m.z, 0.6);
+      }
+    } else u.aim = damp(u.aim, 0, 8, dt);
+    m.model.root.position.set(m.x + fwdX(u.yaw) * 0.8, m.gy + 1.05, m.z + fwdZ(u.yaw) * 0.8);
+    m.model.root.rotation.set(0, u.yaw, 0);
+    return true;
+  }
+
+  // ---------- 碉堡 / 机枪堡里的机枪手 ----------
+  // 射击孔里露出机枪手的头；子弹钻进射击孔就打得到他。打死一个约 3 秒后换下一个上来，人打光了这个碉堡就哑了（碉堡本身还在）
+  initBunkerCrews() {
+    for (const b of this.world.bunkers || []) {
+      const s = this.bunkerSlit(b);
+      if (!s) continue;
+      b.crewSlit = s; b.crew = this.bunkerCrewSize(b); b.manned = true; b.gunnerHp = 3; b.manT = 0;
+      if (!b.crewModel) {
+        const m = buildSoldier('mg');
+        m.root.position.set(s.x, s.y - 1.62, s.z - 0.12); m.root.rotation.y = s.yaw === undefined ? Math.PI : s.yaw;
+        poseSoldier(m, { walk: 0, moving: 0, aim: 1, pitch: 0, carry: 'side', slash: -1 });
+        m.root.visible = false; this.scene.add(m.root); b.crewModel = m;
+      }
+    }
+  }
+  updateCrews(dt) {
+    for (const b of this.world.bunkers || []) {
+      if (!b.crewSlit) continue;
+      if (b.alive && !b.manned && b.crew > 0 && this.cut <= 0) { b.manT -= dt; if (b.manT <= 0) { b.manned = true; b.crew--; b.gunnerHp = 3; } }
+      b.crewModel.root.visible = b.alive && b.manned && this.mode === 'play';
+      if (b.crewModel.root.visible) setSoldierMat(b.crewModel, b.hitFlash > 0 ? MAT.flash : MAT.vc);
+      b.hitFlash = Math.max(0, (b.hitFlash || 0) - dt);
+    }
+  }
+  // 子弹（我方的）钻进有人的射击孔：打中里面的机枪手
+  crewHit(b, x, y, z) {
+    for (const k of this.world.bunkers || []) {
+      const s = k.crewSlit;
+      if (!s || !k.alive || !k.manned) continue;
+      if (Math.abs(x - s.x) > s.w / 2 || Math.abs(y - s.y) > s.h / 2 + 0.08 || Math.abs(z - s.z) > 0.5) continue;
+      k.gunnerHp -= b.dmg; k.hitFlash = 0.1;
+      this.fx.blood(s.x, s.y, s.z);
+      if (b.hero) { this.hitT = 0.12; this.hitKind = 1; }
+      if (k.gunnerHp <= 0) {
+        k.manned = false; k.manT = MAN_DELAY; this.stats.kills++; this.addScore(150); this.sfxAt('kill', s.x, s.z, 0.6);
+        if (!this.flags.slitTip) { this.flags.slitTip = 1; this.ui.toast(k.crew > 0 ? '射击孔里的机枪手倒了：里面还有人，几秒后就换上来' : '射击孔里的机枪手倒了', 3); }
+        else if (k.crew <= 0) this.ui.toast('这个碉堡的机枪手打光了，哑了', 2.2);
+      }
+      return true;
+    }
+    return false;
+  }
+
+  // ---------- 战友阵亡与增援 ----------
+  // 没名字的战友阵亡就是阵亡了（张大彪、和尚这些还是倒地后被救起）；约 8 秒后从后面补上来一个，每个阶段最多补 reinforceReserve() 个
+  updateReinforce(dt) {
+    if (this.phase !== this._resPhase) { this._resPhase = this.phase; this.reserve = this.reinforceReserve(); }
+    for (let i = this.reinf.length - 1; i >= 0; i--) {
+      const r = this.reinf[i];
+      if (this.cut > 0) continue;
+      r.t -= dt;
+      if (r.t > 0) continue;
+      this.reinf.splice(i, 1);
+      if (this.reserve <= 0 || this.flags.won || this.over) continue;
+      this.reserve--;
+      this.spawnReinforcement(r.slot);
+    }
+  }
+  spawnReinforcement(slot) {
+    const h = this.hero, rp = this.respawnPoint();
+    const post = this.allyPost({ slot, x: h.x, z: h.z, kind: 'ally' });
+    const sx = post ? post[0] : h.x, sz = post ? post[1] : h.z;
+    let x = rp[0] + rand(-2, 2), z = rp[1] + rand(-1, 2);
+    const d = dist(x, z, sx, sz);
+    if (d > 40) { x = sx + ((x - sx) / d) * 30; z = sz + ((z - sz) / d) * 30; }
+    const u = this.addUnit('ally', 'ally', x, z, { slot });
+    resolveCircle(this.world, u, u.r, u.y);
+    this.stats.reinf++;
+    if (!this.flags.reinfTip) { this.flags.reinfTip = 1; this.ui.say(this.info().aide, '后面的弟兄补上来了！'); }
+    return u;
+  }
+
   manMG(m) {
     const h = this.hero;
     h.mg = m; h.x = m.x; h.z = m.z; h.y = m.gy || 0; h.vy = 0; h.onGround = true; h.moving = 0; h.ads = false;
@@ -922,6 +1087,7 @@ export class Game {
           }
           if (!dead && c.visible && c.alive && this.gunExposed() && segPointD2(b.x, b.z, nx, nz, c.x, c.z + 0.8) < 2.2 && my < 1.9) { this.hurtCannon(b.dmg * 0.5); fx.sparks(nx, ny, nz, 4); dead = true; }
         }
+        if (!dead && b.team === 0 && this.crewHit(b, nx, ny, nz)) dead = true;
         if (!dead) {
           if (pointBlocked(w, nx, ny, nz, b.ign)) { fx.sparks(nx - b.dx * 0.3, ny, nz - b.dz * 0.3, 3, 0xffe2a0); fx.dust(nx - b.dx * 0.4, ny, nz - b.dz * 0.4, 1); dead = true; }
           else { const gy = this.world.hgt ? this.world.hgt(nx, nz) : 0; if (ny <= gy + 0.02) { fx.dust(nx, gy + 0.05, nz, 2); dead = true; } }
@@ -1000,7 +1166,13 @@ export class Game {
   }
   killUnit(u, silent, dx = 0, dz = 0) {
     if (!u.alive) return;
-    if (u.kind === 'ally') { u.down = 8; u.hp = 0; u.moving = 0; return; }   // 战友倒地后会被卫生员救起
+    if (u.kind === 'ally') {
+      if (u.name || !this.reinforceReserve()) { u.down = 8; u.hp = 0; u.moving = 0; return; }   // 有名有姓的倒地后被卫生员救起
+      // 普通战士阵亡：倒下，约 8 秒后从后面补一个
+      u.alive = false; u.deadT = 0; u.fallYaw = Math.atan2(dx, dz); if (u.gun) { u.gun.ally = null; u.gun = null; }
+      this.stats.fallen++; this.reinf.push({ t: REINF_DELAY, slot: u.slot });
+      return;
+    }
     u.alive = false; u.deadT = 0; u.fallYaw = Math.atan2(dx, dz);
     if (this.elev(u) > 2) { u.fall = 1; }
     if (silent) return;
@@ -1452,6 +1624,10 @@ export class Game {
   gunUsable() { return false; }
   useOption() { return null; }
   mgSpots() { return []; }
+  bunkerSlit() { return null; }          // 碉堡射击孔：{ x, y, z（孔外侧）, w, h, yaw（机枪手朝向）}；返回 null 表示这个碉堡不按人算
+  bunkerCrewSize() { return 2; }         // 机枪手之外，碉堡里还能补上来几个人
+  reinforceReserve() { return 4; }       // 每个阶段战友最多补几个（0 = 战友只倒地不阵亡）
+  allyGuns() { return true; }            // 战友会不会去操空着的机枪
   gunAimInfo(pre) { return [`仰角 <b>${Math.round(this.cannon.elev / DEG)}°</b>　炮弹 <b>${this.cannon.shells}</b>`, false]; }
   gunTargetHit() { return null; }
   gunFireIntercept() { return false; }

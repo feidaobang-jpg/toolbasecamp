@@ -92,6 +92,8 @@ export class LijiapoGame extends Game {
     }
   }
   mgSpots() { return [['PL', L.postL, 1], ['PR', L.postR, 1]]; }
+  // 坡顶碉堡朝南的射击孔（宽 2.4、高 0.42，外侧在 z+2.13）
+  bunkerSlit(b) { return { x: b.x, y: b.y + 1.45, z: b.z + 2.13, w: 2.3, h: 0.42, yaw: Math.PI }; }
   advanceFormation() { return this.phase === 1 || this.phase >= 4; }
   updateBossUnit(u, dt) { updateYamazaki(this, u, dt); }
   respawnPoint() {
@@ -249,6 +251,7 @@ export class LijiapoGame extends Game {
     for (const b of this.world.bunkers) {
       b.flashT -= dt; b.flash.visible = b.alive && b.flashT > 0;
       if (!b.alive || this.cut > 0 || this.flags.won || this.phase > 3 || this.mode !== 'play') continue;
+      if (!b.manned) { b.burst = 0; continue; }   // 机枪手倒了，下一个还没补上来
       b.cd -= dt;
       if (b.burst > 0) {
         b.shotT -= dt;

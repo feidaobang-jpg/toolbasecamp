@@ -87,6 +87,13 @@ export function updateEnemy(g, u, dt) {
   }
   if (g.cut > 0 || g.flags.won) { still(u, dt); u.aim = damp(u.aim, 0, 8, dt); return; }
   if (u.stagT > 0) { u.stagT -= dt; still(u, dt); u.aim = damp(u.aim, 0, 8, dt); u.slash = -1; return; }   // 被重砍、被弹开：踉跄一下
+  // 去补空着的机枪：一路跑过去，到了就变成机枪手
+  if (u.manGun) {
+    const m = u.manGun;
+    if (g.hero.mg === m || m.ally || g.enemies.some((e) => e !== u && e.alive && e.type === 'mg' && e.nest === m.id)) { u.manGun = null; m.claim = null; }
+    else if (Math.hypot(u.x - m.gx, u.z - m.gz) > 0.6) { move(g, u, m.gx - u.x, m.gz - u.z, u.def.speed * 1.4, dt); u.yaw = angStep(u.yaw, yawTo(m.gx - u.x, m.gz - u.z), 8 * dt); u.aim = damp(u.aim, 0, 8, dt); return; }
+    else { g.takeGun(u, m); return; }
+  }
   if (u.think <= 0 || (u.target && u.target.alive === false) || (u.target && u.target.down > 0)) {
     u.think = 0.5 + rand(0.3);
     u.target = chooseTarget(g, u);
@@ -194,6 +201,13 @@ export function updateAlly(g, u, dt) {
   u.stT -= dt; u.think -= dt;
   if (g.flags.won) { const cp = g.cheerPoint(); still(u, dt); u.aim = 0; u.yaw = angStep(u.yaw, yawTo(cp.x - u.x, cp.z - u.z), 5 * dt); return; }
   if (g.cut > 0) { still(u, dt); return; }
+  // 操机枪：先跑到枪后面，到了就转枪口打
+  if (u.gun) {
+    const m = u.gun;
+    if (g.allyShootMG(u, dt)) return;
+    move(g, u, m.x - u.x, m.z - u.z, 8.6, dt); u.yaw = angStep(u.yaw, yawTo(m.x - u.x, m.z - u.z), 10 * dt); u.aim = damp(u.aim, 0, 8, dt);
+    return;
+  }
   // 站位：本章给了岗位就守岗位（fixed=固定岗位，不往主角身边瞬移），否则按前进方向排成散兵线跟着主角
   let sx, sz, fixed = false;
   const post = u.hold ? null : g.allyPost(u);

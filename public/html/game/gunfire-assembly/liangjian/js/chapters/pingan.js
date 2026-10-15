@@ -61,6 +61,8 @@ export class PinganGame extends Game {
   }
   gunUsable() { return this.phase === 3; }
   mgSpots() { return [['A', L.nestA], ['B', L.nestB], ['S', L.streetNest]]; }
+  // 城墙机枪堡：正面沙袋顶和顶棚之间那道缝
+  bunkerSlit(b) { return { x: b.x, y: L.wallH + 2.42, z: b.z + 0.65, w: 3.8, h: 0.34, yaw: Math.PI }; }
   gunAimInfo(pre) {
     const c = this.cannon;
     const choice = this.flags.choice && !this.flags.ending;
@@ -329,6 +331,7 @@ export class PinganGame extends Game {
     // 城墙机枪堡开火
     for (const b of w.bunkers) {
       if (!b.alive) continue;
+      if (!b.manned) { b.burst = 0; continue; }   // 机枪手倒了，下一个还没补上来
       b.cd -= dt;
       if (b.burst > 0) {
         b.shotT -= dt;

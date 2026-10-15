@@ -1,0 +1,193 @@
+{
+ "at": "2026-10-15T00:23:44.043Z",
+ "results": [
+  {
+   "name": "平安县城：机枪手死了 3 秒内没人补；之后 15 米内的鬼子跑过去当机枪手（6 秒内到位），22 米外的不动",
+   "ok": true,
+   "detail": {
+    "at2s": {
+     "claim": false
+    },
+    "nearType": "mg",
+    "nearNest": "A",
+    "farType": "rifle",
+    "farClaim": false,
+    "crews": 1,
+    "pos": 0
+   }
+  },
+  {
+   "name": "有鬼子机枪手时团长接管不了，打掉就能接管",
+   "ok": true,
+   "detail": {
+    "withGunner": false,
+    "empty": true
+   }
+  },
+  {
+   "name": "普通战士阵亡倒下、张大彪只是倒地；约 8 秒后同一个位置补上来一个，人数恢复",
+   "ok": true,
+   "detail": {
+    "n0": 6,
+    "after": {
+     "plainAlive": false,
+     "namedAlive": true,
+     "namedDown": true,
+     "fallen": 1
+    },
+    "at7": 5,
+    "n1": 6,
+    "nu": true,
+    "reinf": 1,
+    "n2": 5
+   }
+  },
+  {
+   "name": "这个阶段的预备队打光了就不再补人",
+   "ok": true,
+   "detail": {
+    "n0": 6,
+    "after": {
+     "plainAlive": false,
+     "namedAlive": true,
+     "namedDown": true,
+     "fallen": 1
+    },
+    "at7": 5,
+    "n1": 6,
+    "nu": true,
+    "reinf": 1,
+    "n2": 5
+   }
+  },
+  {
+   "name": "平安县城机枪堡：缝里露着机枪手，打顶棚打不到，三枪打倒；没人时不开火，3 秒后换人",
+   "ok": true,
+   "detail": {
+    "slit": true,
+    "crew0": 2,
+    "man0": true,
+    "vis0": true,
+    "missHp": 3,
+    "after3": {
+     "manned": false,
+     "vis": false,
+     "kills": 1
+    },
+    "silentBurst": 0,
+    "back": {
+     "manned": true,
+     "crew": 1
+    },
+    "end": {
+     "manned": false,
+     "crew": 0
+    },
+    "end2": {
+     "manned": false,
+     "alive": true
+    }
+   }
+  },
+  {
+   "name": "机枪手打光（一共三个）这个堡就哑了，堡还在",
+   "ok": true,
+   "detail": {
+    "slit": true,
+    "crew0": 2,
+    "man0": true,
+    "vis0": true,
+    "missHp": 3,
+    "after3": {
+     "manned": false,
+     "vis": false,
+     "kills": 1
+    },
+    "silentBurst": 0,
+    "back": {
+     "manned": true,
+     "crew": 1
+    },
+    "end": {
+     "manned": false,
+     "crew": 0
+    },
+    "end2": {
+     "manned": false,
+     "alive": true
+    }
+   }
+  },
+  {
+   "name": "李家坡碉堡：射击孔里的机枪手三枪打倒，倒了之后碉堡不开火",
+   "ok": true,
+   "detail": {
+    "man0": true,
+    "vis": true,
+    "after": {
+     "manned": false,
+     "kills": 1
+    },
+    "fired": 0
+   }
+  },
+  {
+   "name": "苍云岭：山头空着的机枪，团长不在跟前时 20 米内的普通战士过去操枪",
+   "ok": true,
+   "detail": {
+    "t0": {
+     "ally": false
+    },
+    "named": "",
+    "at": {
+     "onGun": true,
+     "gun": true
+    },
+    "shot": 0,
+    "give": {
+     "ally": false,
+     "near": true
+    }
+   }
+  },
+  {
+   "name": "操机枪的战友打前面的鬼子",
+   "ok": false,
+   "detail": {
+    "t0": {
+     "ally": false
+    },
+    "named": "",
+    "at": {
+     "onGun": true,
+     "gun": true
+    },
+    "shot": 0,
+    "give": {
+     "ally": false,
+     "near": true
+    }
+   }
+  },
+  {
+   "name": "团长走到机枪跟前，战友把枪让出来，团长能接管",
+   "ok": true,
+   "detail": {
+    "t0": {
+     "ally": false
+    },
+    "named": "",
+    "at": {
+     "onGun": true,
+     "gun": true
+    },
+    "shot": 0,
+    "give": {
+     "ally": false,
+     "near": true
+    }
+   }
+  }
+ ],
+ "errors": []
+}
