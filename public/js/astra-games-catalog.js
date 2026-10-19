@@ -1,5 +1,5 @@
 /** Auto-parsed from awesome-gpt-6-astra README.zh-CN (external play links). */
-/** generated_at: 2026-10-12T08:33:11Z */
+/** generated_at: 2026-10-19T07:16:15Z */
 (function (global) {
   var groups = [
     { titleKey: 'games.groups.astraAction', items: [
@@ -177,6 +177,7 @@
       { title: "Flappy Bird · Click to Fly", url: "https://flappy-click-arcade-sept26.wesley-blomquist96.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/flappy-click-to-fly/gameplay.jpg", external: true },
     ] },
     { titleKey: 'games.groups.astraExperimental', items: [
+      { title: "入画 · WITHIN", url: "https://fatasia.github.io/within/", thumb: "https://raw.githubusercontent.com/fatasia/within/271b11849c1f279e78195a69699f255c18d79c63/docs/images/qingming-2026-10-19.png", external: true },
       { title: "ASTRA Arcade", url: "https://astra-arcade.antonioleivag.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/astra-arcade/gameplay.jpg", external: true },
       { title: "Chao Party", url: "https://chao.party/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/chao-party/gameplay.jpg", external: true },
       { title: "ORBITAL GARDEN · 轨道花园", url: "https://orbital-garden-one.vercel.app", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/orbital-garden/gameplay.jpg", external: true },
@@ -194,8 +195,8 @@
   global.astraGamesCatalog = {
     source: 'https://github.com/MartinDelophy/awesome-gpt-6-astra',
     gallery: 'https://astragames.aigccreative.com/',
-    generatedAt: "2026-10-12T08:33:11Z",
-    count: 176,
+    generatedAt: "2026-10-19T07:16:15Z",
+    count: 177,
     groups: groups
   };
 })(typeof window !== 'undefined' ? window : globalThis);
