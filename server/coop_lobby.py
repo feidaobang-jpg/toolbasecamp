@@ -19,7 +19,10 @@ GAMES = {
     'jackal': {'title': '赤色要塞', 'protocol': 'jackal3d-v1', 'maxPlayers': 4, 'path': 'jackal-stage1-3d'},
     'cadillacs': {'title': '恐龙快打', 'protocol': 'cadillacs3d-v1', 'maxPlayers': 4, 'path': 'cadillacs-stage1-3d'},
     'starship': {'title': '虫潮围城', 'protocol': 'starship-v1', 'maxPlayers': 4, 'path': 'starship-defense'},
+    # 枪火战地联机合作：最多 12 名真人同在蓝方打红方电脑，空位由房主那台补电脑兵；房主算电脑兵与伤害，客人自己算走位
+    'zhandi': {'title': '枪火战地', 'protocol': 'zhandi-v1', 'maxPlayers': 12, 'path': 'qianghuo-zhandi'},
 }
+ZHANDI_MAPS = ('desert', 'snow', 'island', 'ruins', 'canyon', 'farm', 'random')
 def bounded(value, low, high, default):
     return max(low, min(high, value)) if type(value) is int else default
 
@@ -35,6 +38,11 @@ def game_config(game, raw):
             'area': bounded(raw.get('area'), 0, 7, 0),
             'hero': bounded(raw.get('hero'), 0, 3, 0),
             'seed': secrets.randbelow(1000000), 'demo': False, 'coop': True}
+    if game == 'zhandi':
+        return {'map': raw.get('map') if raw.get('map') in ZHANDI_MAPS else 'desert',
+                'mapSeed': bounded(raw.get('mapSeed'), 0, 99999, 0),
+                'diff': raw.get('diff') if raw.get('diff') in ('easy', 'normal', 'hard') else 'normal',
+                'hero': bounded(raw.get('hero'), 0, 3, 0), 'demo': False, 'coop': True}
     if game == 'starship':
         # 虫潮对战：1 对 1 到 4 对 4，房间人数上限 = 两队座位数，空座位由房主那台电脑补电脑；客户端按 mode 开局。
         settings['mode'] = 'versus' if raw.get('mode') == 'versus' else 'coop'
@@ -61,6 +69,21 @@ def clean_input(source):
     direction = source.get('dir')
     data['dir'] = direction if type(direction) is int and -1 <= direction <= 7 else -1
     data['edges'] = [k for k in source.get('edges', []) if k in ('atk','jump','mega','dash','fireTap','bombTap','interact','grenade','heal')][:12] if isinstance(source.get('edges'), list) else []
+    return data
+
+# 战地客人每帧上报：自己的位置朝向姿势（客人自己算走位）、载具操纵、以及开火 / 手雷 / 部署等计数器（丢包也不会漏）
+ZHANDI_NUM = ('px', 'py', 'pz', 'yaw', 'pitch', 'mx', 'my', 'st', 'mv', 'aim', 'sl', 'kit', 'shot', 'nade', 'nx', 'nz', 'mine', 'gad',
+              'use', 'uv', 'life', 'rd', 'rn', 'tg')
+ZHANDI_BOOL = ('ads', 'run', 'og', 'fire', 'up', 'down', 'demo')
+
+def clean_zhandi(source):
+    data = {}
+    for key in ZHANDI_NUM:
+        n = source.get(key)
+        if type(n) in (int, float) and math.isfinite(n):
+            data[key] = max(-100000, min(100000, n))
+    for key in ZHANDI_BOOL:
+        data[key] = source.get(key) is True
     return data
 
 rooms = {}
@@ -270,6 +293,8 @@ async def coop_lobby_ws(socket: WebSocket, game='tank'):
                     data = {'dir': direction if type(direction) is int and -1 <= direction <= 3 else -1,
                             'fire': source.get('fire') is True, 'firePressed': source.get('firePressed') is True,
                             'look': max(-1000, min(1000, angle)) if type(angle) in (int, float) and math.isfinite(angle) else None}
+                elif game == 'zhandi':
+                    data = clean_zhandi(source)
                 else:
                     data = clean_input(source)
                 data['activity'] = source.get('activity') is True
