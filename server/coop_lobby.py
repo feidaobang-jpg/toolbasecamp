@@ -292,10 +292,9 @@ async def coop_lobby_ws(socket: WebSocket, game='tank'):
                 await room.broadcast({'type': 'roster', 'room': room.public()})
                 await publish_directory()
             elif kind == 'start' and room:
+                # 房主一个人也能开局：空位由房主的电脑兵补，其他人开局后仍可中途加入。
                 if peer.slot != 0:
                     await peer.send({'type': 'error', 'message': '由房主开始游戏'})
-                elif len(room.peers) < 2 or not all(p.ready for p in room.peers.values()):
-                    await peer.send({'type': 'error', 'message': '至少两人，所有队友准备后开始'})
                 elif not room.started:
                     room.started = True
                     start = dict(room.settings)
