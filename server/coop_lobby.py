@@ -50,6 +50,7 @@ def game_config(game, raw):
         return {'map': raw.get('map') if raw.get('map') in BAOPO_MAPS else 'dust2',
                 'diff': raw.get('diff') if raw.get('diff') in ('easy', 'normal', 'hard') else 'normal',
                 'match': 'std' if raw.get('match') == 'std' else 'short',
+                'respawn': 'instant' if raw.get('respawn') == 'instant' else 'round',
                 'hero': 0, 'demo': False, 'coop': True}
     if game == 'starship':
         # 虫潮对战：1 对 1 到 4 对 4，房间人数上限 = 两队座位数，空座位由房主那台电脑补电脑；客户端按 mode 开局。
