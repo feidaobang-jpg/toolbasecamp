@@ -21,8 +21,9 @@ GAMES = {
     'starship': {'title': '虫潮围城', 'protocol': 'starship-v1', 'maxPlayers': 4, 'path': 'starship-defense'},
     # 枪火战地联机合作：最多 12 名真人同在蓝方打红方电脑，空位由房主那台补电脑兵；房主算电脑兵与伤害，客人自己算走位
     'zhandi': {'title': '枪火战地', 'protocol': 'zhandi-v1', 'maxPlayers': 12, 'path': 'qianghuo-zhandi'},
-    # 枪火爆破：5 对 5 回合制，真人可分警察（blue）/ 匪徒（red）两边对打，空位由房主那台补电脑；做法同战地（房主算、客人报）
-    'baopo': {'title': '枪火爆破', 'protocol': 'baopo-v1', 'maxPlayers': 10, 'path': 'qianghuo-baopo'},
+    # 枪火爆破：5 对 5 回合制（歼灭玩法 6 对 6），真人可分警察（blue）/ 匪徒（red）两边对打，空位由房主那台补电脑；做法同战地（房主算、客人报）
+    # 房间上限按玩法：爆破 10 人、歼灭 12 人（建房时按 rule 收窄）
+    'baopo': {'title': '枪火爆破', 'protocol': 'baopo-v1', 'maxPlayers': 12, 'path': 'qianghuo-baopo'},
 }
 BAOPO_MAPS = ('dust2', 'dust', 'aztec', 'inferno', 'train')
 ZHANDI_MAPS = ('desert', 'snow', 'island', 'ruins', 'canyon', 'farm', 'random')
@@ -48,6 +49,7 @@ def game_config(game, raw):
                 'hero': bounded(raw.get('hero'), 0, 3, 0), 'demo': False, 'coop': True}
     if game == 'baopo':
         return {'map': raw.get('map') if raw.get('map') in BAOPO_MAPS else 'dust2',
+                'rule': 'elim' if raw.get('rule') == 'elim' else 'bomb',
                 'diff': raw.get('diff') if raw.get('diff') in ('easy', 'normal', 'hard') else 'normal',
                 'match': 'std' if raw.get('match') == 'std' else 'short',
                 'respawn': 'instant' if raw.get('respawn') == 'instant' else 'round',
@@ -225,6 +227,8 @@ async def coop_lobby_ws(socket: WebSocket, game='tank'):
                     settings = game_config(game, msg.get('config'))
                     if settings.get('mode') == 'versus':
                         capacity = 2 * settings.get('size', 1)
+                    if game == 'baopo' and settings.get('rule') != 'elim':
+                        capacity = min(capacity, 10)
                     room_name = '' if anonymous else str(msg.get('roomName') or '').strip()[:32]
                     candidate = Room(code, room_name or '合作房间 · ' + code,
                                      capacity, settings, salt,
