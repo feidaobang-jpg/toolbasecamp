@@ -990,15 +990,19 @@ window.TB_LOCALES['zh-CN'] = {
         collectionDesc: '今后我的游戏只在 B站 Toy 上架和更新，本站不再提供新的试玩与更新入口。下方自研游戏均前往已公开的 Toy 游玩。',
         collectionOpen: 'B站全部游戏合集',
         voteMigration: '本站游戏投票与愿望单已停止。后续投票统一在 B站动态发布，玩法建议和反馈请留在 B站评论或弹幕。',
-        followVotes: '关注后续动态投票',
+        followVotes: '关注 B站动态',
         collectionVote: '投票与愿望单',
         playHere: '本站玩',
         playToy: '在 B站 Toy 玩',
         playSite3d: '本站 3D',
         playToy2d: 'B站 2D 旧版',
         earlyDesc: '保留早期尝试与试玩入口，暂缓扩展。',
+        titles: {
+            gunfireAssembly: '枪火战地'
+        },
         tags: {
             threeD: '3D',
+            online: '已上线',
             developing: '开发中',
             demo: '试玩版',
             experimental: '实验版'
@@ -1013,7 +1017,7 @@ window.TB_LOCALES['zh-CN'] = {
             gunfireAssembly: '枪战大厅 · 战地与抗战'
         },
         groups: {
-            all: '游戏',
+            all: '全部',
             recent: '近期作品',
             early: '实验作品',
             action: '动作扮演',
