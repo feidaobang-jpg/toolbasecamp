@@ -456,10 +456,6 @@
     ].join('');
   }
 
-  function renderGameClicks(data) {
-    if (window.TBGameClickStats) window.TBGameClickStats.render(data);
-  }
-
   function syncDayChips() {
     if (!dayChips) return;
     var chips = dayChips.querySelectorAll('.day-chip');
@@ -526,12 +522,11 @@
       var note = document.getElementById('visitor-stats-note');
       if (note) {
         note.textContent = '访客按所选日期内的浏览器标识去重，回访也计入，跨天不重复累加；不是实名人数。累计数据含历史漏记，可能偏少。' +
-          (tracking.partial !== false ? ' 当前日期范围含历史漏记时段，访客仅为已记录人数（含游戏入口点击），浏览量和累计数据也可能偏少。' : '') +
+          (tracking.partial !== false ? ' 当前日期范围含历史漏记时段，访客仅为已记录人数，浏览量和累计数据也可能偏少。' : '') +
           (tracking.since ? ' 新访问记录起点：' + tracking.since + '（北京时间）。' : '');
       }
 
       renderBusiness(data.business, isDay);
-      renderGameClicks(data.game_clicks);
 
       var tip;
       if (isDay) {
@@ -552,7 +547,6 @@
       syncDayChips();
     }).catch(function (err) {
       if (requestId !== overviewRequest) return;
-      renderGameClicks(null);
       if (err && err.message === 'forbidden') {
         showError('统计数据加载被拒绝，请刷新重试');
         return;

@@ -194,8 +194,6 @@
                 (note ? '<p class="hub-game-note">' + escapeHtml(note) + '</p>' : '') +
             '</div>';
         if (!external) {
-            var gameKeyMatch = (item.url || '').match(/(?:^|\/)html\/game\/([a-z0-9_-]+)(?:\.html|\/index\.html)(?:[?#]|$)/i);
-            var gameKey = gameKeyMatch ? gameKeyMatch[1].toLowerCase() : '';
             var playUrl = item.toyUrl || 'https://www.bilibili.com/toy/feidao-games/index.html';
             var playLabel = tr(item.toyUrl ? 'games.playToy' : 'games.collectionOpen');
             var mainLink = document.createElement('a');
@@ -204,7 +202,6 @@
             mainLink.setAttribute('aria-label', label + ' · ' + playLabel);
             mainLink.target = '_blank';
             mainLink.rel = 'noopener noreferrer';
-            if (gameKey) mainLink.setAttribute('data-tb-track', 'game.play.toy.' + gameKey);
             while (card.firstChild) mainLink.appendChild(card.firstChild);
             card.appendChild(mainLink);
             // 整张卡片已经是 Toy 入口，不再重复渲染指向同一地址的「B 站玩」按钮。
