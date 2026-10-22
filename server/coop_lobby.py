@@ -358,6 +358,12 @@ async def coop_lobby_ws(socket: WebSocket, game='tank'):
                 command = msg.get('command')
                 if isinstance(command, dict) and len(json.dumps(command)) <= 4096:
                     await room.peers[0].send({'type': 'command', 'slot': peer.slot, 'command': command})
+            elif kind == 'quick' and room and room.started:
+                # 快捷语只允许预设编号（客户端各自持有同一份固定短语），服务端不接收自由文本。
+                q = msg.get('msg')
+                if type(q) is int and 0 <= q <= 15:
+                    await asyncio.gather(*(p.send({'type': 'quick', 'slot': peer.slot, 'msg': q})
+                                           for p in list(room.peers.values()) if p is not peer), return_exceptions=True)
             elif kind == 'leave':
                 break
     except (WebSocketDisconnect, asyncio.TimeoutError, RuntimeError):
