@@ -21,7 +21,10 @@ GAMES = {
     'starship': {'title': '虫潮围城', 'protocol': 'starship-v1', 'maxPlayers': 4, 'path': 'starship-defense'},
     # 枪火战地联机合作：最多 12 名真人同在蓝方打红方电脑，空位由房主那台补电脑兵；房主算电脑兵与伤害，客人自己算走位
     'zhandi': {'title': '枪火战地', 'protocol': 'zhandi-v1', 'maxPlayers': 12, 'path': 'qianghuo-zhandi'},
+    # 枪火爆破：5 对 5 回合制，真人可分警察（blue）/ 匪徒（red）两边对打，空位由房主那台补电脑；做法同战地（房主算、客人报）
+    'baopo': {'title': '枪火爆破', 'protocol': 'baopo-v1', 'maxPlayers': 10, 'path': 'qianghuo-baopo'},
 }
+BAOPO_MAPS = ('dust2', 'dust', 'aztec', 'inferno', 'train')
 ZHANDI_MAPS = ('desert', 'snow', 'island', 'ruins', 'canyon', 'farm', 'random')
 def bounded(value, low, high, default):
     return max(low, min(high, value)) if type(value) is int else default
@@ -43,6 +46,11 @@ def game_config(game, raw):
                 'mapSeed': bounded(raw.get('mapSeed'), 0, 99999, 0),
                 'diff': raw.get('diff') if raw.get('diff') in ('easy', 'normal', 'hard') else 'normal',
                 'hero': bounded(raw.get('hero'), 0, 3, 0), 'demo': False, 'coop': True}
+    if game == 'baopo':
+        return {'map': raw.get('map') if raw.get('map') in BAOPO_MAPS else 'dust2',
+                'diff': raw.get('diff') if raw.get('diff') in ('easy', 'normal', 'hard') else 'normal',
+                'match': 'std' if raw.get('match') == 'std' else 'short',
+                'hero': 0, 'demo': False, 'coop': True}
     if game == 'starship':
         # 虫潮对战：1 对 1 到 4 对 4，房间人数上限 = 两队座位数，空座位由房主那台电脑补电脑；客户端按 mode 开局。
         settings['mode'] = 'versus' if raw.get('mode') == 'versus' else 'coop'
@@ -79,6 +87,19 @@ ZHANDI_BOOL = ('ads', 'run', 'og', 'fire', 'up', 'down', 'demo')
 def clean_zhandi(source):
     data = {}
     for key in ZHANDI_NUM:
+        n = source.get(key)
+        if type(n) in (int, float) and math.isfinite(n):
+            data[key] = max(-100000, min(100000, n))
+    for key in ZHANDI_BOOL:
+        data[key] = source.get(key) is True
+    return data
+
+# 爆破客人上报：在战地字段上加投掷物种类 nk（1 高爆 / 2 闪光 / 3 烟雾）；安包拆包走 use 计数器，买东西走 command
+BAOPO_NUM = ZHANDI_NUM + ('nk',)
+
+def clean_baopo(source):
+    data = {}
+    for key in BAOPO_NUM:
         n = source.get(key)
         if type(n) in (int, float) and math.isfinite(n):
             data[key] = max(-100000, min(100000, n))
@@ -295,6 +316,8 @@ async def coop_lobby_ws(socket: WebSocket, game='tank'):
                             'look': max(-1000, min(1000, angle)) if type(angle) in (int, float) and math.isfinite(angle) else None}
                 elif game == 'zhandi':
                     data = clean_zhandi(source)
+                elif game == 'baopo':
+                    data = clean_baopo(source)
                 else:
                     data = clean_input(source)
                 data['activity'] = source.get('activity') is True
