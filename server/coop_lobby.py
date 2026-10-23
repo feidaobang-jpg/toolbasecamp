@@ -24,6 +24,9 @@ GAMES = {
     # 枪火爆破：5 对 5 回合制（歼灭玩法 6 对 6），真人可分警察（blue）/ 匪徒（red）两边对打，空位由房主那台补电脑；做法同战地（房主算、客人报）
     # 房间上限按玩法：爆破 10 人、歼灭 12 人（建房时按 rule 收窄）
     'baopo': {'title': '枪火爆破', 'protocol': 'baopo-v1', 'maxPlayers': 12, 'path': 'qianghuo-baopo'},
+    # 枪火生化：开局全员人类、随机出母体僵尸的感染玩法，最多 12 人；房主算电脑兵、感染和回合，客人报走位（做法同爆破）
+    # team 字段表示「想当」：red 想当僵尸（开局优先当母体）、blue 想当人类
+    'shenghua': {'title': '枪火生化', 'protocol': 'shenghua-v1', 'maxPlayers': 12, 'path': 'qianghuo-shenghua'},
 }
 BAOPO_MAPS = ('dust2', 'dust', 'aztec', 'inferno', 'train')
 ZHANDI_MAPS = ('desert', 'snow', 'island', 'ruins', 'canyon', 'farm', 'random')
@@ -53,6 +56,11 @@ def game_config(game, raw):
                 'diff': raw.get('diff') if raw.get('diff') in ('easy', 'normal', 'hard') else 'normal',
                 'match': 'std' if raw.get('match') == 'std' else 'short',
                 'respawn': 'instant' if raw.get('respawn') == 'instant' else 'round',
+                'hero': 0, 'demo': False, 'coop': True}
+    if game == 'shenghua':
+        return {'map': raw.get('map') if raw.get('map') in BAOPO_MAPS else 'dust2',
+                'diff': raw.get('diff') if raw.get('diff') in ('easy', 'normal', 'hard') else 'normal',
+                'match': 'std' if raw.get('match') == 'std' else 'short',
                 'hero': 0, 'demo': False, 'coop': True}
     if game == 'starship':
         # 虫潮对战：1 对 1 到 4 对 4，房间人数上限 = 两队座位数，空座位由房主那台电脑补电脑；客户端按 mode 开局。
@@ -320,7 +328,7 @@ async def coop_lobby_ws(socket: WebSocket, game='tank'):
                             'look': max(-1000, min(1000, angle)) if type(angle) in (int, float) and math.isfinite(angle) else None}
                 elif game == 'zhandi':
                     data = clean_zhandi(source)
-                elif game == 'baopo':
+                elif game in ('baopo', 'shenghua'):
                     data = clean_baopo(source)
                 else:
                     data = clean_input(source)
