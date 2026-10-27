@@ -27,6 +27,9 @@ GAMES = {
     # 枪火生化：开局全员人类、随机出母体僵尸的感染玩法，最多 12 人；房主算电脑兵、感染和回合，客人报走位（做法同爆破）
     # team 字段表示「想当」：red 想当僵尸（开局优先当母体）、blue 想当人类
     'shenghua': {'title': '枪火生化', 'protocol': 'shenghua-v1', 'maxPlayers': 12, 'path': 'qianghuo-shenghua'},
+    # 植物大战僵尸 3D：最多 4 人守同一片院子，各附身一株植物；房主算全部，客人用 input 报走位、command 报种植 / 附身。
+    # 关卡编号放在通用设置的 stage / area 里（li = (stage-1)*8 + area），不需要额外字段
+    'zhiwu': {'title': '植物大战僵尸3D', 'protocol': 'zhiwu-v1', 'maxPlayers': 4, 'path': 'zhiwu-dazhan-jiangshi'},
 }
 BAOPO_MAPS = ('dust2', 'dust', 'aztec', 'inferno', 'train')
 ZHANDI_MAPS = ('desert', 'snow', 'island', 'ruins', 'canyon', 'farm', 'random')
