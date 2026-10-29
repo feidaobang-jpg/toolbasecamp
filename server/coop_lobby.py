@@ -88,6 +88,9 @@ def clean_input(source):
         data['x'] /= length; data['z'] /= length
     for key in ('fire', 'firePressed', 'bomb', 'bombPressed', 'atk', 'jump', 'mega', 'run', 'motion', 'lane', 'autoFire', 'autoAim', 'fp', 'rise', 'lower', 'crouch', 'prone'):
         data[key] = source.get(key) is True
+    seq = source.get('seq')
+    if type(seq) is int and 0 < seq < 2 ** 31:
+        data['seq'] = seq   # 赤色要塞加入者本机预测：房主回传处理到的输入序号
     direction = source.get('dir')
     data['dir'] = direction if type(direction) is int and -1 <= direction <= 7 else -1
     data['edges'] = [k for k in source.get('edges', []) if k in ('atk','jump','mega','dash','fireTap','bombTap','interact','grenade','heal')][:12] if isinstance(source.get('edges'), list) else []
@@ -155,6 +158,27 @@ class Room:
     async def broadcast(self, message, guests_only=False):
         await asyncio.gather(*(p.send(message) for p in list(self.peers.values())
                                if not guests_only or p.slot != 0), return_exceptions=True)
+
+    def push_state(self, message):
+        # 房主快照每秒十几包，每包都是完整状态：某个客人网慢时不排队等，只留最新一包，
+        # 发完再补发留下的那包。原先逐包 await，慢的客人会让积压越来越长、画面落后好几秒。
+        for p in list(self.peers.values()):
+            if p.slot == 0:
+                continue
+            p.latest_state = message
+            task = getattr(p, 'state_task', None)
+            if task is None or task.done():
+                p.state_task = asyncio.create_task(drain_state(p))
+
+
+async def drain_state(peer):
+    while getattr(peer, 'latest_state', None) is not None:
+        message, peer.latest_state = peer.latest_state, None
+        try:
+            await peer.send(message)
+        except Exception:
+            peer.latest_state = None
+            return
 
 
 def listing(page=1, password='all', game='tank'):
@@ -364,7 +388,7 @@ async def coop_lobby_ws(socket: WebSocket, game='tank'):
             elif kind == 'state' and room and room.started and peer.slot == 0:
                 if isinstance(msg.get('state'), dict):
                     room.seq += 1
-                    await room.broadcast({'type': 'state', 'seq': room.seq, 'state': msg['state']}, guests_only=True)
+                    room.push_state({'type': 'state', 'seq': room.seq, 'state': msg['state']})
             elif kind == 'action' and room and room.started:
                 if msg.get('action') in ('pause', 'resume', 'restart', 'retry', 'tally', 'next'):
                     if msg['action'] in ('restart', 'retry', 'next') and peer.slot != 0:
