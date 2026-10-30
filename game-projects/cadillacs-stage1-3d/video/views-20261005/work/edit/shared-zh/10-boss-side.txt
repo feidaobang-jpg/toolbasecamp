@@ -1,3 +1,0 @@
-file '10-boss-side-0.mp4'
-file '10-boss-side-1.mp4'
-file '10-boss-side-2.mp4'

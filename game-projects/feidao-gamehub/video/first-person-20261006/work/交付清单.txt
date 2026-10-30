@@ -1,6 +1,0 @@
-﻿已发布过审：https://www.bilibili.com/video/BV1Fwpw6FEFx/
-成片：final/bilibili-zh/gameplay-zh-final-v2.mp4（用户审片通过，2分38秒，1080P60）
-合集Toy绑定、置顶试玩评论、自动动态已核验。
-Toy推流申请表A297:E297已云端保存，运营反馈尚空白。
-1000免费曝光券：符合本期稿件条件，另附新推广协议，等待本次确认后使用。
-完整证据：work/publication-result.json。

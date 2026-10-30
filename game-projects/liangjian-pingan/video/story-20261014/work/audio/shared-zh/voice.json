@@ -1,9 +1,0 @@
-{
- "engine": "IndexTTS-2.5（本地，D:/sd/index-tts）",
- "reference": "yunxi-ref-8s.wav",
- "preferred_voice": "Edge 在线语音 zh-CN-YunxiNeural",
- "fallback_reason": "2026-10-12 Edge 在线语音对 edge-tts 7.2.8 返回 403（上游 rany2/edge-tts issue #490，换成本机 Edge 版本号仍然 403；语音列表接口正常）",
- "note": "不是微软官方云希；参考音与当天另一条视频（超级玛丽 1-4）用的是同一个",
- "timestamp_source": "逐句合成的真实时长",
- "subjective_listening": "not-run"
-}

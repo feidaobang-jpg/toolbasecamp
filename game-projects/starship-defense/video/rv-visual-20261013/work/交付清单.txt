@@ -1,9 +1,0 @@
-﻿B站单版｜中文配音＋烧录中文字幕｜1920×1080 30fps｜111.5秒
-成片：../final/bilibili-zh/gameplay-zh-final.mp4
-首页封面：../final/bilibili-zh/cover-home-4x3.png
-空间封面：../final/bilibili-zh/cover-space-16x9.png
-投稿文案：../final/bilibili-zh/投稿文案.txt
-SHA256：cfca0b3a80b0e8c4985725e3f36038334137028c53ea29b508fbc0fdfd5f85e3
-状态：制作完成，待本人听审和人工审片；未上传。
-工程：render.py、edit/shared-zh/timeline.json、captions.ass；原片capture，配音audio/shared-zh。
-永久交付目录：D:\project\toolbasecamp-artifacts\rv-visual-video-20261013

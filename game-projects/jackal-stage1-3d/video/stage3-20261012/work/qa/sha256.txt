@@ -1,5 +1,0 @@
-68a7e12e59d768490882339c56a898f1f9df1531bae24f33f848c20faecaa4e0 *final/bilibili-zh/gameplay-zh-final.mp4
-3e7c53eaab8a55abb3e9c179f7d4a49f80904826b0299163a949fd6026f725e2 *final/douyin-zh/gameplay-zh-final.mp4
-888034e9c06bc4203332997293a4915ee95c396c356bd173312a8b88803ae451 *final/youtube-zh/gameplay-youtube-final.mp4
-7e037df1358f36e04279cd203918960be861eb8878649fe41a0c574c0214cc12 *final/youtube-zh/captions-en.srt
-247228e2d55e426ece38ab7f1a7aedef65abe568eb3edfb98fab1c3b73710920 *final/youtube-zh/captions-zh.srt
