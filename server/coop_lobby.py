@@ -30,6 +30,9 @@ GAMES = {
     # 植物大战僵尸 3D：最多 4 人守同一片院子，各附身一株植物；房主算全部，客人用 input 报走位、command 报种植 / 附身。
     # 关卡编号放在通用设置的 stage / area 里（li = (stage-1)*8 + area），不需要额外字段
     'zhiwu': {'title': '植物大战僵尸3D', 'protocol': 'zhiwu-v1', 'maxPlayers': 4, 'path': 'zhiwu-dazhan-jiangshi'},
+    # 废狱捉迷藏：最多 4 人一起躲，大壮由房主那台的电脑来找；客人位置朝向用 input 的 look / aim / yaw 报（不走会被归一化的 x / z），
+    # 躲进出来、扔石子、爬通风管用 command 报
+    'feiyu': {'title': '废狱捉迷藏', 'protocol': 'feiyu-v1', 'maxPlayers': 4, 'path': 'feiyu-zhuomicang'},
 }
 BAOPO_MAPS = ('dust2', 'dust', 'aztec', 'inferno', 'train')
 ZHANDI_MAPS = ('desert', 'snow', 'island', 'ruins', 'canyon', 'farm', 'random')
