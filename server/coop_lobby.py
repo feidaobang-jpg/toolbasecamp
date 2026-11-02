@@ -33,9 +33,9 @@ GAMES = {
     # 废狱捉迷藏：最多 4 人一起躲，大壮由房主那台的电脑来找；客人位置朝向用 input 的 look / aim / yaw 报（不走会被归一化的 x / z），
     # 躲进出来、扔石子、爬通风管用 command 报
     'feiyu': {'title': '废狱捉迷藏', 'protocol': 'feiyu-v1', 'maxPlayers': 4, 'path': 'feiyu-zhuomicang'},
-    # 枪火搜打撤：最多 4 人进同一张图搜刮撤离；房主算电脑兵、伤害和战利品箱，客人报走位开火（字段同战地再加血量 / 枪 / 撤离），
+    # 枪火搜打撤：最多 8 人进同一张图搜刮撤离；房主算电脑兵、伤害和战利品箱，客人报走位开火（字段同战地再加血量 / 枪 / 撤离），
     # 拿箱子、丢东西、送队友走 command；背包和仓库各存各的本机
-    'soudache': {'title': '枪火搜打撤', 'protocol': 'soudache-v1', 'maxPlayers': 4, 'path': 'qianghuo-soudache'},
+    'soudache': {'title': '枪火搜打撤', 'protocol': 'soudache-v1', 'maxPlayers': 8, 'path': 'qianghuo-soudache'},
 }
 BAOPO_MAPS = ('dust2', 'dust', 'aztec', 'inferno', 'train')
 ZHANDI_MAPS = ('desert', 'snow', 'island', 'ruins', 'canyon', 'farm', 'railDepot', 'containerPort', 'forestCamp', 'radarStation', 'dryRiver', 'sihangWarehouse', 'beachAssault', 'archipelago', 'megaTower', 'airfield', 'canalHarbor', 'random')
