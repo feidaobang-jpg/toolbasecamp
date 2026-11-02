@@ -33,6 +33,9 @@ GAMES = {
     # 废狱捉迷藏：最多 4 人一起躲，大壮由房主那台的电脑来找；客人位置朝向用 input 的 look / aim / yaw 报（不走会被归一化的 x / z），
     # 躲进出来、扔石子、爬通风管用 command 报
     'feiyu': {'title': '废狱捉迷藏', 'protocol': 'feiyu-v1', 'maxPlayers': 4, 'path': 'feiyu-zhuomicang'},
+    # 枪火搜打撤：最多 4 人进同一张图搜刮撤离；房主算电脑兵、伤害和战利品箱，客人报走位开火（字段同战地再加血量 / 枪 / 撤离），
+    # 拿箱子、丢东西、送队友走 command；背包和仓库各存各的本机
+    'soudache': {'title': '枪火搜打撤', 'protocol': 'soudache-v1', 'maxPlayers': 4, 'path': 'qianghuo-soudache'},
 }
 BAOPO_MAPS = ('dust2', 'dust', 'aztec', 'inferno', 'train')
 ZHANDI_MAPS = ('desert', 'snow', 'island', 'ruins', 'canyon', 'farm', 'railDepot', 'containerPort', 'forestCamp', 'radarStation', 'dryRiver', 'sihangWarehouse', 'beachAssault', 'archipelago', 'megaTower', 'airfield', 'canalHarbor', 'random')
@@ -56,6 +59,12 @@ def game_config(game, raw):
                 'mapSeed': bounded(raw.get('mapSeed'), 0, 99999, 0),
                 'diff': raw.get('diff') if raw.get('diff') in ('easy', 'normal', 'hard') else 'normal',
                 'hero': bounded(raw.get('hero'), 0, 3, 0), 'demo': False, 'coop': True}
+    if game == 'soudache':
+        return {'map': raw.get('map') if raw.get('map') in ZHANDI_MAPS else 'desert',
+                'mapSeed': bounded(raw.get('mapSeed'), 0, 99999, 0),
+                'diff': raw.get('diff') if raw.get('diff') in ('easy', 'normal', 'hard') else 'normal',
+                'limit': raw.get('limit') if raw.get('limit') in (15, 20, 30, 45) else 20,
+                'hero': 0, 'demo': False, 'coop': True}
     if game == 'baopo':
         return {'map': raw.get('map') if raw.get('map') in BAOPO_MAPS else 'dust2',
                 'rule': 'elim' if raw.get('rule') == 'elim' else 'bomb',
@@ -107,6 +116,19 @@ ZHANDI_BOOL = ('ads', 'run', 'og', 'fire', 'up', 'down', 'demo')
 def clean_zhandi(source):
     data = {}
     for key in ZHANDI_NUM:
+        n = source.get(key)
+        if type(n) in (int, float) and math.isfinite(n):
+            data[key] = max(-100000, min(100000, n))
+    for key in ZHANDI_BOOL:
+        data[key] = source.get(key) is True
+    return data
+
+# 搜打撤客人上报：战地字段 + 血量上限 mh、累计回血 ha、手里的枪 gw、撤离 ex / 自己判定阵亡 dd 计数
+SOUDACHE_NUM = ZHANDI_NUM + ('mh', 'ha', 'gw', 'ex', 'dd')
+
+def clean_soudache(source):
+    data = {}
+    for key in SOUDACHE_NUM:
         n = source.get(key)
         if type(n) in (int, float) and math.isfinite(n):
             data[key] = max(-100000, min(100000, n))
@@ -360,6 +382,8 @@ async def coop_lobby_ws(socket: WebSocket, game='tank'):
                     data = clean_zhandi(source)
                 elif game in ('baopo', 'shenghua'):
                     data = clean_baopo(source)
+                elif game == 'soudache':
+                    data = clean_soudache(source)
                 else:
                     data = clean_input(source)
                 data['activity'] = source.get('activity') is True
