@@ -36,6 +36,9 @@ GAMES = {
     # 枪火搜打撤：最多 8 人进同一张图搜刮撤离；房主算电脑兵、伤害和战利品箱，客人报走位开火（字段同战地再加血量 / 枪 / 撤离），
     # 拿箱子、丢东西、送队友走 command；背包和仓库各存各的本机
     'soudache': {'title': '枪火搜打撤', 'protocol': 'soudache-v1', 'maxPlayers': 8, 'path': 'qianghuo-soudache'},
+    # 方块大陆：最多 4 人，用房主的存档世界；房主算怪物、时间、流水和作物，客人自己走位、挖放方块先本机生效再用 command 报，
+    # 客人每帧报位置朝向、收到的改动编号 ack 和事件编号 ea（见 clean_fangkuai）；config 只带世界模式
+    'fangkuai': {'title': '方块大陆', 'protocol': 'fangkuai-v1', 'maxPlayers': 4, 'path': 'fangkuai-dalu'},
 }
 BAOPO_MAPS = ('dust2', 'dust', 'aztec', 'inferno', 'train')
 ZHANDI_MAPS = ('desert', 'snow', 'island', 'ruins', 'canyon', 'farm', 'railDepot', 'containerPort', 'forestCamp', 'radarStation', 'dryRiver', 'sihangWarehouse', 'beachAssault', 'archipelago', 'megaTower', 'airfield', 'canalHarbor', 'random')
@@ -77,6 +80,8 @@ def game_config(game, raw):
                 'diff': raw.get('diff') if raw.get('diff') in ('easy', 'normal', 'hard') else 'normal',
                 'match': 'std' if raw.get('match') == 'std' else 'short',
                 'hero': 0, 'demo': False, 'coop': True}
+    if game == 'fangkuai':
+        return {'mode': raw.get('mode') if raw.get('mode') in ('creative', 'survival', 'farm') else 'survival', 'demo': False, 'coop': True}
     if game == 'starship':
         # 虫潮对战：1 对 1 到 4 对 4，房间人数上限 = 两队座位数，空座位由房主那台电脑补电脑；客户端按 mode 开局。
         # mode 'zerg'：虫族联机对抗，房主当母虫、客人当人类指挥官（客人走位放 input 的 look / aim，刷兵建塔走 command）
@@ -124,6 +129,17 @@ def clean_zhandi(source):
             data[key] = max(-100000, min(100000, n))
     for key in ZHANDI_BOOL:
         data[key] = source.get(key) is True
+    return data
+
+# 方块大陆客人上报：自己的位置朝向、动作位 an、手里的东西、外观编号、血量、收到的改动编号 ack / 事件编号 ea
+FANGKUAI_NUM = ('px', 'py', 'pz', 'yaw', 'pitch', 'an', 'held', 'lk', 'sh', 'hr', 'hp', 'ack', 'ea', 'seq')
+
+def clean_fangkuai(source):
+    data = {}
+    for key in FANGKUAI_NUM:
+        n = source.get(key)
+        if type(n) in (int, float) and math.isfinite(n):
+            data[key] = max(-1e9, min(1e9, n))
     return data
 
 # 搜打撤客人上报：战地字段 + 血量上限 mh、累计回血 ha、手里的枪 gw、撤离 ex / 自己判定阵亡 dd 计数
@@ -387,6 +403,8 @@ async def coop_lobby_ws(socket: WebSocket, game='tank'):
                     data = clean_baopo(source)
                 elif game == 'soudache':
                     data = clean_soudache(source)
+                elif game == 'fangkuai':
+                    data = clean_fangkuai(source)
                 else:
                     data = clean_input(source)
                 data['activity'] = source.get('activity') is True
