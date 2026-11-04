@@ -79,7 +79,10 @@ def game_config(game, raw):
                 'hero': 0, 'demo': False, 'coop': True}
     if game == 'starship':
         # 虫潮对战：1 对 1 到 4 对 4，房间人数上限 = 两队座位数，空座位由房主那台电脑补电脑；客户端按 mode 开局。
-        settings['mode'] = 'versus' if raw.get('mode') == 'versus' else 'coop'
+        # mode 'zerg'：虫族联机对抗，房主当母虫、客人当人类指挥官（客人走位放 input 的 look / aim，刷兵建塔走 command）
+        settings['mode'] = raw.get('mode') if raw.get('mode') in ('versus', 'zerg') else 'coop'
+        if settings['mode'] == 'zerg':
+            settings['diff'] = raw.get('diff') if raw.get('diff') in ('easy', 'normal', 'hard', 'nightmare') else 'normal'
         if settings['mode'] == 'versus':
             settings['rules'] = 'bank' if raw.get('rules') == 'bank' else 'conquest'
             settings['size'] = bounded(raw.get('size'), 1, 4, 1)
