@@ -98,8 +98,8 @@ def game_config(game, raw):
 def clean_team(value):
     return value if value in ('blue', 'red') else 'auto'
 
-# 自由文字聊天试点（2026-11-07）：只对这些房间类型开放
-CHAT_GAMES = ('zhiwu',)
+# 自由文字聊天（2026-11-07 植僵试点过审后推广）：全部房间类型都开放，客户端发送前过 Toy checkInputSafety
+CHAT_GAMES = tuple(GAMES)
 CHAT_MAX = 30          # 单条最多 30 个字
 CHAT_GAP = 2.5         # 两条之间至少隔 2.5 秒
 # 兜底拦截：链接、联系方式、导流词。主判定在客户端的 Toy checkInputSafety，这里只防绕过客户端直接发的。
