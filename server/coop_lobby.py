@@ -4,6 +4,7 @@ import hashlib
 import hmac
 import json
 import math
+import re
 import secrets
 import time
 from collections import deque
@@ -96,6 +97,25 @@ def game_config(game, raw):
 
 def clean_team(value):
     return value if value in ('blue', 'red') else 'auto'
+
+# 自由文字聊天试点（2026-11-07）：只对这些房间类型开放
+CHAT_GAMES = ('zhiwu',)
+CHAT_MAX = 30          # 单条最多 30 个字
+CHAT_GAP = 2.5         # 两条之间至少隔 2.5 秒
+# 兜底拦截：链接、联系方式、导流词。主判定在客户端的 Toy checkInputSafety，这里只防绕过客户端直接发的。
+CHAT_BLOCK = re.compile(
+    r'(https?|www\.|\.com|\.cn|\.net|\.top|\.xyz|qq|vx|v信|微信|威信|薇信|wx|加群|进群|加我|私聊|扣扣|企鹅|二维码|代练|充值|返利|兼职|刷单)'
+    r'|\d[\d\s\-_.]{4,}\d',
+    re.IGNORECASE)
+
+def clean_chat(value):
+    if not isinstance(value, str):
+        return ''
+    text = ''.join(ch for ch in value if ch.isprintable() and ch not in '<>')
+    text = re.sub(r'\s+', ' ', text).strip()[:CHAT_MAX]
+    if not text or CHAT_BLOCK.search(text):
+        return ''
+    return text
 
 def clean_input(source):
     data = {}
@@ -451,6 +471,25 @@ async def coop_lobby_ws(socket: WebSocket, game='tank'):
                 q = msg.get('msg')
                 if type(q) is int and 0 <= q <= 15:
                     await asyncio.gather(*(p.send({'type': 'quick', 'slot': peer.slot, 'msg': q})
+                                           for p in list(room.peers.values()) if p is not peer), return_exceptions=True)
+            elif kind == 'chat' and room and room.started and game in CHAT_GAMES:
+                # 自由文字聊天：客户端发送前已过 Toy 的 checkInputSafety，但那一步在玩家本机，
+                # 绕过客户端直接发 WS 的管不住，所以这里再兜一道：限长、限频、去控制符、拦链接和联系方式。
+                text = clean_chat(msg.get('text'))
+                now = time.monotonic()
+                times = getattr(peer, 'chat_times', None)
+                if times is None:
+                    times = deque(maxlen=8)
+                    peer.chat_times = times
+                if not text:
+                    await peer.send({'type': 'chat_rejected', 'reason': '这条消息不能发送'})
+                elif times and now - times[-1] < CHAT_GAP:
+                    await peer.send({'type': 'chat_rejected', 'reason': '发得太快了，稍等一下'})
+                elif len(times) == times.maxlen and now - times[0] < 60:
+                    await peer.send({'type': 'chat_rejected', 'reason': '一分钟内消息太多，歇一会儿'})
+                else:
+                    times.append(now)
+                    await asyncio.gather(*(p.send({'type': 'chat', 'slot': peer.slot, 'text': text})
                                            for p in list(room.peers.values()) if p is not peer), return_exceptions=True)
             elif kind == 'leave':
                 break
