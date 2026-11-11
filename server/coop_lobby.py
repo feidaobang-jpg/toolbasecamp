@@ -207,6 +207,27 @@ def clean_baopo(source):
 rooms = {}
 watchers = {}
 failed_passwords = {}
+# 联机好友（2026-11-11 枪火试点，客户端 coop-friends.js）：好友码 -> (peer, game, 取当前房间的函数)
+# 好友码由客户端本机密钥算出（sha256 取 8 位数字），只收数字不收文字；只在连着大厅 / 房间时算在线
+presence = {}
+FRIEND_KEY = re.compile(r'[0-9a-f]{32}')
+FRIEND_CODE = re.compile(r'\d{8}')
+
+
+def friend_code(key):
+    return f'{int(hashlib.sha256(key.encode()).hexdigest(), 16) % 100000000:08d}'
+
+
+def friend_view(code):
+    entry = presence.get(code)
+    if not entry:
+        return {'code': code, 'online': False}
+    _, game, current = entry
+    r = current()
+    view = {'code': code, 'online': True, 'game': game, 'gameTitle': GAMES.get(game, {}).get('title', '')}
+    if r and rooms.get(r.code) is r:
+        view.update({'room': r.code, 'players': len(r.peers), 'max': r.capacity, 'started': r.started, 'canJoin': r.features, 'locked': bool(r.key)})
+    return view
 
 
 def password_key(password, salt):
@@ -308,6 +329,33 @@ async def coop_lobby_ws(socket: WebSocket, game='tank'):
                 continue
             if kind == 'ping':
                 await peer.send({'type': 'pong', 'at': msg.get('at')})
+            elif kind == 'friend_hello':
+                key = msg.get('key')
+                if isinstance(key, str) and FRIEND_KEY.fullmatch(key):
+                    old = getattr(peer, 'friend_code', None)
+                    if old and presence.get(old, (None,))[0] is peer:
+                        presence.pop(old, None)
+                    peer.friend_code = friend_code(key)
+                    presence[peer.friend_code] = (peer, game, lambda: room)
+                    if len(presence) > 20000:
+                        presence.pop(next(iter(presence)))
+                    await peer.send({'type': 'friend_me', 'code': peer.friend_code})
+            elif kind == 'friend_status':
+                codes = msg.get('codes')
+                if isinstance(codes, list):
+                    codes = [c for c in codes[:30] if isinstance(c, str) and FRIEND_CODE.fullmatch(c)]
+                    await peer.send({'type': 'friend_status', 'list': [friend_view(c) for c in codes]})
+            elif kind == 'friend_invite' and room and getattr(peer, 'friend_code', None):
+                to = msg.get('to')
+                last = getattr(peer, 'invite_at', 0)
+                if not (isinstance(to, str) and FRIEND_CODE.fullmatch(to)) or now - last < 3:
+                    continue
+                peer.invite_at = now
+                target = presence.get(to)
+                ok = bool(target) and target[0] is not peer
+                if ok:
+                    await target[0].send({'type': 'friend_invite', 'from': peer.friend_code, 'game': game, 'gameTitle': spec['title'], 'roomCode': room.code, 'locked': bool(room.key)})
+                await peer.send({'type': 'friend_invited', 'to': to, 'ok': ok})
             elif kind == 'list':
                 page = msg.get('page', 1)
                 page = page if type(page) is int and page > 0 else 1
@@ -515,6 +563,9 @@ async def coop_lobby_ws(socket: WebSocket, game='tank'):
         pass
     finally:
         watchers.pop(id(socket), None)
+        code = getattr(peer, 'friend_code', None)
+        if code and presence.get(code, (None,))[0] is peer:
+            presence.pop(code, None)
         if room and rooms.get(room.code) is room and room.peers.get(peer.slot) is peer:
             room.peers.pop(peer.slot, None)
             if peer.slot == 0:
