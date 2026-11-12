@@ -43,6 +43,9 @@ GAMES = {
     # 霓虹湾：最多 4 人同城开放世界；房主算全城的车、行人、警察、通缉和任务，客人每帧报自己的位置和自己开的车（见 clean_nihong），
     # 开枪 / 上车 / 捡东西攒成一批走 command（每批最多 40 条，每秒 5 批以内）
     'nihong': {'title': '霓虹湾', 'protocol': 'nihong-v1', 'maxPlayers': 4, 'path': 'nihong-wan'},
+    # 现代战争：最多 4 人一起打同一个任务（空战 / 坦克战 / 海战 / 联合作战）；房主算电脑、伤害、导弹和任务进度，
+    # 客人每帧报自己开的载具（位置、姿态、炮塔、车型 vk、出击次数 life、事件编号 ea，见 clean_xiandai），开火 / 导弹 / 干扰弹攒成一批走 command
+    'xiandai': {'title': '现代战争', 'protocol': 'xiandai-v1', 'maxPlayers': 4, 'path': 'xiandai-zhanzheng'},
 }
 BAOPO_MAPS = ('dust2', 'dust', 'aztec', 'inferno', 'train')
 ZHANDI_MAPS = ('desert', 'snow', 'island', 'ruins', 'canyon', 'farm', 'railDepot', 'containerPort', 'forestCamp', 'radarStation', 'dryRiver', 'sihangWarehouse', 'beachAssault', 'archipelago', 'megaTower', 'airfield', 'canalHarbor', 'damSite', 'random')
@@ -84,6 +87,9 @@ def game_config(game, raw):
                 'diff': raw.get('diff') if raw.get('diff') in ('easy', 'normal', 'hard') else 'normal',
                 'match': 'std' if raw.get('match') == 'std' else 'short',
                 'hero': 0, 'demo': False, 'coop': True}
+    if game == 'xiandai':
+        return {'mis': raw.get('mis') if raw.get('mis') in XIANDAI_MISSIONS else 'j1',
+                'diff': raw.get('diff') if raw.get('diff') in ('easy', 'normal', 'hard') else 'normal', 'demo': False, 'coop': True}
     if game == 'nihong':
         return {'demo': False, 'coop': True}
     if game == 'fangkuai':
@@ -165,6 +171,18 @@ NIHONG_NUM = ('px', 'py', 'pz', 'yaw', 'pitch', 'vid', 'vyaw', 'vx', 'vz', 'vhp'
 def clean_nihong(source):
     data = {}
     for key in NIHONG_NUM:
+        n = source.get(key)
+        if type(n) in (int, float) and math.isfinite(n):
+            data[key] = max(-1e9, min(1e9, n))
+    return data
+
+# 现代战争客人上报：位置、姿态（yaw / pitch / roll）、炮塔转角 ty / 炮管俯仰 tp、车型 vk、速度 sp、出击次数 life、事件编号 ea、标志位 fl、阵亡 dd
+XIANDAI_MISSIONS = ('a1', 'a2', 'a3', 't1', 't2', 't3', 's1', 's2', 's3', 'j1')
+XIANDAI_NUM = ('px', 'py', 'pz', 'yaw', 'pitch', 'roll', 'ty', 'tp', 'vk', 'sp', 'life', 'ea', 'fl', 'dd', 'seq')
+
+def clean_xiandai(source):
+    data = {}
+    for key in XIANDAI_NUM:
         n = source.get(key)
         if type(n) in (int, float) and math.isfinite(n):
             data[key] = max(-1e9, min(1e9, n))
@@ -489,6 +507,8 @@ async def coop_lobby_ws(socket: WebSocket, game='tank'):
                     data = clean_soudache(source)
                 elif game == 'fangkuai':
                     data = clean_fangkuai(source)
+                elif game == 'xiandai':
+                    data = clean_xiandai(source)
                 elif game == 'nihong':
                     data = clean_nihong(source)
                 else:
