@@ -358,6 +358,11 @@ async def coop_lobby_ws(socket: WebSocket, game='tank'):
                     if len(presence) > 20000:
                         presence.pop(next(iter(presence)))
                     await peer.send({'type': 'friend_me', 'code': peer.friend_code})
+            elif kind == 'friend_room':
+                # 局内加好友（2026-11-12 枪火玩家「局内联机模式加个加好友的」）：只回同房间里已经亮过好友码的人，房间列表里不带
+                if room:
+                    await peer.send({'type': 'friend_room', 'list': [{'slot': p.slot, 'code': p.friend_code} for p in list(room.peers.values())
+                                                                     if getattr(p, 'friend_code', None)]})
             elif kind == 'friend_status':
                 codes = msg.get('codes')
                 if isinstance(codes, list):
