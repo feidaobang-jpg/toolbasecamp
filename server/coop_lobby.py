@@ -98,7 +98,8 @@ def game_config(game, raw):
         return {'mis': raw.get('mis') if raw.get('mis') in XIANDAI_MISSIONS else 'j1',
                 'diff': raw.get('diff') if raw.get('diff') in ('easy', 'normal', 'hard') else 'normal', 'demo': False, 'coop': True}
     if game == 'guodao':
-        return {'route': raw.get('route') if raw.get('route') in ('g1', 'xueling', 'gebi') else 'g1', 'demo': False, 'coop': True}
+        return {'route': raw.get('route') if raw.get('route') in ('g1', 'xueling', 'gebi') else 'g1',
+                'mode': 'netitem' if raw.get('mode') == 'netitem' else 'netrace', 'demo': False, 'coop': True}
     if game == 'baozi':
         return {'diff': 'normal', 'demo': False, 'coop': True}
     if game == 'nihong':
