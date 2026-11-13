@@ -45,12 +45,14 @@ GAMES = {
     'baozi': {'title': '孢子房车', 'protocol': 'baozi-v1', 'maxPlayers': 4, 'path': 'baozi-fangche'},
     # 霓虹湾：最多 4 人同城开放世界；房主算全城的车、行人、警察、通缉和任务，客人每帧报自己的位置和自己开的车（见 clean_nihong），
     # 开枪 / 上车 / 捡东西攒成一批走 command（每批最多 40 条，每秒 5 批以内）
-    'nihong': {'title': '霓虹湾', 'protocol': 'nihong-v1', 'maxPlayers': 4, 'path': 'nihong-wan'},
+    'nihong': {'title': '霓虹湾', 'protocol': 'nihong-v1', 'maxPlayers': 8, 'path': 'nihong-wan'},
     # 现代战争：最多 4 人一起打同一个任务（空战 / 坦克战 / 海战 / 联合作战）；房主算电脑、伤害、导弹和任务进度，
     # 客人每帧报自己开的载具（位置、姿态、炮塔、车型 vk、出击次数 life、事件编号 ea，见 clean_xiandai），开火 / 导弹 / 干扰弹攒成一批走 command
     'xiandai': {'title': '现代战争', 'protocol': 'xiandai-v1', 'maxPlayers': 4, 'path': 'xiandai-zhanzheng'},
 }
 BAOPO_MAPS = ('dust2', 'dust', 'aztec', 'inferno', 'train')
+# 生化多一张专用防守图（围城哨站），不进爆破
+SHENGHUA_MAPS = BAOPO_MAPS + ('fort',)
 ZHANDI_MAPS = ('desert', 'snow', 'island', 'ruins', 'canyon', 'farm', 'railDepot', 'containerPort', 'forestCamp', 'radarStation', 'dryRiver', 'sihangWarehouse', 'beachAssault', 'archipelago', 'megaTower', 'airfield', 'canalHarbor', 'damSite', 'random')
 def bounded(value, low, high, default):
     return max(low, min(high, value)) if type(value) is int else default
@@ -86,7 +88,7 @@ def game_config(game, raw):
                 'respawn': 'instant' if raw.get('respawn') == 'instant' else 'round',
                 'hero': 0, 'demo': False, 'coop': True}
     if game == 'shenghua':
-        return {'map': raw.get('map') if raw.get('map') in BAOPO_MAPS else 'dust2',
+        return {'map': raw.get('map') if raw.get('map') in SHENGHUA_MAPS else 'dust2',
                 'diff': raw.get('diff') if raw.get('diff') in ('easy', 'normal', 'hard') else 'normal',
                 'match': 'std' if raw.get('match') == 'std' else 'short',
                 'hero': 0, 'demo': False, 'coop': True}
