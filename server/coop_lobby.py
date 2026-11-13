@@ -40,6 +40,9 @@ GAMES = {
     # 方块大陆：最多 4 人，用房主的存档世界；房主算怪物、时间、流水和作物，客人自己走位、挖放方块先本机生效再用 command 报，
     # 客人每帧报位置朝向、收到的改动编号 ack 和事件编号 ea（见 clean_fangkuai）；config 只带世界模式
     'fangkuai': {'title': '方块大陆', 'protocol': 'fangkuai-v1', 'maxPlayers': 4, 'path': 'fangkuai-dalu'},
+    # 孢子房车「联机守车」：最多 4 人守同一辆房车打波次尸潮；房主算怪、房车、机炮、波次和全队废料，
+    # 客人报位置朝向血量和开枪计数（见 clean_baozi），命中 / 手雷 / 购买 / 救人走 command 批量报给房主
+    'baozi': {'title': '孢子房车', 'protocol': 'baozi-v1', 'maxPlayers': 4, 'path': 'baozi-fangche'},
     # 霓虹湾：最多 4 人同城开放世界；房主算全城的车、行人、警察、通缉和任务，客人每帧报自己的位置和自己开的车（见 clean_nihong），
     # 开枪 / 上车 / 捡东西攒成一批走 command（每批最多 40 条，每秒 5 批以内）
     'nihong': {'title': '霓虹湾', 'protocol': 'nihong-v1', 'maxPlayers': 4, 'path': 'nihong-wan'},
@@ -90,6 +93,8 @@ def game_config(game, raw):
     if game == 'xiandai':
         return {'mis': raw.get('mis') if raw.get('mis') in XIANDAI_MISSIONS else 'j1',
                 'diff': raw.get('diff') if raw.get('diff') in ('easy', 'normal', 'hard') else 'normal', 'demo': False, 'coop': True}
+    if game == 'baozi':
+        return {'diff': 'normal', 'demo': False, 'coop': True}
     if game == 'nihong':
         return {'demo': False, 'coop': True}
     if game == 'fangkuai':
@@ -186,6 +191,17 @@ def clean_xiandai(source):
         n = source.get(key)
         if type(n) in (int, float) and math.isfinite(n):
             data[key] = max(-1e9, min(1e9, n))
+    return data
+
+# 孢子房车联机守车客人上报：位置朝向、血量、倒地位 an、手里的枪 wp、开枪计数 f、收到的事件编号 ea
+BAOZI_NUM = ('px', 'pz', 'yaw', 'hp', 'an', 'wp', 'f', 'ea', 'seq')
+
+def clean_baozi(source):
+    data = {}
+    for key in BAOZI_NUM:
+        n = source.get(key)
+        if type(n) in (int, float) and math.isfinite(n):
+            data[key] = max(-100000, min(100000, n))
     return data
 
 def clean_fangkuai(source):
@@ -510,6 +526,8 @@ async def coop_lobby_ws(socket: WebSocket, game='tank'):
                     data = clean_baopo(source)
                 elif game == 'soudache':
                     data = clean_soudache(source)
+                elif game == 'baozi':
+                    data = clean_baozi(source)
                 elif game == 'fangkuai':
                     data = clean_fangkuai(source)
                 elif game == 'xiandai':
