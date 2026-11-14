@@ -83,7 +83,7 @@ def game_config(game, raw):
     if game == 'soudache':
         return {'map': raw.get('map') if raw.get('map') in ZHANDI_MAPS else 'desert',
                 'mapSeed': bounded(raw.get('mapSeed'), 0, 99999, 0),
-                'diff': raw.get('diff') if raw.get('diff') in ('easy', 'normal', 'hard') else 'normal',
+                'diff': raw.get('diff') if raw.get('diff') in ('easy', 'normal', 'hard', 'hell') else 'normal',
                 'limit': raw.get('limit') if raw.get('limit') in (15, 20, 30, 45) else 20,
                 'hero': 0, 'demo': False, 'coop': True}
     if game == 'baopo':
