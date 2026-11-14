@@ -51,6 +51,10 @@ GAMES = {
     # 现代战争：最多 4 人一起打同一个任务（空战 / 坦克战 / 海战 / 联合作战）；房主算电脑、伤害、导弹和任务进度，
     # 客人每帧报自己开的载具（位置、姿态、炮塔、车型 vk、出击次数 life、事件编号 ea，见 clean_xiandai），开火 / 导弹 / 干扰弹攒成一批走 command
     'xiandai': {'title': '现代战争', 'protocol': 'xiandai-v1', 'maxPlayers': 4, 'path': 'xiandai-zhanzheng'},
+    # 中途岛海战：最多 4 人一起打同一个章节或联机海战；房主算全部舰船、飞机、炮弹和伤害，每 0.12 秒发完整快照，
+    # 客人每帧报自己开的飞机（位置、四元数、机型 k、开火位 fl）或自己操的舰（舰号 si、航向、航速、深度），见 clean_zhongtudao；
+    # 投弹 / 投雷 / 齐射 / 潜艇鱼雷攒成一批走 command
+    'zhongtudao': {'title': '中途岛海战', 'protocol': 'zhongtudao-v1', 'maxPlayers': 4, 'path': 'zhongtudao-haizhan'},
 }
 BAOPO_MAPS = ('dust2', 'dust', 'aztec', 'inferno', 'train')
 # 生化多一张专用防守图（围城哨站），不进爆破
@@ -97,6 +101,13 @@ def game_config(game, raw):
     if game == 'xiandai':
         return {'mis': raw.get('mis') if raw.get('mis') in XIANDAI_MISSIONS else 'j1',
                 'diff': raw.get('diff') if raw.get('diff') in ('easy', 'normal', 'hard') else 'normal', 'demo': False, 'coop': True}
+    if game == 'zhongtudao':
+        mopt = raw.get('mopt') if isinstance(raw.get('mopt'), dict) else {}
+        clean = {}
+        for k, v in list(mopt.items())[:16]:
+            if isinstance(k, str) and isinstance(v, str) and re.fullmatch(r'[a-z0-9]{1,8}', k) and re.fullmatch(r'[a-z0-9]{1,10}', v):
+                clean[k] = v
+        return {'ch': raw.get('ch') if raw.get('ch') in ZHONGTUDAO_CHAPTERS else 'haizhan', 'mopt': clean, 'demo': False, 'coop': True}
     if game == 'guodao':
         return {'route': raw.get('route') if raw.get('route') in ('g1', 'xueling', 'gebi') else 'g1',
                 'mode': 'netitem' if raw.get('mode') == 'netitem' else 'netrace', 'demo': False, 'coop': True}
@@ -191,6 +202,18 @@ def clean_nihong(source):
 # 现代战争客人上报：位置、姿态（yaw / pitch / roll）、炮塔转角 ty / 炮管俯仰 tp、车型 vk、速度 sp、出击次数 life、事件编号 ea、标志位 fl、阵亡 dd
 XIANDAI_MISSIONS = ('a1', 'a2', 'a3', 't1', 't2', 't3', 's1', 's2', 's3', 'j1')
 XIANDAI_NUM = ('px', 'py', 'pz', 'yaw', 'pitch', 'roll', 'ty', 'tp', 'vk', 'sp', 'life', 'ea', 'fl', 'dd', 'seq')
+
+# 中途岛海战：章节白名单（随游戏 chapters/index.js 的章节和模式），客人上报的数字字段
+ZHONGTUDAO_CHAPTERS = ('yingwuluo', 'liufenzhong', 'yulei', 'feilong', 'yuekecheng', 'lieqian', 'huanjiao', 'dongjing', 'tiedi', 'fangkong', 'haizhan', 'kongzhan')
+ZHONGTUDAO_NUM = ('t', 'k', 'si', 'px', 'py', 'pz', 'qx', 'qy', 'qz', 'qw', 'yaw', 'sp', 'dp', 'fl', 'life', 'dd', 'seq')
+
+def clean_zhongtudao(source):
+    data = {}
+    for key in ZHONGTUDAO_NUM:
+        n = source.get(key)
+        if type(n) in (int, float) and math.isfinite(n):
+            data[key] = max(-1e7, min(1e7, n))
+    return data
 
 def clean_xiandai(source):
     data = {}
@@ -551,6 +574,8 @@ async def coop_lobby_ws(socket: WebSocket, game='tank'):
                     data = clean_fangkuai(source)
                 elif game == 'xiandai':
                     data = clean_xiandai(source)
+                elif game == 'zhongtudao':
+                    data = clean_zhongtudao(source)
                 elif game == 'nihong':
                     data = clean_nihong(source)
                 else:
