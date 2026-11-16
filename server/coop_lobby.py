@@ -43,9 +43,26 @@ GAMES = {
     # 塑料兵大战：最多 4 人合作打同一章；房主算黄军、战友、玩具和伤害，客人自己走位，开枪 / 手雷 / 火箭按 command 批量报给房主结算；
     # config 只带章节 id（ch），客人章节不同会切到这一章再进房
     'suliaobing': {'title': '塑料兵大战', 'protocol': 'suliaobing-v1', 'maxPlayers': 4, 'path': 'suliaobing-dazhan'},
+    # 孢子房车「联机守车」：最多 4 人守同一辆房车打波次尸潮；房主算怪、房车、机炮、波次和全队废料，
+    # 客人报位置朝向血量和开枪计数（见 clean_baozi），命中 / 手雷 / 购买 / 救人走 command 批量报给房主
+    'baozi': {'title': '孢子房车', 'protocol': 'baozi-v1', 'maxPlayers': 4, 'path': 'baozi-fangche'},
+    # 国道狂飙「联机竞速」：最多 6 人同跑一条国道；房主算车流和电脑车手，客人报自己的路程 s、横向 d、速度、车型、离地高度和是否冲线（见 clean_guodao）
+    'guodao': {'title': '国道狂飙', 'protocol': 'guodao-v1', 'maxPlayers': 6, 'path': 'guodao-kuangbiao'},
+    # 霓虹湾：最多 4 人同城开放世界；房主算全城的车、行人、警察、通缉和任务，客人每帧报自己的位置和自己开的车（见 clean_nihong），
+    # 开枪 / 上车 / 捡东西攒成一批走 command（每批最多 40 条，每秒 5 批以内）
+    'nihong': {'title': '霓虹湾', 'protocol': 'nihong-v1', 'maxPlayers': 8, 'path': 'nihong-wan'},
+    # 现代战争：最多 4 人一起打同一个任务（空战 / 坦克战 / 海战 / 联合作战）；房主算电脑、伤害、导弹和任务进度，
+    # 客人每帧报自己开的载具（位置、姿态、炮塔、车型 vk、出击次数 life、事件编号 ea，见 clean_xiandai），开火 / 导弹 / 干扰弹攒成一批走 command
+    'xiandai': {'title': '现代战争', 'protocol': 'xiandai-v1', 'maxPlayers': 4, 'path': 'xiandai-zhanzheng'},
+    # 中途岛海战：最多 4 人一起打同一个章节或联机海战；房主算全部舰船、飞机、炮弹和伤害，每 0.12 秒发完整快照，
+    # 客人每帧报自己开的飞机（位置、四元数、机型 k、开火位 fl）或自己操的舰（舰号 si、航向、航速、深度），见 clean_zhongtudao；
+    # 投弹 / 投雷 / 齐射 / 潜艇鱼雷攒成一批走 command
+    'zhongtudao': {'title': '中途岛海战', 'protocol': 'zhongtudao-v1', 'maxPlayers': 4, 'path': 'zhongtudao-haizhan'},
 }
 BAOPO_MAPS = ('dust2', 'dust', 'aztec', 'inferno', 'train')
-ZHANDI_MAPS = ('desert', 'snow', 'island', 'ruins', 'canyon', 'farm', 'railDepot', 'containerPort', 'forestCamp', 'radarStation', 'dryRiver', 'sihangWarehouse', 'beachAssault', 'archipelago', 'megaTower', 'airfield', 'canalHarbor', 'random')
+# 生化多一张专用防守图（围城哨站），不进爆破
+SHENGHUA_MAPS = BAOPO_MAPS + ('fort',)
+ZHANDI_MAPS = ('desert', 'snow', 'island', 'ruins', 'canyon', 'farm', 'railDepot', 'containerPort', 'forestCamp', 'radarStation', 'dryRiver', 'sihangWarehouse', 'beachAssault', 'archipelago', 'megaTower', 'airfield', 'canalHarbor', 'damSite', 'random')
 def bounded(value, low, high, default):
     return max(low, min(high, value)) if type(value) is int else default
 
@@ -69,7 +86,7 @@ def game_config(game, raw):
     if game == 'soudache':
         return {'map': raw.get('map') if raw.get('map') in ZHANDI_MAPS else 'desert',
                 'mapSeed': bounded(raw.get('mapSeed'), 0, 99999, 0),
-                'diff': raw.get('diff') if raw.get('diff') in ('easy', 'normal', 'hard') else 'normal',
+                'diff': raw.get('diff') if raw.get('diff') in ('easy', 'normal', 'hard', 'hell') else 'normal',
                 'limit': raw.get('limit') if raw.get('limit') in (15, 20, 30, 45) else 20,
                 'hero': 0, 'demo': False, 'coop': True}
     if game == 'baopo':
@@ -80,13 +97,30 @@ def game_config(game, raw):
                 'respawn': 'instant' if raw.get('respawn') == 'instant' else 'round',
                 'hero': 0, 'demo': False, 'coop': True}
     if game == 'shenghua':
-        return {'map': raw.get('map') if raw.get('map') in BAOPO_MAPS else 'dust2',
+        return {'map': raw.get('map') if raw.get('map') in SHENGHUA_MAPS else 'dust2',
                 'diff': raw.get('diff') if raw.get('diff') in ('easy', 'normal', 'hard') else 'normal',
                 'match': 'std' if raw.get('match') == 'std' else 'short',
                 'hero': 0, 'demo': False, 'coop': True}
     if game == 'suliaobing':
         ch = raw.get('ch')
         return {'ch': ch if isinstance(ch, str) and re.fullmatch(r'[a-z]{2,16}', ch) else 'ditan', 'demo': False, 'coop': True}
+    if game == 'xiandai':
+        return {'mis': raw.get('mis') if raw.get('mis') in XIANDAI_MISSIONS else 'j1',
+                'diff': raw.get('diff') if raw.get('diff') in ('easy', 'normal', 'hard') else 'normal', 'demo': False, 'coop': True}
+    if game == 'zhongtudao':
+        mopt = raw.get('mopt') if isinstance(raw.get('mopt'), dict) else {}
+        clean = {}
+        for k, v in list(mopt.items())[:16]:
+            if isinstance(k, str) and isinstance(v, str) and re.fullmatch(r'[a-z0-9]{1,8}', k) and re.fullmatch(r'[a-z0-9]{1,10}', v):
+                clean[k] = v
+        return {'ch': raw.get('ch') if raw.get('ch') in ZHONGTUDAO_CHAPTERS else 'haizhan', 'mopt': clean, 'demo': False, 'coop': True}
+    if game == 'guodao':
+        return {'route': raw.get('route') if raw.get('route') in ('g1', 'xueling', 'gebi') else 'g1',
+                'mode': 'netitem' if raw.get('mode') == 'netitem' else 'netrace', 'demo': False, 'coop': True}
+    if game == 'baozi':
+        return {'diff': 'normal', 'demo': False, 'coop': True}
+    if game == 'nihong':
+        return {'demo': False, 'coop': True}
     if game == 'fangkuai':
         return {'mode': raw.get('mode') if raw.get('mode') in ('creative', 'survival', 'farm') else 'survival', 'demo': False, 'coop': True}
     if game == 'starship':
@@ -171,6 +205,62 @@ def clean_suliaobing(source):
             data[key] = max(-100000, min(100000, n))
     return data
 
+# 霓虹湾客人上报：位置朝向、开的车（编号 vid、朝向、速度、车况、炮塔）、血量、动作位 an、枪 wp、角色 ch / 衣服 of、事件编号 ea
+NIHONG_NUM = ('px', 'py', 'pz', 'yaw', 'pitch', 'vid', 'vyaw', 'vx', 'vz', 'vhp', 'tu', 'hp', 'an', 'wp', 'ch', 'of', 'ea', 'seq')
+
+def clean_nihong(source):
+    data = {}
+    for key in NIHONG_NUM:
+        n = source.get(key)
+        if type(n) in (int, float) and math.isfinite(n):
+            data[key] = max(-1e9, min(1e9, n))
+    return data
+
+# 现代战争客人上报：位置、姿态（yaw / pitch / roll）、炮塔转角 ty / 炮管俯仰 tp、车型 vk、速度 sp、出击次数 life、事件编号 ea、标志位 fl、阵亡 dd
+XIANDAI_MISSIONS = ('a1', 'a2', 'a3', 't1', 't2', 't3', 's1', 's2', 's3', 'j1')
+XIANDAI_NUM = ('px', 'py', 'pz', 'yaw', 'pitch', 'roll', 'ty', 'tp', 'vk', 'sp', 'life', 'ea', 'fl', 'dd', 'seq')
+
+# 中途岛海战：章节白名单（随游戏 chapters/index.js 的章节和模式），客人上报的数字字段
+ZHONGTUDAO_CHAPTERS = ('yingwuluo', 'liufenzhong', 'yulei', 'feilong', 'yuekecheng', 'lieqian', 'huanjiao', 'dongjing', 'tiedi', 'fangkong', 'haizhan', 'kongzhan')
+ZHONGTUDAO_NUM = ('t', 'k', 'si', 'px', 'py', 'pz', 'qx', 'qy', 'qz', 'qw', 'yaw', 'sp', 'dp', 'fl', 'life', 'dd', 'seq')
+
+def clean_zhongtudao(source):
+    data = {}
+    for key in ZHONGTUDAO_NUM:
+        n = source.get(key)
+        if type(n) in (int, float) and math.isfinite(n):
+            data[key] = max(-1e7, min(1e7, n))
+    return data
+
+def clean_xiandai(source):
+    data = {}
+    for key in XIANDAI_NUM:
+        n = source.get(key)
+        if type(n) in (int, float) and math.isfinite(n):
+            data[key] = max(-1e9, min(1e9, n))
+    return data
+
+# 孢子房车联机守车客人上报：位置朝向、血量、倒地位 an、手里的枪 wp、开枪计数 f、收到的事件编号 ea
+BAOZI_NUM = ('px', 'pz', 'yaw', 'hp', 'an', 'wp', 'f', 'ea', 'seq')
+
+GUODAO_NUM = ('s', 'd', 'v', 'vid', 'y', 'fin', 'seq')
+
+def clean_guodao(source):
+    data = {}
+    for key in GUODAO_NUM:
+        n = source.get(key)
+        if type(n) in (int, float) and math.isfinite(n):
+            data[key] = max(-1000000, min(1000000, n))
+    return data
+
+def clean_baozi(source):
+    data = {}
+    for key in BAOZI_NUM:
+        n = source.get(key)
+        if type(n) in (int, float) and math.isfinite(n):
+            data[key] = max(-100000, min(100000, n))
+    return data
+
 def clean_fangkuai(source):
     data = {}
     for key in FANGKUAI_NUM:
@@ -208,6 +298,27 @@ def clean_baopo(source):
 rooms = {}
 watchers = {}
 failed_passwords = {}
+# 联机好友（2026-11-11 枪火试点，客户端 coop-friends.js）：好友码 -> (peer, game, 取当前房间的函数)
+# 好友码由客户端本机密钥算出（sha256 取 8 位数字），只收数字不收文字；只在连着大厅 / 房间时算在线
+presence = {}
+FRIEND_KEY = re.compile(r'[0-9a-f]{32}')
+FRIEND_CODE = re.compile(r'\d{8}')
+
+
+def friend_code(key):
+    return f'{int(hashlib.sha256(key.encode()).hexdigest(), 16) % 100000000:08d}'
+
+
+def friend_view(code):
+    entry = presence.get(code)
+    if not entry:
+        return {'code': code, 'online': False}
+    _, game, current = entry
+    r = current()
+    view = {'code': code, 'online': True, 'game': game, 'gameTitle': GAMES.get(game, {}).get('title', '')}
+    if r and rooms.get(r.code) is r:
+        view.update({'room': r.code, 'players': len(r.peers), 'max': r.capacity, 'started': r.started, 'canJoin': r.features, 'locked': bool(r.key)})
+    return view
 
 
 def password_key(password, salt):
@@ -309,6 +420,38 @@ async def coop_lobby_ws(socket: WebSocket, game='tank'):
                 continue
             if kind == 'ping':
                 await peer.send({'type': 'pong', 'at': msg.get('at')})
+            elif kind == 'friend_hello':
+                key = msg.get('key')
+                if isinstance(key, str) and FRIEND_KEY.fullmatch(key):
+                    old = getattr(peer, 'friend_code', None)
+                    if old and presence.get(old, (None,))[0] is peer:
+                        presence.pop(old, None)
+                    peer.friend_code = friend_code(key)
+                    presence[peer.friend_code] = (peer, game, lambda: room)
+                    if len(presence) > 20000:
+                        presence.pop(next(iter(presence)))
+                    await peer.send({'type': 'friend_me', 'code': peer.friend_code})
+            elif kind == 'friend_room':
+                # 局内加好友（2026-11-12 枪火玩家「局内联机模式加个加好友的」）：只回同房间里已经亮过好友码的人，房间列表里不带
+                if room:
+                    await peer.send({'type': 'friend_room', 'list': [{'slot': p.slot, 'code': p.friend_code} for p in list(room.peers.values())
+                                                                     if getattr(p, 'friend_code', None)]})
+            elif kind == 'friend_status':
+                codes = msg.get('codes')
+                if isinstance(codes, list):
+                    codes = [c for c in codes[:30] if isinstance(c, str) and FRIEND_CODE.fullmatch(c)]
+                    await peer.send({'type': 'friend_status', 'list': [friend_view(c) for c in codes]})
+            elif kind == 'friend_invite' and room and getattr(peer, 'friend_code', None):
+                to = msg.get('to')
+                last = getattr(peer, 'invite_at', 0)
+                if not (isinstance(to, str) and FRIEND_CODE.fullmatch(to)) or now - last < 3:
+                    continue
+                peer.invite_at = now
+                target = presence.get(to)
+                ok = bool(target) and target[0] is not peer
+                if ok:
+                    await target[0].send({'type': 'friend_invite', 'from': peer.friend_code, 'game': game, 'gameTitle': spec['title'], 'roomCode': room.code, 'locked': bool(room.key)})
+                await peer.send({'type': 'friend_invited', 'to': to, 'ok': ok})
             elif kind == 'list':
                 page = msg.get('page', 1)
                 page = page if type(page) is int and page > 0 else 1
@@ -440,10 +583,20 @@ async def coop_lobby_ws(socket: WebSocket, game='tank'):
                     data = clean_baopo(source)
                 elif game == 'soudache':
                     data = clean_soudache(source)
+                elif game == 'guodao':
+                    data = clean_guodao(source)
+                elif game == 'baozi':
+                    data = clean_baozi(source)
                 elif game == 'fangkuai':
                     data = clean_fangkuai(source)
                 elif game == 'suliaobing':
                     data = clean_suliaobing(source)
+                elif game == 'xiandai':
+                    data = clean_xiandai(source)
+                elif game == 'zhongtudao':
+                    data = clean_zhongtudao(source)
+                elif game == 'nihong':
+                    data = clean_nihong(source)
                 else:
                     data = clean_input(source)
                 data['activity'] = source.get('activity') is True
@@ -516,6 +669,9 @@ async def coop_lobby_ws(socket: WebSocket, game='tank'):
         pass
     finally:
         watchers.pop(id(socket), None)
+        code = getattr(peer, 'friend_code', None)
+        if code and presence.get(code, (None,))[0] is peer:
+            presence.pop(code, None)
         if room and rooms.get(room.code) is room and room.peers.get(peer.slot) is peer:
             room.peers.pop(peer.slot, None)
             if peer.slot == 0:

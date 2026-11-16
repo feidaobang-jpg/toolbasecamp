@@ -1,10 +1,11 @@
 /** Auto-parsed from awesome-gpt-6-astra README.zh-CN (external play links). */
-/** generated_at: 2026-10-29T07:58:18Z */
+/** generated_at: 2026-11-16T08:57:56Z */
 (function (global) {
   var groups = [
     { titleKey: 'games.groups.astraAction', items: [
       { title: "Mosswing", url: "https://mosswing-quiet-flight.jack-514.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/mosswing/gameplay.jpg", external: true },
       { title: "MOXstrike", url: "https://www.moxride.com/home/moxstrike", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/moxstrike/gameplay.png", external: true },
+      { title: "借影 / Borrowed Shadow", url: "https://borrowed-shadow-opera.epic-tetra-9787.chatgpt.site/", thumb: "https://borrowed-shadow-opera.epic-tetra-9787.chatgpt.site/press/gameplay-rain-stage.png", external: true },
       { title: "雨切 · AMAGIRI", url: "https://mafeis.github.io/amagiri/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/amagiri/gameplay.jpg", external: true },
       { title: "Potato League", url: "https://promptpotatogames.itch.io/potato-league", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/potato-league/gameplay.jpg", external: true },
       { title: "CRASH! City Breakers / 城市连锁", url: "https://crash-city-breakers.vercel.app/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/crash-city-breakers/gameplay.png", external: true },
@@ -182,6 +183,7 @@
       { title: "Flappy Bird · Click to Fly", url: "https://flappy-click-arcade-sept26.wesley-blomquist96.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/flappy-click-to-fly/gameplay.jpg", external: true },
     ] },
     { titleKey: 'games.groups.astraExperimental', items: [
+      { title: "雪球大作战 / Snowball Arena", url: "https://snowball-arena-workbuddy.epic-tetra-9787.chatgpt.site/", thumb: "https://github.com/user-attachments/assets/1af21a5c-a96a-4ddf-a306-7909f5ae13ab", external: true },
       { title: "入画 · WITHIN", url: "https://fatasia.github.io/within/", thumb: "https://raw.githubusercontent.com/fatasia/within/34e80b3945ce863c482361a0478f78419a6d7465/public/previews/qingming.webp", external: true },
       { title: "ASTRA Arcade", url: "https://astra-arcade.antonioleivag.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/astra-arcade/gameplay.jpg", external: true },
       { title: "Chao Party", url: "https://chao.party/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/chao-party/gameplay.jpg", external: true },
@@ -200,8 +202,8 @@
   global.astraGamesCatalog = {
     source: 'https://github.com/MartinDelophy/awesome-gpt-6-astra',
     gallery: 'https://astragames.aigccreative.com/',
-    generatedAt: "2026-10-29T07:58:18Z",
-    count: 182,
+    generatedAt: "2026-11-16T08:57:56Z",
+    count: 184,
     groups: groups
   };
 })(typeof window !== 'undefined' ? window : globalThis);
