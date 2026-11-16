@@ -1,5 +1,5 @@
 /** Auto-parsed from awesome-gpt-6-astra README.zh-CN (external play links). */
-/** generated_at: 2026-11-08T08:32:17Z */
+/** generated_at: 2026-11-16T08:57:56Z */
 (function (global) {
   var groups = [
     { titleKey: 'games.groups.astraAction', items: [
@@ -183,6 +183,7 @@
       { title: "Flappy Bird · Click to Fly", url: "https://flappy-click-arcade-sept26.wesley-blomquist96.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/flappy-click-to-fly/gameplay.jpg", external: true },
     ] },
     { titleKey: 'games.groups.astraExperimental', items: [
+      { title: "雪球大作战 / Snowball Arena", url: "https://snowball-arena-workbuddy.epic-tetra-9787.chatgpt.site/", thumb: "https://github.com/user-attachments/assets/1af21a5c-a96a-4ddf-a306-7909f5ae13ab", external: true },
       { title: "入画 · WITHIN", url: "https://fatasia.github.io/within/", thumb: "https://raw.githubusercontent.com/fatasia/within/34e80b3945ce863c482361a0478f78419a6d7465/public/previews/qingming.webp", external: true },
       { title: "ASTRA Arcade", url: "https://astra-arcade.antonioleivag.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/astra-arcade/gameplay.jpg", external: true },
       { title: "Chao Party", url: "https://chao.party/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/chao-party/gameplay.jpg", external: true },
@@ -201,8 +202,8 @@
   global.astraGamesCatalog = {
     source: 'https://github.com/MartinDelophy/awesome-gpt-6-astra',
     gallery: 'https://astragames.aigccreative.com/',
-    generatedAt: "2026-11-08T08:32:17Z",
-    count: 183,
+    generatedAt: "2026-11-16T08:57:56Z",
+    count: 184,
     groups: groups
   };
 })(typeof window !== 'undefined' ? window : globalThis);
