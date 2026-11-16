@@ -36,8 +36,7 @@ const siteConfig = {
         { nameKey: 'nav.downloads', url: 'downloads.html' },
         { nameKey: 'nav.sites', url: 'cool-sites.html' },
         { nameKey: 'nav.guestbook', url: 'guestbook.html' },
-        { nameKey: 'nav.topUp', url: 'top-up.html' },
-        { nameKey: 'nav.about', url: 'about.html' }
+        { nameKey: 'nav.topUp', url: 'top-up.html' }
     ]
 };
 
@@ -45,26 +44,45 @@ const toolsConfig = {
     sectionTitleKey: 'hub.basecampTools',
     groups: [
         {
-            titleKey: 'tools.groups.calc',
+            titleKey: 'tools.groups.ladder',
             items: [
-                { titleKey: 'tools.age.title', url: 'html/calc/age.html' },
-                { titleKey: 'tools.bmi.title', url: 'html/calc/bmi.html' },
-                { titleKey: 'tools.loan.title', url: 'html/calc/loan.html' },
-                { titleKey: 'tools.k510Reward.title', url: 'html/calc/510k-reward.html' },
-                { titleKey: 'tools.taxCn.title', url: 'html/calc/tax-cn.html' },
-                { titleKey: 'tools.billSplit.title', url: 'html/calc/bill-split.html' },
-                { titleKey: 'tools.fuelCost.title', url: 'html/calc/fuel-cost.html' },
-                { titleKey: 'tools.dateDiff.title', url: 'html/calc/date-diff.html' }
+                { titleKey: 'tools.pcBuilds.title', url: 'html/ladder/pc-builds.html' },
+                { titleKey: 'tools.ladderSocRank.title', url: 'html/ladder/soc_rank.html' },
+                { titleKey: 'tools.ladderNbGpuRank.title', url: 'html/ladder/nb_gpu_rank.html' },
+                { titleKey: 'tools.ladderCpuRank.title', url: 'html/ladder/cpu_rank.html' },
+                { titleKey: 'tools.ladderNbCpuRank.title', url: 'html/ladder/nb_cpu_rank.html' },
+                { titleKey: 'tools.ladderGpuRank.title', url: 'html/ladder/gpu_rank.html' }
             ]
         },
         {
-            titleKey: 'tools.groups.convert',
+            titleKey: 'tools.groups.media',
             items: [
-                { titleKey: 'tools.rmbUppercase.title', url: 'html/convert/rmb-uppercase.html' },
-                { titleKey: 'tools.unitConvert.title', url: 'html/convert/unit-convert.html' },
-                { titleKey: 'tools.currencyConvert.title', url: 'html/convert/currency-convert.html' },
-                { titleKey: 'tools.timestampTimezone.title', url: 'html/convert/timestamp-timezone.html' },
-                { titleKey: 'tools.percentDiscount.title', url: 'html/convert/percent-discount.html' }
+                { titleKey: 'tools.qrCode.title', url: 'html/media/qr-code.html' },
+                { titleKey: 'tools.imageResize.title', url: 'html/media/image-resize.html' },
+                { titleKey: 'tools.watermarkRemoval.title', url: 'html/media/watermark-removal.html' },
+                { titleKey: 'tools.watermarkRemovalAdvanced.title', url: 'html/media/watermark-removal-advanced.html' },
+                { titleKey: 'tools.addMosaic.title', url: 'html/media/add-mosaic.html' },
+                { titleKey: 'tools.addWatermark.title', url: 'html/media/add-watermark.html' },
+                { titleKey: 'tools.addBackground.title', url: 'html/media/add-background.html' },
+                { titleKey: 'tools.iconMaker.title', url: 'html/media/icon-maker.html' },
+                { titleKey: 'tools.coverMaker.title', url: 'html/media/cover-maker.html' },
+                { titleKey: 'tools.imageCollage.title', url: 'html/media/image-collage.html' },
+                { titleKey: 'tools.idCardCopy.title', url: 'html/media/id-card-copy.html' },
+                { titleKey: 'tools.videoToImages.title', url: 'html/media/video-to-images.html' },
+                { titleKey: 'tools.aiMusic.title', url: 'html/media/ai-music.html', authRequired: true },
+                { titleKey: 'tools.removeBackground.title', url: 'html/media/remove-background.html', authRequired: true, dailyLimit: true },
+                { titleKey: 'tools.generalCutout.title', url: 'html/media/general-cutout.html', authRequired: true, dailyLimit: true },
+                { titleKey: 'tools.imageEnhance.title', url: 'html/media/image-enhance.html', authRequired: true, dailyLimit: true },
+                { titleKey: 'tools.idPhoto.title', url: 'html/media/id-photo.html', authRequired: true, dailyLimit: true },
+                { titleKey: 'tools.imageUnderstand.title', url: 'html/media/image-understand.html', authRequired: true, dailyLimit: true },
+                { titleKey: 'tools.speechTts.title', url: 'html/media/speech-tts.html', authRequired: true, paid: true },
+                { titleKey: 'tools.imageToAnimation.title', url: 'html/media/image-to-animation.html', authRequired: true, paid: true },
+                { titleKey: 'tools.imageToSprites.title', url: 'html/media/image-to-sprites.html', authRequired: true, paid: true },
+                { titleKey: 'tools.textToVideo.title', url: 'html/media/text-to-video.html', authRequired: true, paid: true },
+                { titleKey: 'tools.refToVideo.title', url: 'html/media/ref-to-video.html', authRequired: true, paid: true },
+                { titleKey: 'tools.videoEdit.title', url: 'html/media/video-edit.html', authRequired: true, paid: true },
+                { titleKey: 'tools.instructEdit.title', url: 'html/media/instruct-edit.html', authRequired: true, paid: true },
+                { titleKey: 'tools.textToImage.title', url: 'html/media/text-to-image.html', authRequired: true, paid: true }
             ]
         },
         {
@@ -110,34 +128,26 @@ const toolsConfig = {
             ]
         },
         {
-            titleKey: 'tools.groups.media',
+            titleKey: 'tools.groups.calc',
             items: [
-                { titleKey: 'tools.qrCode.title', url: 'html/media/qr-code.html' },
-                { titleKey: 'tools.imageResize.title', url: 'html/media/image-resize.html' },
-                { titleKey: 'tools.watermarkRemoval.title', url: 'html/media/watermark-removal.html' },
-                { titleKey: 'tools.watermarkRemovalAdvanced.title', url: 'html/media/watermark-removal-advanced.html' },
-                { titleKey: 'tools.addMosaic.title', url: 'html/media/add-mosaic.html' },
-                { titleKey: 'tools.addWatermark.title', url: 'html/media/add-watermark.html' },
-                { titleKey: 'tools.addBackground.title', url: 'html/media/add-background.html' },
-                { titleKey: 'tools.iconMaker.title', url: 'html/media/icon-maker.html' },
-                { titleKey: 'tools.coverMaker.title', url: 'html/media/cover-maker.html' },
-                { titleKey: 'tools.imageCollage.title', url: 'html/media/image-collage.html' },
-                { titleKey: 'tools.idCardCopy.title', url: 'html/media/id-card-copy.html' },
-                { titleKey: 'tools.videoToImages.title', url: 'html/media/video-to-images.html' },
-                { titleKey: 'tools.aiMusic.title', url: 'html/media/ai-music.html', authRequired: true },
-                { titleKey: 'tools.removeBackground.title', url: 'html/media/remove-background.html', authRequired: true, dailyLimit: true },
-                { titleKey: 'tools.generalCutout.title', url: 'html/media/general-cutout.html', authRequired: true, dailyLimit: true },
-                { titleKey: 'tools.imageEnhance.title', url: 'html/media/image-enhance.html', authRequired: true, dailyLimit: true },
-                { titleKey: 'tools.idPhoto.title', url: 'html/media/id-photo.html', authRequired: true, dailyLimit: true },
-                { titleKey: 'tools.imageUnderstand.title', url: 'html/media/image-understand.html', authRequired: true, dailyLimit: true },
-                { titleKey: 'tools.speechTts.title', url: 'html/media/speech-tts.html', authRequired: true, paid: true },
-                { titleKey: 'tools.imageToAnimation.title', url: 'html/media/image-to-animation.html', authRequired: true, paid: true },
-                { titleKey: 'tools.imageToSprites.title', url: 'html/media/image-to-sprites.html', authRequired: true, paid: true },
-                { titleKey: 'tools.textToVideo.title', url: 'html/media/text-to-video.html', authRequired: true, paid: true },
-                { titleKey: 'tools.refToVideo.title', url: 'html/media/ref-to-video.html', authRequired: true, paid: true },
-                { titleKey: 'tools.videoEdit.title', url: 'html/media/video-edit.html', authRequired: true, paid: true },
-                { titleKey: 'tools.instructEdit.title', url: 'html/media/instruct-edit.html', authRequired: true, paid: true },
-                { titleKey: 'tools.textToImage.title', url: 'html/media/text-to-image.html', authRequired: true, paid: true }
+                { titleKey: 'tools.age.title', url: 'html/calc/age.html' },
+                { titleKey: 'tools.bmi.title', url: 'html/calc/bmi.html' },
+                { titleKey: 'tools.loan.title', url: 'html/calc/loan.html' },
+                { titleKey: 'tools.k510Reward.title', url: 'html/calc/510k-reward.html' },
+                { titleKey: 'tools.taxCn.title', url: 'html/calc/tax-cn.html' },
+                { titleKey: 'tools.billSplit.title', url: 'html/calc/bill-split.html' },
+                { titleKey: 'tools.fuelCost.title', url: 'html/calc/fuel-cost.html' },
+                { titleKey: 'tools.dateDiff.title', url: 'html/calc/date-diff.html' }
+            ]
+        },
+        {
+            titleKey: 'tools.groups.convert',
+            items: [
+                { titleKey: 'tools.rmbUppercase.title', url: 'html/convert/rmb-uppercase.html' },
+                { titleKey: 'tools.unitConvert.title', url: 'html/convert/unit-convert.html' },
+                { titleKey: 'tools.currencyConvert.title', url: 'html/convert/currency-convert.html' },
+                { titleKey: 'tools.timestampTimezone.title', url: 'html/convert/timestamp-timezone.html' },
+                { titleKey: 'tools.percentDiscount.title', url: 'html/convert/percent-discount.html' }
             ]
         },
         {
@@ -150,17 +160,6 @@ const toolsConfig = {
                 { titleKey: 'tools.ocrText.title', url: 'html/media/ocr-text.html', authRequired: true, dailyLimit: true },
                 { titleKey: 'tools.ocrTable.title', url: 'html/media/ocr-table.html', authRequired: true, dailyLimit: true },
                 { titleKey: 'tools.drugLabel.title', url: 'html/docs/drug-label.html', authRequired: true, dailyLimit: true }
-            ]
-        },
-        {
-            titleKey: 'tools.groups.ladder',
-            items: [
-                { titleKey: 'tools.pcBuilds.title', url: 'html/ladder/pc-builds.html' },
-                { titleKey: 'tools.ladderCpuRank.title', url: 'html/ladder/cpu_rank.html' },
-                { titleKey: 'tools.ladderGpuRank.title', url: 'html/ladder/gpu_rank.html' },
-                { titleKey: 'tools.ladderSocRank.title', url: 'html/ladder/soc_rank.html' },
-                { titleKey: 'tools.ladderNbCpuRank.title', url: 'html/ladder/nb_cpu_rank.html' },
-                { titleKey: 'tools.ladderNbGpuRank.title', url: 'html/ladder/nb_gpu_rank.html' }
             ]
         }
     ]
