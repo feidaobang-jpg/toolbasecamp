@@ -99,3 +99,9 @@ game-projects/*/video/**/work/build-current/
 game-projects/*/video/**/*.ffconcat
 # Raw per-frame capture logs; retain compact capture manifests instead.
 game-projects/*/video/**/work/capture/**/capture.json
+
+# Trae HTML share packages (generated zip artifacts)
+.trae-html-share-packages/
+
+# Local git worktrees placed inside the repo
+.worktrees*/
