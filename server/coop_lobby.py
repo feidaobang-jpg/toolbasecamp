@@ -40,6 +40,9 @@ GAMES = {
     # 方块大陆：最多 4 人，用房主的存档世界；房主算怪物、时间、流水和作物，客人自己走位、挖放方块先本机生效再用 command 报，
     # 客人每帧报位置朝向、收到的改动编号 ack 和事件编号 ea（见 clean_fangkuai）；config 只带世界模式
     'fangkuai': {'title': '方块大陆', 'protocol': 'fangkuai-v1', 'maxPlayers': 4, 'path': 'fangkuai-dalu'},
+    # 塑料兵大战：最多 4 人合作打同一章；房主算黄军、战友、玩具和伤害，客人自己走位，开枪 / 手雷 / 火箭按 command 批量报给房主结算；
+    # config 只带章节 id（ch），客人章节不同会切到这一章再进房
+    'suliaobing': {'title': '塑料兵大战', 'protocol': 'suliaobing-v1', 'maxPlayers': 4, 'path': 'suliaobing-dazhan'},
 }
 BAOPO_MAPS = ('dust2', 'dust', 'aztec', 'inferno', 'train')
 ZHANDI_MAPS = ('desert', 'snow', 'island', 'ruins', 'canyon', 'farm', 'railDepot', 'containerPort', 'forestCamp', 'radarStation', 'dryRiver', 'sihangWarehouse', 'beachAssault', 'archipelago', 'megaTower', 'airfield', 'canalHarbor', 'random')
@@ -81,6 +84,9 @@ def game_config(game, raw):
                 'diff': raw.get('diff') if raw.get('diff') in ('easy', 'normal', 'hard') else 'normal',
                 'match': 'std' if raw.get('match') == 'std' else 'short',
                 'hero': 0, 'demo': False, 'coop': True}
+    if game == 'suliaobing':
+        ch = raw.get('ch')
+        return {'ch': ch if isinstance(ch, str) and re.fullmatch(r'[a-z]{2,16}', ch) else 'ditan', 'demo': False, 'coop': True}
     if game == 'fangkuai':
         return {'mode': raw.get('mode') if raw.get('mode') in ('creative', 'survival', 'farm') else 'survival', 'demo': False, 'coop': True}
     if game == 'starship':
@@ -153,6 +159,17 @@ def clean_zhandi(source):
 
 # 方块大陆客人上报：自己的位置朝向、动作位 an、手里的东西、外观编号、血量、收到的改动编号 ack / 事件编号 ea
 FANGKUAI_NUM = ('px', 'py', 'pz', 'yaw', 'pitch', 'an', 'held', 'lk', 'sh', 'hr', 'hp', 'ack', 'ea', 'seq')
+
+# 塑料兵大战客人上报：位置朝向、动作位 an、手里的枪 wp、命数 life
+SULIAOBING_NUM = ('px', 'py', 'pz', 'yaw', 'pitch', 'an', 'wp', 'life', 'seq')
+
+def clean_suliaobing(source):
+    data = {}
+    for key in SULIAOBING_NUM:
+        n = source.get(key)
+        if type(n) in (int, float) and math.isfinite(n):
+            data[key] = max(-100000, min(100000, n))
+    return data
 
 def clean_fangkuai(source):
     data = {}
@@ -425,6 +442,8 @@ async def coop_lobby_ws(socket: WebSocket, game='tank'):
                     data = clean_soudache(source)
                 elif game == 'fangkuai':
                     data = clean_fangkuai(source)
+                elif game == 'suliaobing':
+                    data = clean_suliaobing(source)
                 else:
                     data = clean_input(source)
                 data['activity'] = source.get('activity') is True
