@@ -115,8 +115,10 @@ def game_config(game, raw):
                 clean[k] = v
         return {'ch': raw.get('ch') if raw.get('ch') in ZHONGTUDAO_CHAPTERS else 'haizhan', 'mopt': clean, 'demo': False, 'coop': True}
     if game == 'guodao':
-        return {'route': raw.get('route') if raw.get('route') in ('g1', 'xueling', 'gebi') else 'g1',
-                'mode': 'netitem' if raw.get('mode') == 'netitem' else 'netrace', 'demo': False, 'coop': True}
+        # 2026-11-17 联机卡丁车（netkart）：赛场只能是卡丁车场 kart1 / kart2，其余模式还是三条国道
+        mode = raw.get('mode') if raw.get('mode') in ('netrace', 'netitem', 'netkart') else 'netrace'
+        routes = ('kart1', 'kart2') if mode == 'netkart' else ('g1', 'xueling', 'gebi')
+        return {'route': raw.get('route') if raw.get('route') in routes else routes[0], 'mode': mode, 'demo': False, 'coop': True}
     if game == 'baozi':
         return {'diff': 'normal', 'demo': False, 'coop': True}
     if game == 'nihong':
