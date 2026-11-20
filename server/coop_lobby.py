@@ -224,7 +224,7 @@ XIANDAI_NUM = ('px', 'py', 'pz', 'yaw', 'pitch', 'roll', 'ty', 'tp', 'vk', 'sp',
 
 # 中途岛海战：章节白名单（随游戏 chapters/index.js 的章节和模式），客人上报的数字字段
 ZHONGTUDAO_CHAPTERS = ('yingwuluo', 'liufenzhong', 'yulei', 'feilong', 'yuekecheng', 'lieqian', 'huanjiao', 'dongjing', 'tiedi', 'fangkong', 'haizhan', 'kongzhan')
-ZHONGTUDAO_NUM = ('t', 'k', 'si', 'px', 'py', 'pz', 'qx', 'qy', 'qz', 'qw', 'yaw', 'sp', 'dp', 'fl', 'life', 'dd', 'seq')
+ZHONGTUDAO_NUM = ('t', 'k', 'si', 'px', 'py', 'pz', 'qx', 'qy', 'qz', 'qw', 'yaw', 'sp', 'dp', 'fl', 'life', 'dd', 'seq', 'ax', 'ay', 'az')  # ax ay az：客人当炮手时的瞄准方向（2026-11-20）
 
 def clean_zhongtudao(source):
     data = {}
