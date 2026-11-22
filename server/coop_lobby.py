@@ -59,7 +59,7 @@ GAMES = {
     # 投弹 / 投雷 / 齐射 / 潜艇鱼雷攒成一批走 command
     'zhongtudao': {'title': '中途岛海战', 'protocol': 'zhongtudao-v1', 'maxPlayers': 4, 'path': 'zhongtudao-haizhan'},
 }
-BAOPO_MAPS = ('dust2', 'dust', 'aztec', 'inferno', 'train')
+BAOPO_MAPS = ('dust2', 'dust', 'aztec', 'inferno', 'train', 'civic')   # 2026-11-22 市政大楼（三层大楼）
 # 生化多一张专用防守图（围城哨站），不进爆破
 SHENGHUA_MAPS = BAOPO_MAPS + ('fort', 'siege')
 ZHANDI_MAPS = ('desert', 'snow', 'island', 'ruins', 'canyon', 'farm', 'railDepot', 'containerPort', 'forestCamp', 'radarStation', 'dryRiver', 'sihangWarehouse', 'beachAssault', 'archipelago', 'megaTower', 'airfield', 'canalHarbor', 'damSite', 'random')
