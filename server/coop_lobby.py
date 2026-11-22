@@ -120,7 +120,8 @@ def game_config(game, raw):
         routes = ('kart1', 'kart2') if mode == 'netkart' else ('g1', 'xueling', 'gebi')
         return {'route': raw.get('route') if raw.get('route') in routes else routes[0], 'mode': mode, 'demo': False, 'coop': True}
     if game == 'baozi':
-        return {'diff': 'normal', 'demo': False, 'coop': True}
+        # 2026-11-22 剧情联机放到 4 人后和联机守车同为 4 人房，用 story 标记区分（客户端按它分开列表）
+        return {'diff': 'normal', 'demo': False, 'coop': True, 'story': raw.get('story') is True}
     if game == 'nihong':
         return {'demo': False, 'coop': True}
     if game == 'fangkuai':
