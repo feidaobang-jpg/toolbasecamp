@@ -61,7 +61,7 @@ GAMES = {
 }
 BAOPO_MAPS = ('dust2', 'dust', 'aztec', 'inferno', 'train')
 # 生化多一张专用防守图（围城哨站），不进爆破
-SHENGHUA_MAPS = BAOPO_MAPS + ('fort',)
+SHENGHUA_MAPS = BAOPO_MAPS + ('fort', 'siege')
 ZHANDI_MAPS = ('desert', 'snow', 'island', 'ruins', 'canyon', 'farm', 'railDepot', 'containerPort', 'forestCamp', 'radarStation', 'dryRiver', 'sihangWarehouse', 'beachAssault', 'archipelago', 'megaTower', 'airfield', 'canalHarbor', 'damSite', 'random')
 def bounded(value, low, high, default):
     return max(low, min(high, value)) if type(value) is int else default
